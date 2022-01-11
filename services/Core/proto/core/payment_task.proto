@@ -3,19 +3,8 @@ syntax = "proto3";
 package core;
 option go_package = "./proto;core";
 
-enum PlanType {
-  PLANTYPE_UNKNOWN = 0;
-  OPTIM_CREDIT_SCORE = 1;
-  MIN_FEES = 2;
-}
-
-enum PaymentFrequency {
-  PAYMENTFREQ_UNKNOWN = 0;
-  WEEKLY = 1;
-  BIWEEKLY = 2;
-  MONTHLY = 3;
-  QUARTERLY = 4;
-}
+import "common.proto";
+import "google/protobuf/field_mask.proto";
 
 message PaymentTask {
   int32 payment_task_id = 1;
@@ -25,9 +14,38 @@ message PaymentTask {
   MetaData meta_data = 5;
 }
 
-
 message MetaData {
   PlanType preferred_plan_type =1;
   double preferred_timeline=2;
   PaymentFrequency preferred_payment_freq=3;
+}
+
+// CRUD Methods
+message CreatePaymentTaskRequest {
+  PaymentTask payment_task = 1;
+}
+
+message GetPaymentTaskRequest {
+  int32 id = 1;
+}
+
+message UpdatePaymentTaskRequest {
+  int32 id = 1;
+  PaymentTask payment_task = 2;
+  google.protobuf.FieldMask mask = 3;
+}
+
+message DeletePaymentTaskRequest {
+  int32 id = 1;
+}
+
+message ListPaymentTaskRequest {}
+
+message ListPaymentTaskResponse {
+  repeated PaymentTask payment_tasks = 1;
+}
+
+message DeletePaymentTaskResponse {
+  DELETE_STATUS status = 1;
+  PaymentTask payment_task = 2;
 }

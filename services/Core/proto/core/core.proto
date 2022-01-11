@@ -4,13 +4,31 @@ package core;
 option go_package = "./proto;core";
 
 import "payment_task.proto";
+import "payment_plan.proto";
 import "accounts.proto";
 import "transactions.proto";
 
 service Core {
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (GetPaymentPlanResponse);
-  rpc GetAccounts(GetAccountsRequest) returns (GetAccountsResponse);
-  rpc GetTransactions(GetTransactionsRequest) returns (GetTransactionsResponse);
+  //  CRUD METHODS
+  // Account
+  rpc CreateAccount(CreateAccountRequest) returns (Account);
+  rpc GetAccount(GetAccountRequest) returns (Account);
+  rpc ListAccounts(ListAccountRequest) returns (ListAccountResponse);
+  rpc UpdateAccount(UpdateAccountRequest) returns (Account);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  // Transaction
+  rpc CreateTransaction(CreateTransactionRequest) returns (Transaction);
+  rpc GetTransaction(GetTransactionRequest) returns (Transaction);
+  rpc ListTransactions(ListTransactionRequest) returns (ListTransactionResponse);
+  rpc UpdateTransaction(UpdateTransactionRequest) returns (Transaction);
+  rpc DeleteTransaction(DeleteTransactionRequest) returns (DeleteTransactionResponse);
+  //Payment Task
+  rpc CreatePaymentTask(CreatePaymentTaskRequest) returns (PaymentTask);
+  rpc GetPaymentTask(GetPaymentTaskRequest) returns (PaymentTask);
+  rpc ListPaymentTasks(ListPaymentTaskRequest) returns (ListPaymentTaskResponse);
+  rpc UpdatePaymentTask(UpdatePaymentTaskRequest) returns (PaymentTask);
+  rpc DeletePaymentTask(DeletePaymentTaskRequest) returns (DeletePaymentTaskResponse);
 }
 
 message GetPaymentPlanRequest {
@@ -18,21 +36,5 @@ message GetPaymentPlanRequest {
 }
 
 message GetPaymentPlanResponse {
-
-}
-
-message GetAccountsRequest {
-  repeated int32 account_ids=1;
-}
-
-message     GetAccountsResponse {
-  repeated Account accounts=1;
-}
-
-message GetTransactionsRequest {
-  repeated int32 transaction_ids=1;
-}
-
-message     GetTransactionsResponse {
-  repeated Transaction transactions=1;
+  repeated PaymentPlan payment_plans = 1;
 }

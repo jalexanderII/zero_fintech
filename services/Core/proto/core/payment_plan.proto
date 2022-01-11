@@ -3,7 +3,7 @@ syntax = "proto3";
 package core;
 option go_package = "./proto;core";
 
-import "payment_task.proto";
+import "common.proto";
 import "google/protobuf/timestamp.proto";
 
 enum PaymentStatus {
