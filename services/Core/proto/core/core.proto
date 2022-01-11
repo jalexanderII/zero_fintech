@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package core;
+option go_package = "./proto;core";
+
+import "payment_task.proto";
+import "accounts.proto";
+import "transactions.proto";
+
+service Core {
+  rpc GetPaymentPlan(GetPaymentPlanRequest) returns (GetPaymentPlanResponse);
+  rpc GetAccounts(GetAccountsRequest) returns (GetAccountsResponse);
+  rpc GetTransactions(GetTransactionsRequest) returns (GetTransactionsResponse);
+}
+
+message GetPaymentPlanRequest {
+  repeated PaymentTask payment_tasks=1;
+}
+
+message GetPaymentPlanResponse {
+
+}
+
+message GetAccountsRequest {
+  repeated int32 account_ids=1;
+}
+
+message     GetAccountsResponse {
+  repeated Account accounts=1;
+}
+
+message GetTransactionsRequest {
+  repeated int32 transaction_ids=1;
+}
+
+message     GetTransactionsResponse {
+  repeated Transaction transactions=1;
+}
