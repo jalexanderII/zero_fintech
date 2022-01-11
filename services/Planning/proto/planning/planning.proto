@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package planning;
+
+import "payment_plan.proto";
+import "payment_task.proto";
+
+service Planning {
+    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (CreatePaymentPlanResponse) {}
+}
+
+message CreatePaymentPlanRequest {
+    repeated PaymentTask payment_tasks = 1;
+}
+
+message CreatePaymentPlanResponse {
+    repeated PaymentPlan payment_plans = 1;
+} 
+
