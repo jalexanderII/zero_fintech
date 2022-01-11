@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package core;
+option go_package = "./proto;core";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "common.proto";
+
+// Account balances we be calculated using the “average daily balance (including new Purchases)" method.
+message Account {
+  int32 account_id = 1;
+  // User id this account is associated with
+  int32 user_id =2;
+  // Name of account
+  string name =3;
+  // Date account was opened and approved
+  google.protobuf.Timestamp created_at=4;
+  // Represents a percentage range. E.g 9.99% to 23.99%
+  // The APR corresponds to the Daily Periodic Rates (DPRs): the APR is equal to the DPR multiplied by 365,
+  // and the DPR is equal to the APR divided by 365.
+  // Interest charges are calculated by using the DPR. We calculate interest by multiplying each transaction by
+  // its applicable DPR and that result is multiplied by the number of days in the billing cycle.
+  AnnualPercentageRates annual_percentage_rate=5;
+  // New APR if some penalty is levied
+  PenaltyAPR penalty_apr=6;
+  // day of each month a minimum payment is due. No interest is charged on purchases if the
+  // entire account balance is paid by the due date each month.
+  int32 due_day=7;
+  // Minimum amount of interest charged on account balance per month
+  double minimum_interest_charge =8;
+  // Fee paid once a year in dollars for access to credit card
+  double annual_account_fee=9;
+  // One time fee as a % of transaction charged on any foreign transaction
+  double foreign_transaction_fee=10;
+  // Temporary APR as % and its expiration date
+  PromotionalRate promotional_rate=11;
+  // Monthly minimum payment due on the due day
+  double minimum_payment_due =12;
+  // Current balance in dollars on the account (may not reflect pending transactions)
+  double current_balance =13;
+  // Balance in dollars of all transactions that are pending
+  double pending_transactions=14;
+  // Total credit limit of the account
+  double credit_limit=15;
+}
+
+message AnnualPercentageRates {
+  double low_end =1;
+  double high_end =2;
+}
+
+message PenaltyAPR {
+  enum PenaltyReason {
+      PENALTY_REASON_UNKNOWN=0;
+      LATE_PAYMENT=1;
+  }
+
+  double penalty_apr =1;
+  PenaltyReason penalty_reason=2;
+}
+
+message PromotionalRate {
+  double temporary_apr=1;
+  // Date this APR expires
+  google.protobuf.Timestamp expiration_date=2;
+}
+
+// CRUD Methods
+message CreateAccountRequest {
+  Account account = 1;
+}
+
+message GetAccountRequest {
+  int32 id = 1;
+}
+
+message UpdateAccountRequest {
+  int32 id = 1;
+  Account account = 2;
+  google.protobuf.FieldMask mask = 3;
+}
+
+message DeleteAccountRequest {
+  int32 id = 1;
+}
+
+message ListAccountRequest {}
+
+message ListAccountResponse {
+  repeated Account accounts = 1;
+}
+
+message DeleteAccountResponse {
+  DELETE_STATUS status = 1;
+  Account account = 2;
+}
