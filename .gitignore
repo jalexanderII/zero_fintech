@@ -23,3 +23,5 @@
 
 # Database
 .DS_Store
+
+/services/Core/gen/
