@@ -1,3 +1,4 @@
+from collections import defaultdict
 import numpy as np
 import pandas as pd
 import grpc
@@ -20,7 +21,7 @@ def shift_date_by_payment_frequency(date: datetime, payment_freq: common_pb2.Pay
     if payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY:
         future_date = dtObj + pd.DateOffset(months=1)
     elif payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY:
-        future_date = dtObj + pd.DateOffset(months=1)
+        future_date = dtObj + pd.DateOffset(months=3)
     return future_date.date()
 
 class PlanningServicer(planning_pb2_grpc.PlanningServicer):
@@ -63,20 +64,39 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         stub = core_pb2_grpc.CoreStub(channel)
         accounts = []
         account_aprs = []
+        account2credit_limits, account2current_usage_amount, account2current_usage_prcnt = {}, {}, {}
         for _account_id in account_ids:
             _account = stub.GetAccount(accounts_pb2.GetAccountRequest(id=_account_id))
             accounts.append(_account)
             _apr = (_account.annual_percentage_rate.high_end + _account.annual_percentage_rate.low_end) / 2
             account_aprs.append(_apr)
+
+            account2credit_limits[_account_id] = _account.credit_limit
+            account2current_usage_amount[_account_id] = _account.current_balance + _account.pending_transactions
+            account2current_usage_prcnt[_account_id] = (_account.current_balance + _account.pending_transactions) / _account.credit_limit
         account_ids = np.array(account_ids)
         account_aprs = np.array(account_aprs)
         transaction_amounts = []
+        account2amount = defaultdict(list)
         for _transaction_id in transaction_ids:
             _transaction = stub.GetTransaction(transactions_pb2.GetTransactionRequest(id=_transaction_id))
-            transaction_amounts.append(_transaction.amount)
+            _amount = _transaction.amount
+            transaction_amounts.append(_amount)
+            account2amount[_transaction.account_id].append(_amount)
+        account2amount = {_acc_id: sum(_amounts) for _acc_id, _amounts in account2amount.items()}
         transaction_amounts = np.array(transaction_amounts)
         total_amount = sum(transaction_amounts)
-        amount_per_payment = total_amount / (pref_payment_freq * pref_timeline)     # TODO: details
+
+        pref_payment_freq_days = None
+        if pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
+            pref_payment_freq_days = timedelta(days=7)
+        elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY:
+            pref_payment_freq_days = timedelta(days=14)
+        elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY:
+            pref_payment_freq_days = timedelta(days=30)
+        elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY:
+            pref_payment_freq_days = timedelta(days=90)
+        amount_per_payment = total_amount / (timedelta(days=30) * pref_timeline / pref_payment_freq_days)
 
         if pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES or pref_plan_type == payment_task_pb2.PlanType.PLANTYPE_UNKNOWN:
             _array_sort = np.argsort(account_aprs)[::-1]
@@ -108,7 +128,8 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
                     timestamp.FromDatetime(date)
                 
         elif pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
-            pass
+            account_current_usage_prcnt = account_current_usage_prcnt.round(decimals=1)
+
 
         return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
 
