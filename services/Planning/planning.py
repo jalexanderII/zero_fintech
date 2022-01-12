@@ -128,7 +128,7 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
                     timestamp.FromDatetime(date)
                 
         elif pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
-            account_current_usage_prcnt = account_current_usage_prcnt.round(decimals=1)
+            account2current_usage_prcnt = {_account_id: round(_usage_rcnt, 1) for _account_id, _usage_rcnt in account2current_usage_prcnt.items()}
 
 
         return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
