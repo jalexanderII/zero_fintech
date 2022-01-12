@@ -7,6 +7,13 @@ import planning_pb2_grpc
 import payment_plan_pb2
 import payment_task_pb2
 
+
+import importlib.util
+spec = importlib.util.spec_from_file_location("module.name", "/Users/joschkabraun/dev/zero_fintech/services/Core/gen/core_py/accounts_pb2_grpc.py")
+foo = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(foo)
+foo.MyClass()
+
 class PlanningServicer(planning_pb2_grpc.PlanningServicer):
 
     def CreatePaymentPlan(self, request: planning_pb2_grpc.CreatePaymentPlanRequest, context: grpc.ServicerContext) -> planning_pb2_grpc.CreatePaymentPlanResponse:
