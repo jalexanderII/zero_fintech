@@ -22,6 +22,7 @@ message PaymentPlan {
   int32 payment_id=1;
   int32 user_id = 2;
   repeated int32 payment_task_id = 3;
+  // planned timeline to finish payment plan; is in fraction of months, e.g., 2 week = 0.5 months
   float timeline = 4;
   PaymentFrequency payment_freq = 5;
   float amount_per_payment = 6;

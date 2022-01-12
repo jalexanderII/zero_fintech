@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x63ommon.proto\x12\x08planning*F\n\x08PlanType\x12\x14\n\x10PLANTYPE_UNKNOWN\x10\x00\x12\x16\n\x12OPTIM_CREDIT_SCORE\x10\x01\x12\x0c\n\x08MIN_FEES\x10\x02*a\n\x10PaymentFrequency\x12\x17\n\x13PAYMENTFREQ_UNKNOWN\x10\x00\x12\n\n\x06WEEKLY\x10\x01\x12\x0c\n\x08\x42IWEEKLY\x10\x02\x12\x0b\n\x07MONTHLY\x10\x03\x12\r\n\tQUARTERLY\x10\x04\x62\x06proto3'
+  serialized_pb=b'\n\x0c\x63ommon.proto\x12\x08planning*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x62\x06proto3'
 )
 
 _PLANTYPE = _descriptor.EnumDescriptor(
@@ -31,17 +31,17 @@ _PLANTYPE = _descriptor.EnumDescriptor(
   create_key=_descriptor._internal_create_key,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='PLANTYPE_UNKNOWN', index=0, number=0,
+      name='PLAN_TYPE_UNKNOWN', index=0, number=0,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='OPTIM_CREDIT_SCORE', index=1, number=1,
+      name='PLAN_TYPE_OPTIM_CREDIT_SCORE', index=1, number=1,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='MIN_FEES', index=2, number=2,
+      name='PLAN_TYPE_MIN_FEES', index=2, number=2,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
@@ -49,7 +49,7 @@ _PLANTYPE = _descriptor.EnumDescriptor(
   containing_type=None,
   serialized_options=None,
   serialized_start=26,
-  serialized_end=96,
+  serialized_end=117,
 )
 _sym_db.RegisterEnumDescriptor(_PLANTYPE)
 
@@ -62,47 +62,47 @@ _PAYMENTFREQUENCY = _descriptor.EnumDescriptor(
   create_key=_descriptor._internal_create_key,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='PAYMENTFREQ_UNKNOWN', index=0, number=0,
+      name='PAYMENT_FREQUENCY_UNKNOWN', index=0, number=0,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='WEEKLY', index=1, number=1,
+      name='PAYMENT_FREQUENCY_WEEKLY', index=1, number=1,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='BIWEEKLY', index=2, number=2,
+      name='PAYMENT_FREQUENCY_BIWEEKLY', index=2, number=2,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='MONTHLY', index=3, number=3,
+      name='PAYMENT_FREQUENCY_MONTHLY', index=3, number=3,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='QUARTERLY', index=4, number=4,
+      name='PAYMENT_FREQUENCY_QUARTERLY', index=4, number=4,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=98,
-  serialized_end=195,
+  serialized_start=120,
+  serialized_end=295,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTFREQUENCY)
 
 PaymentFrequency = enum_type_wrapper.EnumTypeWrapper(_PAYMENTFREQUENCY)
-PLANTYPE_UNKNOWN = 0
-OPTIM_CREDIT_SCORE = 1
-MIN_FEES = 2
-PAYMENTFREQ_UNKNOWN = 0
-WEEKLY = 1
-BIWEEKLY = 2
-MONTHLY = 3
-QUARTERLY = 4
+PLAN_TYPE_UNKNOWN = 0
+PLAN_TYPE_OPTIM_CREDIT_SCORE = 1
+PLAN_TYPE_MIN_FEES = 2
+PAYMENT_FREQUENCY_UNKNOWN = 0
+PAYMENT_FREQUENCY_WEEKLY = 1
+PAYMENT_FREQUENCY_BIWEEKLY = 2
+PAYMENT_FREQUENCY_MONTHLY = 3
+PAYMENT_FREQUENCY_QUARTERLY = 4
 
 
 DESCRIPTOR.enum_types_by_name['PlanType'] = _PLANTYPE
