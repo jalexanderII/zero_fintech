@@ -32,7 +32,7 @@ service Core {
 }
 
 message GetPaymentPlanRequest {
-  repeated PaymentTask payment_tasks=1;
+  repeated string payment_tasks_ids = 1;
 }
 
 message GetPaymentPlanResponse {

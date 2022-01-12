@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -13,4 +14,7 @@ type PaymentTask struct {
 }
 
 type MetaData struct {
+	PreferredPlanType    core.PlanType         `bson:"preferred_plan_type"`
+	PreferredTimeline    float64               `bson:"preferred_timeline"`
+	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq"`
 }
