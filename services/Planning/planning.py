@@ -3,19 +3,13 @@ import grpc
 from concurrent import futures
 import logging
 
-import planning_pb2_grpc
-import payment_plan_pb2
-import payment_task_pb2
+from gen.core import core_pb2_grpc, accounts_pb2
 
-
-import importlib.util
-spec = importlib.util.spec_from_file_location("accounts_pb2_grpc", "/Users/joschkabraun/dev/zero_fintech/services/Core/gen/core_py/accounts_pb2_grpc.py")
-accounts_pb2_grpc = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(accounts_pb2_grpc)
+from gen.planning import planning_pb2_grpc, payment_plan_pb2, payment_task_pb2
 
 class PlanningServicer(planning_pb2_grpc.PlanningServicer):
 
-    def CreatePaymentPlan(self, request: planning_pb2_grpc.CreatePaymentPlanRequest, context: grpc.ServicerContext) -> planning_pb2_grpc.CreatePaymentPlanResponse:
+    def CreatePaymentPlan(self, request, context: grpc.ServicerContext):
         user_id = None
         payment_task_ids = []
         transaction_ids = []
@@ -44,22 +38,25 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
 
         return planning_pb2_grpc.CreatePaymentPlanResponse(payment_plans=payment_plans)
     
-    def _createPaymentPlan(self, payment_task_ids, transaction_ids, account_ids, user_id, pref_payment_freq, pref_plan_type, pref_timeline) -> payment_plan_pb2.PaymentPlan:
-        if pref_plan_type == payment_task_pb2.PlanType.OPTIM_CREDIT_SCORE or pref_plan_type == payment_task_pb2.PlanType.PLANTYPE_UNKNOWN:
-            accounts_pb2_grpc.Account()
-        elif  pref_plan_type == payment_task_pb2.PlanType.MIN_FEES:
+    def _createPaymentPlan(self, payment_task_ids, transaction_ids, account_ids, user_id, pref_payment_freq, pref_plan_type, pref_timeline): # -> payment_plan_pb2.PaymentPlan:
+        if pref_plan_type == payment_task_pb2.PlanType.MIN_FEES or pref_plan_type == payment_task_pb2.PlanType.PLANTYPE_UNKNOWN:
+            channel = grpc.insecure_channel('localhost:50051')
+            stub = core_pb2_grpc.CoreStub(channel)
+            accounts = []
+            # for 
+            pass
+        elif  pref_plan_type == payment_task_pb2.PlanType.OPTIM_CREDIT_SCORE:
             pass
 
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    planning_pb2_grpc.add_RouteGuideServicer_to_server(
+    planning_pb2_grpc.add_PlanningServicer_to_server(
         PlanningServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
 
-
 if __name__ == '__main__':
-    logging.basicConfig()
+    # logging.basicConfig()
     serve()

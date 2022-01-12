@@ -2,19 +2,7 @@ syntax = "proto3";
 
 package planning;
 
-enum PlanType {
-  PLANTYPE_UNKNOWN = 0;
-  OPTIM_CREDIT_SCORE = 1;
-  MIN_FEES = 2;
-}
-
-enum PaymentFrequency {
-  PAYMENTFREQ_UNKNOWN = 0;
-  WEEKLY = 1;
-  BIWEEKLY = 2;
-  MONTHLY = 3;
-  QUARTERLY = 4;
-}
+import "common.proto";
 
 message PaymentTask {
   int32 payment_task_id = 1;

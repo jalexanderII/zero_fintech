@@ -11,7 +11,8 @@ from google.protobuf import symbol_database as _symbol_database
 
 _sym_db = _symbol_database.Default()
 
-import payment_task_pb2 as payment__task__pb2
+
+import common_pb2 as common__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
@@ -21,9 +22,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12payment_plan.proto\x12\x08planning\x1a\x12payment_task.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\x05\x12\x0f\n\x07user_id\x18\x02 \x01(\x05\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\x05\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12\x30\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x1a.planning.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12%\n\tplan_type\x18\x07 \x01(\x0e\x32\x12.planning.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12\'\n\x06status\x18\n \x01(\x0e\x32\x17.planning.PaymentStatus*f\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x0b\n\x07\x43URRENT\x10\x01\x12\r\n\tCOMPLETED\x10\x02\x12\r\n\tCANCELLED\x10\x03\x12\x0e\n\nIN_DEFAULT\x10\x04\x62\x06proto3'
+  serialized_pb=b'\n\x12payment_plan.proto\x12\x08planning\x1a\x0c\x63ommon.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\x05\x12\x0f\n\x07user_id\x18\x02 \x01(\x05\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\x05\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12\x30\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x1a.planning.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12%\n\tplan_type\x18\x07 \x01(\x0e\x32\x12.planning.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12\'\n\x06status\x18\n \x01(\x0e\x32\x17.planning.PaymentStatus*f\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x0b\n\x07\x43URRENT\x10\x01\x12\r\n\tCOMPLETED\x10\x02\x12\r\n\tCANCELLED\x10\x03\x12\x0e\n\nIN_DEFAULT\x10\x04\x62\x06proto3'
   ,
-  dependencies=[payment__task__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
+  dependencies=[common__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
 _PAYMENTSTATUS = _descriptor.EnumDescriptor(
   name='PaymentStatus',
@@ -60,8 +61,8 @@ _PAYMENTSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=406,
-  serialized_end=508,
+  serialized_start=400,
+  serialized_end=502,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTSTATUS)
 
@@ -164,12 +165,12 @@ _PAYMENTPLAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=86,
-  serialized_end=404,
+  serialized_start=80,
+  serialized_end=398,
 )
 
-_PAYMENTPLAN.fields_by_name['payment_freq'].enum_type = payment__task__pb2._PAYMENTFREQUENCY
-_PAYMENTPLAN.fields_by_name['plan_type'].enum_type = payment__task__pb2._PLANTYPE
+_PAYMENTPLAN.fields_by_name['payment_freq'].enum_type = common__pb2._PAYMENTFREQUENCY
+_PAYMENTPLAN.fields_by_name['plan_type'].enum_type = common__pb2._PLANTYPE
 _PAYMENTPLAN.fields_by_name['end_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _PAYMENTPLAN.fields_by_name['status'].enum_type = _PAYMENTSTATUS
 DESCRIPTOR.message_types_by_name['PaymentPlan'] = _PAYMENTPLAN

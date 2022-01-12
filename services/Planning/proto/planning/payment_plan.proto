@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package planning;
 
-import "payment_task.proto";
+import "common.proto";
 import "google/protobuf/timestamp.proto";
 
 enum PaymentStatus {
