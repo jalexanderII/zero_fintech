@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/services/Core/config"
+	"github.com/jalexanderII/zero_fintech/services/Core/database"
 	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
 	"github.com/jalexanderII/zero_fintech/services/Core/server"
 	"google.golang.org/grpc"
@@ -23,10 +24,13 @@ func main() {
 		panic(err)
 	}
 
+	db, err := database.ConnectToDB()
+	coreDB := database.NewCoreDB(db)
+
 	var serverOptions []grpc.ServerOption
 	grpcServer := grpc.NewServer(serverOptions...)
 
-	core.RegisterCoreServer(grpcServer, server.NewCoreServer(l))
+	core.RegisterCoreServer(grpcServer, server.NewCoreServer(coreDB, l))
 
 	// register the reflection service which allows clients to determine the methods
 	// for this gRPC service
