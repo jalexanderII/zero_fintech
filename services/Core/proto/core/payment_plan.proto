@@ -7,29 +7,29 @@ import "common.proto";
 import "google/protobuf/timestamp.proto";
 
 enum PaymentStatus {
-    PAYMENT_STATUS_UNKNOWN=0;
-    // Payment plan is in good standing and all payments are current
-    CURRENT=1;
-    // This plan is fully paid
-    COMPLETED=2;
-    // The user has requested this payment to be cancelled
-    CANCELLED=3;
-    // The payment plan is not current because the user has missed a payment and still have not paid it
-    IN_DEFAULT=4;
+  PAYMENT_STATUS_UNKNOWN = 0;
+  // Payment plan is in good standing and all payments are current
+  PAYMENT_STATUS_CURRENT = 1;
+  // This plan is fully paid
+  PAYMENT_STATUS_COMPLETED = 2;
+  // The user has requested this payment to be cancelled
+  PAYMENT_STATUS_CANCELLED = 3;
+  // The payment plan is not current because the user has missed a payment and still have not paid it
+  PAYMENT_STATUS_IN_DEFAULT = 4;
 }
 
 message PaymentPlan {
-  int32 payment_id=1;
-  int32 user_id = 2;
-  repeated int32 payment_task_id = 3;
+  string payment_id = 1;
+  string user_id = 2;
+  repeated string payment_task_id = 3;
   float timeline = 4;
   PaymentFrequency payment_freq = 5;
   float amount_per_payment = 6;
   PlanType plan_type = 7;
   // Expected date the plan should be completed
-  google.protobuf.Timestamp end_date=8;
+  google.protobuf.Timestamp end_date = 8;
   // This Payment plan has not completed and is still active
-  bool active=9;
+  bool active = 9;
   // Current status of this plan
-  PaymentStatus status=10;
+  PaymentStatus status = 10;
 }

@@ -24,13 +24,13 @@ func main() {
 		panic(err)
 	}
 
-	db, err := database.ConnectToDB()
-	coreDB := database.NewCoreDB(db)
+	DB := database.InitiateMongoClient()
+	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
 
 	var serverOptions []grpc.ServerOption
 	grpcServer := grpc.NewServer(serverOptions...)
 
-	core.RegisterCoreServer(grpcServer, server.NewCoreServer(coreDB, l))
+	core.RegisterCoreServer(grpcServer, server.NewCoreServer(coreCollection, l))
 
 	// register the reflection service which allows clients to determine the methods
 	// for this gRPC service
