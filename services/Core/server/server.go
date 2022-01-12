@@ -13,12 +13,14 @@ import (
 
 type CoreServer struct {
 	core.UnimplementedCoreServer
-	DB mongo.Collection
-	l  hclog.Logger
+	PaymentTaskDB mongo.Collection
+	AccountDB     mongo.Collection
+	TransactionDB mongo.Collection
+	l             hclog.Logger
 }
 
-func NewCoreServer(db mongo.Collection, l hclog.Logger) *CoreServer {
-	return &CoreServer{DB: db, l: l}
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, l hclog.Logger) *CoreServer {
+	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, l: l}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*core.GetPaymentPlanResponse, error) {
@@ -29,9 +31,9 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	}
 
 	var results []database.PaymentTask
-	cursor, err := s.DB.Find(ctx, bson.D{{"_id", bson.D{{"$in", listOfIds}}}})
+	cursor, err := s.PaymentTaskDB.Find(ctx, bson.D{{"_id", bson.D{{"$in", listOfIds}}}})
 	if err = cursor.All(ctx, &results); err != nil {
-		s.l.Error("[DB] Error getting all PaymentTasks", "error", err)
+		s.l.Error("[PaymentTaskDB] Error getting all PaymentTasks", "error", err)
 		return nil, err
 	}
 	res := make([]*core.PaymentTask, len(results))

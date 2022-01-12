@@ -14,7 +14,7 @@ func (s CoreServer) CreatePaymentTask(ctx context.Context, in *core.CreatePaymen
 	paymentTask := in.GetPaymentTask()
 	newPaymentTask := PaymentTaskPBToDB(paymentTask, primitive.NewObjectID())
 
-	_, err := s.DB.InsertOne(ctx, newPaymentTask)
+	_, err := s.PaymentTaskDB.InsertOne(ctx, newPaymentTask)
 	if err != nil {
 		log.Printf("Error inserting new PaymentTask: %v\n", err)
 		return nil, err
@@ -30,7 +30,7 @@ func (s CoreServer) GetPaymentTask(ctx context.Context, in *core.GetPaymentTaskR
 	}
 
 	filter := bson.D{{"_id", id}}
-	err = s.DB.FindOne(ctx, filter).Decode(&paymentTask)
+	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&paymentTask)
 	if err != nil {
 		return nil, err
 	}
@@ -39,9 +39,9 @@ func (s CoreServer) GetPaymentTask(ctx context.Context, in *core.GetPaymentTaskR
 
 func (s CoreServer) ListPaymentTasks(ctx context.Context, in *core.ListPaymentTaskRequest) (*core.ListPaymentTaskResponse, error) {
 	var results []database.PaymentTask
-	cursor, err := s.DB.Find(ctx, bson.D{})
+	cursor, err := s.PaymentTaskDB.Find(ctx, bson.D{})
 	if err = cursor.All(ctx, &results); err != nil {
-		s.l.Error("[DB] Error getting all users", "error", err)
+		s.l.Error("[PaymentTaskDB] Error getting all users", "error", err)
 		return nil, err
 	}
 	res := make([]*core.PaymentTask, len(results))
@@ -65,12 +65,12 @@ func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymen
 
 	filter := bson.D{{"_id", id}}
 	update := bson.D{{"$set", bson.D{{"metadata", metaData}}}}
-	_, err = s.DB.UpdateOne(ctx, filter, update)
+	_, err = s.PaymentTaskDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
 	}
 	var payment_task database.PaymentTask
-	err = s.DB.FindOne(ctx, filter).Decode(&payment_task)
+	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&payment_task)
 	return PaymentTaskDBToPB(payment_task), nil
 }
 func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymentTaskRequest) (*core.DeletePaymentTaskResponse, error) {
@@ -79,12 +79,12 @@ func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymen
 		return nil, err
 	}
 	filter := bson.D{{"_id", id}}
-	_, err = s.DB.DeleteOne(ctx, filter)
+	_, err = s.PaymentTaskDB.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
 	var paymentTask database.PaymentTask
-	err = s.DB.FindOne(ctx, filter).Decode(&paymentTask)
+	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&paymentTask)
 	return &core.DeletePaymentTaskResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
 }
 

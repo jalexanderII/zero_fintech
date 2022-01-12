@@ -11,7 +11,7 @@ message Transaction {
   string transaction_id = 1;
   string user_id = 2;
   // Account Id this transaction is associated with
-  int32 account_id = 3;
+  string account_id = 3;
   // Name of the charging entity
   string name = 4;
   // Total amount in dollars of the transaction

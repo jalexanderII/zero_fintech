@@ -18,3 +18,23 @@ type MetaData struct {
 	PreferredTimeline    float64               `bson:"preferred_timeline"`
 	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq"`
 }
+
+type Account struct {
+	ID primitive.ObjectID `bson:"_id"`
+}
+
+type TransactionDetails struct {
+	Address         string              `bson:"address"`
+	DoingBusinessAs string              `bson:"doing_business_as"`
+	DateProcessed   primitive.Timestamp `bson:"date_processed"`
+}
+type Transaction struct {
+	ID                 primitive.ObjectID  `bson:"_id"`
+	UserId             primitive.ObjectID  `bson:"user_id"`
+	AccountId          primitive.ObjectID  `bson:"account_id"`
+	Name               string              `bson:"name"`
+	Amount             float64             `bson:"amount"`
+	Date               primitive.Timestamp `bson:"date"`
+	RewardsEarned      int32               `bson:"rewards_earned"`
+	TransactionDetails TransactionDetails  `bson:"transaction_details"`
+}
