@@ -12,6 +12,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+import payment_task_pb2 as payment__task__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
@@ -21,9 +22,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12payment_plan.proto\x12\x08planning\x1a\x1fgoogle/protobuf/timestamp.proto\"\x86\x04\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\x05\x12\x0f\n\x07user_id\x18\x02 \x01(\x05\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\x05\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12<\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32&.planning.PaymentPlan.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12\x31\n\tplan_type\x18\x07 \x01(\x0e\x32\x1e.planning.PaymentPlan.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12\'\n\x06status\x18\n \x01(\x0e\x32\x17.planning.PaymentStatus\"f\n\x10PaymentFrequency\x12\x1c\n\x18PAYMENTFREQUENCY_UNKNOWN\x10\x00\x12\n\n\x06WEEKLY\x10\x01\x12\x0c\n\x08\x42IWEEKLY\x10\x02\x12\x0b\n\x07MONTHLY\x10\x03\x12\r\n\tQUARTERLY\x10\x04\"F\n\x08PlanType\x12\x14\n\x10PLANTYPE_UNKNOWN\x10\x00\x12\x16\n\x12OPTIM_CREDIT_SCORE\x10\x01\x12\x0c\n\x08MIN_FEES\x10\x02*f\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x0b\n\x07\x43URRENT\x10\x01\x12\r\n\tCOMPLETED\x10\x02\x12\r\n\tCANCELLED\x10\x03\x12\x0e\n\nIN_DEFAULT\x10\x04\x62\x06proto3'
+  serialized_pb=b'\n\x12payment_plan.proto\x12\x08planning\x1a\x12payment_task.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\x05\x12\x0f\n\x07user_id\x18\x02 \x01(\x05\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\x05\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12\x30\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x1a.planning.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12%\n\tplan_type\x18\x07 \x01(\x0e\x32\x12.planning.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12\'\n\x06status\x18\n \x01(\x0e\x32\x17.planning.PaymentStatus*f\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x0b\n\x07\x43URRENT\x10\x01\x12\r\n\tCOMPLETED\x10\x02\x12\r\n\tCANCELLED\x10\x03\x12\x0e\n\nIN_DEFAULT\x10\x04\x62\x06proto3'
   ,
-  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
+  dependencies=[payment__task__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
 _PAYMENTSTATUS = _descriptor.EnumDescriptor(
   name='PaymentStatus',
@@ -60,8 +61,8 @@ _PAYMENTSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=586,
-  serialized_end=688,
+  serialized_start=406,
+  serialized_end=508,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTSTATUS)
 
@@ -72,76 +73,6 @@ COMPLETED = 2
 CANCELLED = 3
 IN_DEFAULT = 4
 
-
-_PAYMENTPLAN_PAYMENTFREQUENCY = _descriptor.EnumDescriptor(
-  name='PaymentFrequency',
-  full_name='planning.PaymentPlan.PaymentFrequency',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENTFREQUENCY_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='WEEKLY', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='BIWEEKLY', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='MONTHLY', index=3, number=3,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='QUARTERLY', index=4, number=4,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=410,
-  serialized_end=512,
-)
-_sym_db.RegisterEnumDescriptor(_PAYMENTPLAN_PAYMENTFREQUENCY)
-
-_PAYMENTPLAN_PLANTYPE = _descriptor.EnumDescriptor(
-  name='PlanType',
-  full_name='planning.PaymentPlan.PlanType',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PLANTYPE_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='OPTIM_CREDIT_SCORE', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='MIN_FEES', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=514,
-  serialized_end=584,
-)
-_sym_db.RegisterEnumDescriptor(_PAYMENTPLAN_PLANTYPE)
 
 
 _PAYMENTPLAN = _descriptor.Descriptor(
@@ -227,8 +158,6 @@ _PAYMENTPLAN = _descriptor.Descriptor(
   ],
   nested_types=[],
   enum_types=[
-    _PAYMENTPLAN_PAYMENTFREQUENCY,
-    _PAYMENTPLAN_PLANTYPE,
   ],
   serialized_options=None,
   is_extendable=False,
@@ -236,16 +165,14 @@ _PAYMENTPLAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=66,
-  serialized_end=584,
+  serialized_start=86,
+  serialized_end=404,
 )
 
-_PAYMENTPLAN.fields_by_name['payment_freq'].enum_type = _PAYMENTPLAN_PAYMENTFREQUENCY
-_PAYMENTPLAN.fields_by_name['plan_type'].enum_type = _PAYMENTPLAN_PLANTYPE
+_PAYMENTPLAN.fields_by_name['payment_freq'].enum_type = payment__task__pb2._PAYMENTFREQUENCY
+_PAYMENTPLAN.fields_by_name['plan_type'].enum_type = payment__task__pb2._PLANTYPE
 _PAYMENTPLAN.fields_by_name['end_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _PAYMENTPLAN.fields_by_name['status'].enum_type = _PAYMENTSTATUS
-_PAYMENTPLAN_PAYMENTFREQUENCY.containing_type = _PAYMENTPLAN
-_PAYMENTPLAN_PLANTYPE.containing_type = _PAYMENTPLAN
 DESCRIPTOR.message_types_by_name['PaymentPlan'] = _PAYMENTPLAN
 DESCRIPTOR.enum_types_by_name['PaymentStatus'] = _PAYMENTSTATUS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)

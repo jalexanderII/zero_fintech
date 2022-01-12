@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package planning;
 
+import "payment_task.proto";
 import "google/protobuf/timestamp.proto";
 
 enum PaymentStatus {
@@ -21,20 +22,8 @@ message PaymentPlan {
     int32 user_id = 2;
     repeated int32 payment_task_id = 3;
     float timeline = 4;
-    enum PaymentFrequency {
-        PAYMENTFREQUENCY_UNKNOWN = 0;
-        WEEKLY = 1;
-        BIWEEKLY = 2;       // every 2 weeks
-        MONTHLY = 3;
-        QUARTERLY = 4;
-    }
     PaymentFrequency payment_freq = 5;
     float amount_per_payment = 6;
-    enum PlanType {
-        PLANTYPE_UNKNOWN = 0;
-        OPTIM_CREDIT_SCORE = 1;
-        MIN_FEES = 2;
-    }
     PlanType plan_type = 7;
 	// Expected date the plan should be completed
 	google.protobuf.Timestamp end_date=8;
