@@ -23,6 +23,3 @@
 
 # ENV
 .env
-
-# Proto
-/services/Core/gen
