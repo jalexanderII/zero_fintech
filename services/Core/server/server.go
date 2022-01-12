@@ -4,16 +4,18 @@ import (
 	"context"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/services/Core/database"
 	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
 )
 
 type CoreServer struct {
 	core.UnimplementedCoreServer
-	l hclog.Logger
+	DB *database.CoreDB
+	l  hclog.Logger
 }
 
-func NewCoreServer(l hclog.Logger) *CoreServer {
-	return &CoreServer{l: l}
+func NewCoreServer(db *database.CoreDB, l hclog.Logger) *CoreServer {
+	return &CoreServer{DB: db, l: l}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*core.GetPaymentPlanResponse, error) {

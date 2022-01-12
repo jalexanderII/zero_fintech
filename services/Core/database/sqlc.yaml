@@ -1,0 +1,8 @@
+version: 1
+packages:
+  - path: "genDB"
+    name: "genDB"
+    engine: "postgresql"
+    schema: "./migrations/"
+    queries: "query.sql"
+    emit_json_tags: true
