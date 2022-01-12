@@ -9,10 +9,9 @@ import payment_task_pb2
 
 
 import importlib.util
-spec = importlib.util.spec_from_file_location("module.name", "/Users/joschkabraun/dev/zero_fintech/services/Core/gen/core_py/accounts_pb2_grpc.py")
-foo = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(foo)
-foo.MyClass()
+spec = importlib.util.spec_from_file_location("accounts_pb2_grpc", "/Users/joschkabraun/dev/zero_fintech/services/Core/gen/core_py/accounts_pb2_grpc.py")
+accounts_pb2_grpc = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(accounts_pb2_grpc)
 
 class PlanningServicer(planning_pb2_grpc.PlanningServicer):
 
@@ -47,7 +46,7 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
     
     def _createPaymentPlan(self, payment_task_ids, transaction_ids, account_ids, user_id, pref_payment_freq, pref_plan_type, pref_timeline) -> payment_plan_pb2.PaymentPlan:
         if pref_plan_type == payment_task_pb2.PlanType.OPTIM_CREDIT_SCORE or pref_plan_type == payment_task_pb2.PlanType.PLANTYPE_UNKNOWN:
-            pass
+            accounts_pb2_grpc.Account()
         elif  pref_plan_type == payment_task_pb2.PlanType.MIN_FEES:
             pass
 
