@@ -7,6 +7,7 @@ import "payment_task.proto";
 import "payment_plan.proto";
 import "accounts.proto";
 import "transactions.proto";
+import "users.proto";
 
 service Core {
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (GetPaymentPlanResponse);
@@ -29,6 +30,28 @@ service Core {
   rpc ListPaymentTasks(ListPaymentTaskRequest) returns (ListPaymentTaskResponse);
   rpc UpdatePaymentTask(UpdatePaymentTaskRequest) returns (PaymentTask);
   rpc DeletePaymentTask(DeletePaymentTaskRequest) returns (DeletePaymentTaskResponse);
+  // Users and Authentication
+  rpc Login(LoginRequest) returns (AuthResponse);
+  rpc SignUp(SignupRequest) returns (AuthResponse);
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc ListUsers(ListUserRequest) returns (ListUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message LoginRequest {
+  string Username = 1;
+  string Password = 2;
+}
+
+message AuthResponse {
+  string Token = 1;
+}
+
+message SignupRequest {
+  string Username = 1;
+  string Email = 2;
+  string Password = 3;
 }
 
 message GetPaymentPlanRequest {

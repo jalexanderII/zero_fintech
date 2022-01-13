@@ -4,14 +4,20 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/services/Core/config"
+	"github.com/jalexanderII/zero_fintech/services/Core/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/Core/database"
 	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
 	"github.com/jalexanderII/zero_fintech/services/Core/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+)
+
+const (
+	TokenDuration = 15 * time.Minute
 )
 
 func main() {
@@ -28,11 +34,15 @@ func main() {
 	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
 	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))
 	transactionCollection := *DB.Collection(config.GetEnv("TRANSACTION_COLLECTION"))
+	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
+	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
 
 	var serverOptions []grpc.ServerOption
 	grpcServer := grpc.NewServer(serverOptions...)
 
-	core.RegisterCoreServer(grpcServer, server.NewCoreServer(coreCollection, accountCollection, transactionCollection, l))
+	core.RegisterCoreServer(grpcServer,
+		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, l),
+	)
 	methods := config.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)
 

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/services/Core/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/Core/database"
 	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,11 +17,13 @@ type CoreServer struct {
 	PaymentTaskDB mongo.Collection
 	AccountDB     mongo.Collection
 	TransactionDB mongo.Collection
+	UserDB        mongo.Collection
+	jwtm          *middleware.JWTManager
 	l             hclog.Logger
 }
 
-func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, l hclog.Logger) *CoreServer {
-	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, l: l}
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, l hclog.Logger) *CoreServer {
+	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, l: l}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*core.GetPaymentPlanResponse, error) {

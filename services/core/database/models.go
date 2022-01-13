@@ -67,3 +67,10 @@ type Transaction struct {
 	RewardsEarned      int32               `bson:"rewards_earned"`
 	TransactionDetails TransactionDetails  `bson:"transaction_details"`
 }
+
+type User struct {
+	ID       primitive.ObjectID `bson:"_id"`
+	Username string             `bson:"username"`
+	Email    string             `bson:"email"`
+	Password string             `bson:"password"`
+}
