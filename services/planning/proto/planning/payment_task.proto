@@ -5,10 +5,10 @@ package planning;
 import "common.proto";
 
 message PaymentTask {
-  int32 payment_task_id = 1;
-  int32 user_id = 2;
-  int32 transaction_id = 3;
-  int32 account_id = 4;
+  string payment_task_id = 1;
+  string user_id = 2;
+  string transaction_id = 3;
+  string account_id = 4;
   MetaData meta_data = 5;
 }
 
