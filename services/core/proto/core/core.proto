@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package core;
+option go_package = "./proto;core";
+
+import "payment_task.proto";
+import "payment_plan.proto";
+import "accounts.proto";
+import "transactions.proto";
+import "users.proto";
+
+service Core {
+  // GetPaymentPlan makes request to the Planning service by passing it a list
+  // of PaymentTasks and expects to receive a list of PaymentPlans
+  rpc GetPaymentPlan(GetPaymentPlanRequest) returns (GetPaymentPlanResponse);
+
+  //  CRUD METHODS
+  // Account
+  rpc CreateAccount(CreateAccountRequest) returns (Account);
+  rpc GetAccount(GetAccountRequest) returns (Account);
+  rpc ListAccounts(ListAccountRequest) returns (ListAccountResponse);
+  rpc UpdateAccount(UpdateAccountRequest) returns (Account);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  // Transaction
+  rpc CreateTransaction(CreateTransactionRequest) returns (Transaction);
+  rpc GetTransaction(GetTransactionRequest) returns (Transaction);
+  rpc ListTransactions(ListTransactionRequest) returns (ListTransactionResponse);
+  rpc UpdateTransaction(UpdateTransactionRequest) returns (Transaction);
+  rpc DeleteTransaction(DeleteTransactionRequest) returns (DeleteTransactionResponse);
+  //Payment Task
+  rpc CreatePaymentTask(CreatePaymentTaskRequest) returns (PaymentTask);
+  rpc GetPaymentTask(GetPaymentTaskRequest) returns (PaymentTask);
+  rpc ListPaymentTasks(ListPaymentTaskRequest) returns (ListPaymentTaskResponse);
+  rpc UpdatePaymentTask(UpdatePaymentTaskRequest) returns (PaymentTask);
+  rpc DeletePaymentTask(DeletePaymentTaskRequest) returns (DeletePaymentTaskResponse);
+  // Users and Authentication
+  rpc Login(LoginRequest) returns (AuthResponse);
+  rpc SignUp(SignupRequest) returns (AuthResponse);
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc ListUsers(ListUserRequest) returns (ListUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message LoginRequest {
+  string Username = 1;
+  string Password = 2;
+}
+
+message AuthResponse {
+  string Token = 1;
+}
+
+message SignupRequest {
+  string Username = 1;
+  string Email = 2;
+  string Password = 3;
+}
+
+message GetPaymentPlanRequest {
+  repeated string payment_tasks_ids = 1;
+}
+
+message GetPaymentPlanResponse {
+  repeated PaymentPlan payment_plans = 1;
+}

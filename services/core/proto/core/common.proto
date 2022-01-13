@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package core;
+option go_package = "./proto;core";
+
+// Status message for Delete database action
+enum DELETE_STATUS {
+  DELETE_STATUS_UNKNOWN = 0;
+  DELETE_STATUS_PENDING = 1;
+  DELETE_STATUS_IN_PROGRESS = 2;
+  DELETE_STATUS_SUCCESS = 3;
+  DELETE_STATUS_FAILED = 4;
+}
+
+// Different optimization plans that a PaymentPlan may prioritize
+enum PlanType {
+  PLANTYPE_UNKNOWN = 0;
+  PLANTYPE_OPTIM_CREDIT_SCORE = 1;
+  PLANTYPE_MIN_FEES = 2;
+}
+
+// Payment frequency for a PaymentPlan
+enum PaymentFrequency {
+  PAYMENTFREQ_UNKNOWN = 0;
+  PAYMENTFREQ_WEEKLY = 1;
+  PAYMENTFREQ_BIWEEKLY = 2;
+  PAYMENTFREQ_MONTHLY = 3;
+  PAYMENTFREQ_QUARTERLY = 4;
+}
