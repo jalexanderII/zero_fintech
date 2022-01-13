@@ -10,7 +10,10 @@ import "transactions.proto";
 import "users.proto";
 
 service Core {
+  // GetPaymentPlan makes request to the Planning service by passing it a list
+  // of PaymentTasks and expects to receive a list of PaymentPlans
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (GetPaymentPlanResponse);
+
   //  CRUD METHODS
   // Account
   rpc CreateAccount(CreateAccountRequest) returns (Account);

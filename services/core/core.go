@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jalexanderII/zero_fintech/services/Core/config"
-	"github.com/jalexanderII/zero_fintech/services/Core/config/middleware"
-	"github.com/jalexanderII/zero_fintech/services/Core/database"
-	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
-	"github.com/jalexanderII/zero_fintech/services/Core/server"
+	"github.com/jalexanderII/zero_fintech/services/core/config"
+	"github.com/jalexanderII/zero_fintech/services/core/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/core/database"
+	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/services/core/server"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -21,6 +21,7 @@ const (
 )
 
 func main() {
+	// establish default logger with log levels
 	l := hclog.Default()
 	l.Debug("Core Service")
 
@@ -30,16 +31,22 @@ func main() {
 		panic(err)
 	}
 
+	// jwtManger to manage user authentication using tokens
+	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
+
+	// Initiate MongoDB Database
 	DB := database.InitiateMongoClient()
+	// Connect to the Collections inside the given DB
 	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
 	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))
 	transactionCollection := *DB.Collection(config.GetEnv("TRANSACTION_COLLECTION"))
 	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
-	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
 
 	var serverOptions []grpc.ServerOption
+	// Initiate grpcServer instance
 	grpcServer := grpc.NewServer(serverOptions...)
 
+	// Bind grpcServer to CoreService Server defined by proto
 	core.RegisterCoreServer(grpcServer,
 		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, l),
 	)
@@ -51,7 +58,6 @@ func main() {
 	reflection.Register(grpcServer)
 
 	l.Info("Server started", "port", lis.Addr().String())
-
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		log.Fatal("Serving gRPC: ", err)

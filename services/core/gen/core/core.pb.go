@@ -620,6 +620,8 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type CoreClient interface {
+	// GetPaymentPlan makes request to the Planning service by passing it a list
+	// of PaymentTasks and expects to receive a list of PaymentPlans
 	GetPaymentPlan(ctx context.Context, in *GetPaymentPlanRequest, opts ...grpc.CallOption) (*GetPaymentPlanResponse, error)
 	//  CRUD METHODS
 	// Account
@@ -857,6 +859,8 @@ func (c *coreClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts
 
 // CoreServer is the server API for Core service.
 type CoreServer interface {
+	// GetPaymentPlan makes request to the Planning service by passing it a list
+	// of PaymentTasks and expects to receive a list of PaymentPlans
 	GetPaymentPlan(context.Context, *GetPaymentPlanRequest) (*GetPaymentPlanResponse, error)
 	//  CRUD METHODS
 	// Account

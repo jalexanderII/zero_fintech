@@ -102,6 +102,7 @@ func (s CoreServer) DeleteTransaction(ctx context.Context, in *core.DeleteTransa
 	return &core.DeleteTransactionResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, Transaction: TransactionDBToPB(transaction)}, nil
 }
 
+// TransactionPBToDB converts a Transaction proto object to its serialized DB object
 func TransactionPBToDB(transaction *core.Transaction, id primitive.ObjectID) database.Transaction {
 	userId, _ := primitive.ObjectIDFromHex(transaction.GetUserId())
 	accountId, _ := primitive.ObjectIDFromHex(transaction.GetAccountId())
@@ -122,6 +123,7 @@ func TransactionPBToDB(transaction *core.Transaction, id primitive.ObjectID) dat
 	}
 }
 
+// TransactionDBToPB converts a Transaction DB object to its proto object
 func TransactionDBToPB(transaction database.Transaction) *core.Transaction {
 	return &core.Transaction{
 		TransactionId:      transaction.ID.Hex(),

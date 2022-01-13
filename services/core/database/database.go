@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// InitiateMongoClient connects to MongoDB URI and binds a database
 func InitiateMongoClient() mongo.Database {
 	clientOptions := options.Client().ApplyURI(config.GetEnv("MONGOURI"))
 	ctx, cancel := config.NewDBContext(10 * time.Second)

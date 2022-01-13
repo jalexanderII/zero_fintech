@@ -42,6 +42,7 @@ func (s CoreServer) Login(ctx context.Context, in *core.LoginRequest) (*core.Aut
 
 func (s CoreServer) SignUp(ctx context.Context, in *core.SignupRequest) (*core.AuthResponse, error) {
 	username, email, password := in.GetUsername(), in.GetEmail(), in.GetPassword()
+	// Email regex validation
 	match, _ := regexp.MatchString(EmailRegex, email)
 	if !match {
 		return nil, errors.New("email validation failed")
@@ -64,6 +65,7 @@ func (s CoreServer) SignUp(ctx context.Context, in *core.SignupRequest) (*core.A
 		return nil, errors.New("email already used")
 	}
 
+	// hashed passwords are saved in the DB
 	pw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	newUser := database.User{ID: primitive.NewObjectID(), Email: email, Username: username, Password: string(pw)}
 
@@ -81,6 +83,7 @@ func (s CoreServer) SignUp(ctx context.Context, in *core.SignupRequest) (*core.A
 	return &core.AuthResponse{Token: token}, nil
 }
 
+// EmailUsed checks if the email is already present in the DB
 func (s CoreServer) EmailUsed(ctx context.Context, email string) (bool, error) {
 	var user database.User
 	filter := bson.D{{"email", email}}
@@ -96,6 +99,7 @@ func (s CoreServer) EmailUsed(ctx context.Context, email string) (bool, error) {
 	return true, nil
 }
 
+// UsernameUsed checks if the username is already present in the DB
 func (s CoreServer) UsernameUsed(ctx context.Context, username string) (bool, error) {
 	var user database.User
 	filter := bson.D{{"username", username}}
@@ -172,6 +176,7 @@ func (s CoreServer) DeleteUser(ctx context.Context, in *core.DeleteUserRequest) 
 	return &core.DeleteUserResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, User: UserDBToPB(&user)}, nil
 }
 
+// UserDBToPB converts a User DB object to its proto object
 func UserDBToPB(user *database.User) *core.User {
 	return &core.User{
 		Id:       user.ID.Hex(),

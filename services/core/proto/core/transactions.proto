@@ -7,6 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
 import "common.proto";
 
+// Transaction represents any credit line item in a credit card account
 message Transaction {
   string transaction_id = 1;
   string user_id = 2;

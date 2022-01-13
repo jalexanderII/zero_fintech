@@ -21,6 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// PaymentTask encapsulates the payment goals a user has per credit account
 type PaymentTask struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -100,6 +101,7 @@ func (x *PaymentTask) GetMetaData() *MetaData {
 	return nil
 }
 
+// MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan
 type MetaData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

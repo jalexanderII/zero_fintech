@@ -88,6 +88,7 @@ func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymen
 	return &core.DeletePaymentTaskResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
 }
 
+// PaymentTaskPBToDB converts a PaymentTask proto object to its serialized DB object
 func PaymentTaskPBToDB(paymentTask *core.PaymentTask, id primitive.ObjectID) database.PaymentTask {
 	userId, _ := primitive.ObjectIDFromHex(paymentTask.GetUserId())
 	accountId, _ := primitive.ObjectIDFromHex(paymentTask.GetAccountId())
@@ -106,6 +107,7 @@ func PaymentTaskPBToDB(paymentTask *core.PaymentTask, id primitive.ObjectID) dat
 	}
 }
 
+// PaymentTaskDBToPB converts a PaymentTask DB object to its proto object
 func PaymentTaskDBToPB(paymentTask database.PaymentTask) *core.PaymentTask {
 	return &core.PaymentTask{
 		PaymentTaskId: paymentTask.ID.Hex(),

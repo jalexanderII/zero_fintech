@@ -20,6 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Status message for Delete database action
 type DELETE_STATUS int32
 
 const (
@@ -75,6 +76,7 @@ func (DELETE_STATUS) EnumDescriptor() ([]byte, []int) {
 	return file_common_proto_rawDescGZIP(), []int{0}
 }
 
+// Different optimization plans that a PaymentPlan may prioritize
 type PlanType int32
 
 const (
@@ -124,6 +126,7 @@ func (PlanType) EnumDescriptor() ([]byte, []int) {
 	return file_common_proto_rawDescGZIP(), []int{1}
 }
 
+// Payment frequency for a PaymentPlan
 type PaymentFrequency int32
 
 const (

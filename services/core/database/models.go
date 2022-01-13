@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// PaymentTask is a DB Serialization of Proto PaymentTask
 type PaymentTask struct {
 	ID            primitive.ObjectID `bson:"_id"`
 	UserId        primitive.ObjectID `bson:"user_id"`
@@ -13,27 +14,32 @@ type PaymentTask struct {
 	MetaData      MetaData           `bson:"meta_data"`
 }
 
+// MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
 	PreferredPlanType    core.PlanType         `bson:"preferred_plan_type"`
 	PreferredTimeline    float64               `bson:"preferred_timeline"`
 	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq"`
 }
 
+// AnnualPercentageRates is a DB Serialization of Proto AnnualPercentageRates
 type AnnualPercentageRates struct {
 	LowEnd  float64 `bson:"low_end"`
 	HighEnd float64 `bson:"high_end"`
 }
 
+// PenaltyAPR is a DB Serialization of Proto PenaltyAPR
 type PenaltyAPR struct {
 	PenaltyAPR    float64                       `bson:"penalty_apr"`
 	PenaltyReason core.PenaltyAPR_PenaltyReason `bson:"penalty_reason"`
 }
 
+// PromotionalRate is a DB Serialization of Proto PromotionalRate
 type PromotionalRate struct {
 	TemporaryAPR   float64             `bson:"temporary_apr"`
 	ExpirationDate primitive.Timestamp `bson:"expiration_date"`
 }
 
+// Account is a DB Serialization of Proto Account
 type Account struct {
 	ID                    primitive.ObjectID    `bson:"_id"`
 	UserId                primitive.ObjectID    `bson:"user_id"`
@@ -52,11 +58,14 @@ type Account struct {
 	CreditLimit           float64               `bson:"credit_limit"`
 }
 
+// TransactionDetails is a DB Serialization of Proto TransactionDetails
 type TransactionDetails struct {
 	Address         string              `bson:"address"`
 	DoingBusinessAs string              `bson:"doing_business_as"`
 	DateProcessed   primitive.Timestamp `bson:"date_processed"`
 }
+
+// Transaction is a DB Serialization of Proto Transaction
 type Transaction struct {
 	ID                 primitive.ObjectID  `bson:"_id"`
 	UserId             primitive.ObjectID  `bson:"user_id"`
@@ -68,6 +77,7 @@ type Transaction struct {
 	TransactionDetails TransactionDetails  `bson:"transaction_details"`
 }
 
+// User is a DB Serialization of Proto User
 type User struct {
 	ID       primitive.ObjectID `bson:"_id"`
 	Username string             `bson:"username"`

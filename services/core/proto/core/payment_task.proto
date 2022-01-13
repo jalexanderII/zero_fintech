@@ -6,6 +6,7 @@ option go_package = "./proto;core";
 import "common.proto";
 import "google/protobuf/field_mask.proto";
 
+// PaymentTask encapsulates the payment goals a user has per credit account
 message PaymentTask {
   string payment_task_id = 1;
   string user_id = 2;
@@ -14,6 +15,7 @@ message PaymentTask {
   MetaData meta_data = 5;
 }
 
+// MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan
 message MetaData {
   PlanType preferred_plan_type = 1;
   double preferred_timeline = 2;

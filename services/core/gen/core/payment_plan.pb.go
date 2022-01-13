@@ -80,6 +80,7 @@ func (PaymentStatus) EnumDescriptor() ([]byte, []int) {
 	return file_payment_plan_proto_rawDescGZIP(), []int{0}
 }
 
+// PaymentPlan defines a payment plan to meet a users payment task goals
 type PaymentPlan struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

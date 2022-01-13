@@ -110,6 +110,7 @@ func (s CoreServer) DeleteAccount(ctx context.Context, in *core.DeleteAccountReq
 	return &core.DeleteAccountResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, Account: AccountDBToPB(account)}, nil
 }
 
+// AccountPBToDB converts an Account proto object to its serialized DB object
 func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Account {
 	userId, _ := primitive.ObjectIDFromHex(account.GetUserId())
 
@@ -141,6 +142,7 @@ func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Accoun
 	}
 }
 
+// AccountDBToPB converts an Account DB object to its proto object
 func AccountDBToPB(account database.Account) *core.Account {
 	return &core.Account{
 		AccountId: account.ID.Hex(),
