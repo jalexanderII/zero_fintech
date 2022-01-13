@@ -126,13 +126,17 @@ func TransactionPBToDB(transaction *core.Transaction, id primitive.ObjectID) dat
 // TransactionDBToPB converts a Transaction DB object to its proto object
 func TransactionDBToPB(transaction database.Transaction) *core.Transaction {
 	return &core.Transaction{
-		TransactionId:      transaction.ID.Hex(),
-		UserId:             transaction.UserId.Hex(),
-		AccountId:          transaction.AccountId.Hex(),
-		Name:               transaction.Name,
-		Amount:             transaction.Amount,
-		Date:               timestamppb.New(time.Unix(int64(transaction.Date.T), 0)),
-		RewardsEarned:      transaction.RewardsEarned,
-		TransactionDetails: &core.TransactionDetails{},
+		TransactionId: transaction.ID.Hex(),
+		UserId:        transaction.UserId.Hex(),
+		AccountId:     transaction.AccountId.Hex(),
+		Name:          transaction.Name,
+		Amount:        transaction.Amount,
+		Date:          timestamppb.New(time.Unix(int64(transaction.Date.T), 0)),
+		RewardsEarned: transaction.RewardsEarned,
+		TransactionDetails: &core.TransactionDetails{
+			Address:         transaction.TransactionDetails.Address,
+			DoingBusinessAs: transaction.TransactionDetails.DoingBusinessAs,
+			DateProcessed:   timestamppb.New(time.Unix(int64(transaction.TransactionDetails.DateProcessed.T), 0)),
+		},
 	}
 }

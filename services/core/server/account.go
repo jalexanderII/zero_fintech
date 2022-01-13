@@ -168,5 +168,6 @@ func AccountDBToPB(account database.Account) *core.Account {
 		MinimumPaymentDue:   account.MinimumPaymentDue,
 		CurrentBalance:      account.CurrentBalance,
 		PendingTransactions: account.PendingTransactions,
+		CreditLimit:         account.CreditLimit,
 	}
 }
