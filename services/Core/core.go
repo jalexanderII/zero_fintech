@@ -26,11 +26,15 @@ func main() {
 
 	DB := database.InitiateMongoClient()
 	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
+	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))
+	transactionCollection := *DB.Collection(config.GetEnv("TRANSACTION_COLLECTION"))
 
 	var serverOptions []grpc.ServerOption
 	grpcServer := grpc.NewServer(serverOptions...)
 
-	core.RegisterCoreServer(grpcServer, server.NewCoreServer(coreCollection, l))
+	core.RegisterCoreServer(grpcServer, server.NewCoreServer(coreCollection, accountCollection, transactionCollection, l))
+	methods := config.ListGRPCResources(grpcServer)
+	l.Info("Methods on this server", "methods", methods)
 
 	// register the reflection service which allows clients to determine the methods
 	// for this gRPC service
