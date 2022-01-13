@@ -11,13 +11,13 @@ type PaymentTask struct {
 	UserId        primitive.ObjectID `bson:"user_id"`
 	TransactionId primitive.ObjectID `bson:"transaction_id"`
 	AccountId     primitive.ObjectID `bson:"account_id"`
+	Amount        float64            `bson:"amount"`
 	MetaData      MetaData           `bson:"meta_data"`
 }
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
 	PreferredPlanType    core.PlanType         `bson:"preferred_plan_type"`
-	PreferredTimeline    float64               `bson:"preferred_timeline"`
 	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq"`
 }
 

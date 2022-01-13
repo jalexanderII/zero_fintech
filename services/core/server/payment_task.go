@@ -55,7 +55,6 @@ func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymen
 	paymentTask := in.GetPaymentTask()
 	metaData := database.MetaData{
 		PreferredPlanType:    paymentTask.GetMetaData().GetPreferredPlanType(),
-		PreferredTimeline:    paymentTask.GetMetaData().GetPreferredTimeline(),
 		PreferredPaymentFreq: paymentTask.GetMetaData().GetPreferredPaymentFreq(),
 	}
 	id, err := primitive.ObjectIDFromHex(in.GetId())
@@ -64,7 +63,7 @@ func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymen
 	}
 
 	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set", bson.D{{"metadata", metaData}}}}
+	update := bson.D{{"$set", bson.D{{"amount", paymentTask.Amount}, {"meta_data", metaData}}}}
 	_, err = s.PaymentTaskDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
@@ -99,9 +98,9 @@ func PaymentTaskPBToDB(paymentTask *core.PaymentTask, id primitive.ObjectID) dat
 		UserId:        userId,
 		TransactionId: transactionId,
 		AccountId:     accountId,
+		Amount:        paymentTask.Amount,
 		MetaData: database.MetaData{
 			PreferredPlanType:    paymentTask.GetMetaData().GetPreferredPlanType(),
-			PreferredTimeline:    paymentTask.GetMetaData().GetPreferredTimeline(),
 			PreferredPaymentFreq: paymentTask.GetMetaData().GetPreferredPaymentFreq(),
 		},
 	}
@@ -114,9 +113,9 @@ func PaymentTaskDBToPB(paymentTask database.PaymentTask) *core.PaymentTask {
 		UserId:        paymentTask.UserId.Hex(),
 		TransactionId: paymentTask.TransactionId.Hex(),
 		AccountId:     paymentTask.AccountId.Hex(),
+		Amount:        paymentTask.Amount,
 		MetaData: &core.MetaData{
 			PreferredPlanType:    paymentTask.MetaData.PreferredPlanType,
-			PreferredTimeline:    paymentTask.MetaData.PreferredTimeline,
 			PreferredPaymentFreq: paymentTask.MetaData.PreferredPaymentFreq,
 		},
 	}
