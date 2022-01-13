@@ -2,6 +2,15 @@ syntax = "proto3";
 
 package planning;
 
+// Status message for Delete database action
+enum DELETE_STATUS {
+  DELETE_STATUS_UNKNOWN = 0;
+  DELETE_STATUS_PENDING = 1;
+  DELETE_STATUS_IN_PROGRESS = 2;
+  DELETE_STATUS_SUCCESS = 3;
+  DELETE_STATUS_FAILED = 4;
+}
+
 enum PlanType {
   PLAN_TYPE_UNKNOWN = 0;
   PLAN_TYPE_OPTIM_CREDIT_SCORE = 1;

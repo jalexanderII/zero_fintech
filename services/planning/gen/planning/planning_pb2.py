@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0eplanning.proto\x12\x08planning\x1a\x12payment_plan.proto\x1a\x12payment_task.proto\"H\n\x18\x43reatePaymentPlanRequest\x12,\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x15.planning.PaymentTask\"I\n\x19\x43reatePaymentPlanResponse\x12,\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x15.planning.PaymentPlan2j\n\x08Planning\x12^\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a#.planning.CreatePaymentPlanResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0eplanning.proto\x12\x08planning\x1a\x12payment_plan.proto\x1a\x12payment_task.proto\"H\n\x18\x43reatePaymentPlanRequest\x12,\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x15.planning.PaymentTask\"I\n\x19\x43reatePaymentPlanResponse\x12,\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x15.planning.PaymentPlan2\xb9\x03\n\x08Planning\x12\\\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a#.planning.CreatePaymentPlanResponse\x12H\n\x0eGetPaymentPlan\x12\x1f.planning.GetPaymentPlanRequest\x1a\x15.planning.PaymentPlan\x12W\n\x10ListPaymentPlans\x12 .planning.ListPaymentPlanRequest\x1a!.planning.ListPaymentPlanResponse\x12N\n\x11UpdatePaymentPlan\x12\".planning.UpdatePaymentPlanRequest\x1a\x15.planning.PaymentPlan\x12\\\n\x11\x44\x65letePaymentPlan\x12\".planning.DeletePaymentPlanRequest\x1a#.planning.DeletePaymentPlanResponseb\x06proto3'
   ,
   dependencies=[payment__plan__pb2.DESCRIPTOR,payment__task__pb2.DESCRIPTOR,])
 
@@ -120,8 +120,8 @@ _PLANNING = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=217,
-  serialized_end=323,
+  serialized_start=218,
+  serialized_end=659,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreatePaymentPlan',
@@ -130,6 +130,46 @@ _PLANNING = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_CREATEPAYMENTPLANREQUEST,
     output_type=_CREATEPAYMENTPLANRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetPaymentPlan',
+    full_name='planning.Planning.GetPaymentPlan',
+    index=1,
+    containing_service=None,
+    input_type=payment__plan__pb2._GETPAYMENTPLANREQUEST,
+    output_type=payment__plan__pb2._PAYMENTPLAN,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ListPaymentPlans',
+    full_name='planning.Planning.ListPaymentPlans',
+    index=2,
+    containing_service=None,
+    input_type=payment__plan__pb2._LISTPAYMENTPLANREQUEST,
+    output_type=payment__plan__pb2._LISTPAYMENTPLANRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='UpdatePaymentPlan',
+    full_name='planning.Planning.UpdatePaymentPlan',
+    index=3,
+    containing_service=None,
+    input_type=payment__plan__pb2._UPDATEPAYMENTPLANREQUEST,
+    output_type=payment__plan__pb2._PAYMENTPLAN,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeletePaymentPlan',
+    full_name='planning.Planning.DeletePaymentPlan',
+    index=4,
+    containing_service=None,
+    input_type=payment__plan__pb2._DELETEPAYMENTPLANREQUEST,
+    output_type=payment__plan__pb2._DELETEPAYMENTPLANRESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

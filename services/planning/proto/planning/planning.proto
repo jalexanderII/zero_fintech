@@ -6,7 +6,14 @@ import "payment_plan.proto";
 import "payment_task.proto";
 
 service Planning {
-    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (CreatePaymentPlanResponse) {}
+    // Create PaymentPlan for list of PaymentTasks
+    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (CreatePaymentPlanResponse);
+
+    //  CRUD METHODS
+    rpc GetPaymentPlan(GetPaymentPlanRequest) returns (PaymentPlan);
+    rpc ListPaymentPlans(ListPaymentPlanRequest) returns (ListPaymentPlanResponse);
+    rpc UpdatePaymentPlan(UpdatePaymentPlanRequest) returns (PaymentPlan);
+    rpc DeletePaymentPlan(DeletePaymentPlanRequest) returns (DeletePaymentPlanResponse);
 }
 
 message CreatePaymentPlanRequest {

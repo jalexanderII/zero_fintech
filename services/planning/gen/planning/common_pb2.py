@@ -20,9 +20,50 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x63ommon.proto\x12\x08planning*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x62\x06proto3'
+  serialized_pb=b'\n\x0c\x63ommon.proto\x12\x08planning*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x62\x06proto3'
 )
 
+_DELETE_STATUS = _descriptor.EnumDescriptor(
+  name='DELETE_STATUS',
+  full_name='planning.DELETE_STATUS',
+  filename=None,
+  file=DESCRIPTOR,
+  create_key=_descriptor._internal_create_key,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='DELETE_STATUS_UNKNOWN', index=0, number=0,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='DELETE_STATUS_PENDING', index=1, number=1,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='DELETE_STATUS_IN_PROGRESS', index=2, number=2,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='DELETE_STATUS_SUCCESS', index=3, number=3,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='DELETE_STATUS_FAILED', index=4, number=4,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=27,
+  serialized_end=180,
+)
+_sym_db.RegisterEnumDescriptor(_DELETE_STATUS)
+
+DELETE_STATUS = enum_type_wrapper.EnumTypeWrapper(_DELETE_STATUS)
 _PLANTYPE = _descriptor.EnumDescriptor(
   name='PlanType',
   full_name='planning.PlanType',
@@ -48,8 +89,8 @@ _PLANTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=26,
-  serialized_end=117,
+  serialized_start=182,
+  serialized_end=273,
 )
 _sym_db.RegisterEnumDescriptor(_PLANTYPE)
 
@@ -89,12 +130,17 @@ _PAYMENTFREQUENCY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=120,
-  serialized_end=295,
+  serialized_start=276,
+  serialized_end=451,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTFREQUENCY)
 
 PaymentFrequency = enum_type_wrapper.EnumTypeWrapper(_PAYMENTFREQUENCY)
+DELETE_STATUS_UNKNOWN = 0
+DELETE_STATUS_PENDING = 1
+DELETE_STATUS_IN_PROGRESS = 2
+DELETE_STATUS_SUCCESS = 3
+DELETE_STATUS_FAILED = 4
 PLAN_TYPE_UNKNOWN = 0
 PLAN_TYPE_OPTIM_CREDIT_SCORE = 1
 PLAN_TYPE_MIN_FEES = 2
@@ -105,6 +151,7 @@ PAYMENT_FREQUENCY_MONTHLY = 3
 PAYMENT_FREQUENCY_QUARTERLY = 4
 
 
+DESCRIPTOR.enum_types_by_name['DELETE_STATUS'] = _DELETE_STATUS
 DESCRIPTOR.enum_types_by_name['PlanType'] = _PLANTYPE
 DESCRIPTOR.enum_types_by_name['PaymentFrequency'] = _PAYMENTFREQUENCY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
