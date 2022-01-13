@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
+	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

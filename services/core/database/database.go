@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/jalexanderII/zero_fintech/services/Core/config"
+	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

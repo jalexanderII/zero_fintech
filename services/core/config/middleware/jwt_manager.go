@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/jalexanderII/zero_fintech/services/Core/database"
+	"github.com/jalexanderII/zero_fintech/services/core/database"
 )
 
 // JWTManager is a JSON web token manager

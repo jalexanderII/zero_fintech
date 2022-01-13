@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/jalexanderII/zero_fintech/services/Core/database"
-	"github.com/jalexanderII/zero_fintech/services/Core/gen/core"
+	"github.com/jalexanderII/zero_fintech/services/core/database"
+	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
