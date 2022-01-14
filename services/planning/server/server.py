@@ -14,9 +14,8 @@ from pymongo.database import Database
 
 from database import models as db_models
 
-from gen.core import core_pb2_grpc, accounts_pb2, transactions_pb2
+# from gen.core import core_pb2_grpc, accounts_pb2, transactions_pb2
 from gen.planning import planning_pb2_grpc, payment_plan_pb2, payment_task_pb2, common_pb2
-from services.planning.gen.core.accounts_pb2 import Account
 
 def shift_date_by_payment_frequency(date: datetime, payment_freq: common_pb2.PaymentFrequency) -> datetime:
     if payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
@@ -78,163 +77,164 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         return planning_pb2_grpc.CreatePaymentPlanResponse(payment_plans=payment_plans)
     
     def _createPaymentPlan(self, payment_task_ids, transaction_ids, account_ids, user_id, pref_payment_freq, pref_plan_type, pref_timeline) -> payment_plan_pb2.PaymentPlan:
-        timestamp = Timestamp()
-        timestamp.GetCurrentTime()
-        start_date = timestamp.ToDatetime()
+        pass
+        # timestamp = Timestamp()
+        # timestamp.GetCurrentTime()
+        # start_date = timestamp.ToDatetime()
 
-        channel = grpc.insecure_channel('localhost:50051')
-        stub = core_pb2_grpc.CoreStub(channel)
-        accounts = []
-        account2apr, acc2min_payment = {}, {}
-        account2credit_limits, account2current_usage_amount, account2current_usage_prcnt = {}, {}, {}
-        for _account_id in account_ids:
-            _account = stub.GetAccount(accounts_pb2.GetAccountRequest(id=_account_id))
-            accounts.append(_account)
-            _apr = (_account.annual_percentage_rate.high_end + _account.annual_percentage_rate.low_end) / 2
-            account2apr[_account_id] = _apr
-            account2credit_limits[_account_id] = _account.credit_limit
-            account2current_usage_amount[_account_id] = _account.current_balance + _account.pending_transactions
-            account2current_usage_prcnt[_account_id] = (_account.current_balance + _account.pending_transactions) / _account.credit_limit
-            acc2min_payment[_account_id] = _account.minimum_payment_due
-        # account_ids = np.array(account_ids)
-        # account2apr = np.array(account2apr)
-        # account_amounts = []
-        account2amount = defaultdict(list)
-        for _transaction_id in transaction_ids:
-            _transaction = stub.GetTransaction(transactions_pb2.GetTransactionRequest(id=_transaction_id))
-            _amount = _transaction.amount
-            # account_amounts.append(_amount)
-            account2amount[_transaction.account_id].append(_amount)
-        account2amount = {_acc_id: sum(_amounts) for _acc_id, _amounts in account2amount.items()}
-        # account_amounts = np.array(account_amounts)
-        total_amount = sum(account2amount.values())
+        # channel = grpc.insecure_channel('localhost:50051')
+        # stub = core_pb2_grpc.CoreStub(channel)
+        # accounts = []
+        # account2apr, acc2min_payment = {}, {}
+        # account2credit_limits, account2current_usage_amount, account2current_usage_prcnt = {}, {}, {}
+        # for _account_id in account_ids:
+        #     _account = stub.GetAccount(accounts_pb2.GetAccountRequest(id=_account_id))
+        #     accounts.append(_account)
+        #     _apr = (_account.annual_percentage_rate.high_end + _account.annual_percentage_rate.low_end) / 2
+        #     account2apr[_account_id] = _apr
+        #     account2credit_limits[_account_id] = _account.credit_limit
+        #     account2current_usage_amount[_account_id] = _account.current_balance + _account.pending_transactions
+        #     account2current_usage_prcnt[_account_id] = (_account.current_balance + _account.pending_transactions) / _account.credit_limit
+        #     acc2min_payment[_account_id] = _account.minimum_payment_due
+        # # account_ids = np.array(account_ids)
+        # # account2apr = np.array(account2apr)
+        # # account_amounts = []
+        # account2amount = defaultdict(list)
+        # for _transaction_id in transaction_ids:
+        #     _transaction = stub.GetTransaction(transactions_pb2.GetTransactionRequest(id=_transaction_id))
+        #     _amount = _transaction.amount
+        #     # account_amounts.append(_amount)
+        #     account2amount[_transaction.account_id].append(_amount)
+        # account2amount = {_acc_id: sum(_amounts) for _acc_id, _amounts in account2amount.items()}
+        # # account_amounts = np.array(account_amounts)
+        # total_amount = sum(account2amount.values())
 
-        pref_payment_freq_days = None
-        if pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
-            pref_payment_freq_days = timedelta(days=7)
-        elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY:
-            pref_payment_freq_days = timedelta(days=14)
-        elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY:
-            pref_payment_freq_days = timedelta(days=30)
-        elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY:
-            pref_payment_freq_days = timedelta(days=90)
-        amount_per_payment = total_amount / (timedelta(days=30) * pref_timeline / pref_payment_freq_days)
+        # pref_payment_freq_days = None
+        # if pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
+        #     pref_payment_freq_days = timedelta(days=7)
+        # elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY:
+        #     pref_payment_freq_days = timedelta(days=14)
+        # elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY:
+        #     pref_payment_freq_days = timedelta(days=30)
+        # elif pref_payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY:
+        #     pref_payment_freq_days = timedelta(days=90)
+        # amount_per_payment = total_amount / (timedelta(days=30) * pref_timeline / pref_payment_freq_days)
 
-        if pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES or pref_plan_type == payment_task_pb2.PlanType.PLANTYPE_UNKNOWN:
-            # need to sort account IDs, APR, amount by APR
-            account_ids = sorted(account_ids)
-            account2apr = OrderedDict(sorted(account2apr.items()))
-            account2amount = OrderedDict(sorted(account2amount.items()))
-            df = pd.DataFrame({'account_id': account_ids, 'account_apr': account2apr.values(), 'account_amount': account2amount.values()}).sort_values('account_apr', ascending=False)
-            account_ids = df['account_id'].values.tolist()
-            account_amounts = df['account_amount'].values.tolist()
+        # if pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES or pref_plan_type == payment_task_pb2.PlanType.PLANTYPE_UNKNOWN:
+        #     # need to sort account IDs, APR, amount by APR
+        #     account_ids = sorted(account_ids)
+        #     account2apr = OrderedDict(sorted(account2apr.items()))
+        #     account2amount = OrderedDict(sorted(account2amount.items()))
+        #     df = pd.DataFrame({'account_id': account_ids, 'account_apr': account2apr.values(), 'account_amount': account2amount.values()}).sort_values('account_apr', ascending=False)
+        #     account_ids = df['account_id'].values.tolist()
+        #     account_amounts = df['account_amount'].values.tolist()
 
-            payment_actions = []
-            date = shift_date_by_payment_frequency(date=start_date, payment_freq=pref_payment_freq)
-            timestamp.FromDatetime(date)
-            pay_this_date = 0
+        #     payment_actions = []
+        #     date = shift_date_by_payment_frequency(date=start_date, payment_freq=pref_payment_freq)
+        #     timestamp.FromDatetime(date)
+        #     pay_this_date = 0
 
-            # pay minimum payment for every account at date
-            for i in range(len(account_ids)):
-                _account_id = account_ids[i]
-                _acc_amount = account_amounts[i]
-                _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
-                payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
-                pay_this_date += _amount_this_date
-                account_amounts[i] -= _amount_this_date
+        #     # pay minimum payment for every account at date
+        #     for i in range(len(account_ids)):
+        #         _account_id = account_ids[i]
+        #         _acc_amount = account_amounts[i]
+        #         _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
+        #         payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+        #         pay_this_date += _amount_this_date
+        #         account_amounts[i] -= _amount_this_date
             
-            # pay accounts off and every minimum
-            while len(account_amounts) > 0:
-                _amount = account_amounts.pop(0)
-                _account_id = account_ids.pop(0)
-                _amount_this_date = min(amount_per_payment-pay_this_date, _amount)
-                _amount_next_dates = _amount - _amount_this_date
-                if _amount_this_date > 0:
-                    payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
-                    pay_this_date += _amount_this_date
-                if _amount_next_dates > 0:
-                    account_amounts.insert(0, _amount_next_dates)
-                    account_ids.insert(0, _account_id)
-                    pay_this_date = 0
-                    date = shift_date_by_payment_frequency(date=date, payment_freq=pref_payment_freq)
-                    timestamp.FromDatetime(date)
+        #     # pay accounts off and every minimum
+        #     while len(account_amounts) > 0:
+        #         _amount = account_amounts.pop(0)
+        #         _account_id = account_ids.pop(0)
+        #         _amount_this_date = min(amount_per_payment-pay_this_date, _amount)
+        #         _amount_next_dates = _amount - _amount_this_date
+        #         if _amount_this_date > 0:
+        #             payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+        #             pay_this_date += _amount_this_date
+        #         if _amount_next_dates > 0:
+        #             account_amounts.insert(0, _amount_next_dates)
+        #             account_ids.insert(0, _account_id)
+        #             pay_this_date = 0
+        #             date = shift_date_by_payment_frequency(date=date, payment_freq=pref_payment_freq)
+        #             timestamp.FromDatetime(date)
 
-                    # pay minimum payment for every account at date
-                    for i in range(len(account_ids)):
-                        _account_id = account_ids[i]
-                        _acc_amount = account_amounts[i]
-                        _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
-                        payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
-                        pay_this_date += _amount_this_date
-                        account_amounts[i] -= _amount_this_date  
-        elif pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
-            # sort dictionaries by account_id
-            account_ids = sorted(account_ids)
-            account2current_usage_amount = OrderedDict(sorted(account2current_usage_amount.items()))
-            account2credit_limits = OrderedDict(sorted(account2credit_limits.items()))
-            account2current_usage_prcnt = OrderedDict(sorted(account2current_usage_prcnt.items()))
-            account2amount = OrderedDict(sorted(account2amount.items()))
-            df = pd.DataFrame({'account_id': account_ids, 'current_usage_amount': account2current_usage_amount.values(), 'current_usage_prcnt': account2current_usage_prcnt.values(), 'limit': account2credit_limits.values(), 'amount': account2amount.values()}).sort_values('current_usage_prcnt', ascending=False)
-            # df.current_usage_prcnt = df.current_usage_prcnt.round(1)
+        #             # pay minimum payment for every account at date
+        #             for i in range(len(account_ids)):
+        #                 _account_id = account_ids[i]
+        #                 _acc_amount = account_amounts[i]
+        #                 _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
+        #                 payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+        #                 pay_this_date += _amount_this_date
+        #                 account_amounts[i] -= _amount_this_date  
+        # elif pref_plan_type == payment_task_pb2.PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
+        #     # sort dictionaries by account_id
+        #     account_ids = sorted(account_ids)
+        #     account2current_usage_amount = OrderedDict(sorted(account2current_usage_amount.items()))
+        #     account2credit_limits = OrderedDict(sorted(account2credit_limits.items()))
+        #     account2current_usage_prcnt = OrderedDict(sorted(account2current_usage_prcnt.items()))
+        #     account2amount = OrderedDict(sorted(account2amount.items()))
+        #     df = pd.DataFrame({'account_id': account_ids, 'current_usage_amount': account2current_usage_amount.values(), 'current_usage_prcnt': account2current_usage_prcnt.values(), 'limit': account2credit_limits.values(), 'amount': account2amount.values()}).sort_values('current_usage_prcnt', ascending=False)
+        #     # df.current_usage_prcnt = df.current_usage_prcnt.round(1)
             
-            payment_actions = []
-            date = shift_date_by_payment_frequency(date=start_date, payment_freq=pref_payment_freq)
-            timestamp.FromDatetime(date)
-            pay_this_date = 0
+        #     payment_actions = []
+        #     date = shift_date_by_payment_frequency(date=start_date, payment_freq=pref_payment_freq)
+        #     timestamp.FromDatetime(date)
+        #     pay_this_date = 0
 
-            # pay minimum payment for every account at date
-            for i in range(len(df)):
-                row = df[i]
-                _account_id = row['account_id']
-                _acc_amount = row['amount']
-                _current_usage_amount = row['current_usage_amount']
-                _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
-                payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
-                pay_this_date += _amount_this_date
-                df.loc[df['account_id']==_account_id, 'amount'] = _acc_amount - _amount_this_date
-                df.loc[df['account_id']==_account_id, 'current_usage_amount'] = _current_usage_amount - _amount_this_date
-            # update credit card utilization
-            df['current_usage_prcnt'] = df['current_usage_amount'] / df['limit']
-            # pay of currently highest used credit cards and then 
-            while len(df) > 0:
-                # pay highest paying credit cards off first until we can't pay anything more off
-                for i in range(len(df)):
-                    if pay_this_date >= amount_per_payment:
-                        break
-                    row = df[i]
-                    _account_id = row['account_id']
-                    _acc_amount = row['amount']
-                    _current_usage_amount = row['current_usage_amount']
-                    _amount_this_date = min(amount_per_payment-pay_this_date, _acc_amount)
-                    payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
-                    pay_this_date += _amount_this_date
-                    df.loc[df['account_id']==_account_id, 'amount'] = _acc_amount - _amount_this_date
-                    df.loc[df['account_id']==_account_id, 'current_usage_amount'] = _current_usage_amount - _amount_this_date
-                # drop any accounts whose amount is 0
-                df = df.loc[df.amount > 0]
-                # update credit card usage
-                df['current_usage_prcnt'] = df['current_usage_amount'] / df['amount']
-                # move to next date
-                pay_this_date = 0
-                date = shift_date_by_payment_frequency(date=date, payment_freq=pref_payment_freq)
-                timestamp.FromDatetime(date)
-                # pay minimum payment for every account at date
-                for i in range(len(df)):
-                    row = df[i]
-                    _account_id = row['account_id']
-                    _acc_amount = row['amount']
-                    _current_usage_amount = row['current_usage_amount']
-                    _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
-                    payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
-                    pay_this_date += _amount_this_date
-                    df.loc[df['account_id']==_account_id, 'amount'] = _acc_amount - _amount_this_date
-                    df.loc[df['account_id']==_account_id, 'current_usage_amount'] = _current_usage_amount - _amount_this_date
-                # update credit card utilization
-                df['current_usage_prcnt'] = df['current_usage_amount'] / df['limit']
-                # drop any accounts whose amount is 0
-                df = df.loc[df.amount > 0]
+        #     # pay minimum payment for every account at date
+        #     for i in range(len(df)):
+        #         row = df[i]
+        #         _account_id = row['account_id']
+        #         _acc_amount = row['amount']
+        #         _current_usage_amount = row['current_usage_amount']
+        #         _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
+        #         payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+        #         pay_this_date += _amount_this_date
+        #         df.loc[df['account_id']==_account_id, 'amount'] = _acc_amount - _amount_this_date
+        #         df.loc[df['account_id']==_account_id, 'current_usage_amount'] = _current_usage_amount - _amount_this_date
+        #     # update credit card utilization
+        #     df['current_usage_prcnt'] = df['current_usage_amount'] / df['limit']
+        #     # pay of currently highest used credit cards and then 
+        #     while len(df) > 0:
+        #         # pay highest paying credit cards off first until we can't pay anything more off
+        #         for i in range(len(df)):
+        #             if pay_this_date >= amount_per_payment:
+        #                 break
+        #             row = df[i]
+        #             _account_id = row['account_id']
+        #             _acc_amount = row['amount']
+        #             _current_usage_amount = row['current_usage_amount']
+        #             _amount_this_date = min(amount_per_payment-pay_this_date, _acc_amount)
+        #             payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+        #             pay_this_date += _amount_this_date
+        #             df.loc[df['account_id']==_account_id, 'amount'] = _acc_amount - _amount_this_date
+        #             df.loc[df['account_id']==_account_id, 'current_usage_amount'] = _current_usage_amount - _amount_this_date
+        #         # drop any accounts whose amount is 0
+        #         df = df.loc[df.amount > 0]
+        #         # update credit card usage
+        #         df['current_usage_prcnt'] = df['current_usage_amount'] / df['amount']
+        #         # move to next date
+        #         pay_this_date = 0
+        #         date = shift_date_by_payment_frequency(date=date, payment_freq=pref_payment_freq)
+        #         timestamp.FromDatetime(date)
+        #         # pay minimum payment for every account at date
+        #         for i in range(len(df)):
+        #             row = df[i]
+        #             _account_id = row['account_id']
+        #             _acc_amount = row['amount']
+        #             _current_usage_amount = row['current_usage_amount']
+        #             _amount_this_date = min(acc2min_payment[_account_id], _acc_amount)
+        #             payment_actions.append(payment_plan_pb2.PaymentAction(account_id=_account_id, amount=_amount_this_date, transaction_date=timestamp, status=payment_plan_pb2.PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+        #             pay_this_date += _amount_this_date
+        #             df.loc[df['account_id']==_account_id, 'amount'] = _acc_amount - _amount_this_date
+        #             df.loc[df['account_id']==_account_id, 'current_usage_amount'] = _current_usage_amount - _amount_this_date
+        #         # update credit card utilization
+        #         df['current_usage_prcnt'] = df['current_usage_amount'] / df['limit']
+        #         # drop any accounts whose amount is 0
+        #         df = df.loc[df.amount > 0]
 
-        return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
+        # return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
 
     def GetPaymentPlan(self, request, context) -> payment_plan_pb2.PaymentPlan:
         paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
