@@ -24,10 +24,12 @@ func welcome(c *fiber.Ctx) error {
 }
 
 func SetupRoutes(app *fiber.App) {
+	// ******CLIENTS*******
 	// create client and context with timeout to reuse in all handlers
 	ctx, cancel := NewClientContext(timeout)
 	defer cancel()
 
+	// set up universal dail options
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	opts = append(opts, grpc.WithBlock())
@@ -38,24 +40,29 @@ func SetupRoutes(app *fiber.App) {
 		log.Fatalf("fail to dial: %v", err)
 	}
 	defer authConn.Close()
+	// create new auth client
 	authClient := middleware.NewAuthClient(authConn, "", "", "")
 
+	// add auth interceptor middleware to core client
 	opts = append(opts, grpc.WithUnaryInterceptor(handlers.Interceptor.Unary()))
 	coreConn, err := grpc.Dial(config.GetEnv("CORE_SERVER_PORT"), opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
 	defer coreConn.Close()
+	// instantiate core client
 	coreClient := core.NewCoreClient(coreConn)
 
+	// ******HANDLERS*******
 	// Set up handlers
+	// welcome screen
 	app.Get("/", welcome)
 	api := app.Group("/api")
 
 	// monitoring api stats
 	api.Get("/dashboard", monitor.New())
 
-	// Auth
+	// Auth endpoints
 	auth := api.Group("/auth")
 	auth.Post("/login", handlers.Login(authClient))
 	auth.Post("/signup", handlers.SignUp(authClient))
