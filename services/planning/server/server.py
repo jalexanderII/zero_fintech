@@ -237,11 +237,15 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         # return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
 
     def GetPaymentPlan(self, request, context) -> payment_plan_pb2.PaymentPlan:
-        paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        # paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        paymentPlanDB = db_models.PaymentPlan.objects(id=request.payment_plan_id)
         return self.paymentPlanDBToPB(paymentPlanDB)
 
     def ListPaymentPlans(self, request, context) -> payment_plan_pb2.ListPaymentPlanResponse:
-        paymentPlansDB = self.planningCollection.find({})
+        # paymentPlansDB = self.planningCollection.PaymentPlan.find({})
+        paymentPlansDB = db_models.PaymentPlan.objects
+        # print(self.planningCollection.PaymentPlan.objects.all())
+        # print(db_models.PaymentPlan.objects)
         paymentPlansPB = []
         for pp in paymentPlansDB:
             paymentPlansPB.append(self.paymentPlanDBToPB(pp))
@@ -258,7 +262,12 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         return self.paymentPlanDBToPB(paymentPlanUpdatedDB)
 
     def DeletePaymentPlan(self, request, context) -> payment_plan_pb2.DeletePaymentPlanResponse:
-        paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        # paymentPlanDB = self.planningCollection.PaymentPlan.objects.get(id=request.payment_plan_id)
+        # print(type(self.planningCollection))
+        # print(type(self.planningCollection.PaymentPlan))
+        # print(type(self.planningCollection.PaymentPlan.objects))
+        # paymentPlanDB = self.planningCollection.PaymentPlan.objects(id=request.payment_plan_id).first()
+        paymentPlanDB = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
         paymentPlanPB = self.paymentPlanDBToPB(paymentPlanDB)
         paymentPlanDB.delete()
         return payment_plan_pb2.DeletePaymentPlanResponse(status=common_pb2.DELETE_STATUS.DELETE_STATUS_SUCCESS, payment_plan=paymentPlanPB)
@@ -281,7 +290,7 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         for paDB in paymentPlanDB.PaymentAction:
             transactionDatePB = Timestamp()
             transactionDatePB.FromDatetime(paDB.TransactionDate)
-            paActionStatusPB = getattr(payment_plan_pb2.PaymentActionStatus, paDB.Status.name)
+            paActionStatusPB = getattr(payment_plan_pb2.PaymentActionStatus, paDB.PaymentActionStatus.name)
             paPB = payment_plan_pb2.PaymentAction(account_id=paDB.AccountID, amount=paDB.Amount,
                         transaction_date=transactionDatePB, status=paActionStatusPB)
             paymentActionPB.append(paPB)

@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 
 import sys
+import json
 
 # sys.path.append('/Users/joschkabraun/dev/zero_fintech/services/planning/database')
 sys.path.append('/Users/joschkabraun/dev/zero_fintech/services/planning')
@@ -46,18 +47,26 @@ EXAMPLE_PAYMENT_PLANS = [
 def test_delete_payment_plan():
     server = gen_server()
 
-    # originalPaymentPlans = server.ListPaymentPlans(None, None)
-    # originalPaymentPlansLen = len(originalPaymentPlans)
-    # print(f"Number of payment plans before insertion: {originalPaymentPlansLen}")
+    originalPaymentPlans = server.ListPaymentPlans(None, None).payment_plans
 
-    server.planningCollection.insert(EXAMPLE_PAYMENT_PLANS[0])
-    updatedPaymentPlans = server.ListPaymentPlans(None, None)
+    originalPaymentPlansLen = len(originalPaymentPlans)
+    print(f"Number of payment plans before insertion: {originalPaymentPlansLen}")
+
+    # server.planningCollection.PaymentPlan.insert_one(json.loads(EXAMPLE_PAYMENT_PLANS[0].to_json()))
+    # db_models.PaymentPlan.insert_one(json.loads(EXAMPLE_PAYMENT_PLANS[0].to_json()))
+    # server.planningCollection.PaymentPlan.insert(EXAMPLE_PAYMENT_PLANS)
+    # example = EXAMPLE_PAYMENT_PLANS[0]
+    # example.save()
+
+    
+    EXAMPLE_PAYMENT_PLANS[0].save()
+    updatedPaymentPlans = server.ListPaymentPlans(None, None).payment_plans
     updatedPaymentPlansLen = len(updatedPaymentPlans)
     print(f"Number of payment plans after insertion: {updatedPaymentPlansLen}")
 
     deleteRequest = payment_plan_pb2.DeletePaymentPlanRequest(payment_plan_id="61dfa3c6ac621d1be8e64613")
     server.DeletePaymentPlan(request=deleteRequest, context=None)
-    updatedPaymentPlans = server.ListPaymentPlans(None, None)
+    updatedPaymentPlans = server.ListPaymentPlans(None, None).payment_plans
     updatedPaymentPlansLen = len(updatedPaymentPlans)
     print(f"Number of payment plans after deletion: {updatedPaymentPlansLen}")
 

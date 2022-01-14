@@ -32,9 +32,10 @@ class PaymentAction(EmbeddedDocument):
     PaymentActionStatus = EnumField(PaymentActionStatus)
 
 class PaymentPlan(Document):
-    PaymentPlanID = StringField(required=True, primary_key=True) # ObjectIdField
-    UserID = StringField(required=True) # ObjectIdField
-    PaymentTaskID = ListField(StringField(required=True))   # ListField(ObjectIdField)
+    # PaymentPlanID = StringField(primary_key=True) # ObjectIdField
+    PaymentPlanID = StringField() # ObjectIdField
+    UserID = StringField() # ObjectIdField
+    PaymentTaskID = ListField(StringField())   # ListField(ObjectIdField)
     Timeline = FloatField()
     PaymentFrequency = EnumField(PaymentFrequency)
     AmountPerPayment = FloatField()
