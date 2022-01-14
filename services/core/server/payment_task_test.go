@@ -3,6 +3,7 @@ package server
 import (
 	"testing"
 
+	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -117,5 +118,21 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 	}
 	if deleted.Status != core.DELETE_STATUS_DELETE_STATUS_SUCCESS {
 		t.Errorf("5: Failed to delete paymentTask: %+v\n, %+v", deleted.Status, deleted.GetPaymentTask())
+	}
+}
+
+func TestCoreServer_CreateManyPaymentTasks(t *testing.T) {
+	server, ctx := GenServer()
+	c := 0
+	var res []*database.PaymentTask
+	for ok := true; ok; ok = c < 10 {
+		task, _ := GenFakePaymentTask()
+		res = append(res, task)
+		c++
+	}
+
+	err := server.CreateManyPaymentTasks(ctx, res)
+	if err != nil {
+		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}
 }

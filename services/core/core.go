@@ -35,7 +35,10 @@ func main() {
 	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
 
 	// Initiate MongoDB Database
-	DB := database.InitiateMongoClient()
+	DB, err := database.InitiateMongoClient()
+	if err != nil {
+		log.Fatal("MongoDB error: ", err)
+	}
 	// Connect to the Collections inside the given DB
 	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
 	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))

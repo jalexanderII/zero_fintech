@@ -87,6 +87,23 @@ func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymen
 	return &core.DeletePaymentTaskResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
 }
 
+// CreateManyPaymentTasks - Insert multiple documents at once in the collection.
+func (s CoreServer) CreateManyPaymentTasks(ctx context.Context, in []*database.PaymentTask) error {
+	// Map struct slice to interface slice as InsertMany accepts interface slice as parameter
+	insertableList := make([]interface{}, len(in))
+	for i, v := range in {
+		insertableList[i] = v
+	}
+
+	// Perform InsertMany operation & validate against the error.
+	_, err := s.PaymentTaskDB.InsertMany(ctx, insertableList)
+	if err != nil {
+		return err
+	}
+	// Return success without any error.
+	return nil
+}
+
 // PaymentTaskPBToDB converts a PaymentTask proto object to its serialized DB object
 func PaymentTaskPBToDB(paymentTask *core.PaymentTask, id primitive.ObjectID) database.PaymentTask {
 	userId, _ := primitive.ObjectIDFromHex(paymentTask.GetUserId())

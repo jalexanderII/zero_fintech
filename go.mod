@@ -15,6 +15,7 @@ require (
 )
 
 require (
+	github.com/bxcodec/faker/v3 v3.7.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
 	github.com/fatih/color v1.7.0 // indirect

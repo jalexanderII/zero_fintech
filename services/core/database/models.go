@@ -1,6 +1,8 @@
 package database
 
 import (
+	"time"
+
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -17,8 +19,8 @@ type PaymentTask struct {
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
-	PreferredPlanType    core.PlanType         `bson:"preferred_plan_type"`
-	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq"`
+	PreferredPlanType    core.PlanType         `bson:"preferred_plan_type" faker:"preferred_plan_type" `
+	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq" faker:"preferred_payment_freq" `
 }
 
 // AnnualPercentageRates is a DB Serialization of Proto AnnualPercentageRates
@@ -30,13 +32,13 @@ type AnnualPercentageRates struct {
 // PenaltyAPR is a DB Serialization of Proto PenaltyAPR
 type PenaltyAPR struct {
 	PenaltyAPR    float64                       `bson:"penalty_apr"`
-	PenaltyReason core.PenaltyAPR_PenaltyReason `bson:"penalty_reason"`
+	PenaltyReason core.PenaltyAPR_PenaltyReason `bson:"penalty_reason" faker:"penalty_reason"`
 }
 
 // PromotionalRate is a DB Serialization of Proto PromotionalRate
 type PromotionalRate struct {
-	TemporaryAPR   float64             `bson:"temporary_apr"`
-	ExpirationDate primitive.Timestamp `bson:"expiration_date"`
+	TemporaryAPR   float64   `bson:"temporary_apr"`
+	ExpirationDate time.Time `bson:"expiration_date"`
 }
 
 // Account is a DB Serialization of Proto Account
@@ -44,7 +46,7 @@ type Account struct {
 	ID                    primitive.ObjectID    `bson:"_id"`
 	UserId                primitive.ObjectID    `bson:"user_id"`
 	Name                  string                `bson:"name"`
-	CreatedAt             primitive.Timestamp   `bson:"created_at"`
+	CreatedAt             time.Time             `bson:"created_at"`
 	AnnualPercentageRate  AnnualPercentageRates `bson:"annual_percentage_rate"`
 	PenaltyAPR            PenaltyAPR            `bson:"penalty_apr"`
 	DueDay                int32                 `bson:"due_day"`
@@ -60,21 +62,21 @@ type Account struct {
 
 // TransactionDetails is a DB Serialization of Proto TransactionDetails
 type TransactionDetails struct {
-	Address         string              `bson:"address"`
-	DoingBusinessAs string              `bson:"doing_business_as"`
-	DateProcessed   primitive.Timestamp `bson:"date_processed"`
+	Address         string    `bson:"address"`
+	DoingBusinessAs string    `bson:"doing_business_as"`
+	DateProcessed   time.Time `bson:"date_processed"`
 }
 
 // Transaction is a DB Serialization of Proto Transaction
 type Transaction struct {
-	ID                 primitive.ObjectID  `bson:"_id"`
-	UserId             primitive.ObjectID  `bson:"user_id"`
-	AccountId          primitive.ObjectID  `bson:"account_id"`
-	Name               string              `bson:"name"`
-	Amount             float64             `bson:"amount"`
-	Date               primitive.Timestamp `bson:"date"`
-	RewardsEarned      int32               `bson:"rewards_earned"`
-	TransactionDetails TransactionDetails  `bson:"transaction_details"`
+	ID                 primitive.ObjectID `bson:"_id"`
+	UserId             primitive.ObjectID `bson:"user_id"`
+	AccountId          primitive.ObjectID `bson:"account_id"`
+	Name               string             `bson:"name"`
+	Amount             float64            `bson:"amount"`
+	Date               time.Time          `bson:"date"`
+	RewardsEarned      int32              `bson:"rewards_earned"`
+	TransactionDetails TransactionDetails `bson:"transaction_details"`
 }
 
 // User is a DB Serialization of Proto User

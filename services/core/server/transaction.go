@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
@@ -60,7 +59,7 @@ func (s CoreServer) UpdateTransaction(ctx context.Context, in *core.UpdateTransa
 	td := database.TransactionDetails{
 		Address:         transaction.GetTransactionDetails().Address,
 		DoingBusinessAs: transaction.GetTransactionDetails().DoingBusinessAs,
-		DateProcessed:   primitive.Timestamp{T: uint32(transaction.GetTransactionDetails().DateProcessed.AsTime().Unix()), I: 0},
+		DateProcessed:   transaction.GetTransactionDetails().DateProcessed.AsTime(),
 	}
 
 	id, err := primitive.ObjectIDFromHex(in.GetId())
@@ -113,12 +112,12 @@ func TransactionPBToDB(transaction *core.Transaction, id primitive.ObjectID) dat
 		AccountId:     accountId,
 		Name:          transaction.Name,
 		Amount:        transaction.Amount,
-		Date:          primitive.Timestamp{T: uint32(transaction.Date.AsTime().Unix()), I: 0},
+		Date:          transaction.Date.AsTime(),
 		RewardsEarned: transaction.RewardsEarned,
 		TransactionDetails: database.TransactionDetails{
 			Address:         transaction.GetTransactionDetails().Address,
 			DoingBusinessAs: transaction.GetTransactionDetails().DoingBusinessAs,
-			DateProcessed:   primitive.Timestamp{T: uint32(transaction.GetTransactionDetails().DateProcessed.AsTime().Unix()), I: 0},
+			DateProcessed:   transaction.GetTransactionDetails().DateProcessed.AsTime(),
 		},
 	}
 }
@@ -131,12 +130,12 @@ func TransactionDBToPB(transaction database.Transaction) *core.Transaction {
 		AccountId:     transaction.AccountId.Hex(),
 		Name:          transaction.Name,
 		Amount:        transaction.Amount,
-		Date:          timestamppb.New(time.Unix(int64(transaction.Date.T), 0)),
+		Date:          timestamppb.New(transaction.Date),
 		RewardsEarned: transaction.RewardsEarned,
 		TransactionDetails: &core.TransactionDetails{
 			Address:         transaction.TransactionDetails.Address,
 			DoingBusinessAs: transaction.TransactionDetails.DoingBusinessAs,
-			DateProcessed:   timestamppb.New(time.Unix(int64(transaction.TransactionDetails.DateProcessed.T), 0)),
+			DateProcessed:   timestamppb.New(transaction.TransactionDetails.DateProcessed),
 		},
 	}
 }
