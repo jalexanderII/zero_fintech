@@ -3,7 +3,6 @@ package server
 import (
 	"testing"
 
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -123,15 +122,16 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 
 func TestCoreServer_CreateManyPaymentTasks(t *testing.T) {
 	server, ctx := GenServer()
+	limit := 10
 	c := 0
-	var res []*database.PaymentTask
-	for ok := true; ok; ok = c < 10 {
+	var res []*core.PaymentTask
+	for ok := true; ok; ok = c < limit {
 		task, _ := GenFakePaymentTask()
 		res = append(res, task)
 		c++
 	}
 
-	err := server.CreateManyPaymentTasks(ctx, res)
+	_, err := server.CreateManyPaymentTask(ctx, &core.CreateManyPaymentTaskRequest{PaymentTasks: res})
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}

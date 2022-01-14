@@ -9,36 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Test_authServer_SignUp(t *testing.T) {
-	server, ctx := GenServer()
-
-	u := &core.SignupRequest{
-		Username: "joel_admin",
-		Email:    "fudoshin2596@gmail.com",
-		Password: "joel_admin",
-	}
-
-	_, err := server.SignUp(ctx, u)
-	if err != nil {
-		t.Errorf("1: Error creating new user: %v", err)
-	}
-
-	_, err = server.SignUp(ctx, &core.SignupRequest{Username: "example", Email: "bad-email", Password: "example"})
-	if err.Error() != "email validation failed" {
-		t.Error("2: No or wrong error returned for email validation")
-	}
-
-	_, err = server.SignUp(ctx, &core.SignupRequest{Username: u.Username, Email: "e@gmail.com", Password: "e"})
-	if err.Error() != "username already taken" {
-		t.Error("3: No or wrong error returned for username already taken")
-	}
-
-	_, err = server.SignUp(ctx, &core.SignupRequest{Username: "e", Email: u.Email, Password: "e"})
-	if err.Error() != "email already used" {
-		t.Error("4: No or wrong error returned for email already taken")
-	}
-}
-
 func TestAuthServer_GetUser(t *testing.T) {
 	server, ctx := GenServer()
 
@@ -109,31 +79,5 @@ func TestAuthServer_DeleteUser(t *testing.T) {
 	}
 	if deleted.Status != core.DELETE_STATUS_DELETE_STATUS_SUCCESS {
 		t.Errorf("5: Failed to delete user: %+v\n, %+v", deleted.Status, deleted.GetUser())
-	}
-}
-
-func Test_authServer_Login(t *testing.T) {
-	server, ctx := GenServer()
-
-	u := &core.SignupRequest{
-		Username: "guest",
-		Email:    "guest@gmail.com",
-		Password: "guest",
-	}
-
-	pw, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-	_, err := server.UserDB.InsertOne(ctx, database.User{ID: primitive.NewObjectID(), Username: u.Username, Email: u.Email, Password: string(pw)})
-	if err != nil {
-		t.Errorf("1: Error inserting new user into db: %v", err)
-	}
-
-	_, err = server.Login(ctx, &core.LoginRequest{Username: u.Username, Password: u.Password})
-	if err != nil {
-		t.Errorf("1: An error was returned: %v", err)
-	}
-
-	_, err = server.Login(ctx, &core.LoginRequest{Username: u.Username, Password: "wrong"})
-	if err == nil {
-		t.Error("2: Error was nil")
 	}
 }

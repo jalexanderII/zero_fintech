@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
+	"github.com/jalexanderII/zero_fintech/services/auth/database"
 )
 
 // JWTManager is a JSON web token manager
@@ -26,7 +26,7 @@ func NewJWTManager(secretKey string, tokenDuration time.Duration) *JWTManager {
 }
 
 // Generate generates and signs a new token for a user
-func (manager *JWTManager) Generate(user *database.User) (string, error) {
+func (manager *JWTManager) Generate(user *database.AuthUser) (string, error) {
 	claims := UserClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(manager.tokenDuration).Unix(),

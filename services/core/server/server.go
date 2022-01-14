@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jalexanderII/zero_fintech/services/core/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson"

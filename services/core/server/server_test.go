@@ -9,8 +9,8 @@ import (
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
-	"github.com/jalexanderII/zero_fintech/services/core/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	_ "github.com/joho/godotenv/autoload"
@@ -61,9 +61,9 @@ func CustomGenerator() {
 	})
 }
 
-func GenFakePaymentTask() (*database.PaymentTask, error) {
+func GenFakePaymentTask() (*core.PaymentTask, error) {
 	CustomGenerator()
-	var fake database.PaymentTask
+	var fake core.PaymentTask
 	err := faker.FakeData(&fake)
 	if err != nil {
 		L.Error("[Error] Could not fake this object", "error", err)

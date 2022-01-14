@@ -51,3 +51,9 @@ message DeletePaymentTaskResponse {
   DELETE_STATUS status = 1;
   PaymentTask payment_task = 2;
 }
+
+message CreateManyPaymentTaskRequest {
+  repeated PaymentTask payment_tasks = 1;
+}
+
+message CreateManyPaymentTaskResponse {}

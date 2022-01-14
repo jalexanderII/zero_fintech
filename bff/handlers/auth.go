@@ -1,53 +1,65 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/bff/middleware"
 )
 
-// Login get user and password
-func Login(c *fiber.Ctx) error {
-	ctx, cancel := NewClientContext(timeout)
-	defer cancel()
+const refreshDuration = 1 * time.Hour
 
-	type LoginData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
+var Interceptor *middleware.AuthInterceptor
+
+// Login gets username and password from request body, writes it to an AuthClient and then calls Login
+func Login(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		type LoginData struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}
+		var input LoginData
+
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
+		}
+		authClient.Username = input.Username
+		authClient.Password = input.Password
+
+		token, err := authClient.Login()
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+		Interceptor, err = middleware.NewAuthInterceptor(authClient, middleware.AccessibleRoles(), refreshDuration)
+		if err != nil {
+			c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Could not create interceptor", "data": err})
+		}
+
+		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
 	}
-	var input LoginData
-
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
-	}
-
-	resp, err := coreClient.Login(ctx, &core.LoginRequest{Username: input.Username, Password: input.Password})
-	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
-	}
-
-	return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": resp.GetToken()})
 }
 
-func SignUp(c *fiber.Ctx) error {
-	ctx, cancel := NewClientContext(timeout)
-	defer cancel()
+// SignUp gets username, email, and password from request body, writes it to an AuthClient and then calls SignUp
+func SignUp(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		type SignUpData struct {
+			Username string `json:"username"`
+			Email    string `json:"email"`
+			Password string `json:"password"`
+		}
+		var input SignUpData
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": err})
+		}
+		authClient.Username = input.Username
+		authClient.Email = input.Email
+		authClient.Password = input.Password
 
-	type UserData struct {
-		Username string `json:"username"`
-		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password"`
-	}
-	var input UserData
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
+		token, err := authClient.SignUp()
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
 
-	resp, err := coreClient.SignUp(ctx, &core.SignupRequest{Username: input.Username, Email: input.Email, Password: input.Password})
-	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": token})
 	}
-
-	return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": resp.GetToken()})
 }
