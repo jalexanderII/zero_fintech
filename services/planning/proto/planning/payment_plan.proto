@@ -75,10 +75,10 @@ message UpdatePaymentPlanRequest {
 }
 
 message DeletePaymentPlanRequest {
-    DELETE_STATUS status = 1;
-    PaymentPlan payment_plan = 2;
+    string payment_plan_id = 1;
 }
 
 message DeletePaymentPlanResponse {
-
+    DELETE_STATUS status = 1;
+    PaymentPlan payment_plan = 2;
 }

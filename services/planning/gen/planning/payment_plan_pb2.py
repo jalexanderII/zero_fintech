@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12payment_plan.proto\x12\x08planning\x1a\x0c\x63ommon.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\"\x98\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12-\n\x06status\x18\x04 \x01(\x0e\x32\x1d.planning.PaymentActionStatus\"\xef\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12\x30\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x1a.planning.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12%\n\tplan_type\x18\x07 \x01(\x0e\x32\x12.planning.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12\'\n\x06status\x18\n \x01(\x0e\x32\x17.planning.PaymentStatus\x12/\n\x0epayment_action\x18\x0b \x03(\x0b\x32\x17.planning.PaymentAction\"0\n\x15GetPaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentPlanRequest\"G\n\x17ListPaymentPlanResponse\x12,\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x15.planning.PaymentPlan\"\x8a\x01\n\x18UpdatePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12+\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x15.planning.PaymentPlan\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"p\n\x18\x44\x65letePaymentPlanRequest\x12\'\n\x06status\x18\x01 \x01(\x0e\x32\x17.planning.DELETE_STATUS\x12+\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x15.planning.PaymentPlan\"\x1b\n\x19\x44\x65letePaymentPlanResponse*\xa2\x01\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x1a\n\x16PAYMENT_STATUS_CURRENT\x10\x01\x12\x1c\n\x18PAYMENT_STATUS_COMPLETED\x10\x02\x12\x1c\n\x18PAYMENT_STATUS_CANCELLED\x10\x03\x12\x1d\n\x19PAYMENT_STATUS_IN_DEFAULT\x10\x04*\xa6\x01\n\x13PaymentActionStatus\x12!\n\x1dPAYMENT_ACTION_STATUS_UNKNOWN\x10\x00\x12!\n\x1dPAYMENT_ACTION_STATUS_PENDING\x10\x01\x12#\n\x1fPAYMENT_ACTION_STATUS_COMPLETED\x10\x02\x12$\n PAYMENT_ACTION_STATUS_IN_DEFAULT\x10\x03\x62\x06proto3'
+  serialized_pb=b'\n\x12payment_plan.proto\x12\x08planning\x1a\x0c\x63ommon.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\"\x98\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12-\n\x06status\x18\x04 \x01(\x0e\x32\x1d.planning.PaymentActionStatus\"\xef\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12\x30\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x1a.planning.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12%\n\tplan_type\x18\x07 \x01(\x0e\x32\x12.planning.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12\'\n\x06status\x18\n \x01(\x0e\x32\x17.planning.PaymentStatus\x12/\n\x0epayment_action\x18\x0b \x03(\x0b\x32\x17.planning.PaymentAction\"0\n\x15GetPaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentPlanRequest\"G\n\x17ListPaymentPlanResponse\x12,\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x15.planning.PaymentPlan\"\x8a\x01\n\x18UpdatePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12+\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x15.planning.PaymentPlan\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"3\n\x18\x44\x65letePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"q\n\x19\x44\x65letePaymentPlanResponse\x12\'\n\x06status\x18\x01 \x01(\x0e\x32\x17.planning.DELETE_STATUS\x12+\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x15.planning.PaymentPlan*\xa2\x01\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x1a\n\x16PAYMENT_STATUS_CURRENT\x10\x01\x12\x1c\n\x18PAYMENT_STATUS_COMPLETED\x10\x02\x12\x1c\n\x18PAYMENT_STATUS_CANCELLED\x10\x03\x12\x1d\n\x19PAYMENT_STATUS_IN_DEFAULT\x10\x04*\xa6\x01\n\x13PaymentActionStatus\x12!\n\x1dPAYMENT_ACTION_STATUS_UNKNOWN\x10\x00\x12!\n\x1dPAYMENT_ACTION_STATUS_PENDING\x10\x01\x12#\n\x1fPAYMENT_ACTION_STATUS_COMPLETED\x10\x02\x12$\n PAYMENT_ACTION_STATUS_IN_DEFAULT\x10\x03\x62\x06proto3'
   ,
   dependencies=[common__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 
@@ -62,8 +62,8 @@ _PAYMENTSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1072,
-  serialized_end=1234,
+  serialized_start=1097,
+  serialized_end=1259,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTSTATUS)
 
@@ -98,8 +98,8 @@ _PAYMENTACTIONSTATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1237,
-  serialized_end=1403,
+  serialized_start=1262,
+  serialized_end=1428,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTACTIONSTATUS)
 
@@ -415,14 +415,46 @@ _DELETEPAYMENTPLANREQUEST = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='status', full_name='planning.DeletePaymentPlanRequest.status', index=0,
+      name='payment_plan_id', full_name='planning.DeletePaymentPlanRequest.payment_plan_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=928,
+  serialized_end=979,
+)
+
+
+_DELETEPAYMENTPLANRESPONSE = _descriptor.Descriptor(
+  name='DeletePaymentPlanResponse',
+  full_name='planning.DeletePaymentPlanResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='status', full_name='planning.DeletePaymentPlanResponse.status', index=0,
       number=1, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='payment_plan', full_name='planning.DeletePaymentPlanRequest.payment_plan', index=1,
+      name='payment_plan', full_name='planning.DeletePaymentPlanResponse.payment_plan', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -440,33 +472,8 @@ _DELETEPAYMENTPLANREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=928,
-  serialized_end=1040,
-)
-
-
-_DELETEPAYMENTPLANRESPONSE = _descriptor.Descriptor(
-  name='DeletePaymentPlanResponse',
-  full_name='planning.DeletePaymentPlanResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1042,
-  serialized_end=1069,
+  serialized_start=981,
+  serialized_end=1094,
 )
 
 _PAYMENTACTION.fields_by_name['transaction_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -479,8 +486,8 @@ _PAYMENTPLAN.fields_by_name['payment_action'].message_type = _PAYMENTACTION
 _LISTPAYMENTPLANRESPONSE.fields_by_name['payment_plans'].message_type = _PAYMENTPLAN
 _UPDATEPAYMENTPLANREQUEST.fields_by_name['payment_plan'].message_type = _PAYMENTPLAN
 _UPDATEPAYMENTPLANREQUEST.fields_by_name['mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
-_DELETEPAYMENTPLANREQUEST.fields_by_name['status'].enum_type = common__pb2._DELETE_STATUS
-_DELETEPAYMENTPLANREQUEST.fields_by_name['payment_plan'].message_type = _PAYMENTPLAN
+_DELETEPAYMENTPLANRESPONSE.fields_by_name['status'].enum_type = common__pb2._DELETE_STATUS
+_DELETEPAYMENTPLANRESPONSE.fields_by_name['payment_plan'].message_type = _PAYMENTPLAN
 DESCRIPTOR.message_types_by_name['PaymentAction'] = _PAYMENTACTION
 DESCRIPTOR.message_types_by_name['PaymentPlan'] = _PAYMENTPLAN
 DESCRIPTOR.message_types_by_name['GetPaymentPlanRequest'] = _GETPAYMENTPLANREQUEST

@@ -3,6 +3,7 @@ from typing import OrderedDict
 import numpy as np
 import pandas as pd
 import grpc
+import json
 
 import logging
 from datetime import timedelta, datetime
@@ -15,8 +16,9 @@ from database import models as db_models
 
 from gen.core import core_pb2_grpc, accounts_pb2, transactions_pb2
 from gen.planning import planning_pb2_grpc, payment_plan_pb2, payment_task_pb2, common_pb2
+from services.planning.gen.core.accounts_pb2 import Account
 
-def shift_date_by_payment_frequency(date: datetime, payment_freq: common_pb2.PaymentFrequency) -> timedelta:
+def shift_date_by_payment_frequency(date: datetime, payment_freq: common_pb2.PaymentFrequency) -> datetime:
     if payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
         return date + timedelta(days=7)
     elif payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY:
@@ -245,20 +247,80 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
             paymentPlansPB.append(self.paymentPlanDBToPB(pp))
         return payment_plan_pb2.ListPaymentPlanResponse(payment_plans=paymentPlansPB)
 
-    def UpdatePaymentPlan(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+    def UpdatePaymentPlan(self, request, context) -> payment_plan_pb2.PaymentPlan:
+        paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        paymentPlanPB = request.payment_plan
+        update = json.loads(self.paymentPlanPBToDB(paymentPlanPB).to_mongo())
+        del update['PaymentPlanID']
+        paymentPlanDB.update(**update)
 
-    def DeletePaymentPlan(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        paymentPlanUpdatedDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        return self.paymentPlanDBToPB(paymentPlanUpdatedDB)
+
+    def DeletePaymentPlan(self, request, context) -> payment_plan_pb2.DeletePaymentPlanResponse:
+        paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        paymentPlanPB = self.paymentPlanDBToPB(paymentPlanDB)
+        paymentPlanDB.delete()
+        return payment_plan_pb2.DeletePaymentPlanResponse(status=common_pb2.DELETE_STATUS.DELETE_STATUS_SUCCESS, payment_plan=paymentPlanPB)
     
-    def paymentPlanDBToPB(self, paymentPlan: db_models.PaymentPlan) -> payment_plan_pb2.PaymentPlan:
-        pass
+    def paymentPlanDBToPB(self, paymentPlanDB: db_models.PaymentPlan) -> payment_plan_pb2.PaymentPlan:
+        """ Converts a MongoDB Document version of PaymentPlan to Protobuf version
 
-    def paymentPlanPBToDB(self, paymentPlan: payment_plan_pb2.PaymentPlan) -> db_models.PaymentPlan:
-        pass
+        Args:
+            paymentPlanDB (db_models.PaymentPlan): PaymentPlan as a MongoDB object
+
+        Returns:
+            payment_plan_pb2.PaymentPlan: PaymentPlan as Protobuf
+        """
+        paymentFrequencyPB = getattr(common_pb2.PaymentFrequency, paymentPlanDB.PaymentFrequency.name)
+        planTypePB = getattr(common_pb2.PlanType, paymentPlanDB.PlanType.name)
+        endDatePB = Timestamp()
+        endDatePB.FromDatetime(paymentPlanDB.EndDate)
+        paymentPlanStatusPB = getattr(payment_plan_pb2.PaymentStatus, paymentPlanDB.Status.name)
+        paymentActionPB = []
+        for paDB in paymentPlanDB.PaymentAction:
+            transactionDatePB = Timestamp()
+            transactionDatePB.FromDatetime(paDB.TransactionDate)
+            paActionStatusPB = getattr(payment_plan_pb2.PaymentActionStatus, paDB.Status.name)
+            paPB = payment_plan_pb2.PaymentAction(account_id=paDB.AccountID, amount=paDB.Amount,
+                        transaction_date=transactionDatePB, status=paActionStatusPB)
+            paymentActionPB.append(paPB)
+        
+        return payment_plan_pb2.PaymentPlan(payment_plan_id=paymentPlanDB.PaymentPlanID,
+            user_id=paymentPlanDB.UserID, payment_task_id=paymentPlanDB.PaymentTaskID, 
+            timeline=paymentPlanDB.Timeline, payment_freq=paymentFrequencyPB, amount_per_payment=paymentPlanDB.AmountPerPayment,
+            plan_type=planTypePB, end_date=endDatePB, active=paymentPlanDB.Active, status=paymentPlanStatusPB,
+            payment_action=paymentActionPB)
+
+    def paymentPlanPBToDB(self, paymentPlanPB: payment_plan_pb2.PaymentPlan) -> db_models.PaymentPlan:
+        """ Converts a Protobuf Document version of PaymentPlan to MongoDB version
+
+        Args:
+            paymentPlanPB (payment_plan_pb2.PaymentPlan): PaymentPlan as a Protobuf object
+
+        Returns:
+            db_models.PaymentPlan: PaymentPlan as a MongoDB object
+        """
+        paymentFrequencyDB = db_models.PaymentFrequency[common_pb2.PaymentFrequency.Name(paymentPlanPB.payment_freq)]
+        planTypeDB = db_models.PlanType[common_pb2.PlanType.Name(paymentPlanPB.plan_type)]
+        paymentPlanStatusDB = db_models.PaymentStatus[payment_plan_pb2.PaymentStatus.Name(paymentPlanPB.status)]
+        paymentActionDB = []
+        for paPB in paymentPlanPB.payment_action:
+            paDB = db_models.PaymentAction(AccountID=paPB.account_id, amount=paPB.amount,
+                        TransactionDate=paPB.transaction_date.ToDatetime(),
+                        PaymentActionStatus=db_models.PaymentActionStatus[payment_plan_pb2.PaymentActionStatus.Name(paPB.status)])
+            paymentActionDB.append(paDB)
+        document_dict = {
+            'PaymentPlanID': paymentPlanPB.payment_plan_id,
+            'UserID': paymentPlanPB.user_id,
+            'PaymentTaskID': paymentPlanPB.payment_task_id,
+            'Timeline': paymentPlanPB.timeline,
+            'PaymentFrequency': paymentFrequencyDB,
+            'AmountPerPayment': paymentPlanPB.amount_per_payment,
+            'PlanType': planTypeDB,
+            'EndDate': paymentPlanPB.end_date.ToDatetime(),
+            'Active': paymentPlanPB.active,
+            'Status': paymentPlanStatusDB,
+            'PaymentAction': paymentActionDB,
+        }
+        return db_models.PaymentPlan(**document_dict)
