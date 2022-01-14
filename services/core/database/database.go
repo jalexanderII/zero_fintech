@@ -21,15 +21,6 @@ var mongoOnce sync.Once
 
 // InitiateMongoClient connects to MongoDB URI and binds a database
 func InitiateMongoClient() (mongo.Database, error) {
-	// clientOptions := options.Client().ApplyURI(config.GetEnv("MONGOURI"))
-	// ctx, cancel := config.NewDBContext(10 * time.Second)
-	// defer cancel()
-	//
-	// client, err := mongo.Connect(ctx, clientOptions)
-	// if err != nil {
-	// 	log.Fatalf("Error connecting to DB: %v", err)
-	// }
-
 	// Perform connection creation operation only once.
 	mongoOnce.Do(func() {
 		// Set client options
