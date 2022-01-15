@@ -237,36 +237,35 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         # return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
 
     def GetPaymentPlan(self, request, context) -> payment_plan_pb2.PaymentPlan:
-        # paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
-        paymentPlanDB = db_models.PaymentPlan.objects(id=request.payment_plan_id)
+        paymentPlanDB = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
         return self.paymentPlanDBToPB(paymentPlanDB)
 
     def ListPaymentPlans(self, request, context) -> payment_plan_pb2.ListPaymentPlanResponse:
-        # paymentPlansDB = self.planningCollection.PaymentPlan.find({})
         paymentPlansDB = db_models.PaymentPlan.objects
-        # print(self.planningCollection.PaymentPlan.objects.all())
-        # print(db_models.PaymentPlan.objects)
         paymentPlansPB = []
         for pp in paymentPlansDB:
             paymentPlansPB.append(self.paymentPlanDBToPB(pp))
         return payment_plan_pb2.ListPaymentPlanResponse(payment_plans=paymentPlansPB)
 
     def UpdatePaymentPlan(self, request, context) -> payment_plan_pb2.PaymentPlan:
-        paymentPlanDB = self.planningCollection.objects.get(id=request.payment_plan_id)
-        paymentPlanPB = request.payment_plan
-        update = json.loads(self.paymentPlanPBToDB(paymentPlanPB).to_mongo())
-        del update['PaymentPlanID']
-        paymentPlanDB.update(**update)
+        paymentPlanDBOld = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
+        paymentPlanDBOld.delete()
+        
+        paymentPlanDBUpdate = self.paymentPlanPBToDB(request.payment_plan)
+        paymentPlanDBUpdate.save()
+        return paymentPlanDBUpdate
 
-        paymentPlanUpdatedDB = self.planningCollection.objects.get(id=request.payment_plan_id)
-        return self.paymentPlanDBToPB(paymentPlanUpdatedDB)
+        # paymentPlanDB = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
+        # paymentPlanPB = request.payment_plan
+        # update = json.loads(self.paymentPlanPBToDB(paymentPlanPB).to_json())
+        # # del update['PaymentPlanID']
+        # paymentPlanDB.update(**update)
+        # # paymentPlanDB.update(update)
+
+        # paymentPlanUpdatedDB = self.planningCollection.objects.get(id=request.payment_plan_id)
+        # return self.paymentPlanDBToPB(paymentPlanUpdatedDB)
 
     def DeletePaymentPlan(self, request, context) -> payment_plan_pb2.DeletePaymentPlanResponse:
-        # paymentPlanDB = self.planningCollection.PaymentPlan.objects.get(id=request.payment_plan_id)
-        # print(type(self.planningCollection))
-        # print(type(self.planningCollection.PaymentPlan))
-        # print(type(self.planningCollection.PaymentPlan.objects))
-        # paymentPlanDB = self.planningCollection.PaymentPlan.objects(id=request.payment_plan_id).first()
         paymentPlanDB = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
         paymentPlanPB = self.paymentPlanDBToPB(paymentPlanDB)
         paymentPlanDB.delete()
@@ -315,7 +314,7 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         paymentPlanStatusDB = db_models.PaymentStatus[payment_plan_pb2.PaymentStatus.Name(paymentPlanPB.status)]
         paymentActionDB = []
         for paPB in paymentPlanPB.payment_action:
-            paDB = db_models.PaymentAction(AccountID=paPB.account_id, amount=paPB.amount,
+            paDB = db_models.PaymentAction(AccountID=paPB.account_id, Amount=paPB.amount,
                         TransactionDate=paPB.transaction_date.ToDatetime(),
                         PaymentActionStatus=db_models.PaymentActionStatus[payment_plan_pb2.PaymentActionStatus.Name(paPB.status)])
             paymentActionDB.append(paDB)
