@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package core;
-option go_package = "./proto;core";
+package planning;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
-import "common.proto";
+import "common/common.proto";
 import "google/protobuf/timestamp.proto";
 
 enum PaymentStatus {
@@ -44,9 +44,9 @@ message PaymentPlan {
   string user_id = 2;
   repeated string payment_task_id = 3;
   float timeline = 4;
-  PaymentFrequency payment_freq = 5;
+  common.PaymentFrequency payment_freq = 5;
   float amount_per_payment = 6;
-  PlanType plan_type = 7;
+  common.PlanType plan_type = 7;
   // Expected date the plan should be completed
   google.protobuf.Timestamp end_date = 8;
   // This Payment plan has not completed and is still active

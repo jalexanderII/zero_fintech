@@ -3,8 +3,10 @@ package server
 import (
 	"context"
 
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -67,7 +69,7 @@ func (s CoreServer) DeleteUser(ctx context.Context, in *core.DeleteUserRequest) 
 	}
 	var user database.User
 	err = s.UserDB.FindOne(ctx, filter).Decode(&user)
-	return &core.DeleteUserResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, User: UserDBToPB(&user)}, nil
+	return &core.DeleteUserResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, User: UserDBToPB(&user)}, nil
 }
 
 // UserDBToPB converts a User DB object to its proto object

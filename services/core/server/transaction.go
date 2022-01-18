@@ -4,8 +4,10 @@ import (
 	"context"
 	"log"
 
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -98,7 +100,7 @@ func (s CoreServer) DeleteTransaction(ctx context.Context, in *core.DeleteTransa
 	}
 	var transaction database.Transaction
 	err = s.TransactionDB.FindOne(ctx, filter).Decode(&transaction)
-	return &core.DeleteTransactionResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, Transaction: TransactionDBToPB(transaction)}, nil
+	return &core.DeleteTransactionResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, Transaction: TransactionDBToPB(transaction)}, nil
 }
 
 // TransactionPBToDB converts a Transaction proto object to its serialized DB object

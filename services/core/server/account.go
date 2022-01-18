@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -106,7 +107,7 @@ func (s CoreServer) DeleteAccount(ctx context.Context, in *core.DeleteAccountReq
 	}
 	var account database.Account
 	err = s.AccountDB.FindOne(ctx, filter).Decode(&account)
-	return &core.DeleteAccountResponse{Status: core.DELETE_STATUS_DELETE_STATUS_SUCCESS, Account: AccountDBToPB(account)}, nil
+	return &core.DeleteAccountResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, Account: AccountDBToPB(account)}, nil
 }
 
 // AccountPBToDB converts an Account proto object to its serialized DB object

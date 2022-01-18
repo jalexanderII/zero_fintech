@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package auth;
-option go_package = "./proto;auth";
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/auth";
 
 service Auth {
   // Authentication

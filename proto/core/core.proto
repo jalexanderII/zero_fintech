@@ -1,13 +1,13 @@
 syntax = "proto3";
 
 package core;
-option go_package = "./proto;core";
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
-import "payment_task.proto";
-import "payment_plan.proto";
-import "accounts.proto";
-import "transactions.proto";
-import "users.proto";
+import "core/payment_task.proto";
+import "planning/payment_plan.proto";
+import "core/accounts.proto";
+import "core/transactions.proto";
+import "core/users.proto";
 
 service Core {
   // GetPaymentPlan makes request to the Planning service by passing it a list
@@ -46,5 +46,5 @@ message GetPaymentPlanRequest {
 }
 
 message GetPaymentPlanResponse {
-  repeated PaymentPlan payment_plans = 1;
+  repeated planning.PaymentPlan payment_plans = 1;
 }

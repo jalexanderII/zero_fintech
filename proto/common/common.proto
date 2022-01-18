@@ -1,7 +1,8 @@
 syntax = "proto3";
 
-package core;
-option go_package = "./proto;core";
+package common;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
+
 
 // Status message for Delete database action
 enum DELETE_STATUS {
@@ -14,16 +15,16 @@ enum DELETE_STATUS {
 
 // Different optimization plans that a PaymentPlan may prioritize
 enum PlanType {
-  PLANTYPE_UNKNOWN = 0;
-  PLANTYPE_OPTIM_CREDIT_SCORE = 1;
-  PLANTYPE_MIN_FEES = 2;
+  PLAN_TYPE_UNKNOWN = 0;
+  PLAN_TYPE_OPTIM_CREDIT_SCORE = 1;
+  PLAN_TYPE_MIN_FEES = 2;
 }
 
 // Payment frequency for a PaymentPlan
 enum PaymentFrequency {
-  PAYMENTFREQ_UNKNOWN = 0;
-  PAYMENTFREQ_WEEKLY = 1;
-  PAYMENTFREQ_BIWEEKLY = 2;
-  PAYMENTFREQ_MONTHLY = 3;
-  PAYMENTFREQ_QUARTERLY = 4;
+  PAYMENT_FREQUENCY_UNKNOWN = 0;
+  PAYMENT_FREQUENCY_WEEKLY = 1;
+  PAYMENT_FREQUENCY_BIWEEKLY = 2;
+  PAYMENT_FREQUENCY_MONTHLY = 3;
+  PAYMENT_FREQUENCY_QUARTERLY = 4;
 }

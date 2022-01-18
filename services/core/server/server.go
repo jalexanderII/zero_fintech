@@ -5,9 +5,12 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -59,33 +62,33 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	return &core.GetPaymentPlanResponse{PaymentPlans: res}, nil
 }
 
-func MockClientCall(tasks []*core.PaymentTask) []*core.PaymentPlan {
-	var plans []*core.PaymentPlan
-	var actions []*core.PaymentAction
+func MockClientCall(tasks []*core.PaymentTask) []*planning.PaymentPlan {
+	var plans []*planning.PaymentPlan
+	var actions []*planning.PaymentAction
 	var ids []string
 	var total float64
 	for _, task := range tasks {
 		ids = append(ids, task.PaymentTaskId)
 		total += task.Amount
-		a := &core.PaymentAction{
+		a := &planning.PaymentAction{
 			AccountId:       task.AccountId,
 			Amount:          float32(task.GetAmount()),
 			TransactionDate: timestamppb.New(time.Now()),
-			Status:          core.PaymentActionStatus_PAYMENT_ACTION_STATUS_PENDING,
+			Status:          planning.PaymentActionStatus_PAYMENT_ACTION_STATUS_PENDING,
 		}
 		actions = append(actions, a)
 	}
-	plan := &core.PaymentPlan{
+	plan := &planning.PaymentPlan{
 		PaymentPlanId:    primitive.NewObjectID().Hex(),
 		UserId:           tasks[0].UserId,
 		PaymentTaskId:    ids,
 		Timeline:         12,
-		PaymentFreq:      core.PaymentFrequency_PAYMENTFREQ_MONTHLY,
+		PaymentFreq:      common.PaymentFrequency_PAYMENT_FREQUENCY_MONTHLY,
 		AmountPerPayment: float32(total / 12),
-		PlanType:         core.PlanType_PLANTYPE_OPTIM_CREDIT_SCORE,
+		PlanType:         common.PlanType_PLAN_TYPE_OPTIM_CREDIT_SCORE,
 		EndDate:          timestamppb.New(time.Now()),
 		Active:           true,
-		Status:           core.PaymentStatus_PAYMENT_STATUS_CURRENT,
+		Status:           planning.PaymentStatus_PAYMENT_STATUS_CURRENT,
 		PaymentAction:    actions,
 	}
 	plans = append(plans, plan)

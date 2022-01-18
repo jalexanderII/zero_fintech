@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 package core;
-option go_package = "./proto;core";
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
-import "common.proto";
+import "common/common.proto";
 
 // Account balances we be calculated using the “average daily balance (including new Purchases)" method.
 message Account {
@@ -92,6 +92,6 @@ message ListAccountResponse {
 }
 
 message DeleteAccountResponse {
-  DELETE_STATUS status = 1;
+  common.DELETE_STATUS status = 1;
   Account account = 2;
 }

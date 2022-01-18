@@ -3,7 +3,7 @@ package client
 import (
 	"log"
 
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"google.golang.org/grpc"
 )
 

@@ -1,9 +1,9 @@
 syntax = "proto3";
 
 package core;
-option go_package = "./proto;core";
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
-import "common.proto";
+import "common/common.proto";
 import "google/protobuf/field_mask.proto";
 
 // PaymentTask encapsulates the payment goals a user has per credit account
@@ -18,8 +18,8 @@ message PaymentTask {
 
 // MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan
 message MetaData {
-  PlanType preferred_plan_type = 1;
-  PaymentFrequency preferred_payment_freq = 3;
+  common.PlanType preferred_plan_type = 1;
+  common.PaymentFrequency preferred_payment_freq = 3;
 }
 
 // CRUD Methods
@@ -48,7 +48,7 @@ message ListPaymentTaskResponse {
 }
 
 message DeletePaymentTaskResponse {
-  DELETE_STATUS status = 1;
+  common.DELETE_STATUS status = 1;
   PaymentTask payment_task = 2;
 }
 
