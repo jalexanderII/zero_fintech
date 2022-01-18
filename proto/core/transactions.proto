@@ -5,6 +5,7 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
+
 import "common/common.proto";
 
 // Transaction represents any credit line item in a credit card account

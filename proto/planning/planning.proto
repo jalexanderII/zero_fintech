@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package planning;
 
-import "payment_plan.proto";
-import "payment_task.proto";
+import "planning/payment_plan.proto";
+import "core/payment_task.proto";
 
 service Planning {
     // Create PaymentPlan for list of PaymentTasks
@@ -17,10 +17,10 @@ service Planning {
 }
 
 message CreatePaymentPlanRequest {
-    repeated PaymentTask payment_tasks = 1;
+    repeated core.PaymentTask payment_tasks = 1;
 }
 
 message CreatePaymentPlanResponse {
-    repeated PaymentPlan payment_plans = 1;
+    repeated planning.PaymentPlan payment_plans = 1;
 } 
 

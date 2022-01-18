@@ -2,11 +2,11 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import accounts_pb2 as accounts__pb2
-import core_pb2 as core__pb2
-import payment_task_pb2 as payment__task__pb2
-import transactions_pb2 as transactions__pb2
-import users_pb2 as users__pb2
+from core import accounts_pb2 as core_dot_accounts__pb2
+from core import core_pb2 as core_dot_core__pb2
+from core import payment_task_pb2 as core_dot_payment__task__pb2
+from core import transactions_pb2 as core_dot_transactions__pb2
+from core import users_pb2 as core_dot_users__pb2
 
 
 class CoreStub(object):
@@ -20,108 +20,108 @@ class CoreStub(object):
         """
         self.GetPaymentPlan = channel.unary_unary(
                 '/core.Core/GetPaymentPlan',
-                request_serializer=core__pb2.GetPaymentPlanRequest.SerializeToString,
-                response_deserializer=core__pb2.GetPaymentPlanResponse.FromString,
+                request_serializer=core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
+                response_deserializer=core_dot_core__pb2.GetPaymentPlanResponse.FromString,
                 )
         self.CreateAccount = channel.unary_unary(
                 '/core.Core/CreateAccount',
-                request_serializer=accounts__pb2.CreateAccountRequest.SerializeToString,
-                response_deserializer=accounts__pb2.Account.FromString,
+                request_serializer=core_dot_accounts__pb2.CreateAccountRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.Account.FromString,
                 )
         self.GetAccount = channel.unary_unary(
                 '/core.Core/GetAccount',
-                request_serializer=accounts__pb2.GetAccountRequest.SerializeToString,
-                response_deserializer=accounts__pb2.Account.FromString,
+                request_serializer=core_dot_accounts__pb2.GetAccountRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.Account.FromString,
                 )
         self.ListAccounts = channel.unary_unary(
                 '/core.Core/ListAccounts',
-                request_serializer=accounts__pb2.ListAccountRequest.SerializeToString,
-                response_deserializer=accounts__pb2.ListAccountResponse.FromString,
+                request_serializer=core_dot_accounts__pb2.ListAccountRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.ListAccountResponse.FromString,
                 )
         self.UpdateAccount = channel.unary_unary(
                 '/core.Core/UpdateAccount',
-                request_serializer=accounts__pb2.UpdateAccountRequest.SerializeToString,
-                response_deserializer=accounts__pb2.Account.FromString,
+                request_serializer=core_dot_accounts__pb2.UpdateAccountRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.Account.FromString,
                 )
         self.DeleteAccount = channel.unary_unary(
                 '/core.Core/DeleteAccount',
-                request_serializer=accounts__pb2.DeleteAccountRequest.SerializeToString,
-                response_deserializer=accounts__pb2.DeleteAccountResponse.FromString,
+                request_serializer=core_dot_accounts__pb2.DeleteAccountRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.DeleteAccountResponse.FromString,
                 )
         self.CreateTransaction = channel.unary_unary(
                 '/core.Core/CreateTransaction',
-                request_serializer=transactions__pb2.CreateTransactionRequest.SerializeToString,
-                response_deserializer=transactions__pb2.Transaction.FromString,
+                request_serializer=core_dot_transactions__pb2.CreateTransactionRequest.SerializeToString,
+                response_deserializer=core_dot_transactions__pb2.Transaction.FromString,
                 )
         self.GetTransaction = channel.unary_unary(
                 '/core.Core/GetTransaction',
-                request_serializer=transactions__pb2.GetTransactionRequest.SerializeToString,
-                response_deserializer=transactions__pb2.Transaction.FromString,
+                request_serializer=core_dot_transactions__pb2.GetTransactionRequest.SerializeToString,
+                response_deserializer=core_dot_transactions__pb2.Transaction.FromString,
                 )
         self.ListTransactions = channel.unary_unary(
                 '/core.Core/ListTransactions',
-                request_serializer=transactions__pb2.ListTransactionRequest.SerializeToString,
-                response_deserializer=transactions__pb2.ListTransactionResponse.FromString,
+                request_serializer=core_dot_transactions__pb2.ListTransactionRequest.SerializeToString,
+                response_deserializer=core_dot_transactions__pb2.ListTransactionResponse.FromString,
                 )
         self.UpdateTransaction = channel.unary_unary(
                 '/core.Core/UpdateTransaction',
-                request_serializer=transactions__pb2.UpdateTransactionRequest.SerializeToString,
-                response_deserializer=transactions__pb2.Transaction.FromString,
+                request_serializer=core_dot_transactions__pb2.UpdateTransactionRequest.SerializeToString,
+                response_deserializer=core_dot_transactions__pb2.Transaction.FromString,
                 )
         self.DeleteTransaction = channel.unary_unary(
                 '/core.Core/DeleteTransaction',
-                request_serializer=transactions__pb2.DeleteTransactionRequest.SerializeToString,
-                response_deserializer=transactions__pb2.DeleteTransactionResponse.FromString,
+                request_serializer=core_dot_transactions__pb2.DeleteTransactionRequest.SerializeToString,
+                response_deserializer=core_dot_transactions__pb2.DeleteTransactionResponse.FromString,
                 )
         self.CreatePaymentTask = channel.unary_unary(
                 '/core.Core/CreatePaymentTask',
-                request_serializer=payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
-                response_deserializer=payment__task__pb2.PaymentTask.FromString,
+                request_serializer=core_dot_payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
+                response_deserializer=core_dot_payment__task__pb2.PaymentTask.FromString,
                 )
         self.CreateManyPaymentTask = channel.unary_unary(
                 '/core.Core/CreateManyPaymentTask',
-                request_serializer=payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
-                response_deserializer=payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
+                request_serializer=core_dot_payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
+                response_deserializer=core_dot_payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
                 )
         self.GetPaymentTask = channel.unary_unary(
                 '/core.Core/GetPaymentTask',
-                request_serializer=payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
-                response_deserializer=payment__task__pb2.PaymentTask.FromString,
+                request_serializer=core_dot_payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
+                response_deserializer=core_dot_payment__task__pb2.PaymentTask.FromString,
                 )
         self.ListPaymentTasks = channel.unary_unary(
                 '/core.Core/ListPaymentTasks',
-                request_serializer=payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
-                response_deserializer=payment__task__pb2.ListPaymentTaskResponse.FromString,
+                request_serializer=core_dot_payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
+                response_deserializer=core_dot_payment__task__pb2.ListPaymentTaskResponse.FromString,
                 )
         self.UpdatePaymentTask = channel.unary_unary(
                 '/core.Core/UpdatePaymentTask',
-                request_serializer=payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
-                response_deserializer=payment__task__pb2.PaymentTask.FromString,
+                request_serializer=core_dot_payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
+                response_deserializer=core_dot_payment__task__pb2.PaymentTask.FromString,
                 )
         self.DeletePaymentTask = channel.unary_unary(
                 '/core.Core/DeletePaymentTask',
-                request_serializer=payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
-                response_deserializer=payment__task__pb2.DeletePaymentTaskResponse.FromString,
+                request_serializer=core_dot_payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
+                response_deserializer=core_dot_payment__task__pb2.DeletePaymentTaskResponse.FromString,
                 )
         self.GetUser = channel.unary_unary(
                 '/core.Core/GetUser',
-                request_serializer=users__pb2.GetUserRequest.SerializeToString,
-                response_deserializer=users__pb2.User.FromString,
+                request_serializer=core_dot_users__pb2.GetUserRequest.SerializeToString,
+                response_deserializer=core_dot_users__pb2.User.FromString,
                 )
         self.ListUsers = channel.unary_unary(
                 '/core.Core/ListUsers',
-                request_serializer=users__pb2.ListUserRequest.SerializeToString,
-                response_deserializer=users__pb2.ListUserResponse.FromString,
+                request_serializer=core_dot_users__pb2.ListUserRequest.SerializeToString,
+                response_deserializer=core_dot_users__pb2.ListUserResponse.FromString,
                 )
         self.UpdateUser = channel.unary_unary(
                 '/core.Core/UpdateUser',
-                request_serializer=users__pb2.UpdateUserRequest.SerializeToString,
-                response_deserializer=users__pb2.User.FromString,
+                request_serializer=core_dot_users__pb2.UpdateUserRequest.SerializeToString,
+                response_deserializer=core_dot_users__pb2.User.FromString,
                 )
         self.DeleteUser = channel.unary_unary(
                 '/core.Core/DeleteUser',
-                request_serializer=users__pb2.DeleteUserRequest.SerializeToString,
-                response_deserializer=users__pb2.DeleteUserResponse.FromString,
+                request_serializer=core_dot_users__pb2.DeleteUserRequest.SerializeToString,
+                response_deserializer=core_dot_users__pb2.DeleteUserResponse.FromString,
                 )
 
 
@@ -266,108 +266,108 @@ def add_CoreServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetPaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentPlan,
-                    request_deserializer=core__pb2.GetPaymentPlanRequest.FromString,
-                    response_serializer=core__pb2.GetPaymentPlanResponse.SerializeToString,
+                    request_deserializer=core_dot_core__pb2.GetPaymentPlanRequest.FromString,
+                    response_serializer=core_dot_core__pb2.GetPaymentPlanResponse.SerializeToString,
             ),
             'CreateAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateAccount,
-                    request_deserializer=accounts__pb2.CreateAccountRequest.FromString,
-                    response_serializer=accounts__pb2.Account.SerializeToString,
+                    request_deserializer=core_dot_accounts__pb2.CreateAccountRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.Account.SerializeToString,
             ),
             'GetAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.GetAccount,
-                    request_deserializer=accounts__pb2.GetAccountRequest.FromString,
-                    response_serializer=accounts__pb2.Account.SerializeToString,
+                    request_deserializer=core_dot_accounts__pb2.GetAccountRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.Account.SerializeToString,
             ),
             'ListAccounts': grpc.unary_unary_rpc_method_handler(
                     servicer.ListAccounts,
-                    request_deserializer=accounts__pb2.ListAccountRequest.FromString,
-                    response_serializer=accounts__pb2.ListAccountResponse.SerializeToString,
+                    request_deserializer=core_dot_accounts__pb2.ListAccountRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.ListAccountResponse.SerializeToString,
             ),
             'UpdateAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateAccount,
-                    request_deserializer=accounts__pb2.UpdateAccountRequest.FromString,
-                    response_serializer=accounts__pb2.Account.SerializeToString,
+                    request_deserializer=core_dot_accounts__pb2.UpdateAccountRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.Account.SerializeToString,
             ),
             'DeleteAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteAccount,
-                    request_deserializer=accounts__pb2.DeleteAccountRequest.FromString,
-                    response_serializer=accounts__pb2.DeleteAccountResponse.SerializeToString,
+                    request_deserializer=core_dot_accounts__pb2.DeleteAccountRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.DeleteAccountResponse.SerializeToString,
             ),
             'CreateTransaction': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateTransaction,
-                    request_deserializer=transactions__pb2.CreateTransactionRequest.FromString,
-                    response_serializer=transactions__pb2.Transaction.SerializeToString,
+                    request_deserializer=core_dot_transactions__pb2.CreateTransactionRequest.FromString,
+                    response_serializer=core_dot_transactions__pb2.Transaction.SerializeToString,
             ),
             'GetTransaction': grpc.unary_unary_rpc_method_handler(
                     servicer.GetTransaction,
-                    request_deserializer=transactions__pb2.GetTransactionRequest.FromString,
-                    response_serializer=transactions__pb2.Transaction.SerializeToString,
+                    request_deserializer=core_dot_transactions__pb2.GetTransactionRequest.FromString,
+                    response_serializer=core_dot_transactions__pb2.Transaction.SerializeToString,
             ),
             'ListTransactions': grpc.unary_unary_rpc_method_handler(
                     servicer.ListTransactions,
-                    request_deserializer=transactions__pb2.ListTransactionRequest.FromString,
-                    response_serializer=transactions__pb2.ListTransactionResponse.SerializeToString,
+                    request_deserializer=core_dot_transactions__pb2.ListTransactionRequest.FromString,
+                    response_serializer=core_dot_transactions__pb2.ListTransactionResponse.SerializeToString,
             ),
             'UpdateTransaction': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateTransaction,
-                    request_deserializer=transactions__pb2.UpdateTransactionRequest.FromString,
-                    response_serializer=transactions__pb2.Transaction.SerializeToString,
+                    request_deserializer=core_dot_transactions__pb2.UpdateTransactionRequest.FromString,
+                    response_serializer=core_dot_transactions__pb2.Transaction.SerializeToString,
             ),
             'DeleteTransaction': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteTransaction,
-                    request_deserializer=transactions__pb2.DeleteTransactionRequest.FromString,
-                    response_serializer=transactions__pb2.DeleteTransactionResponse.SerializeToString,
+                    request_deserializer=core_dot_transactions__pb2.DeleteTransactionRequest.FromString,
+                    response_serializer=core_dot_transactions__pb2.DeleteTransactionResponse.SerializeToString,
             ),
             'CreatePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.CreatePaymentTask,
-                    request_deserializer=payment__task__pb2.CreatePaymentTaskRequest.FromString,
-                    response_serializer=payment__task__pb2.PaymentTask.SerializeToString,
+                    request_deserializer=core_dot_payment__task__pb2.CreatePaymentTaskRequest.FromString,
+                    response_serializer=core_dot_payment__task__pb2.PaymentTask.SerializeToString,
             ),
             'CreateManyPaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateManyPaymentTask,
-                    request_deserializer=payment__task__pb2.CreateManyPaymentTaskRequest.FromString,
-                    response_serializer=payment__task__pb2.CreateManyPaymentTaskResponse.SerializeToString,
+                    request_deserializer=core_dot_payment__task__pb2.CreateManyPaymentTaskRequest.FromString,
+                    response_serializer=core_dot_payment__task__pb2.CreateManyPaymentTaskResponse.SerializeToString,
             ),
             'GetPaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentTask,
-                    request_deserializer=payment__task__pb2.GetPaymentTaskRequest.FromString,
-                    response_serializer=payment__task__pb2.PaymentTask.SerializeToString,
+                    request_deserializer=core_dot_payment__task__pb2.GetPaymentTaskRequest.FromString,
+                    response_serializer=core_dot_payment__task__pb2.PaymentTask.SerializeToString,
             ),
             'ListPaymentTasks': grpc.unary_unary_rpc_method_handler(
                     servicer.ListPaymentTasks,
-                    request_deserializer=payment__task__pb2.ListPaymentTaskRequest.FromString,
-                    response_serializer=payment__task__pb2.ListPaymentTaskResponse.SerializeToString,
+                    request_deserializer=core_dot_payment__task__pb2.ListPaymentTaskRequest.FromString,
+                    response_serializer=core_dot_payment__task__pb2.ListPaymentTaskResponse.SerializeToString,
             ),
             'UpdatePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdatePaymentTask,
-                    request_deserializer=payment__task__pb2.UpdatePaymentTaskRequest.FromString,
-                    response_serializer=payment__task__pb2.PaymentTask.SerializeToString,
+                    request_deserializer=core_dot_payment__task__pb2.UpdatePaymentTaskRequest.FromString,
+                    response_serializer=core_dot_payment__task__pb2.PaymentTask.SerializeToString,
             ),
             'DeletePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.DeletePaymentTask,
-                    request_deserializer=payment__task__pb2.DeletePaymentTaskRequest.FromString,
-                    response_serializer=payment__task__pb2.DeletePaymentTaskResponse.SerializeToString,
+                    request_deserializer=core_dot_payment__task__pb2.DeletePaymentTaskRequest.FromString,
+                    response_serializer=core_dot_payment__task__pb2.DeletePaymentTaskResponse.SerializeToString,
             ),
             'GetUser': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUser,
-                    request_deserializer=users__pb2.GetUserRequest.FromString,
-                    response_serializer=users__pb2.User.SerializeToString,
+                    request_deserializer=core_dot_users__pb2.GetUserRequest.FromString,
+                    response_serializer=core_dot_users__pb2.User.SerializeToString,
             ),
             'ListUsers': grpc.unary_unary_rpc_method_handler(
                     servicer.ListUsers,
-                    request_deserializer=users__pb2.ListUserRequest.FromString,
-                    response_serializer=users__pb2.ListUserResponse.SerializeToString,
+                    request_deserializer=core_dot_users__pb2.ListUserRequest.FromString,
+                    response_serializer=core_dot_users__pb2.ListUserResponse.SerializeToString,
             ),
             'UpdateUser': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateUser,
-                    request_deserializer=users__pb2.UpdateUserRequest.FromString,
-                    response_serializer=users__pb2.User.SerializeToString,
+                    request_deserializer=core_dot_users__pb2.UpdateUserRequest.FromString,
+                    response_serializer=core_dot_users__pb2.User.SerializeToString,
             ),
             'DeleteUser': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteUser,
-                    request_deserializer=users__pb2.DeleteUserRequest.FromString,
-                    response_serializer=users__pb2.DeleteUserResponse.SerializeToString,
+                    request_deserializer=core_dot_users__pb2.DeleteUserRequest.FromString,
+                    response_serializer=core_dot_users__pb2.DeleteUserResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -391,8 +391,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetPaymentPlan',
-            core__pb2.GetPaymentPlanRequest.SerializeToString,
-            core__pb2.GetPaymentPlanResponse.FromString,
+            core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
+            core_dot_core__pb2.GetPaymentPlanResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -408,8 +408,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/CreateAccount',
-            accounts__pb2.CreateAccountRequest.SerializeToString,
-            accounts__pb2.Account.FromString,
+            core_dot_accounts__pb2.CreateAccountRequest.SerializeToString,
+            core_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -425,8 +425,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetAccount',
-            accounts__pb2.GetAccountRequest.SerializeToString,
-            accounts__pb2.Account.FromString,
+            core_dot_accounts__pb2.GetAccountRequest.SerializeToString,
+            core_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -442,8 +442,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListAccounts',
-            accounts__pb2.ListAccountRequest.SerializeToString,
-            accounts__pb2.ListAccountResponse.FromString,
+            core_dot_accounts__pb2.ListAccountRequest.SerializeToString,
+            core_dot_accounts__pb2.ListAccountResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -459,8 +459,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/UpdateAccount',
-            accounts__pb2.UpdateAccountRequest.SerializeToString,
-            accounts__pb2.Account.FromString,
+            core_dot_accounts__pb2.UpdateAccountRequest.SerializeToString,
+            core_dot_accounts__pb2.Account.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -476,8 +476,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/DeleteAccount',
-            accounts__pb2.DeleteAccountRequest.SerializeToString,
-            accounts__pb2.DeleteAccountResponse.FromString,
+            core_dot_accounts__pb2.DeleteAccountRequest.SerializeToString,
+            core_dot_accounts__pb2.DeleteAccountResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -493,8 +493,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/CreateTransaction',
-            transactions__pb2.CreateTransactionRequest.SerializeToString,
-            transactions__pb2.Transaction.FromString,
+            core_dot_transactions__pb2.CreateTransactionRequest.SerializeToString,
+            core_dot_transactions__pb2.Transaction.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -510,8 +510,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetTransaction',
-            transactions__pb2.GetTransactionRequest.SerializeToString,
-            transactions__pb2.Transaction.FromString,
+            core_dot_transactions__pb2.GetTransactionRequest.SerializeToString,
+            core_dot_transactions__pb2.Transaction.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -527,8 +527,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListTransactions',
-            transactions__pb2.ListTransactionRequest.SerializeToString,
-            transactions__pb2.ListTransactionResponse.FromString,
+            core_dot_transactions__pb2.ListTransactionRequest.SerializeToString,
+            core_dot_transactions__pb2.ListTransactionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -544,8 +544,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/UpdateTransaction',
-            transactions__pb2.UpdateTransactionRequest.SerializeToString,
-            transactions__pb2.Transaction.FromString,
+            core_dot_transactions__pb2.UpdateTransactionRequest.SerializeToString,
+            core_dot_transactions__pb2.Transaction.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -561,8 +561,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/DeleteTransaction',
-            transactions__pb2.DeleteTransactionRequest.SerializeToString,
-            transactions__pb2.DeleteTransactionResponse.FromString,
+            core_dot_transactions__pb2.DeleteTransactionRequest.SerializeToString,
+            core_dot_transactions__pb2.DeleteTransactionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -578,8 +578,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/CreatePaymentTask',
-            payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
-            payment__task__pb2.PaymentTask.FromString,
+            core_dot_payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
+            core_dot_payment__task__pb2.PaymentTask.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -595,8 +595,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/CreateManyPaymentTask',
-            payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
-            payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
+            core_dot_payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
+            core_dot_payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -612,8 +612,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetPaymentTask',
-            payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
-            payment__task__pb2.PaymentTask.FromString,
+            core_dot_payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
+            core_dot_payment__task__pb2.PaymentTask.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -629,8 +629,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListPaymentTasks',
-            payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
-            payment__task__pb2.ListPaymentTaskResponse.FromString,
+            core_dot_payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
+            core_dot_payment__task__pb2.ListPaymentTaskResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -646,8 +646,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/UpdatePaymentTask',
-            payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
-            payment__task__pb2.PaymentTask.FromString,
+            core_dot_payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
+            core_dot_payment__task__pb2.PaymentTask.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -663,8 +663,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/DeletePaymentTask',
-            payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
-            payment__task__pb2.DeletePaymentTaskResponse.FromString,
+            core_dot_payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
+            core_dot_payment__task__pb2.DeletePaymentTaskResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -680,8 +680,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetUser',
-            users__pb2.GetUserRequest.SerializeToString,
-            users__pb2.User.FromString,
+            core_dot_users__pb2.GetUserRequest.SerializeToString,
+            core_dot_users__pb2.User.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -697,8 +697,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListUsers',
-            users__pb2.ListUserRequest.SerializeToString,
-            users__pb2.ListUserResponse.FromString,
+            core_dot_users__pb2.ListUserRequest.SerializeToString,
+            core_dot_users__pb2.ListUserResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -714,8 +714,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/UpdateUser',
-            users__pb2.UpdateUserRequest.SerializeToString,
-            users__pb2.User.FromString,
+            core_dot_users__pb2.UpdateUserRequest.SerializeToString,
+            core_dot_users__pb2.User.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -731,7 +731,7 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/DeleteUser',
-            users__pb2.DeleteUserRequest.SerializeToString,
-            users__pb2.DeleteUserResponse.FromString,
+            core_dot_users__pb2.DeleteUserRequest.SerializeToString,
+            core_dot_users__pb2.DeleteUserResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

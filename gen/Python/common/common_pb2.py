@@ -16,16 +16,16 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='common.proto',
-  package='planning',
+  package='common',
   syntax='proto3',
-  serialized_options=None,
+  serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0c\x63ommon.proto\x12\x08planning*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x62\x06proto3'
+  serialized_pb=b'\n\x0c\x63ommon.proto\x12\x06\x63ommon*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x42\x34Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
 )
 
 _DELETE_STATUS = _descriptor.EnumDescriptor(
   name='DELETE_STATUS',
-  full_name='planning.DELETE_STATUS',
+  full_name='common.DELETE_STATUS',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -58,15 +58,15 @@ _DELETE_STATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=27,
-  serialized_end=180,
+  serialized_start=25,
+  serialized_end=178,
 )
 _sym_db.RegisterEnumDescriptor(_DELETE_STATUS)
 
 DELETE_STATUS = enum_type_wrapper.EnumTypeWrapper(_DELETE_STATUS)
 _PLANTYPE = _descriptor.EnumDescriptor(
   name='PlanType',
-  full_name='planning.PlanType',
+  full_name='common.PlanType',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -89,15 +89,15 @@ _PLANTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=182,
-  serialized_end=273,
+  serialized_start=180,
+  serialized_end=271,
 )
 _sym_db.RegisterEnumDescriptor(_PLANTYPE)
 
 PlanType = enum_type_wrapper.EnumTypeWrapper(_PLANTYPE)
 _PAYMENTFREQUENCY = _descriptor.EnumDescriptor(
   name='PaymentFrequency',
-  full_name='planning.PaymentFrequency',
+  full_name='common.PaymentFrequency',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -130,8 +130,8 @@ _PAYMENTFREQUENCY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=276,
-  serialized_end=451,
+  serialized_start=274,
+  serialized_end=449,
 )
 _sym_db.RegisterEnumDescriptor(_PAYMENTFREQUENCY)
 
@@ -157,4 +157,5 @@ DESCRIPTOR.enum_types_by_name['PaymentFrequency'] = _PAYMENTFREQUENCY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
+DESCRIPTOR._options = None
 # @@protoc_insertion_point(module_scope)
