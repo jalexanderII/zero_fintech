@@ -255,16 +255,6 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         paymentPlanDBUpdate.save()
         return paymentPlanDBUpdate
 
-        # paymentPlanDB = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
-        # paymentPlanPB = request.payment_plan
-        # update = json.loads(self.paymentPlanPBToDB(paymentPlanPB).to_json())
-        # # del update['PaymentPlanID']
-        # paymentPlanDB.update(**update)
-        # # paymentPlanDB.update(update)
-
-        # paymentPlanUpdatedDB = self.planningCollection.objects.get(id=request.payment_plan_id)
-        # return self.paymentPlanDBToPB(paymentPlanUpdatedDB)
-
     def DeletePaymentPlan(self, request, context) -> payment_plan_pb2.DeletePaymentPlanResponse:
         paymentPlanDB = db_models.PaymentPlan.objects(PaymentPlanID=request.payment_plan_id).first()
         paymentPlanPB = self.paymentPlanDBToPB(paymentPlanDB)
