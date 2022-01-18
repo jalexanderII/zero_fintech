@@ -6,12 +6,13 @@ from dotenv import load_dotenv
 import sys
 import json
 
-sys.path.append('/Users/joschkabraun/dev/zero_fintech/services/planning')
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'gen')))
+from Python.planning import payment_plan_pb2
 
 from server import PlanningServicer
 from database.database import initateMongoClient
 from database import models as db_models
-from gen.planning import payment_plan_pb2
 
 def gen_server() -> PlanningServicer:
     # load .env file

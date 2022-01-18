@@ -14,8 +14,11 @@ from pymongo.database import Database
 
 from database import models as db_models
 
-# from gen.core import core_pb2_grpc, accounts_pb2, transactions_pb2
-from gen.planning import planning_pb2_grpc, payment_plan_pb2, payment_task_pb2, common_pb2
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'gen')))
+from Python.core import accounts_pb2, core_pb2_grpc, payment_task_pb2, transactions_pb2
+from Python.common import common_pb2
+from Python.planning import payment_plan_pb2, planning_pb2_grpc
 
 def shift_date_by_payment_frequency(date: datetime, payment_freq: common_pb2.PaymentFrequency) -> datetime:
     if payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:

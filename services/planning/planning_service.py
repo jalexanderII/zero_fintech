@@ -4,13 +4,15 @@ import grpc
 from dotenv import load_dotenv
 import os
 
+
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'gen')))
+
+from Python.planning import planning_pb2_grpc
+from Python.core import core_pb2_grpc, accounts_pb2
+
 from server.server import PlanningServicer
 from database.database import initateMongoClient
-from gen.planning import planning_pb2_grpc
-
-# import sys
-# sys.path.append('../core')  # sys.path.append('/Users/joschkabraun/dev/zero_fintech/services/core')
-# from gen.core_py import core_pb2_grpc, accounts_pb2
 
 def serve():
     # load .env file
@@ -29,11 +31,11 @@ def serve():
     logging.info('Server running')
     server.wait_for_termination()
 
-# def run_client():
-#     with grpc.insecure_channel('localhost:9090') as channel:
-#         stub = core_pb2_grpc.CoreStub(channel=channel)
-#         response = stub.ListAccounts(request=accounts_pb2.ListAccountRequest())
-#         print(response)
+def run_client():
+    with grpc.insecure_channel('localhost:9090') as channel:
+        stub = core_pb2_grpc.CoreStub(channel=channel)
+        response = stub.ListAccounts(request=accounts_pb2.ListAccountRequest())
+        print(response)
 
 if __name__ == '__main__':
     logging.basicConfig()
