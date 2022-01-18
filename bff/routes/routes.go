@@ -2,57 +2,24 @@ package routes
 
 import (
 	"context"
-	"log"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
+	"github.com/jalexanderII/zero_fintech/bff/client"
 	"github.com/jalexanderII/zero_fintech/bff/handlers"
-	"github.com/jalexanderII/zero_fintech/bff/middleware"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
-
-var (
-	timeout = 10 * time.Second
-)
-
-func welcome(c *fiber.Ctx) error {
-	return c.SendString("Hello, World!")
-}
 
 func SetupRoutes(app *fiber.App) {
 	// ******CLIENTS*******
-	// create client and context with timeout to reuse in all handlers
+	// create client and context to reuse in all handlers
 	ctx := context.Background()
-
-	// set up universal dail options
-	var opts []grpc.DialOption
-	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	opts = append(opts, grpc.WithBlock())
-
-	// AuthClient Connection
-	authConn, err := grpc.Dial("localhost:9091", opts...)
-	if err != nil {
-		log.Fatalf("fail to dial: %v", err)
-	}
-	// create new auth client
-	authClient := middleware.NewAuthClient(authConn, "", "", "")
-
-	// add auth interceptor middleware to core client
-	opts = append(opts, grpc.WithUnaryInterceptor(authClient.Interceptor.Unary()))
-	coreConn, err := grpc.Dial("localhost:9090", opts...)
-	if err != nil {
-		log.Fatalf("fail to dial: %v", err)
-	}
-	// instantiate core client
-	coreClient := core.NewCoreClient(coreConn)
+	authClient, opts := client.SetUpAuthClient()
+	coreClient := client.SetUpCoreClient(authClient, opts)
 
 	// ******HANDLERS*******
-	// Set up handlers
-	// welcome screen
-	app.Get("/", welcome)
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World!")
+	})
 	api := app.Group("/api")
 
 	// // monitoring api stats
@@ -78,9 +45,4 @@ func SetupRoutes(app *fiber.App) {
 	coreEndpoints.Get("/paymenttask/:id", handlers.GetPaymentTask(coreClient, ctx))
 	coreEndpoints.Patch("/paymenttask/:id", handlers.UpdatePaymentTask(coreClient, ctx))
 	coreEndpoints.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
-}
-
-// NewClientContext returns a new Context according to app performance
-func NewClientContext(d time.Duration) (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.Background(), d)
 }

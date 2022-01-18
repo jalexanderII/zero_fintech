@@ -1,17 +1,20 @@
-package middleware
+package client
 
 import (
 	"context"
+	"log"
 	"time"
 
+	"github.com/jalexanderII/zero_fintech/bff/middleware"
 	"github.com/jalexanderII/zero_fintech/services/auth/gen/auth"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 // AuthClient is a client to call authentication RPC
 type AuthClient struct {
 	authClient  auth.AuthClient
-	Interceptor *AuthInterceptor
+	Interceptor *middleware.AuthInterceptor
 	Username    string
 	Email       string
 	Password    string
@@ -20,7 +23,7 @@ type AuthClient struct {
 // NewAuthClient returns a new auth client
 func NewAuthClient(conn *grpc.ClientConn, username, email, password string) *AuthClient {
 	a := auth.NewAuthClient(conn)
-	return &AuthClient{a, NewAuthInterceptor(AccessibleRoles()), username, email, password}
+	return &AuthClient{a, middleware.NewAuthInterceptor(middleware.AccessibleRoles()), username, email, password}
 }
 
 // Login user and returns the access token
@@ -60,4 +63,16 @@ func (a *AuthClient) SignUp() (string, error) {
 	a.Interceptor.SetToken(res.GetToken())
 
 	return res.GetToken(), nil
+}
+
+func SetUpAuthClient() (*AuthClient, []grpc.DialOption) {
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	opts = append(opts, grpc.WithBlock())
+
+	authConn, err := grpc.Dial("localhost:9091", opts...)
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+	return NewAuthClient(authConn, "", "", ""), opts
 }

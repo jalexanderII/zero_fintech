@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/jalexanderII/zero_fintech/bff/middleware"
+	"github.com/jalexanderII/zero_fintech/bff/client"
 )
 
 // Login gets username and password from request body, writes it to an AuthClient and then calls Login
-func Login(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
+func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type LoginData struct {
 			Username string `json:"username"`
@@ -30,7 +30,7 @@ func Login(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
 }
 
 // SignUp gets username, email, and password from request body, writes it to an AuthClient and then calls SignUp
-func SignUp(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
+func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type SignUpData struct {
 			Username string `json:"username"`

@@ -1,0 +1,17 @@
+package client
+
+import (
+	"log"
+
+	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"google.golang.org/grpc"
+)
+
+func SetUpCoreClient(authClient *AuthClient, opts []grpc.DialOption) core.CoreClient {
+	opts = append(opts, grpc.WithUnaryInterceptor(authClient.Interceptor.Unary()))
+	coreConn, err := grpc.Dial("localhost:9090", opts...)
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+	return core.NewCoreClient(coreConn)
+}

@@ -11,7 +11,6 @@ func main() {
 	app := fiber.New()
 	middleware.FiberMiddleware(app)
 	routes.SetupRoutes(app)
-
 	// Start server (with graceful shutdown).
 	config.StartServerWithGracefulShutdown(app)
 }

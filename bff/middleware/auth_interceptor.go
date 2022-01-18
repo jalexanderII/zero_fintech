@@ -10,7 +10,6 @@ import (
 
 // AuthInterceptor is a client interceptor for authentication
 type AuthInterceptor struct {
-	// AuthClient  *AuthClient
 	AuthMethods map[string]bool
 	AccessToken string
 }
