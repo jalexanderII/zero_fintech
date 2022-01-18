@@ -63,25 +63,25 @@ func SetupRoutes(app *fiber.App) {
 	api.Get("/dashboard", monitor.New())
 
 	// Auth endpoints
-	auth := api.Group("/auth")
-	auth.Post("/login", handlers.Login(authClient))
-	auth.Post("/signup", handlers.SignUp(authClient))
+	authEndpoints := api.Group("/auth")
+	authEndpoints.Post("/login", handlers.Login(authClient))
+	authEndpoints.Post("/signup", handlers.SignUp(authClient))
 
 	// User endpoints
-	// users := api.Group("/users")
-	// users.Get("/", , handlers.ListUsers(coreClient, ctx))
-	// users.Get("/:id", , handlers.GetUser(coreClient, ctx))
-	// users.Patch("/:id", , handlers.UpdateUser(coreClient, ctx))
-	// users.Delete("/:id", , handlers.DeleteUser(coreClient, ctx))
+	userEndpoints := api.Group("/users")
+	userEndpoints.Get("/", handlers.ListUsers(coreClient, ctx))
+	userEndpoints.Get("/:id", handlers.GetUser(coreClient, ctx))
+	userEndpoints.Patch("/:id", handlers.UpdateUser(coreClient, ctx))
+	userEndpoints.Delete("/:id", handlers.DeleteUser(coreClient, ctx))
 
 	// Core endpoints
-	coreH := api.Group("/core")
-	coreH.Post("/paymenttask", handlers.CreatePaymentTask(coreClient, ctx))
-	// coreH.Post("/paymentplan", handlers.GetPaymentPlan(coreClient, ctx))
-	// coreH.Get("/paymenttask", handlers.ListPaymentTasks(coreClient, ctx))
-	// coreH.Get("/paymenttask/:id", handlers.GetPaymentTask(coreClient, ctx))
-	// coreH.Patch("/paymenttask/:id", handlers.UpdatePaymentTask(coreClient, ctx))
-	// coreH.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
+	coreEndpoints := api.Group("/core")
+	coreEndpoints.Post("/paymenttask", handlers.CreatePaymentTask(coreClient, ctx))
+	coreEndpoints.Post("/paymentplan", handlers.GetPaymentPlan(coreClient, ctx))
+	coreEndpoints.Get("/paymenttask", handlers.ListPaymentTasks(coreClient, ctx))
+	coreEndpoints.Get("/paymenttask/:id", handlers.GetPaymentTask(coreClient, ctx))
+	coreEndpoints.Patch("/paymenttask/:id", handlers.UpdatePaymentTask(coreClient, ctx))
+	coreEndpoints.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
 }
 
 // NewClientContext returns a new Context according to app performance
