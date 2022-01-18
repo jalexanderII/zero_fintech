@@ -4,11 +4,8 @@ go 1.17
 
 require (
 	github.com/bxcodec/faker/v3 v3.7.0
-	github.com/go-playground/validator/v10 v10.10.0
 	github.com/gofiber/fiber/v2 v2.24.0
-	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-jwt/jwt/v4 v4.0.0
 	github.com/hashicorp/go-hclog v1.1.0
 	github.com/joho/godotenv v1.4.0
 	go.mongodb.org/mongo-driver v1.7.0
@@ -20,14 +17,11 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.2 // indirect
 	github.com/fatih/color v1.7.0 // indirect
-	github.com/go-playground/locales v0.14.0 // indirect
-	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -43,4 +37,5 @@ require (
 	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211013025323-ce878158c4d4 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
