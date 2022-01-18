@@ -22,7 +22,7 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 
 		token, err := authClient.Login()
 		if err != nil {
-			return c.SendStatus(fiber.StatusInternalServerError)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on login request", "data": err})
 		}
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
@@ -47,7 +47,7 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 
 		token, err := authClient.SignUp()
 		if err != nil {
-			return c.SendStatus(fiber.StatusInternalServerError)
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on sign up request", "data": err})
 		}
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": token})
