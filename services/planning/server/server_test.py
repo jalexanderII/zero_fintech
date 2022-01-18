@@ -106,14 +106,19 @@ def test_get_payment_plan():
 def test_update_payment_plan():
     server = gen_server()
 
-    # # save first PaymentPlan
+    # save first PaymentPlan
     paymentPlanOrig = EXAMPLE_PAYMENT_PLANS[0]
     paymentPlanOrig.save()
-    assert len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id) == 1
+    # check if the PaymentPlan has one PaymentTask (as the first entry of EXAMPLE_PAYMENT_PLANS has)
+    paymentTasks = server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id
+    assert len(paymentTasks) == 1, f"PaymentPlan has {len(paymentTasks)} PaymentTasks instead of 1"
+    # update with the third element of EXAMPLE_PAYMENT_PLANS which has 2 PaymentTasks
     server.UpdatePaymentPlan(payment_plan_pb2.UpdatePaymentPlanRequest(
         payment_plan_id=paymentPlanOrig.PaymentPlanID, payment_plan=server.paymentPlanDBToPB(EXAMPLE_PAYMENT_PLANS[2])
     ), context=None)
-    assert len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id) == 2, f"length = {len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id)}"
+    # check if the PaymentPlan has two PaymentTasks (as the third entry of EXAMPLE_PAYMENT_PLANS has)
+    paymentTasks = server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id
+    assert len(paymentTasks) == 2, f"PaymentPlan has {len(paymentTasks)} PaymentTask(s) instead of 2"
 
 if __name__ == '__main__':
     test_delete_payment_plan()
