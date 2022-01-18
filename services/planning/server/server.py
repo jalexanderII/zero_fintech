@@ -277,16 +277,16 @@ class PlanningServicer(planning_pb2_grpc.PlanningServicer):
         Returns:
             payment_plan_pb2.PaymentPlan: PaymentPlan as Protobuf
         """
-        paymentFrequencyPB = getattr(common_pb2.PaymentFrequency, paymentPlanDB.PaymentFrequency.name)
-        planTypePB = getattr(common_pb2.PlanType, paymentPlanDB.PlanType.name)
+        paymentFrequencyPB = common_pb2.PaymentFrequency.Value(paymentPlanDB.PaymentFrequency.name)
+        planTypePB = common_pb2.PlanType.Value(paymentPlanDB.PlanType.name)
         endDatePB = Timestamp()
         endDatePB.FromDatetime(paymentPlanDB.EndDate)
-        paymentPlanStatusPB = getattr(payment_plan_pb2.PaymentStatus, paymentPlanDB.Status.name)
+        paymentPlanStatusPB = payment_plan_pb2.PaymentStatus.Value(paymentPlanDB.Status.name)
         paymentActionPB = []
         for paDB in paymentPlanDB.PaymentAction:
             transactionDatePB = Timestamp()
             transactionDatePB.FromDatetime(paDB.TransactionDate)
-            paActionStatusPB = getattr(payment_plan_pb2.PaymentActionStatus, paDB.PaymentActionStatus.name)
+            paActionStatusPB = payment_plan_pb2.PaymentActionStatus.Value(paDB.PaymentActionStatus.name)
             paPB = payment_plan_pb2.PaymentAction(account_id=paDB.AccountID, amount=paDB.Amount,
                         transaction_date=transactionDatePB, status=paActionStatusPB)
             paymentActionPB.append(paPB)
