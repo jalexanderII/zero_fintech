@@ -112,7 +112,6 @@ def test_update_payment_plan():
     ), context=None)
     assert len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id) == 2, f"length = {len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id)}"
 
-
 if __name__ == '__main__':
     # test_delete_payment_plan()
     # test_get_payment_plan()
