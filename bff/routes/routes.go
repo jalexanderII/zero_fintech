@@ -10,19 +10,16 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-	// ******CLIENTS*******
-	// create client and context to reuse in all handlers
+	// Create client and context to reuse in all handlers
 	ctx := context.Background()
-	authClient, opts := client.SetUpAuthClient()
-	coreClient := client.SetUpCoreClient(authClient, opts)
+	authClient, grpcOpts := client.SetUpAuthClient()
+	coreClient := client.SetUpCoreClient(authClient, grpcOpts)
 
-	// ******HANDLERS*******
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	// Create handlers for bff server
+	app.Get("/", func(c *fiber.Ctx) error { return c.SendString("Hello, World!") })
 	api := app.Group("/api")
 
-	// // monitoring api stats
+	// Monitoring api stats
 	api.Get("/dashboard", monitor.New())
 
 	// Auth endpoints
