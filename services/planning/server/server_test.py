@@ -6,11 +6,13 @@ from dotenv import load_dotenv
 import sys
 import json
 
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'gen')))
-from Python.planning import payment_plan_pb2
-
 from server import PlanningServicer
+import sys, os
+# make gen/Python importable by import Python.X
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'gen')))
+from Python.planning import payment_plan_pb2
+# make ../database importable
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 from database.database import initateMongoClient
 from database import models as db_models
 
@@ -114,6 +116,6 @@ def test_update_payment_plan():
     assert len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id) == 2, f"length = {len(server.GetPaymentPlan(payment_plan_pb2.GetPaymentPlanRequest(payment_plan_id=paymentPlanOrig.PaymentPlanID), context=None).payment_task_id)}"
 
 if __name__ == '__main__':
-    # test_delete_payment_plan()
-    # test_get_payment_plan()
+    test_delete_payment_plan()
+    test_get_payment_plan()
     test_update_payment_plan()

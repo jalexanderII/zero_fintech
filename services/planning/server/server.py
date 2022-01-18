@@ -12,13 +12,17 @@ from dotenv import load_dotenv
 from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.database import Database
 
-from database import models as db_models
+
 
 import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'gen')))
+# make gen/Python importable by import Python.X
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'gen')))
 from Python.core import accounts_pb2, core_pb2_grpc, payment_task_pb2, transactions_pb2
 from Python.common import common_pb2
 from Python.planning import payment_plan_pb2, planning_pb2_grpc
+# make ../database importable
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+from database import models as db_models
 
 def shift_date_by_payment_frequency(date: datetime, payment_freq: common_pb2.PaymentFrequency) -> datetime:
     if payment_freq == common_pb2.PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
