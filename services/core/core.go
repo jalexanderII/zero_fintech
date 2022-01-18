@@ -7,12 +7,13 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"github.com/jalexanderII/zero_fintech/services/core/config/interceptor"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"github.com/jalexanderII/zero_fintech/services/core/server"
+	"github.com/jalexanderII/zero_fintech/utils"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -27,14 +28,14 @@ func main() {
 	l := hclog.Default()
 	l.Debug("Core Service")
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", config.GetEnv("CORE_SERVER_PORT")))
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", utils.GetEnv("CORE_SERVER_PORT")))
 	if err != nil {
 		l.Error("failed to listen", "error", err)
 		panic(err)
 	}
 
 	// jwtManger to manage user authentication using tokens
-	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
+	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), TokenDuration)
 	authInterceptor := interceptor.NewAuthInterceptor(jwtManager, interceptor.AccessibleRoles(), l)
 
 	// Initiate MongoDB Database
@@ -44,10 +45,10 @@ func main() {
 	}
 
 	// Connect to the Collections inside the given DB
-	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
-	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))
-	transactionCollection := *DB.Collection(config.GetEnv("TRANSACTION_COLLECTION"))
-	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
+	coreCollection := *DB.Collection(utils.GetEnv("CORE_COLLECTION"))
+	accountCollection := *DB.Collection(utils.GetEnv("ACCOUNT_COLLECTION"))
+	transactionCollection := *DB.Collection(utils.GetEnv("TRANSACTION_COLLECTION"))
+	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
 
 	// Initiate grpcServer instance
 	serverOptions := []grpc.ServerOption{grpc.UnaryInterceptor(authInterceptor.Unary())}

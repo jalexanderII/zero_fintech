@@ -5,7 +5,9 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 )
 
 // MetaData is a DB Serialization of Proto MetaData
@@ -44,7 +46,7 @@ type PaymentPlan struct {
 }
 
 // CreateResponsePaymentPlan Takes in a model and returns a serializer
-func CreateResponsePaymentPlan(paymentTaskModel *core.PaymentPlan) PaymentPlan {
+func CreateResponsePaymentPlan(paymentTaskModel *planning.PaymentPlan) PaymentPlan {
 	paymentActions := make([]*PaymentAction, len(paymentTaskModel.GetPaymentAction()))
 	for idx, paymentAction := range paymentTaskModel.GetPaymentAction() {
 		paymentActions[idx] = &PaymentAction{
@@ -164,8 +166,8 @@ func UpdatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 			PaymentTask: &core.PaymentTask{
 				Amount: updatePaymentTaskResponse.Amount,
 				MetaData: &core.MetaData{
-					PreferredPlanType:    core.PlanType(updatePaymentTaskResponse.PreferredPlanType),
-					PreferredPaymentFreq: core.PaymentFrequency(updatePaymentTaskResponse.PreferredPaymentFreq),
+					PreferredPlanType:    common.PlanType(updatePaymentTaskResponse.PreferredPlanType),
+					PreferredPaymentFreq: common.PaymentFrequency(updatePaymentTaskResponse.PreferredPaymentFreq),
 				},
 			},
 		})
@@ -195,8 +197,8 @@ func PaymentTaskDBToPB(paymentTask PaymentTask) *core.PaymentTask {
 		AccountId:     paymentTask.TransactionId,
 		Amount:        paymentTask.Amount,
 		MetaData: &core.MetaData{
-			PreferredPlanType:    core.PlanType(paymentTask.MetaData.PreferredPlanType),
-			PreferredPaymentFreq: core.PaymentFrequency(paymentTask.MetaData.PreferredPaymentFreq),
+			PreferredPlanType:    common.PlanType(paymentTask.MetaData.PreferredPlanType),
+			PreferredPaymentFreq: common.PaymentFrequency(paymentTask.MetaData.PreferredPaymentFreq),
 		},
 	}
 }

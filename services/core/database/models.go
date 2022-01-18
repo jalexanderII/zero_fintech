@@ -3,7 +3,8 @@ package database
 import (
 	"time"
 
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -19,8 +20,8 @@ type PaymentTask struct {
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
-	PreferredPlanType    core.PlanType         `bson:"preferred_plan_type" faker:"preferred_plan_type" `
-	PreferredPaymentFreq core.PaymentFrequency `bson:"preferred_payment_freq" faker:"preferred_payment_freq" `
+	PreferredPlanType    common.PlanType         `bson:"preferred_plan_type" faker:"preferred_plan_type" `
+	PreferredPaymentFreq common.PaymentFrequency `bson:"preferred_payment_freq" faker:"preferred_payment_freq" `
 }
 
 // AnnualPercentageRates is a DB Serialization of Proto AnnualPercentageRates

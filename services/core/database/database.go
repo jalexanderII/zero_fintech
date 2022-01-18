@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jalexanderII/zero_fintech/services/core/config"
+	"github.com/jalexanderII/zero_fintech/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -24,7 +25,7 @@ func InitiateMongoClient() (mongo.Database, error) {
 	// Perform connection creation operation only once.
 	mongoOnce.Do(func() {
 		// Set client options
-		clientOptions := options.Client().ApplyURI(config.GetEnv("MONGOURI"))
+		clientOptions := options.Client().ApplyURI(utils.GetEnv("MONGOURI"))
 		ctx, cancel := config.NewDBContext(10 * time.Second)
 		defer cancel()
 		// Connect to MongoDB
@@ -40,5 +41,5 @@ func InitiateMongoClient() (mongo.Database, error) {
 		clientInstance = client
 	})
 
-	return *clientInstance.Database(config.GetEnv("CORE_DB_NAME")), clientInstanceError
+	return *clientInstance.Database(utils.GetEnv("CORE_DB_NAME")), clientInstanceError
 }

@@ -8,9 +8,10 @@ import (
 	"regexp"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/auth/database"
-	"github.com/jalexanderII/zero_fintech/services/auth/gen/auth"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

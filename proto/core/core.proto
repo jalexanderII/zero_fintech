@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package core;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
+
+import "core/payment_task.proto";
+import "planning/payment_plan.proto";
+import "core/accounts.proto";
+import "core/transactions.proto";
+import "core/users.proto";
+
+service Core {
+  // GetPaymentPlan makes request to the Planning service by passing it a list
+  // of PaymentTasks and expects to receive a list of PaymentPlans
+  rpc GetPaymentPlan(GetPaymentPlanRequest) returns (GetPaymentPlanResponse);
+
+  //  CRUD METHODS
+  // Account
+  rpc CreateAccount(CreateAccountRequest) returns (Account);
+  rpc GetAccount(GetAccountRequest) returns (Account);
+  rpc ListAccounts(ListAccountRequest) returns (ListAccountResponse);
+  rpc UpdateAccount(UpdateAccountRequest) returns (Account);
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  // Transaction
+  rpc CreateTransaction(CreateTransactionRequest) returns (Transaction);
+  rpc GetTransaction(GetTransactionRequest) returns (Transaction);
+  rpc ListTransactions(ListTransactionRequest) returns (ListTransactionResponse);
+  rpc UpdateTransaction(UpdateTransactionRequest) returns (Transaction);
+  rpc DeleteTransaction(DeleteTransactionRequest) returns (DeleteTransactionResponse);
+  //Payment Task
+  rpc CreatePaymentTask(CreatePaymentTaskRequest) returns (PaymentTask);
+  rpc CreateManyPaymentTask(CreateManyPaymentTaskRequest) returns (CreateManyPaymentTaskResponse);
+  rpc GetPaymentTask(GetPaymentTaskRequest) returns (PaymentTask);
+  rpc ListPaymentTasks(ListPaymentTaskRequest) returns (ListPaymentTaskResponse);
+  rpc UpdatePaymentTask(UpdatePaymentTaskRequest) returns (PaymentTask);
+  rpc DeletePaymentTask(DeletePaymentTaskRequest) returns (DeletePaymentTaskResponse);
+  // Users
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc ListUsers(ListUserRequest) returns (ListUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (User);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message GetPaymentPlanRequest {
+  repeated string payment_tasks_ids = 1;
+}
+
+message GetPaymentPlanResponse {
+  repeated planning.PaymentPlan payment_plans = 1;
+}

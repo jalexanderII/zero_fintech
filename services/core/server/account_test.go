@@ -4,7 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -209,7 +210,7 @@ func TestCoreServer_DeleteAccount(t *testing.T) {
 	if err != nil {
 		t.Errorf("4: An error was returned: %v", err)
 	}
-	if deleted.Status != core.DELETE_STATUS_DELETE_STATUS_SUCCESS {
+	if deleted.Status != common.DELETE_STATUS_DELETE_STATUS_SUCCESS {
 		t.Errorf("5: Failed to delete account: %+v\n, %+v", deleted.Status, deleted.GetAccount())
 	}
 }

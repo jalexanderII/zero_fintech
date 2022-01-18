@@ -7,11 +7,13 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/auth/database"
-	"github.com/jalexanderII/zero_fintech/services/auth/gen/auth"
+
 	"github.com/jalexanderII/zero_fintech/services/auth/server"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
+	"github.com/jalexanderII/zero_fintech/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -25,14 +27,14 @@ func main() {
 	l := hclog.Default()
 	l.Debug("Auth Service")
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", config.GetEnv("AUTH_SERVER_PORT")))
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", utils.GetEnv("AUTH_SERVER_PORT")))
 	if err != nil {
 		l.Error("failed to listen", "error", err)
 		panic(err)
 	}
 
 	// jwtManger to manage user authentication using tokens
-	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
+	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), TokenDuration)
 
 	// Initiate MongoDB Database
 	DB, err := database.InitiateMongoClient()
@@ -41,7 +43,7 @@ func main() {
 	}
 
 	// Connect to the Collections inside the given DB
-	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
+	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
 
 	// Initiate grpcServer instance
 	var serverOptions []grpc.ServerOption

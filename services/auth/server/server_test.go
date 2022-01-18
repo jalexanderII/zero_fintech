@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/auth/database"
-	"github.com/jalexanderII/zero_fintech/services/auth/gen/auth"
-	"github.com/jalexanderII/zero_fintech/services/core/config"
+	"github.com/jalexanderII/zero_fintech/utils"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,12 +19,12 @@ import (
 var L = hclog.Default()
 
 func GenServer() (*AuthServer, context.Context) {
-	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), 15*time.Minute)
+	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)
 	DB, err := database.InitiateMongoClient()
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}
-	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
+	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
 
 	server := NewAuthServer(userCollection, jwtManager, L)
 	return server, context.TODO()

@@ -3,7 +3,8 @@ package server
 import (
 	"testing"
 
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -16,8 +17,8 @@ func TestCoreServer_CreatePaymentTask(t *testing.T) {
 		AccountId:     "61df9b621d2c2b15a6e53ec9",
 		Amount:        325,
 		MetaData: &core.MetaData{
-			PreferredPlanType:    core.PlanType_PLANTYPE_OPTIM_CREDIT_SCORE,
-			PreferredPaymentFreq: core.PaymentFrequency_PAYMENTFREQ_MONTHLY,
+			PreferredPlanType:    common.PlanType_PLAN_TYPE_OPTIM_CREDIT_SCORE,
+			PreferredPaymentFreq: common.PaymentFrequency_PAYMENT_FREQUENCY_MONTHLY,
 		},
 	}
 
@@ -64,8 +65,8 @@ func TestCoreServer_UpdatePaymentTask(t *testing.T) {
 		AccountId:     "61df9b621d2c2b15a6e53ec9",
 		Amount:        325,
 		MetaData: &core.MetaData{
-			PreferredPlanType:    core.PlanType_PLANTYPE_MIN_FEES,
-			PreferredPaymentFreq: core.PaymentFrequency_PAYMENTFREQ_QUARTERLY,
+			PreferredPlanType:    common.PlanType_PLAN_TYPE_MIN_FEES,
+			PreferredPaymentFreq: common.PaymentFrequency_PAYMENT_FREQUENCY_QUARTERLY,
 		},
 	}
 
@@ -91,8 +92,8 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 			AccountId:     "61df9b621d2c2b15a6e53ec9",
 			Amount:        1000,
 			MetaData: &core.MetaData{
-				PreferredPlanType:    core.PlanType_PLANTYPE_MIN_FEES,
-				PreferredPaymentFreq: core.PaymentFrequency_PAYMENTFREQ_QUARTERLY,
+				PreferredPlanType:    common.PlanType_PLAN_TYPE_MIN_FEES,
+				PreferredPaymentFreq: common.PaymentFrequency_PAYMENT_FREQUENCY_QUARTERLY,
 			},
 		},
 		primitive.NewObjectID(),
@@ -115,7 +116,7 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 	if err != nil {
 		t.Errorf("4: An error was returned: %v", err)
 	}
-	if deleted.Status != core.DELETE_STATUS_DELETE_STATUS_SUCCESS {
+	if deleted.Status != common.DELETE_STATUS_DELETE_STATUS_SUCCESS {
 		t.Errorf("5: Failed to delete paymentTask: %+v\n, %+v", deleted.Status, deleted.GetPaymentTask())
 	}
 }

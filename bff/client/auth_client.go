@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/jalexanderII/zero_fintech/bff/middleware"
-	"github.com/jalexanderII/zero_fintech/services/auth/gen/auth"
+	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
