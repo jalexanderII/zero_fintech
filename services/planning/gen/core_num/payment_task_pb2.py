@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z\014./proto;core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x12payment_task.proto\x12\x04\x63ore\x1a\x0c\x63ommon.proto\x1a google/protobuf/field_mask.proto\"\x96\x01\n\x0bPaymentTask\x12\x17\n\x0fpayment_task_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x16\n\x0etransaction_id\x18\x03 \x01(\t\x12\x12\n\naccount_id\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12!\n\tmeta_data\x18\x06 \x01(\x0b\x32\x0e.core.MetaData\"o\n\x08MetaData\x12+\n\x13preferred_plan_type\x18\x01 \x01(\x0e\x32\x0e.core.PlanType\x12\x36\n\x16preferred_payment_freq\x18\x03 \x01(\x0e\x32\x16.core.PaymentFrequency\"C\n\x18\x43reatePaymentTaskRequest\x12\'\n\x0cpayment_task\x18\x01 \x01(\x0b\x32\x11.core.PaymentTask\"#\n\x15GetPaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"y\n\x18UpdatePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\'\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x11.core.PaymentTask\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"&\n\x18\x44\x65letePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentTaskRequest\"C\n\x17ListPaymentTaskResponse\x12(\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x11.core.PaymentTask\"i\n\x19\x44\x65letePaymentTaskResponse\x12#\n\x06status\x18\x01 \x01(\x0e\x32\x13.core.DELETE_STATUS\x12\'\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x11.core.PaymentTaskB\x0eZ\x0c./proto;coreb\x06proto3'
+  serialized_pb=b'\n\x12payment_task.proto\x12\x04\x63ore\x1a\x0c\x63ommon.proto\x1a google/protobuf/field_mask.proto\"\x96\x01\n\x0bPaymentTask\x12\x17\n\x0fpayment_task_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x16\n\x0etransaction_id\x18\x03 \x01(\t\x12\x12\n\naccount_id\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12!\n\tmeta_data\x18\x06 \x01(\x0b\x32\x0e.core.MetaData\"o\n\x08MetaData\x12+\n\x13preferred_plan_type\x18\x01 \x01(\x0e\x32\x0e.core.PlanType\x12\x36\n\x16preferred_payment_freq\x18\x03 \x01(\x0e\x32\x16.core.PaymentFrequency\"C\n\x18\x43reatePaymentTaskRequest\x12\'\n\x0cpayment_task\x18\x01 \x01(\x0b\x32\x11.core.PaymentTask\"#\n\x15GetPaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"y\n\x18UpdatePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\'\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x11.core.PaymentTask\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"&\n\x18\x44\x65letePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentTaskRequest\"C\n\x17ListPaymentTaskResponse\x12(\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x11.core.PaymentTask\"i\n\x19\x44\x65letePaymentTaskResponse\x12#\n\x06status\x18\x01 \x01(\x0e\x32\x13.core.DELETE_STATUS\x12\'\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x11.core.PaymentTask\"H\n\x1c\x43reateManyPaymentTaskRequest\x12(\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x11.core.PaymentTask\"\x1f\n\x1d\x43reateManyPaymentTaskResponseB\x0eZ\x0c./proto;coreb\x06proto3'
   ,
   dependencies=[common__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 
@@ -371,6 +371,63 @@ _DELETEPAYMENTTASKRESPONSE = _descriptor.Descriptor(
   serialized_end=811,
 )
 
+
+_CREATEMANYPAYMENTTASKREQUEST = _descriptor.Descriptor(
+  name='CreateManyPaymentTaskRequest',
+  full_name='core.CreateManyPaymentTaskRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='payment_tasks', full_name='core.CreateManyPaymentTaskRequest.payment_tasks', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=813,
+  serialized_end=885,
+)
+
+
+_CREATEMANYPAYMENTTASKRESPONSE = _descriptor.Descriptor(
+  name='CreateManyPaymentTaskResponse',
+  full_name='core.CreateManyPaymentTaskResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=887,
+  serialized_end=918,
+)
+
 _PAYMENTTASK.fields_by_name['meta_data'].message_type = _METADATA
 _METADATA.fields_by_name['preferred_plan_type'].enum_type = common__pb2._PLANTYPE
 _METADATA.fields_by_name['preferred_payment_freq'].enum_type = common__pb2._PAYMENTFREQUENCY
@@ -380,6 +437,7 @@ _UPDATEPAYMENTTASKREQUEST.fields_by_name['mask'].message_type = google_dot_proto
 _LISTPAYMENTTASKRESPONSE.fields_by_name['payment_tasks'].message_type = _PAYMENTTASK
 _DELETEPAYMENTTASKRESPONSE.fields_by_name['status'].enum_type = common__pb2._DELETE_STATUS
 _DELETEPAYMENTTASKRESPONSE.fields_by_name['payment_task'].message_type = _PAYMENTTASK
+_CREATEMANYPAYMENTTASKREQUEST.fields_by_name['payment_tasks'].message_type = _PAYMENTTASK
 DESCRIPTOR.message_types_by_name['PaymentTask'] = _PAYMENTTASK
 DESCRIPTOR.message_types_by_name['MetaData'] = _METADATA
 DESCRIPTOR.message_types_by_name['CreatePaymentTaskRequest'] = _CREATEPAYMENTTASKREQUEST
@@ -389,6 +447,8 @@ DESCRIPTOR.message_types_by_name['DeletePaymentTaskRequest'] = _DELETEPAYMENTTAS
 DESCRIPTOR.message_types_by_name['ListPaymentTaskRequest'] = _LISTPAYMENTTASKREQUEST
 DESCRIPTOR.message_types_by_name['ListPaymentTaskResponse'] = _LISTPAYMENTTASKRESPONSE
 DESCRIPTOR.message_types_by_name['DeletePaymentTaskResponse'] = _DELETEPAYMENTTASKRESPONSE
+DESCRIPTOR.message_types_by_name['CreateManyPaymentTaskRequest'] = _CREATEMANYPAYMENTTASKREQUEST
+DESCRIPTOR.message_types_by_name['CreateManyPaymentTaskResponse'] = _CREATEMANYPAYMENTTASKRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 PaymentTask = _reflection.GeneratedProtocolMessageType('PaymentTask', (_message.Message,), {
@@ -453,6 +513,20 @@ DeletePaymentTaskResponse = _reflection.GeneratedProtocolMessageType('DeletePaym
   # @@protoc_insertion_point(class_scope:core.DeletePaymentTaskResponse)
   })
 _sym_db.RegisterMessage(DeletePaymentTaskResponse)
+
+CreateManyPaymentTaskRequest = _reflection.GeneratedProtocolMessageType('CreateManyPaymentTaskRequest', (_message.Message,), {
+  'DESCRIPTOR' : _CREATEMANYPAYMENTTASKREQUEST,
+  '__module__' : 'payment_task_pb2'
+  # @@protoc_insertion_point(class_scope:core.CreateManyPaymentTaskRequest)
+  })
+_sym_db.RegisterMessage(CreateManyPaymentTaskRequest)
+
+CreateManyPaymentTaskResponse = _reflection.GeneratedProtocolMessageType('CreateManyPaymentTaskResponse', (_message.Message,), {
+  'DESCRIPTOR' : _CREATEMANYPAYMENTTASKRESPONSE,
+  '__module__' : 'payment_task_pb2'
+  # @@protoc_insertion_point(class_scope:core.CreateManyPaymentTaskResponse)
+  })
+_sym_db.RegisterMessage(CreateManyPaymentTaskResponse)
 
 
 DESCRIPTOR._options = None

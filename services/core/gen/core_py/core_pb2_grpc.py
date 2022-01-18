@@ -78,6 +78,11 @@ class CoreStub(object):
                 request_serializer=payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
                 response_deserializer=payment__task__pb2.PaymentTask.FromString,
                 )
+        self.CreateManyPaymentTask = channel.unary_unary(
+                '/core.Core/CreateManyPaymentTask',
+                request_serializer=payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
+                response_deserializer=payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
+                )
         self.GetPaymentTask = channel.unary_unary(
                 '/core.Core/GetPaymentTask',
                 request_serializer=payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
@@ -97,16 +102,6 @@ class CoreStub(object):
                 '/core.Core/DeletePaymentTask',
                 request_serializer=payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
                 response_deserializer=payment__task__pb2.DeletePaymentTaskResponse.FromString,
-                )
-        self.Login = channel.unary_unary(
-                '/core.Core/Login',
-                request_serializer=core__pb2.LoginRequest.SerializeToString,
-                response_deserializer=core__pb2.AuthResponse.FromString,
-                )
-        self.SignUp = channel.unary_unary(
-                '/core.Core/SignUp',
-                request_serializer=core__pb2.SignupRequest.SerializeToString,
-                response_deserializer=core__pb2.AuthResponse.FromString,
                 )
         self.GetUser = channel.unary_unary(
                 '/core.Core/GetUser',
@@ -211,6 +206,12 @@ class CoreServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CreateManyPaymentTask(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def GetPaymentTask(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -235,21 +236,9 @@ class CoreServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def Login(self, request, context):
-        """Users and Authentication
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def SignUp(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def GetUser(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Users
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -335,6 +324,11 @@ def add_CoreServicer_to_server(servicer, server):
                     request_deserializer=payment__task__pb2.CreatePaymentTaskRequest.FromString,
                     response_serializer=payment__task__pb2.PaymentTask.SerializeToString,
             ),
+            'CreateManyPaymentTask': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateManyPaymentTask,
+                    request_deserializer=payment__task__pb2.CreateManyPaymentTaskRequest.FromString,
+                    response_serializer=payment__task__pb2.CreateManyPaymentTaskResponse.SerializeToString,
+            ),
             'GetPaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentTask,
                     request_deserializer=payment__task__pb2.GetPaymentTaskRequest.FromString,
@@ -354,16 +348,6 @@ def add_CoreServicer_to_server(servicer, server):
                     servicer.DeletePaymentTask,
                     request_deserializer=payment__task__pb2.DeletePaymentTaskRequest.FromString,
                     response_serializer=payment__task__pb2.DeletePaymentTaskResponse.SerializeToString,
-            ),
-            'Login': grpc.unary_unary_rpc_method_handler(
-                    servicer.Login,
-                    request_deserializer=core__pb2.LoginRequest.FromString,
-                    response_serializer=core__pb2.AuthResponse.SerializeToString,
-            ),
-            'SignUp': grpc.unary_unary_rpc_method_handler(
-                    servicer.SignUp,
-                    request_deserializer=core__pb2.SignupRequest.FromString,
-                    response_serializer=core__pb2.AuthResponse.SerializeToString,
             ),
             'GetUser': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUser,
@@ -600,6 +584,23 @@ class Core(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def CreateManyPaymentTask(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/CreateManyPaymentTask',
+            payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
+            payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def GetPaymentTask(request,
             target,
             options=(),
@@ -664,40 +665,6 @@ class Core(object):
         return grpc.experimental.unary_unary(request, target, '/core.Core/DeletePaymentTask',
             payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
             payment__task__pb2.DeletePaymentTaskResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def Login(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/Login',
-            core__pb2.LoginRequest.SerializeToString,
-            core__pb2.AuthResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def SignUp(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/SignUp',
-            core__pb2.SignupRequest.SerializeToString,
-            core__pb2.AuthResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

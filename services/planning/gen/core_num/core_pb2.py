@@ -24,128 +24,11 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z\014./proto;core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\ncore.proto\x12\x04\x63ore\x1a\x12payment_task.proto\x1a\x12payment_plan.proto\x1a\x0e\x61\x63\x63ounts.proto\x1a\x12transactions.proto\x1a\x0busers.proto\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05Token\x18\x01 \x01(\t\"B\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t\"2\n\x15GetPaymentPlanRequest\x12\x19\n\x11payment_tasks_ids\x18\x01 \x03(\t\"B\n\x16GetPaymentPlanResponse\x12(\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x11.core.PaymentPlan2\xc3\x0b\n\x04\x43ore\x12K\n\x0eGetPaymentPlan\x12\x1b.core.GetPaymentPlanRequest\x1a\x1c.core.GetPaymentPlanResponse\x12:\n\rCreateAccount\x12\x1a.core.CreateAccountRequest\x1a\r.core.Account\x12\x34\n\nGetAccount\x12\x17.core.GetAccountRequest\x1a\r.core.Account\x12\x43\n\x0cListAccounts\x12\x18.core.ListAccountRequest\x1a\x19.core.ListAccountResponse\x12:\n\rUpdateAccount\x12\x1a.core.UpdateAccountRequest\x1a\r.core.Account\x12H\n\rDeleteAccount\x12\x1a.core.DeleteAccountRequest\x1a\x1b.core.DeleteAccountResponse\x12\x46\n\x11\x43reateTransaction\x12\x1e.core.CreateTransactionRequest\x1a\x11.core.Transaction\x12@\n\x0eGetTransaction\x12\x1b.core.GetTransactionRequest\x1a\x11.core.Transaction\x12O\n\x10ListTransactions\x12\x1c.core.ListTransactionRequest\x1a\x1d.core.ListTransactionResponse\x12\x46\n\x11UpdateTransaction\x12\x1e.core.UpdateTransactionRequest\x1a\x11.core.Transaction\x12T\n\x11\x44\x65leteTransaction\x12\x1e.core.DeleteTransactionRequest\x1a\x1f.core.DeleteTransactionResponse\x12\x46\n\x11\x43reatePaymentTask\x12\x1e.core.CreatePaymentTaskRequest\x1a\x11.core.PaymentTask\x12@\n\x0eGetPaymentTask\x12\x1b.core.GetPaymentTaskRequest\x1a\x11.core.PaymentTask\x12O\n\x10ListPaymentTasks\x12\x1c.core.ListPaymentTaskRequest\x1a\x1d.core.ListPaymentTaskResponse\x12\x46\n\x11UpdatePaymentTask\x12\x1e.core.UpdatePaymentTaskRequest\x1a\x11.core.PaymentTask\x12T\n\x11\x44\x65letePaymentTask\x12\x1e.core.DeletePaymentTaskRequest\x1a\x1f.core.DeletePaymentTaskResponse\x12/\n\x05Login\x12\x12.core.LoginRequest\x1a\x12.core.AuthResponse\x12\x31\n\x06SignUp\x12\x13.core.SignupRequest\x1a\x12.core.AuthResponse\x12+\n\x07GetUser\x12\x14.core.GetUserRequest\x1a\n.core.User\x12:\n\tListUsers\x12\x15.core.ListUserRequest\x1a\x16.core.ListUserResponse\x12\x31\n\nUpdateUser\x12\x17.core.UpdateUserRequest\x1a\n.core.User\x12?\n\nDeleteUser\x12\x17.core.DeleteUserRequest\x1a\x18.core.DeleteUserResponseB\x0eZ\x0c./proto;coreb\x06proto3'
+  serialized_pb=b'\n\ncore.proto\x12\x04\x63ore\x1a\x12payment_task.proto\x1a\x12payment_plan.proto\x1a\x0e\x61\x63\x63ounts.proto\x1a\x12transactions.proto\x1a\x0busers.proto\"2\n\x15GetPaymentPlanRequest\x12\x19\n\x11payment_tasks_ids\x18\x01 \x03(\t\"B\n\x16GetPaymentPlanResponse\x12(\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x11.core.PaymentPlan2\xc1\x0b\n\x04\x43ore\x12K\n\x0eGetPaymentPlan\x12\x1b.core.GetPaymentPlanRequest\x1a\x1c.core.GetPaymentPlanResponse\x12:\n\rCreateAccount\x12\x1a.core.CreateAccountRequest\x1a\r.core.Account\x12\x34\n\nGetAccount\x12\x17.core.GetAccountRequest\x1a\r.core.Account\x12\x43\n\x0cListAccounts\x12\x18.core.ListAccountRequest\x1a\x19.core.ListAccountResponse\x12:\n\rUpdateAccount\x12\x1a.core.UpdateAccountRequest\x1a\r.core.Account\x12H\n\rDeleteAccount\x12\x1a.core.DeleteAccountRequest\x1a\x1b.core.DeleteAccountResponse\x12\x46\n\x11\x43reateTransaction\x12\x1e.core.CreateTransactionRequest\x1a\x11.core.Transaction\x12@\n\x0eGetTransaction\x12\x1b.core.GetTransactionRequest\x1a\x11.core.Transaction\x12O\n\x10ListTransactions\x12\x1c.core.ListTransactionRequest\x1a\x1d.core.ListTransactionResponse\x12\x46\n\x11UpdateTransaction\x12\x1e.core.UpdateTransactionRequest\x1a\x11.core.Transaction\x12T\n\x11\x44\x65leteTransaction\x12\x1e.core.DeleteTransactionRequest\x1a\x1f.core.DeleteTransactionResponse\x12\x46\n\x11\x43reatePaymentTask\x12\x1e.core.CreatePaymentTaskRequest\x1a\x11.core.PaymentTask\x12`\n\x15\x43reateManyPaymentTask\x12\".core.CreateManyPaymentTaskRequest\x1a#.core.CreateManyPaymentTaskResponse\x12@\n\x0eGetPaymentTask\x12\x1b.core.GetPaymentTaskRequest\x1a\x11.core.PaymentTask\x12O\n\x10ListPaymentTasks\x12\x1c.core.ListPaymentTaskRequest\x1a\x1d.core.ListPaymentTaskResponse\x12\x46\n\x11UpdatePaymentTask\x12\x1e.core.UpdatePaymentTaskRequest\x1a\x11.core.PaymentTask\x12T\n\x11\x44\x65letePaymentTask\x12\x1e.core.DeletePaymentTaskRequest\x1a\x1f.core.DeletePaymentTaskResponse\x12+\n\x07GetUser\x12\x14.core.GetUserRequest\x1a\n.core.User\x12:\n\tListUsers\x12\x15.core.ListUserRequest\x1a\x16.core.ListUserResponse\x12\x31\n\nUpdateUser\x12\x17.core.UpdateUserRequest\x1a\n.core.User\x12?\n\nDeleteUser\x12\x17.core.DeleteUserRequest\x1a\x18.core.DeleteUserResponseB\x0eZ\x0c./proto;coreb\x06proto3'
   ,
   dependencies=[payment__task__pb2.DESCRIPTOR,payment__plan__pb2.DESCRIPTOR,accounts__pb2.DESCRIPTOR,transactions__pb2.DESCRIPTOR,users__pb2.DESCRIPTOR,])
 
 
-
-
-_LOGINREQUEST = _descriptor.Descriptor(
-  name='LoginRequest',
-  full_name='core.LoginRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='Username', full_name='core.LoginRequest.Username', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='Password', full_name='core.LoginRequest.Password', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=109,
-  serialized_end=159,
-)
-
-
-_AUTHRESPONSE = _descriptor.Descriptor(
-  name='AuthResponse',
-  full_name='core.AuthResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='Token', full_name='core.AuthResponse.Token', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=161,
-  serialized_end=190,
-)
-
-
-_SIGNUPREQUEST = _descriptor.Descriptor(
-  name='SignupRequest',
-  full_name='core.SignupRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='Username', full_name='core.SignupRequest.Username', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='Email', full_name='core.SignupRequest.Email', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='Password', full_name='core.SignupRequest.Password', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=192,
-  serialized_end=258,
-)
 
 
 _GETPAYMENTPLANREQUEST = _descriptor.Descriptor(
@@ -175,8 +58,8 @@ _GETPAYMENTPLANREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=260,
-  serialized_end=310,
+  serialized_start=109,
+  serialized_end=159,
 )
 
 
@@ -207,38 +90,14 @@ _GETPAYMENTPLANRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=312,
-  serialized_end=378,
+  serialized_start=161,
+  serialized_end=227,
 )
 
 _GETPAYMENTPLANRESPONSE.fields_by_name['payment_plans'].message_type = payment__plan__pb2._PAYMENTPLAN
-DESCRIPTOR.message_types_by_name['LoginRequest'] = _LOGINREQUEST
-DESCRIPTOR.message_types_by_name['AuthResponse'] = _AUTHRESPONSE
-DESCRIPTOR.message_types_by_name['SignupRequest'] = _SIGNUPREQUEST
 DESCRIPTOR.message_types_by_name['GetPaymentPlanRequest'] = _GETPAYMENTPLANREQUEST
 DESCRIPTOR.message_types_by_name['GetPaymentPlanResponse'] = _GETPAYMENTPLANRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-LoginRequest = _reflection.GeneratedProtocolMessageType('LoginRequest', (_message.Message,), {
-  'DESCRIPTOR' : _LOGINREQUEST,
-  '__module__' : 'core_pb2'
-  # @@protoc_insertion_point(class_scope:core.LoginRequest)
-  })
-_sym_db.RegisterMessage(LoginRequest)
-
-AuthResponse = _reflection.GeneratedProtocolMessageType('AuthResponse', (_message.Message,), {
-  'DESCRIPTOR' : _AUTHRESPONSE,
-  '__module__' : 'core_pb2'
-  # @@protoc_insertion_point(class_scope:core.AuthResponse)
-  })
-_sym_db.RegisterMessage(AuthResponse)
-
-SignupRequest = _reflection.GeneratedProtocolMessageType('SignupRequest', (_message.Message,), {
-  'DESCRIPTOR' : _SIGNUPREQUEST,
-  '__module__' : 'core_pb2'
-  # @@protoc_insertion_point(class_scope:core.SignupRequest)
-  })
-_sym_db.RegisterMessage(SignupRequest)
 
 GetPaymentPlanRequest = _reflection.GeneratedProtocolMessageType('GetPaymentPlanRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETPAYMENTPLANREQUEST,
@@ -264,8 +123,8 @@ _CORE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=381,
-  serialized_end=1856,
+  serialized_start=230,
+  serialized_end=1703,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetPaymentPlan',
@@ -388,9 +247,19 @@ _CORE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
+    name='CreateManyPaymentTask',
+    full_name='core.Core.CreateManyPaymentTask',
+    index=12,
+    containing_service=None,
+    input_type=payment__task__pb2._CREATEMANYPAYMENTTASKREQUEST,
+    output_type=payment__task__pb2._CREATEMANYPAYMENTTASKRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
     name='GetPaymentTask',
     full_name='core.Core.GetPaymentTask',
-    index=12,
+    index=13,
     containing_service=None,
     input_type=payment__task__pb2._GETPAYMENTTASKREQUEST,
     output_type=payment__task__pb2._PAYMENTTASK,
@@ -400,7 +269,7 @@ _CORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='ListPaymentTasks',
     full_name='core.Core.ListPaymentTasks',
-    index=13,
+    index=14,
     containing_service=None,
     input_type=payment__task__pb2._LISTPAYMENTTASKREQUEST,
     output_type=payment__task__pb2._LISTPAYMENTTASKRESPONSE,
@@ -410,7 +279,7 @@ _CORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='UpdatePaymentTask',
     full_name='core.Core.UpdatePaymentTask',
-    index=14,
+    index=15,
     containing_service=None,
     input_type=payment__task__pb2._UPDATEPAYMENTTASKREQUEST,
     output_type=payment__task__pb2._PAYMENTTASK,
@@ -420,7 +289,7 @@ _CORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DeletePaymentTask',
     full_name='core.Core.DeletePaymentTask',
-    index=15,
+    index=16,
     containing_service=None,
     input_type=payment__task__pb2._DELETEPAYMENTTASKREQUEST,
     output_type=payment__task__pb2._DELETEPAYMENTTASKRESPONSE,
@@ -428,29 +297,9 @@ _CORE = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='Login',
-    full_name='core.Core.Login',
-    index=16,
-    containing_service=None,
-    input_type=_LOGINREQUEST,
-    output_type=_AUTHRESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
-    name='SignUp',
-    full_name='core.Core.SignUp',
-    index=17,
-    containing_service=None,
-    input_type=_SIGNUPREQUEST,
-    output_type=_AUTHRESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
     name='GetUser',
     full_name='core.Core.GetUser',
-    index=18,
+    index=17,
     containing_service=None,
     input_type=users__pb2._GETUSERREQUEST,
     output_type=users__pb2._USER,
@@ -460,7 +309,7 @@ _CORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='ListUsers',
     full_name='core.Core.ListUsers',
-    index=19,
+    index=18,
     containing_service=None,
     input_type=users__pb2._LISTUSERREQUEST,
     output_type=users__pb2._LISTUSERRESPONSE,
@@ -470,7 +319,7 @@ _CORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='UpdateUser',
     full_name='core.Core.UpdateUser',
-    index=20,
+    index=19,
     containing_service=None,
     input_type=users__pb2._UPDATEUSERREQUEST,
     output_type=users__pb2._USER,
@@ -480,7 +329,7 @@ _CORE = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DeleteUser',
     full_name='core.Core.DeleteUser',
-    index=21,
+    index=20,
     containing_service=None,
     input_type=users__pb2._DELETEUSERREQUEST,
     output_type=users__pb2._DELETEUSERRESPONSE,
