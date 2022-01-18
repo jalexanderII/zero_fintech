@@ -46,13 +46,13 @@ type PaymentPlan struct {
 // CreateResponsePaymentPlan Takes in a model and returns a serializer
 func CreateResponsePaymentPlan(paymentTaskModel *core.PaymentPlan) PaymentPlan {
 	paymentActions := make([]*PaymentAction, len(paymentTaskModel.GetPaymentAction()))
-	for _, paymentAction := range paymentTaskModel.GetPaymentAction() {
-		paymentActions = append(paymentActions, &PaymentAction{
+	for idx, paymentAction := range paymentTaskModel.GetPaymentAction() {
+		paymentActions[idx] = &PaymentAction{
 			AccountId:       paymentAction.AccountId,
 			Amount:          paymentAction.Amount,
 			TransactionDate: paymentAction.TransactionDate.AsTime(),
 			Status:          int32(paymentAction.Status),
-		})
+		}
 	}
 	return PaymentPlan{
 		PaymentPlanId:    paymentTaskModel.PaymentPlanId,
@@ -97,8 +97,8 @@ func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.C
 		}
 
 		responsePaymentPlans := make([]PaymentPlan, len(paymentPlanResponse.GetPaymentPlans()))
-		for _, paymentPlan := range paymentPlanResponse.GetPaymentPlans() {
-			responsePaymentPlans = append(responsePaymentPlans, CreateResponsePaymentPlan(paymentPlan))
+		for idx, paymentPlan := range paymentPlanResponse.GetPaymentPlans() {
+			responsePaymentPlans[idx] = CreateResponsePaymentPlan(paymentPlan)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(responsePaymentPlans)
@@ -127,8 +127,8 @@ func ListPaymentTasks(client core.CoreClient, ctx context.Context) func(c *fiber
 		}
 
 		responsePaymentTasks := make([]PaymentTask, len(listPaymentTasks.GetPaymentTasks()))
-		for _, paymentTask := range listPaymentTasks.GetPaymentTasks() {
-			responsePaymentTasks = append(responsePaymentTasks, CreateResponsePaymentTask(paymentTask))
+		for idx, paymentTask := range listPaymentTasks.GetPaymentTasks() {
+			responsePaymentTasks[idx] = CreateResponsePaymentTask(paymentTask)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(responsePaymentTasks)

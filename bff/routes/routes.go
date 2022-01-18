@@ -9,7 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/jalexanderII/zero_fintech/bff/handlers"
 	"github.com/jalexanderII/zero_fintech/bff/middleware"
-	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -26,8 +25,7 @@ func welcome(c *fiber.Ctx) error {
 func SetupRoutes(app *fiber.App) {
 	// ******CLIENTS*******
 	// create client and context with timeout to reuse in all handlers
-	ctx, cancel := NewClientContext(timeout)
-	defer cancel()
+	ctx := context.Background()
 
 	// set up universal dail options
 	var opts []grpc.DialOption
@@ -35,21 +33,19 @@ func SetupRoutes(app *fiber.App) {
 	opts = append(opts, grpc.WithBlock())
 
 	// AuthClient Connection
-	authConn, err := grpc.Dial(config.GetEnv("AUTH_SERVER_PORT"), opts...)
+	authConn, err := grpc.Dial("localhost:9091", opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
-	defer authConn.Close()
 	// create new auth client
 	authClient := middleware.NewAuthClient(authConn, "", "", "")
 
 	// add auth interceptor middleware to core client
-	opts = append(opts, grpc.WithUnaryInterceptor(handlers.Interceptor.Unary()))
-	coreConn, err := grpc.Dial(config.GetEnv("CORE_SERVER_PORT"), opts...)
+	opts = append(opts, grpc.WithUnaryInterceptor(authClient.Interceptor.Unary()))
+	coreConn, err := grpc.Dial("localhost:9090", opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
-	defer coreConn.Close()
 	// instantiate core client
 	coreClient := core.NewCoreClient(coreConn)
 
@@ -59,7 +55,7 @@ func SetupRoutes(app *fiber.App) {
 	app.Get("/", welcome)
 	api := app.Group("/api")
 
-	// monitoring api stats
+	// // monitoring api stats
 	api.Get("/dashboard", monitor.New())
 
 	// Auth endpoints

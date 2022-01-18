@@ -10,19 +10,20 @@ import (
 
 // AuthClient is a client to call authentication RPC
 type AuthClient struct {
-	authClient auth.AuthClient
-	Username   string
-	Email      string
-	Password   string
+	authClient  auth.AuthClient
+	Interceptor *AuthInterceptor
+	Username    string
+	Email       string
+	Password    string
 }
 
 // NewAuthClient returns a new auth client
 func NewAuthClient(conn *grpc.ClientConn, username, email, password string) *AuthClient {
 	a := auth.NewAuthClient(conn)
-	return &AuthClient{a, username, email, password}
+	return &AuthClient{a, NewAuthInterceptor(AccessibleRoles()), username, email, password}
 }
 
-// Login login user and returns the access token
+// Login user and returns the access token
 func (a *AuthClient) Login() (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -36,6 +37,7 @@ func (a *AuthClient) Login() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	a.Interceptor.SetToken(res.GetToken())
 
 	return res.GetToken(), nil
 }
@@ -55,6 +57,7 @@ func (a *AuthClient) SignUp() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	a.Interceptor.SetToken(res.GetToken())
 
 	return res.GetToken(), nil
 }

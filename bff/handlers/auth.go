@@ -1,15 +1,9 @@
 package handlers
 
 import (
-	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/middleware"
 )
-
-const refreshDuration = 1 * time.Hour
-
-var Interceptor *middleware.AuthInterceptor
 
 // Login gets username and password from request body, writes it to an AuthClient and then calls Login
 func Login(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
@@ -29,10 +23,6 @@ func Login(authClient *middleware.AuthClient) func(c *fiber.Ctx) error {
 		token, err := authClient.Login()
 		if err != nil {
 			return c.SendStatus(fiber.StatusInternalServerError)
-		}
-		Interceptor, err = middleware.NewAuthInterceptor(authClient, middleware.AccessibleRoles(), refreshDuration)
-		if err != nil {
-			c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Could not create interceptor", "data": err})
 		}
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})

@@ -9,9 +9,11 @@ import (
 	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
+	"github.com/jalexanderII/zero_fintech/services/core/config/interceptor"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"github.com/jalexanderII/zero_fintech/services/core/server"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -33,7 +35,7 @@ func main() {
 
 	// jwtManger to manage user authentication using tokens
 	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
-	interceptor := middleware.NewAuthInterceptor(jwtManager, config.AccessibleRoles(), l)
+	authInterceptor := interceptor.NewAuthInterceptor(jwtManager, interceptor.AccessibleRoles(), l)
 
 	// Initiate MongoDB Database
 	DB, err := database.InitiateMongoClient()
@@ -48,7 +50,7 @@ func main() {
 	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
 
 	// Initiate grpcServer instance
-	serverOptions := []grpc.ServerOption{grpc.UnaryInterceptor(interceptor.Unary())}
+	serverOptions := []grpc.ServerOption{grpc.UnaryInterceptor(authInterceptor.Unary())}
 	grpcServer := grpc.NewServer(serverOptions...)
 
 	// Bind grpcServer to CoreService Server defined by proto

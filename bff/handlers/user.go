@@ -27,8 +27,8 @@ func ListUsers(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) e
 		}
 
 		responseUsers := make([]User, len(listUsers.GetUsers()))
-		for _, user := range listUsers.GetUsers() {
-			responseUsers = append(responseUsers, CreateResponseUser(user))
+		for idx, user := range listUsers.GetUsers() {
+			responseUsers[idx] = CreateResponseUser(user)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(responseUsers)

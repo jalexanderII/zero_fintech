@@ -6,7 +6,6 @@ import (
 	"os/signal"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jalexanderII/zero_fintech/services/core/config"
 )
 
 // StartServerWithGracefulShutdown function for starting server with a graceful shutdown.
@@ -29,17 +28,16 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 	}()
 
 	// Run server.
-	if err := a.Listen(config.GetEnv("WEBPROXYPORT")); err != nil {
+	if err := a.Listen("0.0.0.0:8080"); err != nil {
 		log.Printf("Oops... Server is not running! Reason: %v", err)
 	}
-
 	<-idleConnsClosed
 }
 
 // StartServer func for starting a simple server.
 func StartServer(a *fiber.App) {
 	// Run server.
-	if err := a.Listen(config.GetEnv("WEBPROXYPORT")); err != nil {
+	if err := a.Listen("0.0.0.0:8080"); err != nil {
 		log.Printf("Oops... Server is not running! Reason: %v", err)
 	}
 }
