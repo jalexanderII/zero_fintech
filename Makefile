@@ -1,12 +1,12 @@
 .PHONY: gen_protos clear_protos
 
-gen_protos:
+gen_protos_go:
 	protoc -I=./proto --go_opt=paths=source_relative --go_out=plugins=grpc:./gen/Go/ ./proto/common/*.proto
 	protoc -I=./proto --go_opt=paths=source_relative --go_out=plugins=grpc:./gen/Go/ ./proto/auth/*.proto
 	protoc -I=./proto --go_opt=paths=source_relative --go_out=plugins=grpc:./gen/Go/ ./proto/planning/*.proto
 	protoc -I=./proto --go_opt=paths=source_relative --go_out=plugins=grpc:./gen/Go/ ./proto/core/*.proto
 
-clear_protos:
+clear_protos_go:
 	rm ./gen/Go/common/*.go
 	rm ./gen/Go/auth/*.go
 	rm ./gen/Go/planning/*.go
