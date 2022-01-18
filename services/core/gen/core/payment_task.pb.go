@@ -510,6 +510,91 @@ func (x *DeletePaymentTaskResponse) GetPaymentTask() *PaymentTask {
 	return nil
 }
 
+type CreateManyPaymentTaskRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	PaymentTasks []*PaymentTask `protobuf:"bytes,1,rep,name=payment_tasks,json=paymentTasks,proto3" json:"payment_tasks,omitempty"`
+}
+
+func (x *CreateManyPaymentTaskRequest) Reset() {
+	*x = CreateManyPaymentTaskRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_payment_task_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateManyPaymentTaskRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateManyPaymentTaskRequest) ProtoMessage() {}
+
+func (x *CreateManyPaymentTaskRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_task_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateManyPaymentTaskRequest.ProtoReflect.Descriptor instead.
+func (*CreateManyPaymentTaskRequest) Descriptor() ([]byte, []int) {
+	return file_payment_task_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *CreateManyPaymentTaskRequest) GetPaymentTasks() []*PaymentTask {
+	if x != nil {
+		return x.PaymentTasks
+	}
+	return nil
+}
+
+type CreateManyPaymentTaskResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *CreateManyPaymentTaskResponse) Reset() {
+	*x = CreateManyPaymentTaskResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_payment_task_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CreateManyPaymentTaskResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateManyPaymentTaskResponse) ProtoMessage() {}
+
+func (x *CreateManyPaymentTaskResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_payment_task_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateManyPaymentTaskResponse.ProtoReflect.Descriptor instead.
+func (*CreateManyPaymentTaskResponse) Descriptor() ([]byte, []int) {
+	return file_payment_task_proto_rawDescGZIP(), []int{10}
+}
+
 var File_payment_task_proto protoreflect.FileDescriptor
 
 var file_payment_task_proto_rawDesc = []byte{
@@ -575,8 +660,16 @@ var file_payment_task_proto_rawDesc = []byte{
 	0x75, 0x73, 0x12, 0x34, 0x0a, 0x0c, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x74, 0x61,
 	0x73, 0x6b, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e,
 	0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x0b, 0x70, 0x61, 0x79,
-	0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61, 0x73, 0x6b, 0x42, 0x0e, 0x5a, 0x0c, 0x2e, 0x2f, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x3b, 0x63, 0x6f, 0x72, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61, 0x73, 0x6b, 0x22, 0x56, 0x0a, 0x1c, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x4d, 0x61, 0x6e, 0x79, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61, 0x73,
+	0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x36, 0x0a, 0x0d, 0x70, 0x61, 0x79, 0x6d,
+	0x65, 0x6e, 0x74, 0x5f, 0x74, 0x61, 0x73, 0x6b, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x11, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61,
+	0x73, 0x6b, 0x52, 0x0c, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61, 0x73, 0x6b, 0x73,
+	0x22, 0x1f, 0x0a, 0x1d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4d, 0x61, 0x6e, 0x79, 0x50, 0x61,
+	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x61, 0x73, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x42, 0x0e, 0x5a, 0x0c, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x63, 0x6f, 0x72,
+	0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -591,37 +684,40 @@ func file_payment_task_proto_rawDescGZIP() []byte {
 	return file_payment_task_proto_rawDescData
 }
 
-var file_payment_task_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_payment_task_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_payment_task_proto_goTypes = []interface{}{
-	(*PaymentTask)(nil),               // 0: core.PaymentTask
-	(*MetaData)(nil),                  // 1: core.MetaData
-	(*CreatePaymentTaskRequest)(nil),  // 2: core.CreatePaymentTaskRequest
-	(*GetPaymentTaskRequest)(nil),     // 3: core.GetPaymentTaskRequest
-	(*UpdatePaymentTaskRequest)(nil),  // 4: core.UpdatePaymentTaskRequest
-	(*DeletePaymentTaskRequest)(nil),  // 5: core.DeletePaymentTaskRequest
-	(*ListPaymentTaskRequest)(nil),    // 6: core.ListPaymentTaskRequest
-	(*ListPaymentTaskResponse)(nil),   // 7: core.ListPaymentTaskResponse
-	(*DeletePaymentTaskResponse)(nil), // 8: core.DeletePaymentTaskResponse
-	(PlanType)(0),                     // 9: core.PlanType
-	(PaymentFrequency)(0),             // 10: core.PaymentFrequency
-	(*fieldmaskpb.FieldMask)(nil),     // 11: google.protobuf.FieldMask
-	(DELETE_STATUS)(0),                // 12: core.DELETE_STATUS
+	(*PaymentTask)(nil),                   // 0: core.PaymentTask
+	(*MetaData)(nil),                      // 1: core.MetaData
+	(*CreatePaymentTaskRequest)(nil),      // 2: core.CreatePaymentTaskRequest
+	(*GetPaymentTaskRequest)(nil),         // 3: core.GetPaymentTaskRequest
+	(*UpdatePaymentTaskRequest)(nil),      // 4: core.UpdatePaymentTaskRequest
+	(*DeletePaymentTaskRequest)(nil),      // 5: core.DeletePaymentTaskRequest
+	(*ListPaymentTaskRequest)(nil),        // 6: core.ListPaymentTaskRequest
+	(*ListPaymentTaskResponse)(nil),       // 7: core.ListPaymentTaskResponse
+	(*DeletePaymentTaskResponse)(nil),     // 8: core.DeletePaymentTaskResponse
+	(*CreateManyPaymentTaskRequest)(nil),  // 9: core.CreateManyPaymentTaskRequest
+	(*CreateManyPaymentTaskResponse)(nil), // 10: core.CreateManyPaymentTaskResponse
+	(PlanType)(0),                         // 11: core.PlanType
+	(PaymentFrequency)(0),                 // 12: core.PaymentFrequency
+	(*fieldmaskpb.FieldMask)(nil),         // 13: google.protobuf.FieldMask
+	(DELETE_STATUS)(0),                    // 14: core.DELETE_STATUS
 }
 var file_payment_task_proto_depIdxs = []int32{
 	1,  // 0: core.PaymentTask.meta_data:type_name -> core.MetaData
-	9,  // 1: core.MetaData.preferred_plan_type:type_name -> core.PlanType
-	10, // 2: core.MetaData.preferred_payment_freq:type_name -> core.PaymentFrequency
+	11, // 1: core.MetaData.preferred_plan_type:type_name -> core.PlanType
+	12, // 2: core.MetaData.preferred_payment_freq:type_name -> core.PaymentFrequency
 	0,  // 3: core.CreatePaymentTaskRequest.payment_task:type_name -> core.PaymentTask
 	0,  // 4: core.UpdatePaymentTaskRequest.payment_task:type_name -> core.PaymentTask
-	11, // 5: core.UpdatePaymentTaskRequest.mask:type_name -> google.protobuf.FieldMask
+	13, // 5: core.UpdatePaymentTaskRequest.mask:type_name -> google.protobuf.FieldMask
 	0,  // 6: core.ListPaymentTaskResponse.payment_tasks:type_name -> core.PaymentTask
-	12, // 7: core.DeletePaymentTaskResponse.status:type_name -> core.DELETE_STATUS
+	14, // 7: core.DeletePaymentTaskResponse.status:type_name -> core.DELETE_STATUS
 	0,  // 8: core.DeletePaymentTaskResponse.payment_task:type_name -> core.PaymentTask
-	9,  // [9:9] is the sub-list for method output_type
-	9,  // [9:9] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	0,  // 9: core.CreateManyPaymentTaskRequest.payment_tasks:type_name -> core.PaymentTask
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_payment_task_proto_init() }
@@ -739,6 +835,30 @@ func file_payment_task_proto_init() {
 				return nil
 			}
 		}
+		file_payment_task_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateManyPaymentTaskRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_payment_task_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CreateManyPaymentTaskResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -746,7 +866,7 @@ func file_payment_task_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_payment_task_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

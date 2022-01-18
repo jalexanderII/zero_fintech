@@ -119,3 +119,20 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 		t.Errorf("5: Failed to delete paymentTask: %+v\n, %+v", deleted.Status, deleted.GetPaymentTask())
 	}
 }
+
+func TestCoreServer_CreateManyPaymentTasks(t *testing.T) {
+	server, ctx := GenServer()
+	limit := 10
+	c := 0
+	var res []*core.PaymentTask
+	for ok := true; ok; ok = c < limit {
+		task, _ := GenFakePaymentTask()
+		res = append(res, task)
+		c++
+	}
+
+	_, err := server.CreateManyPaymentTask(ctx, &core.CreateManyPaymentTaskRequest{PaymentTasks: res})
+	if err != nil {
+		t.Errorf("1: Error creating new paymentTask: %v", err)
+	}
+}

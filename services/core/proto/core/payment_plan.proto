@@ -18,9 +18,29 @@ enum PaymentStatus {
   PAYMENT_STATUS_IN_DEFAULT = 4;
 }
 
-// PaymentPlan defines a payment plan to meet a users payment task goals
+enum PaymentActionStatus {
+  PAYMENT_ACTION_STATUS_UNKNOWN = 0;
+  // Payment is pending
+  PAYMENT_ACTION_STATUS_PENDING = 1;
+  // payment is completed
+  PAYMENT_ACTION_STATUS_COMPLETED = 2;
+  // payment defaulted
+  PAYMENT_ACTION_STATUS_IN_DEFAULT = 3;
+}
+
+message PaymentAction {
+  // account to which payment shall be made
+  string account_id = 1;
+  // amount of payment
+  float amount = 2;
+  // Planned date of transaction
+  google.protobuf.Timestamp transaction_date = 3;
+  // status of payment action
+  PaymentActionStatus status = 4;
+}
+
 message PaymentPlan {
-  string payment_id = 1;
+  string payment_plan_id = 1;
   string user_id = 2;
   repeated string payment_task_id = 3;
   float timeline = 4;
@@ -33,4 +53,6 @@ message PaymentPlan {
   bool active = 9;
   // Current status of this plan
   PaymentStatus status = 10;
+  // payment actions of the plan
+  repeated PaymentAction payment_action = 11;
 }

@@ -2,12 +2,15 @@ package server
 
 import (
 	"context"
+	"log"
+	"reflect"
 	"testing"
 	"time"
 
+	"github.com/bxcodec/faker/v3"
 	"github.com/hashicorp/go-hclog"
+	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
-	"github.com/jalexanderII/zero_fintech/services/core/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	_ "github.com/joho/godotenv/autoload"
@@ -17,7 +20,10 @@ var L = hclog.Default()
 
 func GenServer() (*CoreServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), 15*time.Minute)
-	DB := database.InitiateMongoClient()
+	DB, err := database.InitiateMongoClient()
+	if err != nil {
+		log.Fatal("MongoDB error: ", err)
+	}
 	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
 	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))
 	transactionCollection := *DB.Collection(config.GetEnv("TRANSACTION_COLLECTION"))
@@ -39,4 +45,29 @@ func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	if paymentPlans.PaymentPlans[0].Timeline != 12 {
 		t.Errorf("2: Error creating payment plan from DB response: %v", paymentPlans)
 	}
+}
+
+// CustomGenerator to handle enum fields
+func CustomGenerator() {
+	_ = faker.AddProvider("preferred_plan_type", func(v reflect.Value) (interface{}, error) {
+		return core.PlanType_PLANTYPE_OPTIM_CREDIT_SCORE, nil
+	})
+	_ = faker.AddProvider("preferred_payment_freq", func(v reflect.Value) (interface{}, error) {
+		return core.PaymentFrequency_PAYMENTFREQ_MONTHLY, nil
+	})
+
+	_ = faker.AddProvider("penalty_reason", func(v reflect.Value) (interface{}, error) {
+		return core.PenaltyAPR_PENALTY_REASON_LATE_PAYMENT, nil
+	})
+}
+
+func GenFakePaymentTask() (*core.PaymentTask, error) {
+	CustomGenerator()
+	var fake core.PaymentTask
+	err := faker.FakeData(&fake)
+	if err != nil {
+		L.Error("[Error] Could not fake this object", "error", err)
+		return nil, err
+	}
+	return &fake, nil
 }

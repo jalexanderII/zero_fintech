@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
@@ -65,7 +64,7 @@ func (s CoreServer) UpdateAccount(ctx context.Context, in *core.UpdateAccountReq
 	}
 	promotionalRate := database.PromotionalRate{
 		TemporaryAPR:   account.GetPromotionalRate().TemporaryApr,
-		ExpirationDate: primitive.Timestamp{T: uint32(account.GetPromotionalRate().ExpirationDate.AsTime().Unix()), I: 0},
+		ExpirationDate: account.GetPromotionalRate().ExpirationDate.AsTime(),
 	}
 
 	id, err := primitive.ObjectIDFromHex(in.GetId())
@@ -118,7 +117,7 @@ func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Accoun
 		ID:        id,
 		UserId:    userId,
 		Name:      account.Name,
-		CreatedAt: primitive.Timestamp{T: uint32(account.CreatedAt.AsTime().Unix()), I: 0},
+		CreatedAt: account.CreatedAt.AsTime(),
 		AnnualPercentageRate: database.AnnualPercentageRates{
 			LowEnd:  account.GetAnnualPercentageRate().LowEnd,
 			HighEnd: account.GetAnnualPercentageRate().HighEnd,
@@ -133,7 +132,7 @@ func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Accoun
 		ForeignTransactionFee: account.ForeignTransactionFee,
 		PromotionalRate: database.PromotionalRate{
 			TemporaryAPR:   account.GetPromotionalRate().TemporaryApr,
-			ExpirationDate: primitive.Timestamp{T: uint32(account.GetPromotionalRate().ExpirationDate.AsTime().Unix()), I: 0},
+			ExpirationDate: account.GetPromotionalRate().ExpirationDate.AsTime(),
 		},
 		MinimumPaymentDue:   account.MinimumPaymentDue,
 		CurrentBalance:      account.CurrentBalance,
@@ -148,7 +147,7 @@ func AccountDBToPB(account database.Account) *core.Account {
 		AccountId: account.ID.Hex(),
 		UserId:    account.UserId.Hex(),
 		Name:      account.Name,
-		CreatedAt: timestamppb.New(time.Unix(int64(account.CreatedAt.T), 0)),
+		CreatedAt: timestamppb.New(account.CreatedAt),
 		AnnualPercentageRate: &core.AnnualPercentageRates{
 			LowEnd:  account.AnnualPercentageRate.LowEnd,
 			HighEnd: account.AnnualPercentageRate.HighEnd,
@@ -163,7 +162,7 @@ func AccountDBToPB(account database.Account) *core.Account {
 		ForeignTransactionFee: account.ForeignTransactionFee,
 		PromotionalRate: &core.PromotionalRate{
 			TemporaryApr:   account.PromotionalRate.TemporaryAPR,
-			ExpirationDate: timestamppb.New(time.Unix(int64(account.PromotionalRate.ExpirationDate.T), 0)),
+			ExpirationDate: timestamppb.New(account.PromotionalRate.ExpirationDate),
 		},
 		MinimumPaymentDue:   account.MinimumPaymentDue,
 		CurrentBalance:      account.CurrentBalance,

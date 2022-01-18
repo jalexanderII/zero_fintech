@@ -8,12 +8,10 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/auth/database"
+	"github.com/jalexanderII/zero_fintech/services/auth/gen/auth"
+	"github.com/jalexanderII/zero_fintech/services/auth/server"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
-	"github.com/jalexanderII/zero_fintech/services/core/config/interceptor"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
-	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
-	"github.com/jalexanderII/zero_fintech/services/core/server"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -25,9 +23,9 @@ const (
 func main() {
 	// establish default logger with log levels
 	l := hclog.Default()
-	l.Debug("Core Service")
+	l.Debug("Auth Service")
 
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", config.GetEnv("CORE_SERVER_PORT")))
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", config.GetEnv("AUTH_SERVER_PORT")))
 	if err != nil {
 		l.Error("failed to listen", "error", err)
 		panic(err)
@@ -35,7 +33,6 @@ func main() {
 
 	// jwtManger to manage user authentication using tokens
 	jwtManager := middleware.NewJWTManager(config.GetEnv("JWTSecret"), TokenDuration)
-	authInterceptor := interceptor.NewAuthInterceptor(jwtManager, interceptor.AccessibleRoles(), l)
 
 	// Initiate MongoDB Database
 	DB, err := database.InitiateMongoClient()
@@ -44,19 +41,14 @@ func main() {
 	}
 
 	// Connect to the Collections inside the given DB
-	coreCollection := *DB.Collection(config.GetEnv("CORE_COLLECTION"))
-	accountCollection := *DB.Collection(config.GetEnv("ACCOUNT_COLLECTION"))
-	transactionCollection := *DB.Collection(config.GetEnv("TRANSACTION_COLLECTION"))
 	userCollection := *DB.Collection(config.GetEnv("USER_COLLECTION"))
 
 	// Initiate grpcServer instance
-	serverOptions := []grpc.ServerOption{grpc.UnaryInterceptor(authInterceptor.Unary())}
+	var serverOptions []grpc.ServerOption
 	grpcServer := grpc.NewServer(serverOptions...)
 
-	// Bind grpcServer to CoreService Server defined by proto
-	core.RegisterCoreServer(grpcServer,
-		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, l),
-	)
+	// Bind grpcServer to AuthService Server defined by proto
+	auth.RegisterAuthServer(grpcServer, server.NewAuthServer(userCollection, jwtManager, l))
 	methods := config.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)
 

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jalexanderII/zero_fintech/services/core/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/gen/core"
 	"go.mongodb.org/mongo-driver/bson"
@@ -61,14 +61,22 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 
 func MockClientCall(tasks []*core.PaymentTask) []*core.PaymentPlan {
 	var plans []*core.PaymentPlan
+	var actions []*core.PaymentAction
 	var ids []string
 	var total float64
 	for _, task := range tasks {
 		ids = append(ids, task.PaymentTaskId)
 		total += task.Amount
+		a := &core.PaymentAction{
+			AccountId:       task.AccountId,
+			Amount:          float32(task.GetAmount()),
+			TransactionDate: timestamppb.New(time.Now()),
+			Status:          core.PaymentActionStatus_PAYMENT_ACTION_STATUS_PENDING,
+		}
+		actions = append(actions, a)
 	}
 	plan := &core.PaymentPlan{
-		PaymentId:        primitive.NewObjectID().Hex(),
+		PaymentPlanId:    primitive.NewObjectID().Hex(),
 		UserId:           tasks[0].UserId,
 		PaymentTaskId:    ids,
 		Timeline:         12,
@@ -78,6 +86,7 @@ func MockClientCall(tasks []*core.PaymentTask) []*core.PaymentPlan {
 		EndDate:          timestamppb.New(time.Now()),
 		Active:           true,
 		Status:           core.PaymentStatus_PAYMENT_STATUS_CURRENT,
+		PaymentAction:    actions,
 	}
 	plans = append(plans, plan)
 	return plans
