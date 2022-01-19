@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import OrderedDict
+from typing import OrderedDict, List
 import numpy as np
 import pandas as pd
 import grpc
@@ -18,13 +18,42 @@ import sys, os
 # make gen/Python importable by import Python.X
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'gen')))
 # from Python.core import accounts_pb2, core_pb2_grpc, payment_task_pb2, transactions_pb2
-from Python.common.common_pb2 import PlanTypePB, PaymentFrequencyPB, DELETE_STATUS_PB
-from Python.planning.planning_pb2_grpc import CreatePaymentPlanResponse, PlanningServicer
-from Python.planning.payment_plan_pb2 import (PaymentPlan as PaymentPlanPB, PaymentStatus as PaymentStatusPB, PaymentActionStatus as PaymentActionStatusPB, PaymentAction as PaymentActionPB, DeletePaymentPlanResponse, ListPaymentPlanResponse)
+from Python.common.common_pb2 import (PlanType as PlanTypePB, PaymentFrequency as PaymentFrequencyPB, DELETE_STATUS as DELETE_STATUS_PB)
+from Python.planning.planning_pb2_grpc import PlanningServicer
+from Python.planning.planning_pb2 import CreatePaymentPlanResponse
+from Python.planning.payment_plan_pb2 import (PaymentPlan as PaymentPlanPB, PaymentStatus as PaymentStatusPB, PaymentActionStatus as PaymentActionStatusPB, PaymentAction as PaymentActionPB, DeletePaymentPlanResponse, ListPaymentPlanResponse, UpdatePaymentPlanRequest, GetPaymentPlanRequest)
 
 # make ../database importable
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 from database.models import (PaymentPlan as PaymentPlanDB, PaymentFrequency as PaymentFrequencyDB, PlanType as PlanTypeDB, PaymentStatus as PaymentStatusDB, PaymentAction as PaymentActionDB, PaymentActionStatus as PaymentActionStatusDB)
+
+def datetime_to_pb_timestamp(timestamp: datetime) -> Timestamp:
+      pb_timestamp = Timestamp()
+      pb_timestamp.FromDatetime(timestamp)
+      return pb_timestamp
+
+def payment_actions_db_to_pb(payment_actions: List[PaymentActionDB]) -> List[PaymentActionPB]:
+    results = []
+    for payment_action in payment_actions:
+        new_payment_action = PaymentActionPB(
+            account_id=payment_action.AccountID,
+            amount=payment_action.Amount,
+            transaction_date=datetime_to_pb_timestamp(payment_action.TransactionDate),
+            status=PaymentActionStatusPB.Value(payment_action.PaymentActionStatus.name))
+    results.append(new_payment_action)
+    return results
+
+def payment_actions_pb_to_db(payment_actions: List[PaymentActionPB]) -> List[PaymentActionDB]:
+    results = []
+    for payment_action in payment_actions:
+        new_payment_action = PaymentActionDB(
+            AccountID=payment_action.account_id,
+            Amount=payment_action.amount,
+            TransactionDate=payment_action.transaction_date.ToDatetime(),
+            PaymentActionStatus=payment_action.status)
+        results.append(new_payment_action)
+    return results
+
 
 def shift_date_by_payment_frequency(date: datetime, payment_freq: PaymentFrequencyPB) -> datetime:
     if payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_WEEKLY:
@@ -245,7 +274,7 @@ class PlanningServicer(PlanningServicer):
 
         # return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
 
-    def GetPaymentPlan(self, request, context) -> PaymentPlanPB:
+    def GetPaymentPlan(self, request: GetPaymentPlanRequest, context) -> PaymentPlanPB:
         paymentPlanDB = PaymentPlanDB.objects(PaymentPlanID=request.payment_plan_id).first()
         return self.paymentPlanDBToPB(paymentPlanDB)
 
@@ -256,13 +285,21 @@ class PlanningServicer(PlanningServicer):
             paymentPlansPB.append(self.paymentPlanDBToPB(pp))
         return ListPaymentPlanResponse(payment_plans=paymentPlansPB)
 
-    def UpdatePaymentPlan(self, request, context) -> PaymentPlanPB:
-        paymentPlanDBOld = PaymentPlanDB.objects(PaymentPlanID=request.payment_plan_id).first()
-        paymentPlanDBOld.delete()
-        
-        paymentPlanDBUpdate = self.paymentPlanPBToDB(request.payment_plan)
-        paymentPlanDBUpdate.save()
-        return paymentPlanDBUpdate
+    def UpdatePaymentPlan(self, request: UpdatePaymentPlanRequest, context) -> PaymentPlanPB:
+        paymentPlanPB = request.payment_plan
+        PaymentPlanDB.objects(PaymentPlanID=paymentPlanPB.payment_plan_id).update(
+            UserID=paymentPlanPB.user_id,
+            PaymentTaskID=list(paymentPlanPB.payment_task_id), 
+            Timeline=paymentPlanPB.timeline,
+            PaymentFrequency=paymentPlanPB.payment_freq,
+            AmountPerPayment=paymentPlanPB.amount_per_payment,
+            PlanType=paymentPlanPB.plan_type,
+            EndDate=paymentPlanPB.end_date.ToDatetime(),
+            Active=paymentPlanPB.active,
+            Status=paymentPlanPB.status,
+            PaymentAction=payment_actions_pb_to_db(paymentPlanPB.payment_action)
+        )
+        return paymentPlanPB
 
     def DeletePaymentPlan(self, request, context) -> DeletePaymentPlanResponse:
         paymentPlanDB = PaymentPlanDB.objects(PaymentPlanID=request.payment_plan_id).first()
@@ -279,25 +316,17 @@ class PlanningServicer(PlanningServicer):
         Returns:
             payment_plan_pb2.PaymentPlan: PaymentPlan as Protobuf
         """
-        paymentFrequencyPB = PaymentFrequencyPB.Value(paymentPlanDB.PaymentFrequency.name)
-        planTypePB = PlanTypePB.Value(paymentPlanDB.PlanType.name)
-        endDatePB = Timestamp()
-        endDatePB.FromDatetime(paymentPlanDB.EndDate)
-        paymentPlanStatusPB = PaymentStatusPB.Value(paymentPlanDB.Status.name)
-        paymentActionPB = []
-        for paDB in paymentPlanDB.PaymentAction:
-            transactionDatePB = Timestamp()
-            transactionDatePB.FromDatetime(paDB.TransactionDate)
-            paActionStatusPB = PaymentActionStatusPB.Value(paDB.PaymentActionStatus.name)
-            paPB = PaymentActionPB(account_id=paDB.AccountID, amount=paDB.Amount,
-                        transaction_date=transactionDatePB, status=paActionStatusPB)
-            paymentActionPB.append(paPB)
-        
         return PaymentPlanPB(payment_plan_id=paymentPlanDB.PaymentPlanID,
-            user_id=paymentPlanDB.UserID, payment_task_id=paymentPlanDB.PaymentTaskID, 
-            timeline=paymentPlanDB.Timeline, payment_freq=paymentFrequencyPB, amount_per_payment=paymentPlanDB.AmountPerPayment,
-            plan_type=planTypePB, end_date=endDatePB, active=paymentPlanDB.Active, status=paymentPlanStatusPB,
-            payment_action=paymentActionPB)
+            user_id=paymentPlanDB.UserID,
+            payment_task_id=paymentPlanDB.PaymentTaskID, 
+            timeline=paymentPlanDB.Timeline,
+            payment_freq=PaymentFrequencyPB.Value(paymentPlanDB.PaymentFrequency.name),
+            amount_per_payment=paymentPlanDB.AmountPerPayment,
+            plan_type=PlanTypePB.Value(paymentPlanDB.PlanType.name),
+            end_date=datetime_to_pb_timestamp(paymentPlanDB.EndDate),
+            active=paymentPlanDB.Active,
+            status=PaymentStatusPB.Value(paymentPlanDB.Status.name),
+            payment_action=payment_actions_db_to_pb(paymentPlanDB.PaymentAction))
 
     def paymentPlanPBToDB(self, paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:
         """ Converts a Protobuf Document version of PaymentPlan to MongoDB version
@@ -308,26 +337,15 @@ class PlanningServicer(PlanningServicer):
         Returns:
             db_models.PaymentPlan: PaymentPlan as a MongoDB object
         """
-        paymentFrequencyDB = PaymentFrequencyDB[PaymentFrequencyPB.Name(paymentPlanPB.payment_freq)]
-        planTypeDB = PlanTypeDB[PlanTypePB.Name(paymentPlanPB.plan_type)]
-        paymentPlanStatusDB = PaymentStatusDB[PaymentStatusPB.Name(paymentPlanPB.status)]
-        paymentActionDB = []
-        for paPB in paymentPlanPB.payment_action:
-            paDB = PaymentActionDB(AccountID=paPB.account_id, Amount=paPB.amount,
-                        TransactionDate=paPB.transaction_date.ToDatetime(),
-                        PaymentActionStatus=PaymentActionStatusDB[PaymentActionStatusPB.Name(paPB.status)])
-            paymentActionDB.append(paDB)
-        document_dict = {
-            'PaymentPlanID': paymentPlanPB.payment_plan_id,
-            'UserID': paymentPlanPB.user_id,
-            'PaymentTaskID': paymentPlanPB.payment_task_id,
-            'Timeline': paymentPlanPB.timeline,
-            'PaymentFrequency': paymentFrequencyDB,
-            'AmountPerPayment': paymentPlanPB.amount_per_payment,
-            'PlanType': planTypeDB,
-            'EndDate': paymentPlanPB.end_date.ToDatetime(),
-            'Active': paymentPlanPB.active,
-            'Status': paymentPlanStatusDB,
-            'PaymentAction': paymentActionDB,
-        }
-        return PaymentPlanDB(**document_dict)
+        return PaymentActionDB(PaymentPlanID=paymentPlanPB.payment_plan_id,
+            UserID=paymentPlanPB.user_id,
+            PaymentTaskID=paymentPlanPB.payment_task_id, 
+            Timeline=paymentPlanPB.timeline,
+            PaymentFrequency=paymentPlanPB.payment_freq,
+            AmountPerPayment=paymentPlanPB.amount_per_payment,
+            PlanType=paymentPlanPB.plan_type,
+            EndDate=paymentPlanPB.end_date.ToDatetime(),
+            Active=paymentPlanPB.active,
+            Status=paymentPlanPB.status,
+            PaymentAction=payment_actions_pb_to_db(paymentPlanPB.payment_action)
+        )

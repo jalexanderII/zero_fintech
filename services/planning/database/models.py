@@ -26,16 +26,15 @@ class PaymentFrequency(Enum):
     PAYMENT_FREQUENCY_QUARTERLY = 4
 
 class PaymentAction(EmbeddedDocument):
-    AccountID = StringField(required=True)  # ObjectIdField
+    AccountID = StringField()
     Amount = FloatField()
     TransactionDate = DateTimeField()
     PaymentActionStatus = EnumField(PaymentActionStatus)
 
 class PaymentPlan(Document):
-    # PaymentPlanID = StringField(primary_key=True) # ObjectIdField
-    PaymentPlanID = StringField() # ObjectIdField
-    UserID = StringField() # ObjectIdField
-    PaymentTaskID = ListField(StringField())   # ListField(ObjectIdField)
+    PaymentPlanID = StringField()
+    UserID = StringField()
+    PaymentTaskID = ListField(StringField())
     Timeline = FloatField()
     PaymentFrequency = EnumField(PaymentFrequency)
     AmountPerPayment = FloatField()
