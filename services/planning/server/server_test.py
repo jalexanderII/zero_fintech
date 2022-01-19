@@ -18,6 +18,8 @@ from database.database import initateMongoClient
 from database.models import (PaymentPlan as PaymentPlanDB, PaymentFrequency as PaymentFrequencyDB, PlanType as PlanTypeDB,
     PaymentStatus as PaymentStatusDB, PaymentAction as PaymentActionDB, PaymentActionStatus as PaymentActionStatusDB)
 
+from utils import paymentPlanDBToPB
+
 def gen_server() -> PlanningServicer:
     # load .env file
     load_dotenv()
@@ -68,19 +70,17 @@ def test_list_payment_plans():
     payment_plans = server.ListPaymentPlans(None, None).payment_plans
     assert len(payment_plans) > 0, f"Server did not return any PaymentPlan"
 
-def test_delete_payment_plan():
+def test_create_no_building_and_delete_payment_plan():
     server = gen_server()
     # original number of PaymentPlan
     originalPaymentPlansLen = len(server.ListPaymentPlans(None, None).payment_plans)
     # adding one PaymentPlan
-    paymentPlanDB = EXAMPLE_PAYMENT_PLANS[0]
-    paymentPlanDB.save()
-    paymentPlanDB.PaymentPlanID = str(paymentPlanDB.id)
-    paymentPlanDB.save()
+    paymentPlanPB = paymentPlanDBToPB(EXAMPLE_PAYMENT_PLANS[0])
+    paymentPlanPB = server.CreatePaymentPlanNoBuilding(paymentPlanPB)
     updatedPaymentPlansLen = len(server.ListPaymentPlans(None, None).payment_plans)
     assert originalPaymentPlansLen == updatedPaymentPlansLen - 1, f"Before insertion number of PaymentPlans={originalPaymentPlansLen}; after insertion number of PaymentPlans={updatedPaymentPlansLen}"
     # deleting the added paymentPlan
-    deleteRequest = DeletePaymentPlanRequest(payment_plan_id=paymentPlanDB.PaymentPlanID)
+    deleteRequest = DeletePaymentPlanRequest(payment_plan_id=paymentPlanPB.payment_plan_id)
     server.DeletePaymentPlan(request=deleteRequest, context=None)
     updatedPaymentPlansLen = len(server.ListPaymentPlans(None, None).payment_plans)
     assert originalPaymentPlansLen == updatedPaymentPlansLen, f"Before insertion number of PaymentPlans={originalPaymentPlansLen}; after insertion & deletion number of PaymentPlans={updatedPaymentPlansLen}"
@@ -101,7 +101,7 @@ def test_update_payment_plan():
     assert len(paymentTasks) == 1, f"PaymentPlan has {len(paymentTasks)} PaymentTasks instead of 1"
     # update with the second element of EXAMPLE_PAYMENT_PLANS which has 2 PaymentTasks
     server.UpdatePaymentPlan(UpdatePaymentPlanRequest(
-        payment_plan_id=payment_plan_id, payment_plan=server.paymentPlanDBToPB(EXAMPLE_PAYMENT_PLANS[1])
+        payment_plan_id=payment_plan_id, payment_plan=paymentPlanDBToPB(EXAMPLE_PAYMENT_PLANS[1])
     ), context=None)
     # check if the PaymentPlan has two PaymentTasks (as the second entry of EXAMPLE_PAYMENT_PLANS has)
     paymentTasks = server.GetPaymentPlan(GetPaymentPlanRequest(payment_plan_id=payment_plan_id), context=None).payment_task_id
@@ -112,8 +112,12 @@ def test_update_payment_plan():
     paymentTasks = server.GetPaymentPlan(GetPaymentPlanRequest(payment_plan_id=payment_plan_id), context=None).payment_task_id
     assert len(paymentTasks) == 1, f"PaymentPlan has {len(paymentTasks)} PaymentTasks instead of 1"
 
+def test_create_payment_plan():
+    print("test_create_payment_plan wasn't implemented yet")
+    pass
+
 if __name__ == '__main__':
     test_list_payment_plans
     test_get_payment_plan()
-    test_delete_payment_plan()
+    test_create_no_building_and_delete_payment_plan()
     test_update_payment_plan()
