@@ -30,6 +30,7 @@ def serve():
     server.add_insecure_port('[::]:50051')
     server.start()
     logging.info('Server running')
+    print('Server running')
     server.wait_for_termination()
 
 def run_client():
@@ -40,5 +41,5 @@ def run_client():
 
 if __name__ == '__main__':
     logging.basicConfig()
-    # serve()
-    run_client()
+    serve()
+    # run_client()

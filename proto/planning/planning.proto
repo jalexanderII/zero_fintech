@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package planning;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
 import "planning/payment_plan.proto";
 import "core/payment_task.proto";

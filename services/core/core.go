@@ -8,6 +8,7 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/core/client"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"github.com/jalexanderII/zero_fintech/services/core/config/interceptor"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
@@ -36,6 +37,7 @@ func main() {
 		panic(err)
 	}
 
+	planningClient := client.SetUpPlanningClient()
 	// jwtManger to manage user authentication using tokens
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), TokenDuration)
 	authInterceptor := interceptor.NewAuthInterceptor(jwtManager, interceptor.AccessibleRoles(), l)
@@ -58,7 +60,7 @@ func main() {
 
 	// Bind grpcServer to CoreService Server defined by proto
 	core.RegisterCoreServer(grpcServer,
-		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, l),
+		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, planningClient, l),
 	)
 	methods := config.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)

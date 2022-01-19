@@ -28,12 +28,14 @@ type CoreServer struct {
 	UserDB        mongo.Collection
 	// authentication manager
 	jwtm *middleware.JWTManager
+	// clients
+	planningClient planning.PlanningClient
 	// custom logger
 	l *logrus.Logger
 }
 
-func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, l *logrus.Logger) *CoreServer {
-	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, l: l}
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient, l *logrus.Logger) *CoreServer {
+	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, planningClient: pc, l: l}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*core.GetPaymentPlanResponse, error) {
@@ -55,11 +57,9 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 		req[idx] = PaymentTaskDBToPB(paymentTask)
 	}
 
-	// TODO:
-	// call Planning client with res and get back a response of Payment Plans
-	res := MockClientCall(req)
+	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: req})
 	s.l.Info("[Payment Plans] Response", "PaymentPlans", res)
-	return &core.GetPaymentPlanResponse{PaymentPlans: res}, nil
+	return &core.GetPaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }
 
 func MockClientCall(tasks []*core.PaymentTask) []*planning.PaymentPlan {

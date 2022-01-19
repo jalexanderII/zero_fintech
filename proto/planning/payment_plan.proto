@@ -58,7 +58,7 @@ message PaymentPlan {
   repeated PaymentAction payment_action = 11;
 }
 
-// CRUDE Methods
+// CRUD Methods
 message GetPaymentPlanRequest {
   string payment_plan_id = 1;
 }
