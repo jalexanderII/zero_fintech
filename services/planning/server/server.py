@@ -47,10 +47,10 @@ class PlanningServicer(PlanningServicer):
         """
         paymentPlanListPB = createPaymentPlan(list(request.payment_tasks))
         for paymentPlanPB in paymentPlanListPB:
-            self.CreatePaymentPlanNoBuilding(paymentPlanPB)
+            self._createPaymentPlan(paymentPlanPB)
         return CreatePaymentPlanRequest(payment_plans=paymentPlanListPB)
 
-    def CreatePaymentPlanNoBuilding(self, paymentPlanPB: PaymentPlanPB) -> PaymentPlanPB:
+    def _createPaymentPlan(self, paymentPlanPB: PaymentPlanPB) -> PaymentPlanPB:
         """ Saves a PaymentPlan into the database without creating it.
 
         Args:

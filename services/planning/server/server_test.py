@@ -76,7 +76,7 @@ def test_create_no_building_and_delete_payment_plan():
     originalPaymentPlansLen = len(server.ListPaymentPlans(None, None).payment_plans)
     # adding one PaymentPlan
     paymentPlanPB = paymentPlanDBToPB(EXAMPLE_PAYMENT_PLANS[0])
-    paymentPlanPB = server.CreatePaymentPlanNoBuilding(paymentPlanPB)
+    paymentPlanPB = server._createPaymentPlan(paymentPlanPB)
     updatedPaymentPlansLen = len(server.ListPaymentPlans(None, None).payment_plans)
     assert originalPaymentPlansLen == updatedPaymentPlansLen - 1, f"Before insertion number of PaymentPlans={originalPaymentPlansLen}; after insertion number of PaymentPlans={updatedPaymentPlansLen}"
     # deleting the added paymentPlan
