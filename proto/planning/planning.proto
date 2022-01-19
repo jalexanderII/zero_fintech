@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package planning;
+
+import "planning/payment_plan.proto";
+import "core/payment_task.proto";
+
+service Planning {
+    // Create PaymentPlan for list of PaymentTasks
+    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (CreatePaymentPlanResponse);
+
+    //  CRUD METHODS
+    rpc GetPaymentPlan(GetPaymentPlanRequest) returns (PaymentPlan);
+    rpc ListPaymentPlans(ListPaymentPlanRequest) returns (ListPaymentPlanResponse);
+    rpc UpdatePaymentPlan(UpdatePaymentPlanRequest) returns (PaymentPlan);
+    rpc DeletePaymentPlan(DeletePaymentPlanRequest) returns (DeletePaymentPlanResponse);
+}
+
+message CreatePaymentPlanRequest {
+    repeated core.PaymentTask payment_tasks = 1;
+}
+
+message CreatePaymentPlanResponse {
+    repeated planning.PaymentPlan payment_plans = 1;
+} 
+

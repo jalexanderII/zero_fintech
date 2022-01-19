@@ -5,6 +5,7 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
 import "common/common.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
 
 enum PaymentStatus {
   PAYMENT_STATUS_UNKNOWN = 0;
@@ -55,4 +56,30 @@ message PaymentPlan {
   PaymentStatus status = 10;
   // payment actions of the plan
   repeated PaymentAction payment_action = 11;
+}
+
+// CRUDE Methods
+message GetPaymentPlanRequest {
+  string payment_plan_id = 1;
+}
+
+message ListPaymentPlanRequest {}
+
+message ListPaymentPlanResponse {
+  repeated PaymentPlan payment_plans = 1;
+}
+
+message UpdatePaymentPlanRequest {
+  string payment_plan_id = 1;
+  PaymentPlan payment_plan = 2;
+  google.protobuf.FieldMask mask = 3;
+}
+
+message DeletePaymentPlanRequest {
+  string payment_plan_id = 1;
+}
+
+message DeletePaymentPlanResponse {
+  common.DELETE_STATUS status = 1;
+  PaymentPlan payment_plan = 2;
 }
