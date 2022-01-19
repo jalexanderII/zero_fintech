@@ -8,18 +8,18 @@ import (
 	"time"
 
 	"github.com/bxcodec/faker/v3"
-	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/utils"
+	"github.com/sirupsen/logrus"
 
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 
 	_ "github.com/joho/godotenv/autoload"
 )
 
-var L = hclog.Default()
+var L = logrus.New()
 
 func GenServer() (*CoreServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)

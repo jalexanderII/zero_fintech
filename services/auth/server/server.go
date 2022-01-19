@@ -7,10 +7,10 @@ import (
 	"log"
 	"regexp"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/auth/database"
+	"github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -33,10 +33,10 @@ type AuthServer struct {
 	// authentication manager
 	jwtm *middleware.JWTManager
 	// custom logger
-	l hclog.Logger
+	l *logrus.Logger
 }
 
-func NewAuthServer(udb mongo.Collection, jwtm *middleware.JWTManager, l hclog.Logger) *AuthServer {
+func NewAuthServer(udb mongo.Collection, jwtm *middleware.JWTManager, l *logrus.Logger) *AuthServer {
 	return &AuthServer{UserDB: udb, jwtm: jwtm, l: l}
 }
 
