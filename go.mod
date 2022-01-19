@@ -6,7 +6,6 @@ require (
 	github.com/bxcodec/faker/v3 v3.7.0
 	github.com/gofiber/fiber/v2 v2.24.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/hashicorp/go-hclog v1.1.0
 	github.com/joho/godotenv v1.4.0
 	github.com/sirupsen/logrus v1.4.2
 	go.mongodb.org/mongo-driver v1.7.0
@@ -17,15 +16,12 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.2 // indirect
-	github.com/fatih/color v1.7.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/mattn/go-colorable v0.1.6 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.31.0 // indirect
