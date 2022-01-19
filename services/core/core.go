@@ -6,7 +6,6 @@ import (
 	"net"
 	"time"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
@@ -14,6 +13,7 @@ import (
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/server"
 	"github.com/jalexanderII/zero_fintech/utils"
+	"github.com/sirupsen/logrus"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -23,9 +23,11 @@ const (
 	TokenDuration = 15 * time.Minute
 )
 
+// Create a new instance of the logger.
+var l = logrus.New()
+
 func main() {
 	// establish default logger with log levels
-	l := hclog.Default()
 	l.Debug("Core Service")
 
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", utils.GetEnv("CORE_SERVER_PORT")))

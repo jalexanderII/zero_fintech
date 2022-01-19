@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
+	"github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,10 +29,10 @@ type CoreServer struct {
 	// authentication manager
 	jwtm *middleware.JWTManager
 	// custom logger
-	l hclog.Logger
+	l *logrus.Logger
 }
 
-func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, l hclog.Logger) *CoreServer {
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, l *logrus.Logger) *CoreServer {
 	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, l: l}
 }
 

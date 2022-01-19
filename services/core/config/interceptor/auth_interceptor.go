@@ -3,8 +3,8 @@ package interceptor
 import (
 	"context"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -15,11 +15,11 @@ import (
 type AuthInterceptor struct {
 	jwtManager      *middleware.JWTManager
 	accessibleRoles map[string]bool
-	l               hclog.Logger
+	l               *logrus.Logger
 }
 
 // NewAuthInterceptor returns a new auth interceptor
-func NewAuthInterceptor(jwtManager *middleware.JWTManager, accessibleRoles map[string]bool, l hclog.Logger) *AuthInterceptor {
+func NewAuthInterceptor(jwtManager *middleware.JWTManager, accessibleRoles map[string]bool, l *logrus.Logger) *AuthInterceptor {
 	return &AuthInterceptor{jwtManager, accessibleRoles, l}
 }
 
@@ -31,12 +31,12 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
-		interceptor.l.Debug("--> unary interceptor: ", info.FullMethod)
+		interceptor.l.Info("--> Core unary interceptor: ", info.FullMethod)
 
-		err := interceptor.authorize(ctx, info.FullMethod)
-		if err != nil {
-			return nil, err
-		}
+		// err := interceptor.authorize(ctx, info.FullMethod)
+		// if err != nil {
+		// 	return nil, err
+		// }
 
 		return handler(ctx, req)
 	}

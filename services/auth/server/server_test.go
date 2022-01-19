@@ -6,17 +6,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/auth/database"
 	"github.com/jalexanderII/zero_fintech/utils"
+	"github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var L = hclog.Default()
+var L = logrus.New()
 
 func GenServer() (*AuthServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)
