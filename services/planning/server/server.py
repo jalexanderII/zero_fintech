@@ -21,7 +21,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardi
 from Python.common.common_pb2 import (PlanType as PlanTypePB, PaymentFrequency as PaymentFrequencyPB, DELETE_STATUS as DELETE_STATUS_PB)
 from Python.planning.planning_pb2_grpc import PlanningServicer
 from Python.planning.planning_pb2 import CreatePaymentPlanResponse
-from Python.planning.payment_plan_pb2 import (PaymentPlan as PaymentPlanPB, PaymentStatus as PaymentStatusPB, PaymentActionStatus as PaymentActionStatusPB, PaymentAction as PaymentActionPB, DeletePaymentPlanResponse, ListPaymentPlanResponse, UpdatePaymentPlanRequest, GetPaymentPlanRequest)
+from Python.planning.payment_plan_pb2 import (PaymentPlan as PaymentPlanPB, PaymentStatus as PaymentStatusPB, PaymentActionStatus as PaymentActionStatusPB, PaymentAction as PaymentActionPB, DeletePaymentPlanResponse, ListPaymentPlanResponse, UpdatePaymentPlanRequest, GetPaymentPlanRequest, ListPaymentPlanRequest, DeletePaymentPlanRequest)
 
 # make ../database importable
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
@@ -275,10 +275,10 @@ class PlanningServicer(PlanningServicer):
         # return payment_plan_pb2(payment_plan_id=1e-9, user_id=user_id, payment_task_id=payment_task_ids, amount_per_payment=amount_per_payment, plan_type=payment_task_pb2.PlanType.PLAN_TYPE_MIN_FEES, end_date=timestamp, active=True, status=payment_plan_pb2.PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=payment_actions)
 
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, context) -> PaymentPlanPB:
-        paymentPlanDB = PaymentPlanDB.objects(PaymentPlanID=request.payment_plan_id).first()
+        paymentPlanDB = PaymentPlanDB.objects.get(id=request.payment_plan_id)
         return self.paymentPlanDBToPB(paymentPlanDB)
 
-    def ListPaymentPlans(self, request, context) -> ListPaymentPlanResponse:
+    def ListPaymentPlans(self, request: ListPaymentPlanRequest, context) -> ListPaymentPlanResponse:
         paymentPlansDB = PaymentPlanDB.objects
         paymentPlansPB = []
         for pp in paymentPlansDB:
@@ -287,7 +287,7 @@ class PlanningServicer(PlanningServicer):
 
     def UpdatePaymentPlan(self, request: UpdatePaymentPlanRequest, context) -> PaymentPlanPB:
         paymentPlanPB = request.payment_plan
-        PaymentPlanDB.objects(PaymentPlanID=paymentPlanPB.payment_plan_id).update(
+        PaymentPlanDB.objects.get(id=paymentPlanPB.payment_plan_id).update(
             UserID=paymentPlanPB.user_id,
             PaymentTaskID=list(paymentPlanPB.payment_task_id), 
             Timeline=paymentPlanPB.timeline,
@@ -301,8 +301,8 @@ class PlanningServicer(PlanningServicer):
         )
         return paymentPlanPB
 
-    def DeletePaymentPlan(self, request, context) -> DeletePaymentPlanResponse:
-        paymentPlanDB = PaymentPlanDB.objects(PaymentPlanID=request.payment_plan_id).first()
+    def DeletePaymentPlan(self, request: DeletePaymentPlanRequest, context) -> DeletePaymentPlanResponse:
+        paymentPlanDB = PaymentPlanDB.objects.get(id=request.payment_plan_id)
         paymentPlanPB = self.paymentPlanDBToPB(paymentPlanDB)
         paymentPlanDB.delete()
         return DeletePaymentPlanResponse(status=DELETE_STATUS_PB.DELETE_STATUS_SUCCESS, payment_plan=paymentPlanPB)
@@ -337,7 +337,7 @@ class PlanningServicer(PlanningServicer):
         Returns:
             db_models.PaymentPlan: PaymentPlan as a MongoDB object
         """
-        return PaymentActionDB(PaymentPlanID=paymentPlanPB.payment_plan_id,
+        return PaymentPlanDB(PaymentPlanID=paymentPlanPB.payment_plan_id,
             UserID=paymentPlanPB.user_id,
             PaymentTaskID=paymentPlanPB.payment_task_id, 
             Timeline=paymentPlanPB.timeline,
