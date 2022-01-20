@@ -12,16 +12,16 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
-from common import common_pb2 as common_dot_common__pb2
+from ..common import common_pb2 as common_dot_common__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='core/users.proto',
   package='core',
   syntax='proto3',
-  serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
+  serialized_options=b'Z3github.com/jalexanderII/zero_fintech/gen/Go/core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a google/protobuf/field_mask.proto\x1a\x13\x63ommon/common.proto\"E\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\"\x1c\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"c\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
+  serialized_pb=b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a google/protobuf/field_mask.proto\x1a\x13\x63ommon/common.proto\"E\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\"\x1c\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"c\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB5Z3github.com/jalexanderII/zero_fintech/gen/Go/core_pbb\x06proto3'
   ,
   dependencies=[google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,common_dot_common__pb2.DESCRIPTOR,])
 

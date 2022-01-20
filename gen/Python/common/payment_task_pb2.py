@@ -11,7 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from common import common_pb2 as common_dot_common__pb2
+from ..common import common_pb2 as common_dot_common__pb2
 from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 
 
@@ -19,9 +19,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='common/payment_task.proto',
   package='common',
   syntax='proto3',
-  serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
+  serialized_options=b'Z5github.com/jalexanderII/zero_fintech/gen/Go/common',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x19\x63ommon/payment_task.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a google/protobuf/field_mask.proto\"\x98\x01\n\x0bPaymentTask\x12\x17\n\x0fpayment_task_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x16\n\x0etransaction_id\x18\x03 \x01(\t\x12\x12\n\naccount_id\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12#\n\tmeta_data\x18\x06 \x01(\x0b\x32\x10.common.MetaData\"s\n\x08MetaData\x12-\n\x13preferred_plan_type\x18\x01 \x01(\x0e\x32\x10.common.PlanType\x12\x38\n\x16preferred_payment_freq\x18\x03 \x01(\x0e\x32\x18.common.PaymentFrequency\"E\n\x18\x43reatePaymentTaskRequest\x12)\n\x0cpayment_task\x18\x01 \x01(\x0b\x32\x13.common.PaymentTask\"#\n\x15GetPaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"{\n\x18UpdatePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"&\n\x18\x44\x65letePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentTaskRequest\"E\n\x17ListPaymentTaskResponse\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"m\n\x19\x44\x65letePaymentTaskResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\"J\n\x1c\x43reateManyPaymentTaskRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"\x1f\n\x1d\x43reateManyPaymentTaskResponseB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
+  serialized_pb=b'\n\x19\x63ommon/payment_task.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a google/protobuf/field_mask.proto\"\x98\x01\n\x0bPaymentTask\x12\x17\n\x0fpayment_task_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x16\n\x0etransaction_id\x18\x03 \x01(\t\x12\x12\n\naccount_id\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12#\n\tmeta_data\x18\x06 \x01(\x0b\x32\x10.common.MetaData\"s\n\x08MetaData\x12-\n\x13preferred_plan_type\x18\x01 \x01(\x0e\x32\x10.common.PlanType\x12\x38\n\x16preferred_payment_freq\x18\x03 \x01(\x0e\x32\x18.common.PaymentFrequency\"E\n\x18\x43reatePaymentTaskRequest\x12)\n\x0cpayment_task\x18\x01 \x01(\x0b\x32\x13.common.PaymentTask\"#\n\x15GetPaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"{\n\x18UpdatePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"&\n\x18\x44\x65letePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentTaskRequest\"E\n\x17ListPaymentTaskResponse\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"m\n\x19\x44\x65letePaymentTaskResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\"J\n\x1c\x43reateManyPaymentTaskRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"\x1f\n\x1d\x43reateManyPaymentTaskResponseB7Z5github.com/jalexanderII/zero_fintech/gen/Go/common_pbb\x06proto3'
   ,
   dependencies=[common_dot_common__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 

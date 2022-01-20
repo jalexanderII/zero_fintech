@@ -17,9 +17,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='auth/auth.proto',
   package='auth',
   syntax='proto3',
-  serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/auth',
+  serialized_options=b'Z3github.com/jalexanderII/zero_fintech/gen/Go/auth',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0f\x61uth/auth.proto\x12\x04\x61uth\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05Token\x18\x01 \x01(\t\"B\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t2j\n\x04\x41uth\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x31\n\x06SignUp\x12\x13.auth.SignupRequest\x1a\x12.auth.AuthResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/authb\x06proto3'
+  serialized_pb=b'\n\x0f\x61uth/auth.proto\x12\x04\x61uth\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05Token\x18\x01 \x01(\t\"B\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t2j\n\x04\x41uth\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x31\n\x06SignUp\x12\x13.auth.SignupRequest\x1a\x12.auth.AuthResponseB5Z3github.com/jalexanderII/zero_fintech/gen/Go/auth_pbb\x06proto3'
 )
 
 

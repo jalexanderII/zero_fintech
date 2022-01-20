@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from auth import auth_pb2 as auth_dot_auth__pb2
+from ..auth import auth_pb2 as auth_dot_auth__pb2
 
 
 class AuthStub(object):

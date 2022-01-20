@@ -18,9 +18,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='common/common.proto',
   package='common',
   syntax='proto3',
-  serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
+  serialized_options=b'Z5github.com/jalexanderII/zero_fintech/gen/Go/common',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13\x63ommon/common.proto\x12\x06\x63ommon*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x42\x34Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
+  serialized_pb=b'\n\x13\x63ommon/common.proto\x12\x06\x63ommon*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04\x42\x37Z5github.com/jalexanderII/zero_fintech/gen/Go/common_pbb\x06proto3'
 )
 
 _DELETE_STATUS = _descriptor.EnumDescriptor(
