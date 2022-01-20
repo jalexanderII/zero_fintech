@@ -1,17 +1,11 @@
 from datetime import datetime
-import os
-
 from dotenv import load_dotenv
-
 import sys
-import json
-
-from server import PlanningServicer
+from .server import PlanningServicer
 import sys, os
 # make gen/Python importable by import Python.X
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'gen')))
 from Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, UpdatePaymentPlanRequest
-
 # make ../database importable
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 from database.database import initateMongoClient
@@ -117,7 +111,7 @@ def test_create_payment_plan():
     pass
 
 if __name__ == '__main__':
-    test_list_payment_plans
+    test_list_payment_plans()
     test_get_payment_plan()
     test_create_no_building_and_delete_payment_plan()
     test_update_payment_plan()

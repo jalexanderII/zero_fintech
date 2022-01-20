@@ -1,5 +1,9 @@
 from enum import Enum
-from mongoengine import Document, ListField, StringField, FloatField, EmbeddedDocument, EnumField, BooleanField, ObjectIdField, DateTimeField, EmbeddedDocumentField
+from mongoengine import (
+    Document, ListField, StringField, FloatField, 
+    EmbeddedDocument, EnumField, BooleanField, 
+    DateTimeField, EmbeddedDocumentField
+)
 
 class PlanType(Enum):
     PLAN_TYPE_UNKNOWN = 0

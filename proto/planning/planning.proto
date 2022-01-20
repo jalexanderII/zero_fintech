@@ -4,7 +4,7 @@ package planning;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
 import "planning/payment_plan.proto";
-import "core/payment_task.proto";
+import "common/payment_task.proto";
 
 service Planning {
     // Create PaymentPlan for list of PaymentTasks
@@ -18,7 +18,7 @@ service Planning {
 }
 
 message CreatePaymentPlanRequest {
-    repeated core.PaymentTask payment_tasks = 1;
+    repeated common.PaymentTask payment_tasks = 1;
 }
 
 message CreatePaymentPlanResponse {

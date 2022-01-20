@@ -10,7 +10,7 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-	// Create client and context to reuse in all handlers
+	// Create a client and context to reuse in all handlers
 	ctx := context.Background()
 	authClient, grpcOpts := client.SetUpAuthClient()
 	coreClient := client.SetUpCoreClient(authClient, grpcOpts)

@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-// FiberMiddleware provide Fiber's built-in middlewares.
+// FiberMiddleware provides Fiber's built-in middlewares.
 // See: https://docs.gofiber.io/api/middleware
 func FiberMiddleware(a *fiber.App) {
 	a.Use(

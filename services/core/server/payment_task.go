@@ -5,13 +5,12 @@ import (
 	"log"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
-	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (s CoreServer) CreatePaymentTask(ctx context.Context, in *core.CreatePaymentTaskRequest) (*core.PaymentTask, error) {
+func (s CoreServer) CreatePaymentTask(ctx context.Context, in *common.CreatePaymentTaskRequest) (*common.PaymentTask, error) {
 	paymentTask := in.GetPaymentTask()
 	newPaymentTask := PaymentTaskPBToDB(paymentTask, primitive.NewObjectID())
 
@@ -23,7 +22,7 @@ func (s CoreServer) CreatePaymentTask(ctx context.Context, in *core.CreatePaymen
 	return paymentTask, nil
 }
 
-func (s CoreServer) GetPaymentTask(ctx context.Context, in *core.GetPaymentTaskRequest) (*core.PaymentTask, error) {
+func (s CoreServer) GetPaymentTask(ctx context.Context, in *common.GetPaymentTaskRequest) (*common.PaymentTask, error) {
 	var paymentTask database.PaymentTask
 	id, err := primitive.ObjectIDFromHex(in.GetId())
 	if err != nil {
@@ -38,21 +37,21 @@ func (s CoreServer) GetPaymentTask(ctx context.Context, in *core.GetPaymentTaskR
 	return PaymentTaskDBToPB(paymentTask), nil
 }
 
-func (s CoreServer) ListPaymentTasks(ctx context.Context, in *core.ListPaymentTaskRequest) (*core.ListPaymentTaskResponse, error) {
+func (s CoreServer) ListPaymentTasks(ctx context.Context, in *common.ListPaymentTaskRequest) (*common.ListPaymentTaskResponse, error) {
 	var results []database.PaymentTask
 	cursor, err := s.PaymentTaskDB.Find(ctx, bson.D{})
 	if err = cursor.All(ctx, &results); err != nil {
 		s.l.Error("[PaymentTaskDB] Error getting all users", "error", err)
 		return nil, err
 	}
-	res := make([]*core.PaymentTask, len(results))
+	res := make([]*common.PaymentTask, len(results))
 	for idx, paymentTask := range results {
 		res[idx] = PaymentTaskDBToPB(paymentTask)
 	}
-	return &core.ListPaymentTaskResponse{PaymentTasks: res}, nil
+	return &common.ListPaymentTaskResponse{PaymentTasks: res}, nil
 }
 
-func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymentTaskRequest) (*core.PaymentTask, error) {
+func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *common.UpdatePaymentTaskRequest) (*common.PaymentTask, error) {
 	paymentTask := in.GetPaymentTask()
 	metaData := database.MetaData{
 		PreferredPlanType:    paymentTask.GetMetaData().GetPreferredPlanType(),
@@ -73,7 +72,7 @@ func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymen
 	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&payment_task)
 	return PaymentTaskDBToPB(payment_task), nil
 }
-func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymentTaskRequest) (*core.DeletePaymentTaskResponse, error) {
+func (s CoreServer) DeletePaymentTask(ctx context.Context, in *common.DeletePaymentTaskRequest) (*common.DeletePaymentTaskResponse, error) {
 	id, err := primitive.ObjectIDFromHex(in.GetId())
 	if err != nil {
 		return nil, err
@@ -85,11 +84,11 @@ func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymen
 	}
 	var paymentTask database.PaymentTask
 	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&paymentTask)
-	return &core.DeletePaymentTaskResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
+	return &common.DeletePaymentTaskResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
 }
 
 // CreateManyPaymentTask - Insert multiple documents at once in the collection.
-func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *core.CreateManyPaymentTaskRequest) (*core.CreateManyPaymentTaskResponse, error) {
+func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *common.CreateManyPaymentTaskRequest) (*common.CreateManyPaymentTaskResponse, error) {
 	// Map struct slice to interface slice as InsertMany accepts interface slice as parameter
 	insertableList := make([]interface{}, len(in.GetPaymentTasks()))
 	for i, v := range in.GetPaymentTasks() {
@@ -102,11 +101,11 @@ func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *core.CreateMa
 		return nil, err
 	}
 	// Return success without any error.
-	return &core.CreateManyPaymentTaskResponse{}, nil
+	return &common.CreateManyPaymentTaskResponse{}, nil
 }
 
 // PaymentTaskPBToDB converts a PaymentTask proto object to its serialized DB object
-func PaymentTaskPBToDB(paymentTask *core.PaymentTask, id primitive.ObjectID) database.PaymentTask {
+func PaymentTaskPBToDB(paymentTask *common.PaymentTask, id primitive.ObjectID) database.PaymentTask {
 	userId, _ := primitive.ObjectIDFromHex(paymentTask.GetUserId())
 	accountId, _ := primitive.ObjectIDFromHex(paymentTask.GetAccountId())
 	transactionId, _ := primitive.ObjectIDFromHex(paymentTask.GetTransactionId())
@@ -125,14 +124,14 @@ func PaymentTaskPBToDB(paymentTask *core.PaymentTask, id primitive.ObjectID) dat
 }
 
 // PaymentTaskDBToPB converts a PaymentTask DB object to its proto object
-func PaymentTaskDBToPB(paymentTask database.PaymentTask) *core.PaymentTask {
-	return &core.PaymentTask{
+func PaymentTaskDBToPB(paymentTask database.PaymentTask) *common.PaymentTask {
+	return &common.PaymentTask{
 		PaymentTaskId: paymentTask.ID.Hex(),
 		UserId:        paymentTask.UserId.Hex(),
 		TransactionId: paymentTask.TransactionId.Hex(),
 		AccountId:     paymentTask.AccountId.Hex(),
 		Amount:        paymentTask.Amount,
-		MetaData: &core.MetaData{
+		MetaData: &common.MetaData{
 			PreferredPlanType:    paymentTask.MetaData.PreferredPlanType,
 			PreferredPaymentFreq: paymentTask.MetaData.PreferredPaymentFreq,
 		},

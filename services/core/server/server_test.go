@@ -10,9 +10,12 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 
@@ -20,6 +23,17 @@ import (
 )
 
 var L = logrus.New()
+
+func MockPlanningClient() planning.PlanningClient {
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	planningConn, err := grpc.Dial("localhost:9092", opts...)
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+	return planning.NewPlanningClient(planningConn)
+}
 
 func GenServer() (*CoreServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)
@@ -32,7 +46,7 @@ func GenServer() (*CoreServer, context.Context) {
 	transactionCollection := *DB.Collection(utils.GetEnv("TRANSACTION_COLLECTION"))
 	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
 
-	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, L)
+	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, MockPlanningClient(), L)
 	return server, context.TODO()
 }
 
@@ -64,9 +78,9 @@ func CustomGenerator() {
 	})
 }
 
-func GenFakePaymentTask() (*core.PaymentTask, error) {
+func GenFakePaymentTask() (*common.PaymentTask, error) {
 	CustomGenerator()
-	var fake core.PaymentTask
+	var fake common.PaymentTask
 	err := faker.FakeData(&fake)
 	if err != nil {
 		L.Error("[Error] Could not fake this object", "error", err)

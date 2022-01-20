@@ -3,7 +3,7 @@ syntax = "proto3";
 package core;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
-import "core/payment_task.proto";
+import "common/payment_task.proto";
 import "planning/payment_plan.proto";
 import "core/accounts.proto";
 import "core/transactions.proto";
@@ -28,12 +28,12 @@ service Core {
   rpc UpdateTransaction(UpdateTransactionRequest) returns (Transaction);
   rpc DeleteTransaction(DeleteTransactionRequest) returns (DeleteTransactionResponse);
   //Payment Task
-  rpc CreatePaymentTask(CreatePaymentTaskRequest) returns (PaymentTask);
-  rpc CreateManyPaymentTask(CreateManyPaymentTaskRequest) returns (CreateManyPaymentTaskResponse);
-  rpc GetPaymentTask(GetPaymentTaskRequest) returns (PaymentTask);
-  rpc ListPaymentTasks(ListPaymentTaskRequest) returns (ListPaymentTaskResponse);
-  rpc UpdatePaymentTask(UpdatePaymentTaskRequest) returns (PaymentTask);
-  rpc DeletePaymentTask(DeletePaymentTaskRequest) returns (DeletePaymentTaskResponse);
+  rpc CreatePaymentTask(common.CreatePaymentTaskRequest) returns (common.PaymentTask);
+  rpc CreateManyPaymentTask(common.CreateManyPaymentTaskRequest) returns (common.CreateManyPaymentTaskResponse);
+  rpc GetPaymentTask(common.GetPaymentTaskRequest) returns (common.PaymentTask);
+  rpc ListPaymentTasks(common.ListPaymentTaskRequest) returns (common.ListPaymentTaskResponse);
+  rpc UpdatePaymentTask(common.UpdatePaymentTaskRequest) returns (common.PaymentTask);
+  rpc DeletePaymentTask(common.DeletePaymentTaskRequest) returns (common.DeletePaymentTaskResponse);
   // Users
   rpc GetUser(GetUserRequest) returns (User);
   rpc ListUsers(ListUserRequest) returns (ListUserResponse);

@@ -72,7 +72,7 @@ func CreateResponsePaymentPlan(paymentTaskModel *planning.PaymentPlan) PaymentPl
 }
 
 // CreateResponsePaymentTask Takes in a model and returns a serializer
-func CreateResponsePaymentTask(paymentTaskModel *core.PaymentTask) PaymentTask {
+func CreateResponsePaymentTask(paymentTaskModel *common.PaymentTask) PaymentTask {
 	return PaymentTask{
 		UserId:        paymentTaskModel.PaymentTaskId,
 		TransactionId: paymentTaskModel.TransactionId,
@@ -113,7 +113,7 @@ func CreatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
 		}
-		paymentTask, err := client.CreatePaymentTask(ctx, &core.CreatePaymentTaskRequest{PaymentTask: PaymentTaskDBToPB(input)})
+		paymentTask, err := client.CreatePaymentTask(ctx, &common.CreatePaymentTaskRequest{PaymentTask: PaymentTaskDBToPB(input)})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Could not create payment task", "data": err})
 		}
@@ -123,7 +123,7 @@ func CreatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func ListPaymentTasks(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		listPaymentTasks, err := client.ListPaymentTasks(ctx, &core.ListPaymentTaskRequest{})
+		listPaymentTasks, err := client.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -139,7 +139,7 @@ func ListPaymentTasks(client core.CoreClient, ctx context.Context) func(c *fiber
 
 func GetPaymentTask(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		getPaymentTask, err := client.GetPaymentTask(ctx, &core.GetPaymentTaskRequest{Id: c.Params("id")})
+		getPaymentTask, err := client.GetPaymentTask(ctx, &common.GetPaymentTaskRequest{Id: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -161,11 +161,11 @@ func UpdatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
 
-		updatePaymentTask, err := client.UpdatePaymentTask(ctx, &core.UpdatePaymentTaskRequest{
+		updatePaymentTask, err := client.UpdatePaymentTask(ctx, &common.UpdatePaymentTaskRequest{
 			Id: c.Params("id"),
-			PaymentTask: &core.PaymentTask{
+			PaymentTask: &common.PaymentTask{
 				Amount: updatePaymentTaskResponse.Amount,
-				MetaData: &core.MetaData{
+				MetaData: &common.MetaData{
 					PreferredPlanType:    common.PlanType(updatePaymentTaskResponse.PreferredPlanType),
 					PreferredPaymentFreq: common.PaymentFrequency(updatePaymentTaskResponse.PreferredPaymentFreq),
 				},
@@ -181,7 +181,7 @@ func UpdatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		response, err := client.DeletePaymentTask(ctx, &core.DeletePaymentTaskRequest{Id: c.Params("id")})
+		response, err := client.DeletePaymentTask(ctx, &common.DeletePaymentTaskRequest{Id: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -190,13 +190,13 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 }
 
 // PaymentTaskDBToPB converts a PaymentTask DB object to its proto object
-func PaymentTaskDBToPB(paymentTask PaymentTask) *core.PaymentTask {
-	return &core.PaymentTask{
+func PaymentTaskDBToPB(paymentTask PaymentTask) *common.PaymentTask {
+	return &common.PaymentTask{
 		UserId:        paymentTask.UserId,
 		TransactionId: paymentTask.AccountId,
 		AccountId:     paymentTask.TransactionId,
 		Amount:        paymentTask.Amount,
-		MetaData: &core.MetaData{
+		MetaData: &common.MetaData{
 			PreferredPlanType:    common.PlanType(paymentTask.MetaData.PreferredPlanType),
 			PreferredPaymentFreq: common.PaymentFrequency(paymentTask.MetaData.PreferredPaymentFreq),
 		},

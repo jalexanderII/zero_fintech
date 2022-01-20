@@ -11,9 +11,7 @@ import (
 func SetUpPlanningClient() planning.PlanningClient {
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	opts = append(opts, grpc.WithBlock())
-
-	planningConn, err := grpc.Dial("localhost:50051", opts...)
+	planningConn, err := grpc.Dial("localhost:9092", opts...)
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}

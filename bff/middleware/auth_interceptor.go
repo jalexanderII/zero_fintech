@@ -52,7 +52,7 @@ func (interceptor *AuthInterceptor) SetToken(accessToken string) {
 func AccessibleRoles() map[string]bool {
 	const authServicePath = "/auth.Auth/"
 	return map[string]bool{
-		// Auth paths not Protected since they are needed to generate the tokens
+		// Auth paths are not Protected since they are needed to generate the tokens
 		authServicePath + "Login":  true,
 		authServicePath + "SignUp": true,
 	}

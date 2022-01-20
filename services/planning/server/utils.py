@@ -1,19 +1,15 @@
 import pandas as pd
 from typing import List
 from datetime import timedelta, datetime
-
 from google.protobuf.timestamp_pb2 import Timestamp
-
 import sys, os
 # make gen/Python importable by import Python.X
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'gen')))
 from Python.common.common_pb2 import (PlanType as PlanTypePB, PaymentFrequency as PaymentFrequencyPB)
 from Python.planning.payment_plan_pb2 import (PaymentStatus as PaymentStatusPB, PaymentActionStatus as PaymentActionStatusPB, PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB)
-
 # make ../database importable
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 from database.models import (PaymentAction as PaymentActionDB, PaymentPlan as PaymentPlanDB)
-
 
 
 def datetime_to_pb_timestamp(timestamp: datetime) -> Timestamp:
@@ -44,14 +40,7 @@ def payment_actions_pb_to_db(payment_actions: List[PaymentActionPB]) -> List[Pay
     return results
 
 def paymentPlanDBToPB(paymentPlanDB: PaymentPlanDB) -> PaymentPlanPB:
-    """ Converts a MongoDB Document version of PaymentPlan to Protobuf version
-
-    Args:
-        paymentPlanDB (db_models.PaymentPlan): PaymentPlan as a MongoDB object
-
-    Returns:
-        payment_plan_pb2.PaymentPlan: PaymentPlan as Protobuf
-    """
+    """ Converts a MongoDB Document version of PaymentPlan to Protobuf version"""
     return PaymentPlanPB(payment_plan_id=paymentPlanDB.PaymentPlanID,
         user_id=paymentPlanDB.UserID,
         payment_task_id=paymentPlanDB.PaymentTaskID, 
@@ -65,15 +54,9 @@ def paymentPlanDBToPB(paymentPlanDB: PaymentPlanDB) -> PaymentPlanPB:
         payment_action=payment_actions_db_to_pb(paymentPlanDB.PaymentAction))
 
 def paymentPlanPBToDB(paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:
-    """ Converts a Protobuf Document version of PaymentPlan to MongoDB version
-
-    Args:
-        paymentPlanPB (payment_plan_pb2.PaymentPlan): PaymentPlan as a Protobuf object
-
-    Returns:
-        db_models.PaymentPlan: PaymentPlan as a MongoDB object
-    """
-    return PaymentPlanDB(PaymentPlanID=paymentPlanPB.payment_plan_id,
+    """ Converts a Protobuf Document version of PaymentPlan to MongoDB version"""
+    return PaymentPlanDB(
+        PaymentPlanID=paymentPlanPB.payment_plan_id,
         UserID=paymentPlanPB.user_id,
         PaymentTaskID=paymentPlanPB.payment_task_id, 
         Timeline=paymentPlanPB.timeline,
@@ -83,7 +66,8 @@ def paymentPlanPBToDB(paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:
         EndDate=paymentPlanPB.end_date.ToDatetime(),
         Active=paymentPlanPB.active,
         Status=paymentPlanPB.status,
-        PaymentAction=payment_actions_pb_to_db(paymentPlanPB.payment_action))
+        PaymentAction=payment_actions_pb_to_db(paymentPlanPB.payment_action)
+    )
 
 
 def shift_date_by_payment_frequency(date: datetime, payment_freq: PaymentFrequencyPB) -> datetime:
@@ -92,7 +76,8 @@ def shift_date_by_payment_frequency(date: datetime, payment_freq: PaymentFrequen
     elif payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_BIWEEKLY:
         return date + timedelta(days=14)
     date_format = '%m/%d/%Y'
-    dtObj = datetime.strptime(date, date_format)
+    date_string = date.strftime(date_format)
+    dtObj = datetime.strptime(date_string, date_format)
     if payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_MONTHLY:
         future_date = dtObj + pd.DateOffset(months=1)
     elif payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_QUARTERLY:

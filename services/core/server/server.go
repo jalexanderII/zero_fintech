@@ -52,7 +52,7 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 		s.l.Error("[PaymentTaskDB] Error getting all PaymentTasks", "error", err)
 		return nil, err
 	}
-	req := make([]*core.PaymentTask, len(results))
+	req := make([]*common.PaymentTask, len(results))
 	for idx, paymentTask := range results {
 		req[idx] = PaymentTaskDBToPB(paymentTask)
 	}
@@ -62,7 +62,7 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	return &core.GetPaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }
 
-func MockClientCall(tasks []*core.PaymentTask) []*planning.PaymentPlan {
+func MockClientCall(tasks []*common.PaymentTask) []*planning.PaymentPlan {
 	var plans []*planning.PaymentPlan
 	var actions []*planning.PaymentAction
 	var ids []string

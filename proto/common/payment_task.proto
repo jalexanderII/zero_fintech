@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package core;
-option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
+package common;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 
 import "common/common.proto";
 import "google/protobuf/field_mask.proto";
