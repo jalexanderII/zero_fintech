@@ -9,7 +9,7 @@ def initateMongoClient():
 
     mongoClient = None
     try:
-        mongoClient = connect(host=os.getenv('MONGOURIPY'), db=os.getenv('PLANNING_DB_NAME'))
+        mongoClient = connect(host=os.getenv('MONGOURI'), db=os.getenv('PLANNING_DB_NAME'))
     except:
         logging.error("Connecting to MongoDB failed", exc_info=True)
 
