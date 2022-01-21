@@ -1,16 +1,13 @@
 import os
-from mongoengine import connect
-import logging
+
 from dotenv import load_dotenv
+from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.database import Database
 
 
-def initateMongoClient():
+def initiate_mongo_client() -> Collection:
     load_dotenv()
-
-    mongoClient = None
-    try:
-        mongoClient = connect(host=os.getenv('MONGOURI'), db=os.getenv('PLANNING_DB_NAME'))
-    except:
-        logging.error("Connecting to MongoDB failed", exc_info=True)
-
-    return mongoClient
+    client = MongoClient(os.getenv('MONGOURI'))
+    db: Database = client[os.getenv('PLANNING_DB_NAME')]
+    return db[os.getenv('PLANNING_COLLECTION')]

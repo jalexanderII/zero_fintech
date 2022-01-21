@@ -2,8 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from planning import payment_plan_pb2 as planning_dot_payment__plan__pb2
-from planning import planning_pb2 as planning_dot_planning__pb2
+from ..planning import payment_plan_pb2 as planning_dot_payment__plan__pb2
+from ..planning import planning_pb2 as planning_dot_planning__pb2
 
 
 class PlanningStub(object):

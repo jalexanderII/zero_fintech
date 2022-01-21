@@ -24,6 +24,7 @@
 
 # Air
 /bff/tmp
+tmp
 
 # Database
 .DS_Store
@@ -33,9 +34,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
-*.so
+.mypy_cache
+.vscode
 
 # Distribution / packaging
 .Python
@@ -84,4 +84,4 @@ __pypackages__/
 
 # Python Environments
 venv/
-tmp
+venv

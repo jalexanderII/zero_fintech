@@ -1,70 +1,88 @@
-import sys, os
-import grpc
-from pymongo.database import Database
-# make gen/Python importable by import Python.X
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'gen')))
-from Python.common.common_pb2 import DELETE_STATUS_SUCCESS
-from Python.planning.planning_pb2_grpc import PlanningServicer as PlanningServicerPB
-from Python.planning.planning_pb2 import CreatePaymentPlanRequest, CreatePaymentPlanResponse
-from Python.planning.payment_plan_pb2 import GetPaymentPlanRequest, ListPaymentPlanRequest, DeletePaymentPlanRequest
-from Python.planning.payment_plan_pb2 import DeletePaymentPlanResponse, ListPaymentPlanResponse, UpdatePaymentPlanRequest
-from Python.planning.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
-# make ../database importable
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
-from database.models import PaymentPlan as PaymentPlanDB
-from .utils import paymentPlanDBToPB, paymentPlanPBToDB, payment_actions_pb_to_db
-from payment_plan_builder import PaymentPlanBuilder
-from dotenv import load_dotenv
+import logging
+import sys
+
+from bson.objectid import ObjectId
+
+from database.models.planning import PaymentPlan as PaymentPlanDB
+from pymongo.collection import Collection
+
+from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
+from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest
+from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanResponse, ListPaymentPlanResponse
+from gen.Python.planning.payment_plan_pb2 import GetPaymentPlanRequest, ListPaymentPlanRequest
+from gen.Python.planning.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
+from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
+from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, CreatePaymentPlanResponse
+from gen.Python.planning.planning_pb2_grpc import PlanningServicer as PlanningServicerPB
+from .payment_plan_builder import PaymentPlanBuilder, payment_plan_builder
+from .utils import paymentPlanDBToPB, paymentPlanPBToDB
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger('PlanningServicer')
 
 
 class PlanningServicer(PlanningServicerPB):
 
-    def __init__(self, planningCollection: Database) -> None:
-        self.planningCollection = planningCollection
-        self.ppb = PaymentPlanBuilder()
+    def __init__(self, planning_collection: Collection) -> None:
+        self.planning_collection = planning_collection
+        self.payment_plan_builder: PaymentPlanBuilder = payment_plan_builder
 
-    def CreatePaymentPlan(self, request: CreatePaymentPlanRequest, context: grpc.ServicerContext) -> CreatePaymentPlanResponse:
+    def CreatePaymentPlan(self, request: CreatePaymentPlanRequest, context) -> CreatePaymentPlanResponse:
         """ Creates PaymentPlan(s) for given request containing a list of PaymentTasks"""
-        paymentPlanListPB = self.ppb.createPaymentPlan(request.payment_tasks)
-        # for paymentPlanPB in paymentPlanListPB:
-        #      self._createPaymentPlan(paymentPlanPB)
+        logger.info('CreatePaymentPlan called')
+        paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks)
+        for paymentPlanPB in paymentPlanListPB:
+            self._createPaymentPlan(paymentPlanPB)
         return CreatePaymentPlanResponse(payment_plans=paymentPlanListPB)
 
-    # TODO(JB): this needs fixing returning error on save
-    def _createPaymentPlan(self, paymentPlanPB: PaymentPlanPB) -> None:
+    def _createPaymentPlan(self, payment_plan_PB: PaymentPlanPB) -> str:
         """ Saves a PaymentPlan into the database without creating it."""
-        paymentPlanDB = paymentPlanPBToDB(paymentPlanPB)
-        paymentPlanDB.save()
-    
+        paymentPlanDB = paymentPlanPBToDB(payment_plan_PB).to_dict()
+        new_payment_plan = self.planning_collection.insert_one(paymentPlanDB)
+        return new_payment_plan.inserted_id
+
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, context) -> PaymentPlanPB:
-        paymentPlanDB = PaymentPlanDB.objects.get(id=request.payment_plan_id)
+        logger.info('GetPaymentPlan called')
+        paymentPlanDB = self.planning_collection.find_one({"_id": ObjectId(request.payment_plan_id)})
+        pp_id = paymentPlanDB["_id"]
+        paymentPlanDB = PaymentPlanDB().from_dict(paymentPlanDB)
+        paymentPlanDB.payment_plan_id = str(pp_id)
         return paymentPlanDBToPB(paymentPlanDB)
 
     def ListPaymentPlans(self, request: ListPaymentPlanRequest, context) -> ListPaymentPlanResponse:
-        paymentPlansDB = PaymentPlanDB.objects
+        logger.info('ListPaymentPlans called')
+        payment_plans = self.planning_collection.find()
         paymentPlansPB = []
-        for pp in paymentPlansDB:
-            paymentPlansPB.append(paymentPlanDBToPB(pp))
+        for payment_plan in payment_plans:
+            pp_id = payment_plan["_id"]
+            paymentPlanDB = PaymentPlanDB().from_dict(payment_plan)
+            paymentPlanDB.payment_plan_id = str(pp_id)
+            paymentPlansPB.append(paymentPlanDBToPB(paymentPlanDB))
         return ListPaymentPlanResponse(payment_plans=paymentPlansPB)
 
     def UpdatePaymentPlan(self, request: UpdatePaymentPlanRequest, context) -> PaymentPlanPB:
-        paymentPlanPB = request.payment_plan
-        PaymentPlanDB.objects.get(id=paymentPlanPB.payment_plan_id).update(
-            UserID=paymentPlanPB.user_id,
-            PaymentTaskID=list(paymentPlanPB.payment_task_id), 
-            Timeline=paymentPlanPB.timeline,
-            PaymentFrequency=paymentPlanPB.payment_freq,
-            AmountPerPayment=paymentPlanPB.amount_per_payment,
-            PlanType=paymentPlanPB.plan_type,
-            EndDate=paymentPlanPB.end_date.ToDatetime(),
-            Active=paymentPlanPB.active,
-            Status=paymentPlanPB.status,
-            PaymentAction=payment_actions_pb_to_db(paymentPlanPB.payment_action)
-        )
-        return paymentPlanPB
+        logger.info('UpdatePaymentPlan called')
+        paymentPlanDB = paymentPlanPBToDB(request.payment_plan)
+        payment_plan = {k: v for k, v in paymentPlanDB.to_dict().items() if v is not None}
+        _ = self.planning_collection.update_one({"_id": ObjectId(request.payment_plan_id)}, {"$set": payment_plan})
+        updated_payment_plan = self.planning_collection.find_one({"_id": ObjectId(request.payment_plan_id)})
+        paymentPlanDB = PaymentPlanDB().from_dict(updated_payment_plan)
+        paymentPlanDB.payment_plan_id = request.payment_plan_id
+        return paymentPlanDBToPB(paymentPlanDB)
 
     def DeletePaymentPlan(self, request: DeletePaymentPlanRequest, context) -> DeletePaymentPlanResponse:
-        paymentPlanDB = PaymentPlanDB.objects.get(id=request.payment_plan_id)
+        logger.info('DeletePaymentPlan called')
+        # fetch
+        paymentPlanDB = self.planning_collection.find_one({"_id": ObjectId(request.payment_plan_id)})
+        paymentPlanDB = PaymentPlanDB().from_dict(paymentPlanDB)
+        paymentPlanDB.payment_plan_id = request.payment_plan_id
         paymentPlanPB = paymentPlanDBToPB(paymentPlanDB)
-        paymentPlanDB.delete()
-        return DeletePaymentPlanResponse(status=DELETE_STATUS_SUCCESS, payment_plan=paymentPlanPB)
+        # delete
+        delete_result = self.planning_collection.delete_one({"_id": ObjectId(request.payment_plan_id)})
+        if delete_result.deleted_count == 1:
+            return DeletePaymentPlanResponse(status=DELETE_STATUS_SUCCESS, payment_plan=paymentPlanPB)
+        return DeletePaymentPlanResponse(status=DELETE_STATUS_FAILED, payment_plan=paymentPlanPB)

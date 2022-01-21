@@ -11,11 +11,11 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
-from common import payment_task_pb2 as common_dot_payment__task__pb2
-from planning import payment_plan_pb2 as planning_dot_payment__plan__pb2
-from core import accounts_pb2 as core_dot_accounts__pb2
-from core import transactions_pb2 as core_dot_transactions__pb2
-from core import users_pb2 as core_dot_users__pb2
+from ..common import payment_task_pb2 as common_dot_payment__task__pb2
+from ..planning import payment_plan_pb2 as planning_dot_payment__plan__pb2
+from ..core import accounts_pb2 as core_dot_accounts__pb2
+from ..core import transactions_pb2 as core_dot_transactions__pb2
+from ..core import users_pb2 as core_dot_users__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
