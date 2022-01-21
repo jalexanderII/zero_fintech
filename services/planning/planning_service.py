@@ -5,6 +5,7 @@ from concurrent import futures
 
 import grpc
 from dotenv import load_dotenv
+from pymongo.collection import Collection
 
 from database.database import initiate_mongo_client
 from gen.Python.core import core_pb2_grpc as coreClient, accounts_pb2 as Accounts
@@ -16,21 +17,22 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)]
 )
+logger = logging.getLogger('Server')
 
 
 def serve():
-    logging.info('Load .env file')
+    logger.info('Load .env file')
     load_dotenv()
 
-    logging.info('Initiate Mongo client and servicer')
-    planning_collection = initiate_mongo_client()
+    logger.info('Initiate Mongo client and servicer')
+    planning_collection: Collection = initiate_mongo_client()
 
     servicer = PlanningServicer(planning_collection)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     PlanningServicePB.add_PlanningServicer_to_server(servicer, server)
 
     server.add_insecure_port("[::]:{}".format(os.getenv('PLANNING_SERVER_PORT')))
-    logging.info('Server running')
+    logger.info('Server running')
     server.start()
     server.wait_for_termination()
 

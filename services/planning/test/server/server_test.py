@@ -4,6 +4,7 @@ import pytest
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
 from google.protobuf.timestamp_pb2 import Timestamp
+from pymongo.collection import Collection
 
 from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PLAN_TYPE_MIN_FEES, DELETE_STATUS_SUCCESS
 from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest
@@ -24,9 +25,8 @@ from services.planning.server.server import PlanningServicer
 @pytest.fixture
 def gen_server() -> PlanningServicer:
     load_dotenv()
-    planningCollection = initiate_mongo_client()
-    server = PlanningServicer(planningCollection)
-    return server
+    planningCollection: Collection = initiate_mongo_client()
+    return PlanningServicer(planningCollection)
 
 
 def test_create_payment_plan(gen_server):

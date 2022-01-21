@@ -111,3 +111,4 @@ class User(betterproto.Message):
     username: str = betterproto.string_field(2)
     email: str = betterproto.string_field(3)
     password: str = betterproto.string_field(4)
+

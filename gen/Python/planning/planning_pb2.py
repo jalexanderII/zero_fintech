@@ -19,9 +19,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='planning/planning.proto',
   package='planning',
   syntax='proto3',
-  serialized_options=b'Z7github.com/jalexanderII/zero_fintech/gen/Go/planning',
+  serialized_options=b'Z4github.com/jalexanderII/zero_fintech/gen/Go/planning',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x1bplanning/payment_plan.proto\x1a\x19\x63ommon/payment_task.proto\"F\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"I\n\x19\x43reatePaymentPlanResponse\x12,\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x15.planning.PaymentPlan2\xb9\x03\n\x08Planning\x12\\\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a#.planning.CreatePaymentPlanResponse\x12H\n\x0eGetPaymentPlan\x12\x1f.planning.GetPaymentPlanRequest\x1a\x15.planning.PaymentPlan\x12W\n\x10ListPaymentPlans\x12 .planning.ListPaymentPlanRequest\x1a!.planning.ListPaymentPlanResponse\x12N\n\x11UpdatePaymentPlan\x12\".planning.UpdatePaymentPlanRequest\x1a\x15.planning.PaymentPlan\x12\\\n\x11\x44\x65letePaymentPlan\x12\".planning.DeletePaymentPlanRequest\x1a#.planning.DeletePaymentPlanResponseB9Z7github.com/jalexanderII/zero_fintech/gen/Go/planning_pbb\x06proto3'
+  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x1bplanning/payment_plan.proto\x1a\x19\x63ommon/payment_task.proto\"F\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"I\n\x19\x43reatePaymentPlanResponse\x12,\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x15.planning.PaymentPlan2\xb9\x03\n\x08Planning\x12\\\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a#.planning.CreatePaymentPlanResponse\x12H\n\x0eGetPaymentPlan\x12\x1f.planning.GetPaymentPlanRequest\x1a\x15.planning.PaymentPlan\x12W\n\x10ListPaymentPlans\x12 .planning.ListPaymentPlanRequest\x1a!.planning.ListPaymentPlanResponse\x12N\n\x11UpdatePaymentPlan\x12\".planning.UpdatePaymentPlanRequest\x1a\x15.planning.PaymentPlan\x12\\\n\x11\x44\x65letePaymentPlan\x12\".planning.DeletePaymentPlanRequest\x1a#.planning.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
   ,
   dependencies=[planning_dot_payment__plan__pb2.DESCRIPTOR,common_dot_payment__task__pb2.DESCRIPTOR,])
 

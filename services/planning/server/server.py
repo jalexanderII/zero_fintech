@@ -1,3 +1,6 @@
+import logging
+import sys
+
 from bson.objectid import ObjectId
 
 from database.models.planning import PaymentPlan as PaymentPlanDB
@@ -14,6 +17,13 @@ from gen.Python.planning.planning_pb2_grpc import PlanningServicer as PlanningSe
 from .payment_plan_builder import PaymentPlanBuilder, payment_plan_builder
 from .utils import paymentPlanDBToPB, paymentPlanPBToDB
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+logger = logging.getLogger('PlanningServicer')
+
 
 class PlanningServicer(PlanningServicerPB):
 
@@ -23,6 +33,7 @@ class PlanningServicer(PlanningServicerPB):
 
     def CreatePaymentPlan(self, request: CreatePaymentPlanRequest, context) -> CreatePaymentPlanResponse:
         """ Creates PaymentPlan(s) for given request containing a list of PaymentTasks"""
+        logger.info('CreatePaymentPlan called')
         paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks)
         for paymentPlanPB in paymentPlanListPB:
             self._createPaymentPlan(paymentPlanPB)
@@ -35,6 +46,7 @@ class PlanningServicer(PlanningServicerPB):
         return new_payment_plan.inserted_id
 
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, context) -> PaymentPlanPB:
+        logger.info('GetPaymentPlan called')
         paymentPlanDB = self.planning_collection.find_one({"_id": ObjectId(request.payment_plan_id)})
         pp_id = paymentPlanDB["_id"]
         paymentPlanDB = PaymentPlanDB().from_dict(paymentPlanDB)
@@ -42,6 +54,7 @@ class PlanningServicer(PlanningServicerPB):
         return paymentPlanDBToPB(paymentPlanDB)
 
     def ListPaymentPlans(self, request: ListPaymentPlanRequest, context) -> ListPaymentPlanResponse:
+        logger.info('ListPaymentPlans called')
         payment_plans = self.planning_collection.find()
         paymentPlansPB = []
         for payment_plan in payment_plans:
@@ -52,6 +65,7 @@ class PlanningServicer(PlanningServicerPB):
         return ListPaymentPlanResponse(payment_plans=paymentPlansPB)
 
     def UpdatePaymentPlan(self, request: UpdatePaymentPlanRequest, context) -> PaymentPlanPB:
+        logger.info('UpdatePaymentPlan called')
         paymentPlanDB = paymentPlanPBToDB(request.payment_plan)
         payment_plan = {k: v for k, v in paymentPlanDB.to_dict().items() if v is not None}
         _ = self.planning_collection.update_one({"_id": ObjectId(request.payment_plan_id)}, {"$set": payment_plan})
@@ -61,6 +75,7 @@ class PlanningServicer(PlanningServicerPB):
         return paymentPlanDBToPB(paymentPlanDB)
 
     def DeletePaymentPlan(self, request: DeletePaymentPlanRequest, context) -> DeletePaymentPlanResponse:
+        logger.info('DeletePaymentPlan called')
         # fetch
         paymentPlanDB = self.planning_collection.find_one({"_id": ObjectId(request.payment_plan_id)})
         paymentPlanDB = PaymentPlanDB().from_dict(paymentPlanDB)

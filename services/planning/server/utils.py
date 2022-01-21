@@ -17,7 +17,7 @@ def datetime_to_pb_timestamp(timestamp: datetime) -> Timestamp:
 
 
 def payment_actions_db_to_pb(payment_actions: List[PaymentActionDB]) -> List[PaymentActionPB]:
-    results = []
+    results: List[PaymentActionPB] = []
     for payment_action in payment_actions:
         new_payment_action = PaymentActionPB(
             account_id=payment_action.account_id,
@@ -30,7 +30,7 @@ def payment_actions_db_to_pb(payment_actions: List[PaymentActionDB]) -> List[Pay
 
 
 def payment_actions_pb_to_db(payment_actions: List[PaymentActionPB]) -> List[PaymentActionDB]:
-    results = []
+    results: List[PaymentActionDB] = []
     for payment_action in payment_actions:
         new_payment_action = PaymentActionDB(
             account_id=payment_action.account_id,
@@ -79,10 +79,10 @@ def paymentPlanPBToDB(paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:
 
 
 def shift_date_by_payment_frequency(date: datetime, payment_freq: PaymentFrequencyPB) -> datetime:
-    future_date = date
+    future_date: datetime = date
     date_format = '%m/%d/%Y'
     date_string = date.strftime(date_format)
-    dtObj = datetime.strptime(date_string, date_format)
+    dtObj: datetime = datetime.strptime(date_string, date_format)
 
     if payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_WEEKLY:
         return date + timedelta(days=7)
@@ -92,4 +92,4 @@ def shift_date_by_payment_frequency(date: datetime, payment_freq: PaymentFrequen
         future_date = dtObj + pd.DateOffset(months=1)
     elif payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_QUARTERLY:
         future_date = dtObj + pd.DateOffset(months=3)
-    return future_date.datetime()
+    return future_date
