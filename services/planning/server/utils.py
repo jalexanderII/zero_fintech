@@ -43,17 +43,19 @@ def payment_actions_pb_to_db(payment_actions: List[PaymentActionPB]) -> List[Pay
 
 def paymentPlanDBToPB(paymentPlanDB: PaymentPlanDB) -> PaymentPlanPB:
     """ Converts a MongoDB Document version of PaymentPlan to Protobuf version"""
-    return PaymentPlanPB(payment_plan_id=paymentPlanDB.payment_plan_id,
-                         user_id=paymentPlanDB.user_id,
-                         payment_task_id=paymentPlanDB.payment_task_id,
-                         timeline=paymentPlanDB.timeline,
-                         payment_freq=paymentPlanDB.payment_freq,
-                         amount_per_payment=paymentPlanDB.amount_per_payment,
-                         plan_type=paymentPlanDB.plan_type,
-                         end_date=datetime_to_pb_timestamp(paymentPlanDB.end_date),
-                         active=paymentPlanDB.active,
-                         status=paymentPlanDB.status,
-                         payment_action=payment_actions_db_to_pb(paymentPlanDB.payment_action))
+    return PaymentPlanPB(
+        payment_plan_id=paymentPlanDB.payment_plan_id,
+        user_id=paymentPlanDB.user_id,
+        payment_task_id=paymentPlanDB.payment_task_id,
+        timeline=paymentPlanDB.timeline,
+        payment_freq=paymentPlanDB.payment_freq,
+        amount_per_payment=paymentPlanDB.amount_per_payment,
+        plan_type=paymentPlanDB.plan_type,
+        end_date=datetime_to_pb_timestamp(paymentPlanDB.end_date),
+        active=paymentPlanDB.active,
+        status=paymentPlanDB.status,
+        payment_action=payment_actions_db_to_pb(paymentPlanDB.payment_action)
+    )
 
 
 def paymentPlanPBToDB(paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:

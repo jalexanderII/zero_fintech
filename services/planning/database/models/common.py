@@ -2,7 +2,6 @@
 # sources: common/common.proto, common/payment_task.proto
 # plugin: python-betterproto
 from dataclasses import dataclass
-from typing import List
 
 import betterproto
 
@@ -58,52 +57,3 @@ class MetaData(betterproto.Message):
 
     preferred_plan_type: "PlanType" = betterproto.enum_field(1)
     preferred_payment_freq: "PaymentFrequency" = betterproto.enum_field(3)
-
-
-@dataclass
-class CreatePaymentTaskRequest(betterproto.Message):
-    """CRUD Methods"""
-
-    payment_task: "PaymentTask" = betterproto.message_field(1)
-
-
-@dataclass
-class GetPaymentTaskRequest(betterproto.Message):
-    id: str = betterproto.string_field(1)
-
-
-@dataclass
-class UpdatePaymentTaskRequest(betterproto.Message):
-    id: str = betterproto.string_field(1)
-    payment_task: "PaymentTask" = betterproto.message_field(2)
-
-
-@dataclass
-class DeletePaymentTaskRequest(betterproto.Message):
-    id: str = betterproto.string_field(1)
-
-
-@dataclass
-class ListPaymentTaskRequest(betterproto.Message):
-    pass
-
-
-@dataclass
-class ListPaymentTaskResponse(betterproto.Message):
-    payment_tasks: List["PaymentTask"] = betterproto.message_field(1)
-
-
-@dataclass
-class DeletePaymentTaskResponse(betterproto.Message):
-    status: "DELETE_STATUS" = betterproto.enum_field(1)
-    payment_task: "PaymentTask" = betterproto.message_field(2)
-
-
-@dataclass
-class CreateManyPaymentTaskRequest(betterproto.Message):
-    payment_tasks: List["PaymentTask"] = betterproto.message_field(1)
-
-
-@dataclass
-class CreateManyPaymentTaskResponse(betterproto.Message):
-    pass

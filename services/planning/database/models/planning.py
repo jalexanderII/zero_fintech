@@ -3,10 +3,9 @@
 # plugin: python-betterproto
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 import betterproto
-import grpclib
 
 from . import common
 
@@ -64,113 +63,3 @@ class PaymentPlan(betterproto.Message):
     # payment actions of the plan
     payment_action: List["PaymentAction"] = betterproto.message_field(11)
 
-
-@dataclass
-class GetPaymentPlanRequest(betterproto.Message):
-    """CRUD Methods"""
-
-    payment_plan_id: str = betterproto.string_field(1)
-
-
-@dataclass
-class ListPaymentPlanRequest(betterproto.Message):
-    pass
-
-
-@dataclass
-class ListPaymentPlanResponse(betterproto.Message):
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
-
-
-@dataclass
-class UpdatePaymentPlanRequest(betterproto.Message):
-    payment_plan_id: str = betterproto.string_field(1)
-    payment_plan: "PaymentPlan" = betterproto.message_field(2)
-
-
-@dataclass
-class DeletePaymentPlanRequest(betterproto.Message):
-    payment_plan_id: str = betterproto.string_field(1)
-
-
-@dataclass
-class DeletePaymentPlanResponse(betterproto.Message):
-    status: common.DELETE_STATUS = betterproto.enum_field(1)
-    payment_plan: "PaymentPlan" = betterproto.message_field(2)
-
-
-@dataclass
-class CreatePaymentPlanRequest(betterproto.Message):
-    payment_tasks: List[common.PaymentTask] = betterproto.message_field(1)
-
-
-@dataclass
-class CreatePaymentPlanResponse(betterproto.Message):
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
-
-
-class PlanningStub(betterproto.ServiceStub):
-    async def create_payment_plan(
-        self, *, payment_tasks: List[common.PaymentTask] = []
-    ) -> CreatePaymentPlanResponse:
-        """Create PaymentPlan for list of PaymentTasks"""
-
-        request = CreatePaymentPlanRequest()
-        if payment_tasks is not None:
-            request.payment_tasks = payment_tasks
-
-        return await self._unary_unary(
-            "/planning.Planning/CreatePaymentPlan",
-            request,
-            CreatePaymentPlanResponse,
-        )
-
-    async def get_payment_plan(self, *, payment_plan_id: str = "") -> PaymentPlan:
-        """CRUD METHODS"""
-
-        request = GetPaymentPlanRequest()
-        request.payment_plan_id = payment_plan_id
-
-        return await self._unary_unary(
-            "/planning.Planning/GetPaymentPlan",
-            request,
-            PaymentPlan,
-        )
-
-    async def list_payment_plans(self) -> ListPaymentPlanResponse:
-        request = ListPaymentPlanRequest()
-
-        return await self._unary_unary(
-            "/planning.Planning/ListPaymentPlans",
-            request,
-            ListPaymentPlanResponse,
-        )
-
-    async def update_payment_plan(
-        self,
-        *,
-        payment_plan_id: str = "",
-        payment_plan: Optional["PaymentPlan"] = None,
-    ) -> PaymentPlan:
-        request = UpdatePaymentPlanRequest()
-        request.payment_plan_id = payment_plan_id
-        if payment_plan is not None:
-            request.payment_plan = payment_plan
-
-        return await self._unary_unary(
-            "/planning.Planning/UpdatePaymentPlan",
-            request,
-            PaymentPlan,
-        )
-
-    async def delete_payment_plan(
-        self, *, payment_plan_id: str = ""
-    ) -> DeletePaymentPlanResponse:
-        request = DeletePaymentPlanRequest()
-        request.payment_plan_id = payment_plan_id
-
-        return await self._unary_unary(
-            "/planning.Planning/DeletePaymentPlan",
-            request,
-            DeletePaymentPlanResponse,
-        )
