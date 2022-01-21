@@ -32,7 +32,7 @@ func (s CoreServer) GetTransaction(ctx context.Context, in *core.GetTransactionR
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	err = s.TransactionDB.FindOne(ctx, filter).Decode(&transaction)
 	if err != nil {
 		return nil, err
@@ -43,6 +43,9 @@ func (s CoreServer) GetTransaction(ctx context.Context, in *core.GetTransactionR
 func (s CoreServer) ListTransactions(ctx context.Context, in *core.ListTransactionRequest) (*core.ListTransactionResponse, error) {
 	var results []database.Transaction
 	cursor, err := s.TransactionDB.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
 	if err = cursor.All(ctx, &results); err != nil {
 		s.l.Error("[TransactionDB] Error getting all users", "error", err)
 		return nil, err
@@ -69,13 +72,13 @@ func (s CoreServer) UpdateTransaction(ctx context.Context, in *core.UpdateTransa
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.D{
-		{"$set",
-			bson.D{
-				{"name", name}, {"amount", amount},
-				{"date", date}, {"rewards_earned", rewardsEarned},
-				{"transaction_details", td},
+		{Key: "$set",
+			Value: bson.D{
+				{Key: "name", Value: name}, {Key: "amount", Value: amount},
+				{Key: "date", Value: date}, {Key: "rewards_earned", Value: rewardsEarned},
+				{Key: "transaction_details", Value: td},
 			},
 		},
 	}
@@ -85,6 +88,9 @@ func (s CoreServer) UpdateTransaction(ctx context.Context, in *core.UpdateTransa
 	}
 	var tt database.Transaction
 	err = s.TransactionDB.FindOne(ctx, filter).Decode(&tt)
+	if err != nil {
+		return nil, err
+	}
 	return TransactionDBToPB(tt), nil
 }
 
@@ -93,13 +99,16 @@ func (s CoreServer) DeleteTransaction(ctx context.Context, in *core.DeleteTransa
 	if err != nil {
 		return nil, err
 	}
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	_, err = s.TransactionDB.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
 	var transaction database.Transaction
 	err = s.TransactionDB.FindOne(ctx, filter).Decode(&transaction)
+	if err != nil {
+		return nil, err
+	}
 	return &core.DeleteTransactionResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, Transaction: TransactionDBToPB(transaction)}, nil
 }
 

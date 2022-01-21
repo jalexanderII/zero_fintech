@@ -31,7 +31,7 @@ func (s CoreServer) GetAccount(ctx context.Context, in *core.GetAccountRequest) 
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	err = s.AccountDB.FindOne(ctx, filter).Decode(&account)
 	if err != nil {
 		return nil, err
@@ -42,6 +42,9 @@ func (s CoreServer) GetAccount(ctx context.Context, in *core.GetAccountRequest) 
 func (s CoreServer) ListAccounts(ctx context.Context, in *core.ListAccountRequest) (*core.ListAccountResponse, error) {
 	var results []database.Account
 	cursor, err := s.AccountDB.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
 	if err = cursor.All(ctx, &results); err != nil {
 		s.l.Error("[AccountDB] Error getting all users", "error", err)
 		return nil, err
@@ -73,16 +76,16 @@ func (s CoreServer) UpdateAccount(ctx context.Context, in *core.UpdateAccountReq
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	update := bson.D{
-		{"$set",
-			bson.D{
-				{"annual_percentage_rate", annualPercentageRate}, {"penalty_apr", penaltyApr},
-				{"due_day", account.GetDueDay()}, {"minimum_interest_charge", account.GetMinimumInterestCharge()},
-				{"annual_account_fee", account.GetAnnualAccountFee()}, {"foreign_transaction_fee", account.GetForeignTransactionFee()},
-				{"promotional_rate", promotionalRate}, {"minimum_payment_due", account.GetMinimumPaymentDue()},
-				{"current_balance", account.GetCurrentBalance()}, {"pending_transactions", account.GetPendingTransactions()},
-				{"credit_limit", account.GetCreditLimit()},
+		{Key: "$set",
+			Value: bson.D{
+				{Key: "annual_percentage_rate", Value: annualPercentageRate}, {Key: "penalty_apr", Value: penaltyApr},
+				{Key: "due_day", Value: account.GetDueDay()}, {Key: "minimum_interest_charge", Value: account.GetMinimumInterestCharge()},
+				{Key: "annual_account_fee", Value: account.GetAnnualAccountFee()}, {Key: "foreign_transaction_fee", Value: account.GetForeignTransactionFee()},
+				{Key: "promotional_rate", Value: promotionalRate}, {Key: "minimum_payment_due", Value: account.GetMinimumPaymentDue()},
+				{Key: "current_balance", Value: account.GetCurrentBalance()}, {Key: "pending_transactions", Value: account.GetPendingTransactions()},
+				{Key: "credit_limit", Value: account.GetCreditLimit()},
 			},
 		},
 	}
@@ -92,6 +95,9 @@ func (s CoreServer) UpdateAccount(ctx context.Context, in *core.UpdateAccountReq
 	}
 	var aa database.Account
 	err = s.AccountDB.FindOne(ctx, filter).Decode(&aa)
+	if err != nil {
+		return nil, err
+	}
 	return AccountDBToPB(aa), nil
 }
 
@@ -100,13 +106,16 @@ func (s CoreServer) DeleteAccount(ctx context.Context, in *core.DeleteAccountReq
 	if err != nil {
 		return nil, err
 	}
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	_, err = s.AccountDB.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
 	var account database.Account
 	err = s.AccountDB.FindOne(ctx, filter).Decode(&account)
+	if err != nil {
+		return nil, err
+	}
 	return &core.DeleteAccountResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, Account: AccountDBToPB(account)}, nil
 }
 

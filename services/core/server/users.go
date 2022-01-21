@@ -18,7 +18,7 @@ func (s CoreServer) GetUser(ctx context.Context, in *core.GetUserRequest) (*core
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	err = s.UserDB.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		return nil, err
@@ -29,6 +29,9 @@ func (s CoreServer) GetUser(ctx context.Context, in *core.GetUserRequest) (*core
 func (s CoreServer) ListUsers(ctx context.Context, in *core.ListUserRequest) (*core.ListUserResponse, error) {
 	var results []database.User
 	cursor, err := s.UserDB.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
 	if err = cursor.All(ctx, &results); err != nil {
 		s.l.Error("[DB] Error getting all users", "error", err)
 		return nil, err
@@ -46,14 +49,17 @@ func (s CoreServer) UpdateUser(ctx context.Context, in *core.UpdateUserRequest) 
 	if err != nil {
 		return nil, err
 	}
-	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set", bson.D{{"username", username}, {"email", email}}}}
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "username", Value: username}, {Key: "email", Value: email}}}}
 	_, err = s.UserDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
 	}
 	var user database.User
 	err = s.UserDB.FindOne(ctx, filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
 	return UserDBToPB(&user), nil
 }
 
@@ -62,13 +68,16 @@ func (s CoreServer) DeleteUser(ctx context.Context, in *core.DeleteUserRequest) 
 	if err != nil {
 		return nil, err
 	}
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	_, err = s.UserDB.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
 	var user database.User
 	err = s.UserDB.FindOne(ctx, filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
 	return &core.DeleteUserResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, User: UserDBToPB(&user)}, nil
 }
 

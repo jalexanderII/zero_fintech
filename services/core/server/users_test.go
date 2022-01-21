@@ -56,12 +56,12 @@ func TestAuthServer_UpdateUser(t *testing.T) {
 func TestAuthServer_DeleteUser(t *testing.T) {
 	server, ctx := GenServer()
 
-	u, err := server.ListUsers(ctx, &core.ListUserRequest{})
+	u, _ := server.ListUsers(ctx, &core.ListUserRequest{})
 	originalLen := len(u.GetUsers())
 
 	pw, _ := bcrypt.GenerateFromPassword([]byte("to_delete"), bcrypt.DefaultCost)
 	newUser := database.User{ID: primitive.NewObjectID(), Email: "to_delete@gmail.com", Username: "to_delete", Password: string(pw)}
-	_, err = server.UserDB.InsertOne(ctx, &newUser)
+	_, err := server.UserDB.InsertOne(ctx, &newUser)
 	if err != nil {
 		t.Errorf("1: Error creating new user:: %v", err)
 	}

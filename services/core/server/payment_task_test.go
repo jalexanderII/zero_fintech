@@ -81,7 +81,7 @@ func TestCoreServer_UpdatePaymentTask(t *testing.T) {
 func TestCoreServer_DeletePaymentTask(t *testing.T) {
 	server, ctx := GenServer()
 
-	u, err := server.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
+	u, _ := server.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
 	originalLen := len(u.GetPaymentTasks())
 
 	newPaymentTask := PaymentTaskPBToDB(
@@ -97,7 +97,7 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 		},
 		primitive.NewObjectID(),
 	)
-	_, err = server.PaymentTaskDB.InsertOne(ctx, &newPaymentTask)
+	_, err := server.PaymentTaskDB.InsertOne(ctx, &newPaymentTask)
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask:: %v", err)
 	}

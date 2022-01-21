@@ -29,7 +29,7 @@ func (s CoreServer) GetPaymentTask(ctx context.Context, in *common.GetPaymentTas
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&paymentTask)
 	if err != nil {
 		return nil, err
@@ -40,6 +40,9 @@ func (s CoreServer) GetPaymentTask(ctx context.Context, in *common.GetPaymentTas
 func (s CoreServer) ListPaymentTasks(ctx context.Context, in *common.ListPaymentTaskRequest) (*common.ListPaymentTaskResponse, error) {
 	var results []database.PaymentTask
 	cursor, err := s.PaymentTaskDB.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
 	if err = cursor.All(ctx, &results); err != nil {
 		s.l.Error("[PaymentTaskDB] Error getting all users", "error", err)
 		return nil, err
@@ -62,14 +65,17 @@ func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *common.UpdatePaym
 		return nil, err
 	}
 
-	filter := bson.D{{"_id", id}}
-	update := bson.D{{"$set", bson.D{{"amount", paymentTask.Amount}, {"meta_data", metaData}}}}
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "amount", Value: paymentTask.Amount}, {Key: "meta_data", Value: metaData}}}}
 	_, err = s.PaymentTaskDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
 	}
 	var payment_task database.PaymentTask
 	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&payment_task)
+	if err != nil {
+		return nil, err
+	}
 	return PaymentTaskDBToPB(payment_task), nil
 }
 func (s CoreServer) DeletePaymentTask(ctx context.Context, in *common.DeletePaymentTaskRequest) (*common.DeletePaymentTaskResponse, error) {
@@ -77,13 +83,16 @@ func (s CoreServer) DeletePaymentTask(ctx context.Context, in *common.DeletePaym
 	if err != nil {
 		return nil, err
 	}
-	filter := bson.D{{"_id", id}}
+	filter := bson.D{{Key: "_id", Value: id}}
 	_, err = s.PaymentTaskDB.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
 	var paymentTask database.PaymentTask
 	err = s.PaymentTaskDB.FindOne(ctx, filter).Decode(&paymentTask)
+	if err != nil {
+		return nil, err
+	}
 	return &common.DeletePaymentTaskResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
 }
 

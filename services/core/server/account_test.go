@@ -164,7 +164,7 @@ func TestCoreServer_UpdateAccount(t *testing.T) {
 func TestCoreServer_DeleteAccount(t *testing.T) {
 	server, ctx := GenServer()
 
-	u, err := server.ListAccounts(ctx, &core.ListAccountRequest{})
+	u, _ := server.ListAccounts(ctx, &core.ListAccountRequest{})
 	originalLen := len(u.GetAccounts())
 
 	newAccount := AccountPBToDB(
@@ -192,7 +192,7 @@ func TestCoreServer_DeleteAccount(t *testing.T) {
 		},
 		primitive.NewObjectID(),
 	)
-	_, err = server.AccountDB.InsertOne(ctx, &newAccount)
+	_, err := server.AccountDB.InsertOne(ctx, &newAccount)
 	if err != nil {
 		t.Errorf("1: Error creating new account:: %v", err)
 	}

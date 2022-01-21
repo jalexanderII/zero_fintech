@@ -113,7 +113,7 @@ func TestCoreServer_UpdateTransaction(t *testing.T) {
 func TestCoreServer_DeleteTransaction(t *testing.T) {
 	server, ctx := GenServer()
 
-	u, err := server.ListTransactions(ctx, &core.ListTransactionRequest{})
+	u, _ := server.ListTransactions(ctx, &core.ListTransactionRequest{})
 	originalLen := len(u.GetTransactions())
 
 	newTransaction := TransactionPBToDB(
@@ -132,7 +132,7 @@ func TestCoreServer_DeleteTransaction(t *testing.T) {
 		},
 		primitive.NewObjectID(),
 	)
-	_, err = server.TransactionDB.InsertOne(ctx, &newTransaction)
+	_, err := server.TransactionDB.InsertOne(ctx, &newTransaction)
 	if err != nil {
 		t.Errorf("1: Error creating new transaction:: %v", err)
 	}
