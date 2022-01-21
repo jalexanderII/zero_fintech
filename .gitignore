@@ -24,6 +24,7 @@
 
 # Air
 /bff/tmp
+tmp
 
 # Database
 .DS_Store
