@@ -11,7 +11,7 @@ from gen.Python.planning.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, CreatePaymentPlanResponse
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer as PlanningServicerPB
-from .payment_plan_builder import PaymentPlanBuilder
+from .payment_plan_builder import PaymentPlanBuilder, payment_plan_builder
 from .utils import paymentPlanDBToPB, paymentPlanPBToDB
 
 
@@ -19,11 +19,11 @@ class PlanningServicer(PlanningServicerPB):
 
     def __init__(self, planning_collection: Collection) -> None:
         self.planning_collection = planning_collection
-        self.ppb = PaymentPlanBuilder()
+        self.payment_plan_builder: PaymentPlanBuilder = payment_plan_builder
 
     def CreatePaymentPlan(self, request: CreatePaymentPlanRequest, context) -> CreatePaymentPlanResponse:
         """ Creates PaymentPlan(s) for given request containing a list of PaymentTasks"""
-        paymentPlanListPB = self.ppb.createPaymentPlan(request.payment_tasks)
+        paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks)
         for paymentPlanPB in paymentPlanListPB:
             self._createPaymentPlan(paymentPlanPB)
         return CreatePaymentPlanResponse(payment_plans=paymentPlanListPB)
@@ -31,7 +31,6 @@ class PlanningServicer(PlanningServicerPB):
     def _createPaymentPlan(self, payment_plan_PB: PaymentPlanPB) -> str:
         """ Saves a PaymentPlan into the database without creating it."""
         paymentPlanDB = paymentPlanPBToDB(payment_plan_PB).to_dict()
-        print(paymentPlanDB)
         new_payment_plan = self.planning_collection.insert_one(paymentPlanDB)
         return new_payment_plan.inserted_id
 
@@ -65,10 +64,10 @@ class PlanningServicer(PlanningServicerPB):
         # fetch
         paymentPlanDB = self.planning_collection.find_one({"_id": ObjectId(request.payment_plan_id)})
         paymentPlanDB = PaymentPlanDB().from_dict(paymentPlanDB)
-        paymentPlanDB.payment_plan_id = str(request.payment_plan_id)
-        payment_plan = paymentPlanDBToPB(paymentPlanDB)
-
+        paymentPlanDB.payment_plan_id = request.payment_plan_id
+        paymentPlanPB = paymentPlanDBToPB(paymentPlanDB)
+        # delete
         delete_result = self.planning_collection.delete_one({"_id": ObjectId(request.payment_plan_id)})
         if delete_result.deleted_count == 1:
-            return DeletePaymentPlanResponse(status=DELETE_STATUS_SUCCESS, payment_plan=payment_plan)
-        return DeletePaymentPlanResponse(status=DELETE_STATUS_FAILED, payment_plan=payment_plan)
+            return DeletePaymentPlanResponse(status=DELETE_STATUS_SUCCESS, payment_plan=paymentPlanPB)
+        return DeletePaymentPlanResponse(status=DELETE_STATUS_FAILED, payment_plan=paymentPlanPB)

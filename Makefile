@@ -19,7 +19,7 @@ gen_protos_py:
 	python3 -m grpc_tools.protoc -I proto --python_betterproto_out=services/planning/database/models --python_out=gen/Python --grpc_python_out=gen/Python proto/planning/*.proto
 
 clear_protos_py:
-	rm ./gen/Python/common_pb/*.py
-	rm ./gen/Python/auth_pb/*.py
-	rm ./gen/Python/planning_pb/*.py
-	rm ./gen/Python/core_pb/*.py
+	rm ./gen/Python/common/*.py
+	rm ./gen/Python/auth/*.py
+	rm ./gen/Python/planning/*.py
+	rm ./gen/Python/core/*.py

@@ -58,13 +58,13 @@ def paymentPlanDBToPB(paymentPlanDB: PaymentPlanDB) -> PaymentPlanPB:
 
 def paymentPlanPBToDB(paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:
     """ Converts a Protobuf Document version of PaymentPlan to MongoDB version"""
-    ids: List[str] = []
+    task_ids: List[str] = []
     for task_id in paymentPlanPB.payment_task_id:
-        ids.append(str(task_id))
+        task_ids.append(str(task_id))
     return PaymentPlanDB(
         payment_plan_id=paymentPlanPB.payment_plan_id,
         user_id=paymentPlanPB.user_id,
-        payment_task_id=ids,
+        payment_task_id=task_ids,
         timeline=paymentPlanPB.timeline,
         payment_freq=paymentPlanPB.payment_freq,
         amount_per_payment=paymentPlanPB.amount_per_payment,

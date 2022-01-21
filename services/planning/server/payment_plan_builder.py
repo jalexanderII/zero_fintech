@@ -50,3 +50,6 @@ class PaymentPlanBuilder:
         )
         plans.append(plan)
         return plans
+
+
+payment_plan_builder = PaymentPlanBuilder()
