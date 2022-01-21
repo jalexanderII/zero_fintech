@@ -95,6 +95,7 @@ def test_update_payment_plan(gen_server):
     )
     assert updated_payment_plan.payment_plan_id == pp.payment_plan_id, "Not equal"
     assert updated_payment_plan.timeline == pp.timeline, "Not updated"
+    assert updated_payment_plan.end_date == pp.end_date, "Not updated"
     assert updated_payment_plan.amount_per_payment == pp.amount_per_payment, "Not updated"
     assert len(updated_payment_plan.payment_task_id) == len(pp.payment_task_id), "Not updated"
 
