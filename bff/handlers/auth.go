@@ -5,7 +5,6 @@ import (
 	"github.com/jalexanderII/zero_fintech/bff/client"
 )
 
-// Login gets username and password from request body, writes it to an AuthClient and then calls Login
 func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type LoginData struct {
