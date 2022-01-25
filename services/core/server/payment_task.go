@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
@@ -110,7 +109,8 @@ func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *core.CreateMa
 
 	resp := make([]string, len(insertManyResult.InsertedIDs))
 	for idx, id := range insertManyResult.InsertedIDs {
-		resp[idx] = fmt.Sprintf("%v", id)
+		ido := id.(primitive.ObjectID)
+		resp[idx] = ido.Hex()
 	}
 
 	// Return success without any error.

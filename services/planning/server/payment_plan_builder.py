@@ -1,5 +1,3 @@
-import logging
-import sys
 from typing import List
 
 from bson.objectid import ObjectId
@@ -9,14 +7,6 @@ from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_MONTHLY, PAYMENT_ACTI
 from gen.Python.common.common_pb2 import PLAN_TYPE_OPTIM_CREDIT_SCORE, PAYMENT_STATUS_CURRENT
 from gen.Python.common.payment_task_pb2 import PaymentTask
 from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-
-logger = logging.getLogger('Server')
 
 
 class PaymentPlanBuilder:

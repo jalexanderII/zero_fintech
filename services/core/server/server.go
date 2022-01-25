@@ -50,6 +50,7 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 		s.l.Error("[PaymentTask] Error creating PaymentTasks", "error", err)
 		return nil, err
 	}
+
 	for idx, id := range listOfIds.GetPaymentTaskIds() {
 		pt, _ := s.GetPaymentTask(ctx, &core.GetPaymentTaskRequest{Id: id})
 		payment_tasks[idx] = pt
