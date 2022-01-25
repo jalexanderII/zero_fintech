@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
 )
@@ -23,6 +25,15 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on login request", "data": err})
 		}
+
+		cookie := fiber.Cookie{
+			Name:     "jwt",
+			Value:    token,
+			Expires:  time.Now().Add(time.Hour * 24),
+			HTTPOnly: true,
+		}
+
+		c.Cookie(&cookie)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
 	}
@@ -51,4 +62,19 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": token})
 	}
+}
+
+func Logout(c *fiber.Ctx) error {
+	cookie := fiber.Cookie{
+		Name:     "jwt",
+		Value:    "",
+		Expires:  time.Now().Add(-time.Hour),
+		HTTPOnly: true,
+	}
+
+	c.Cookie(&cookie)
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
 }
