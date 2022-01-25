@@ -8,7 +8,9 @@ import "common/payment_task.proto";
 
 service Planning {
     // Create PaymentPlan for list of PaymentTasks
-    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (CreatePaymentPlanResponse);
+    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (PaymentPlanResponse);
+    // Update PaymentPlan
+    rpc ModifyPaymentPlan(ModifyPaymentPlanRequest) returns (ModifyPaymentPlanResponse);
 
     //  CRUD METHODS
     rpc GetPaymentPlan(GetPaymentPlanRequest) returns (PaymentPlan);
@@ -21,7 +23,11 @@ message CreatePaymentPlanRequest {
     repeated common.PaymentTask payment_tasks = 1;
 }
 
-message CreatePaymentPlanResponse {
+message PaymentPlanResponse {
     repeated planning.PaymentPlan payment_plans = 1;
-} 
+}
 
+message ModifyPaymentPlanRequest {
+    repeated planning.PaymentPlan payment_plans = 1;
+    MetaData meta_data = 2;
+}

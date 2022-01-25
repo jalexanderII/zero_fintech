@@ -1,14 +1,20 @@
-from typing import List
+import datetime
+from datetime import timedelta
+from itertools import product
+from typing import List, Tuple
 
 import numpy as np
+import pandas as pd
 from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from gen.Python.common.common_pb2 import PaymentFrequency, PlanType
-from gen.Python.common.payment_task_pb2 import PaymentTask
 from gen.Python.core.core_pb2_grpc import  CoreStub
-from gen.Python.planning.payment_plan_pb2 import PAYMENT_ACTION_STATUS_PENDING, PAYMENT_STATUS_CURRENT
+from gen.Python.core.accounts_pb2 import GetAccountRequest
+from gen.Python.common.common_pb2 import PaymentFrequency, PlanType
+from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
+from gen.Python.planning.payment_plan_pb2 import PAYMENT_STATUS_CURRENT, PaymentActionStatus, PaymentStatus
 from gen.Python.planning.payment_plan_pb2 import PaymentAction, PaymentPlan
+from services.planning.server.utils import paymentFrequencyToDays, shift_date_by_payment_frequency
 
 
 class PaymentPlanBuilder:
@@ -16,51 +22,154 @@ class PaymentPlanBuilder:
     def __init__(self, coreClient: CoreStub):
         self.coreClient = coreClient
 
-    def createPaymentPlan(self, paymentTasks: List[PaymentTask]) -> List[PaymentPlan]:
+    def createPaymentPlan(self, paymentTasks: List[PaymentTask], metaData: MetaData=None) -> List[PaymentPlan]:
         """ Creates a PaymentPlan protobuf from given list of PaymentTasks protos."""
-
-        """ Assumptions:
-         - don't pay off minimum
-         - we group those PaymentTasks together which shall be paid with
-           the same PlanType and PaymentFrequency
-        """
-
-        # acc2amount = paymentTasks.account_to_amount
-        # prefPlanType = paymentTasks.preferred_payment_type
-        # prefPaymentFreq = paymentTasks.preferred_payment_frequency
-
-        user_id = None
+        userId = None
         paymentTaskIds = []
         accountIds = []
         amounts = []
-        prefPaymentFreqs = []
-        prefPlanTypes = []
-
         for paymentTask in paymentTasks:
-            if user_id is None:
-                user_id = paymentTask.user_id
+            if userId is None:
+                userId = paymentTask.user_id
             paymentTaskIds.append(paymentTask.payment_task_id)
             accountIds.append(paymentTask.account_id)
             amounts.append(paymentTask.amount)
-            prefPaymentFreqs.append(paymentTask.preferred_payment_freq)
-            prefPlanTypes.append(paymentTask.preferred_plan_type)
-        paymentTaskIds = np.array(paymentTaskIds)
-        accountIds = np.array(accountIds)
-        amounts = np.array(amounts)
 
-        payment_plans = []
-        for prefPaymentFreq, prefPlanType in set(zip(prefPaymentFreqs, prefPlanTypes)):
-            mask = (prefPaymentFreqs == prefPaymentFreq) and (prefPlanTypes == prefPlanType)
-            # for any of them with UNKNOWN PaymentFrequency or PlanType, choose a way either adding them to existing
-            # other partial matches in those tuples or simply select a few choices (at least possible in PlanType
-            payment_plans.extend(self._createPaymentPlanSameTypeFreq(paymentTaskIds[mask], accountIds[mask],
-                                amounts[mask], prefPaymentFreq, prefPlanType))
-        return self._mock_payment_plan(paymentTasks)
+        if metaData:
+            planType = metaData.preferred_plan_type
+            timelineInMonths = metaData.timeline_in_months
+        else:
+            planType = PlanType.PLAN_TYPE_UNKNOWN
+            timelineInMonths = 0.0
+            paymentFreq = PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN
 
-    def _createPaymentPlanSameTypeFreq(self, paymentTaskIds: np.ndarray, accountIds: np.ndarray, amounts: np.ndarray,
-            paymentFreq: PaymentFrequency, planType: PlanType) -> PaymentPlan:
+        typeTimelineFrequencyOptions = self._createTypeTimelineFrequencyOptions(planType=planType,
+            timelineInMonths=timelineInMonths, paymentFreq=paymentFreq, totalAmount=sum(amounts))
+
+        paymentPlans = []
+        for prefPlanType, prefTimelineInMonths, prefPaymentFreq in typeTimelineFrequencyOptions:
+            paymentPlan = self._createPaymentPlanSameTypeFreq(userId=userId, planType=prefPlanType,
+                timelineInMonths=prefTimelineInMonths, paymentFreq=prefPaymentFreq, paymentTaskIds=paymentTaskIds,
+                accountIds=accountIds, amounts=amounts)
+            paymentPlans.append(paymentPlan)
+
+        return paymentPlans
+
+    def _createTypeTimelineFrequencyOptions(self, planType: PlanType, timelineInMonths: float, paymentFreq: PaymentFrequency,
+            totalAmount: float) -> List[Tuple[PlanType, float, PaymentFrequency]]:
+        """ Creates options for what kind of plans to create given type, timeline, frequency and total amount. """
+        typeOptions = [planType] if planType != PlanType.PLAN_TYPE_UNKNOWN else [PlanType.PLAN_TYPE_MIN_FEES,
+                                                                                 PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE]
+        freqOptions = [paymentFreq]
+        if paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN:
+            if timelineInMonths > 0:
+                timelineOptions = [timelineInMonths]
+            else:
+                if totalAmount < 250.0:
+                    timelineOptions = [1.0]
+                else:
+                    timelineOptions = [3.0, 6.0, 12.0]
+            freqOptions = [PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY]
+        elif paymentFreq in [PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY, PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY]:
+            if timelineInMonths > 0:
+                timelineOptions = [timelineInMonths]
+            else:
+                timelineOptions = [1.0, 2.0]
+        elif paymentFreq in [PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY]:
+            if timelineInMonths > 0:
+                timelineOptions = [timelineInMonths]
+            else:
+                timelineOptions = [3.0, 6.0, 12.0]
+        return list(product(typeOptions, timelineOptions, freqOptions))
+
+def _createPaymentPlanSameTypeFreq(self, userId: str, planType: PlanType, timelineInMonths: float,
+            paymentFreq: PaymentFrequency, paymentTaskIds: List[str], accountIds: List[str], amounts: List[float],
+            ) -> PaymentPlan:
         """Creates a PaymentPlan for given choices of PaymentFrequency and PlanType for the Accounts and Amounts. """
-        pass
+        assert planType != PlanType.PLAN_TYPE_UNKNOWN, "PlanType needs to be chosen"
+
+        if planType == PlanType.PLAN_TYPE_MIN_FEES:
+            apr = []
+            for accId in accountIds:
+                acc = self.coreClient.GetAccount(GetAccountRequest(id=accId))
+                apr.append(acc.annual_percentage_rate)
+            df = pd.DataFrame({'account_id': accountIds, 'apr': apr, 'amount': amounts,
+                               'payment_task_id': paymentTaskIds}).sort_values('apr', ascending=False)
+            accountIds = df['account_id'].values
+            amounts = df['amount'].values
+            paymentTaskIds = df['payment_task_id'].values
+
+            totalAmount = sum(amounts)
+            amountPerPayment = totalAmount / (timedelta(days=30) * timelineInMonths / paymentFrequencyToDays(paymentFreq))
+
+            paymentActions = []
+            startDate = datetime.datetime.now()
+            dateDt = shift_date_by_payment_frequency(date=startDate, payment_freq=paymentFreq)
+            datePB = Timestamp()
+            datePB.FromDatetime(dateDt)
+            payThisDate = 0
+            while len(amounts) > 0:
+                _amount = amounts.pop(0)
+                _accId = accountIds.pop(0)
+                _amountThisDate = min(amountPerPayment - payThisDate, _amount)
+                _amountNextDates = _amount - _amountThisDate
+                if _amountThisDate > 0:
+                    paymentActions.append(PaymentAction(account_id=_accId, amount=_amountThisDate, transaction_date=datePB,
+                                                        status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+                    payThisDate += _amount
+                elif _amountNextDates > 0:
+                    amounts.insert(0, _amountNextDates)
+                    accountIds.insert(0, _accId)
+                    # move to next date
+                    payThisDate = 0
+                    dateDt = shift_date_by_payment_frequency(date=dateDt, payment_freq=paymentFreq)
+        elif planType == PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
+            balance = []
+            creditLimit = []
+            for accId in accountIds:
+                acc = self.coreClient.GetAccount(GetAccountRequest(id=accId))
+                balance.append(acc.current_balance)
+                creditLimit.append(acc.credit_limit)
+            df = pd.DataFrame({'account_id': accountIds, 'amount': amounts, 'balance': balance, 'credit_limit': creditLimit})
+            df['usage'] = df['balance'] / df['credit_limit']
+            df = df.sort_values('usage', ascending=False)
+
+            paymentActions = []
+            startDate = datetime.datetime.now()
+            dateDt = shift_date_by_payment_frequency(date=startDate, payment_freq=paymentFreq)
+            datePB = Timestamp()
+            datePB.FromDatetime(dateDt)
+            payThisDate = 0
+            while len(df) > 0:
+                # pay off until hit limit for this payment date
+                for _, row in df.iterrows():
+                    _accId = row['account_id']
+                    _amount = row['amount']
+                    _balance = row['balance']
+                    _amountThisDate = min(amountPerPayment - payThisDate, _amount)
+                    paymentActions.append(PaymentAction(account_id=_accId, amount=_amountThisDate, transaction_date=datePB,
+                                      status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
+                    payThisDate += _amountThisDate
+                    df.loc[df['account_id'] == _accId, 'amount'] = _amount - _amountThisDate
+                    df.loc[df['account_id'] == _accId, 'balance'] = _balance - _amountThisDate
+                # drop any accounts which don't have any amounts left to pay off
+                df = df.loc[df.amount > 0]
+                # update credit card usage
+                df['usage'] = df['balance'] / df['credit_limit']
+                # move to next date
+                datePB.FromDatetime(dateDt)
+                payThisDate = 0
+                dateDt = shift_date_by_payment_frequency(date=dateDt, payment_freq=paymentFreq)
+                datePB.FromDatetime(dateDt)
+
+        endDatePB = paymentActions[-1].transaction_date
+        # timeline = (endDatePB.ToDatetime() - startDate) / timedelta(days=30)
+        timeline = None
+        return PaymentPlan(user_id=userId, payment_task_id=paymentTaskIds, timeline=timeline, payment_freq=paymentFreq,
+                           amount_per_payment=amountPerPayment, plan_type=planType, end_date=endDatePB, active=True,
+                           status=PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=paymentActions)
+
+
 
     @staticmethod
     def _mock_payment_plan(paymentTasks: List[PaymentTask]) -> List[PaymentPlan]:
@@ -77,7 +186,7 @@ class PaymentPlanBuilder:
                 account_id=task.account_id,
                 amount=task.amount,
                 transaction_date=pb_timestamp.GetCurrentTime(),
-                status=PAYMENT_ACTION_STATUS_PENDING,
+                status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
             )
             actions.append(a)
         bson_id = ObjectId()

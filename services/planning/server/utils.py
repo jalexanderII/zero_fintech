@@ -93,3 +93,16 @@ def shift_date_by_payment_frequency(date: datetime, payment_freq: PaymentFrequen
     elif payment_freq == PaymentFrequencyPB.PAYMENT_FREQUENCY_QUARTERLY:
         future_date = dtObj + pd.DateOffset(months=3)
     return future_date
+
+def paymentFrequencyToDays(paymentFrequency: PaymentFrequencyPB) -> timedelta:
+    """ Converts PaymentFrequency protobuf to timedelta """
+    payment_freq_days = None
+    if paymentFrequency == PaymentFrequencyPB.PAYMENT_FREQUENCY_WEEKLY:
+        payment_freq_days = timedelta(days=7)
+    elif paymentFrequency == PaymentFrequencyPB.PAYMENT_FREQUENCY_BIWEEKLY:
+        payment_freq_days = timedelta(days=14)
+    elif paymentFrequency == PaymentFrequencyPB.PAYMENT_FREQUENCY_MONTHLY:
+        payment_freq_days = timedelta(days=30)
+    elif paymentFrequency == PaymentFrequencyPB.PAYMENT_FREQUENCY_QUARTERLY:
+        payment_freq_days = timedelta(days=90)
+    return payment_freq_days

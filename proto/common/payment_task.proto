@@ -10,15 +10,14 @@ import "google/protobuf/field_mask.proto";
 message PaymentTask {
   string payment_task_id = 1;
   string user_id = 2;
-  string transaction_id = 3;
   string account_id = 4;
   double amount = 5;
-  MetaData meta_data = 6;
 }
 
 // MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan
 message MetaData {
   common.PlanType preferred_plan_type = 1;
+  float timeline_in_months = 2;
   common.PaymentFrequency preferred_payment_freq = 3;
 }
 
