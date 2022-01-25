@@ -73,6 +73,9 @@ func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	if paymentPlans.PaymentPlans[0].Timeline != 12 {
 		t.Errorf("2: Error creating payment plan from DB response: %v", paymentPlans)
 	}
+	if len(paymentPlans.PaymentPlans[0].PaymentTaskId) != 2 {
+		t.Errorf("3: Error payment plan doesnt have enough tasks ids: %v", paymentPlans.PaymentPlans[0].PaymentTaskId)
+	}
 }
 
 // CustomGenerator to handle enum fields
