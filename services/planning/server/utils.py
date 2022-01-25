@@ -5,9 +5,8 @@ import pandas as pd
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from gen.Python.common.common_pb2 import PaymentFrequency as PaymentFrequencyPB
-from gen.Python.planning.payment_plan_pb2 import PaymentAction as PaymentActionPB
-from gen.Python.planning.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
-from database.models.planning import PaymentAction as PaymentActionDB, PaymentPlan as PaymentPlanDB
+from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB
+from database.models.common import PaymentAction as PaymentActionDB, PaymentPlan as PaymentPlanDB
 
 
 def datetime_to_pb_timestamp(timestamp: datetime) -> Timestamp:

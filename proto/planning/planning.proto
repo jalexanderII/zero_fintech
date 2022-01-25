@@ -5,17 +5,18 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
 import "planning/payment_plan.proto";
 import "common/payment_task.proto";
+import "common/payment_plan.proto";
 
 service Planning {
-    // Create PaymentPlan for list of PaymentTasks
-    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (PaymentPlanResponse);
-    // Update PaymentPlan
-    rpc ModifyPaymentPlan(ModifyPaymentPlanRequest) returns (ModifyPaymentPlanResponse);
+    // CreatePaymentPlan accepts a request from Core service with PaymentTasks to create a PaymentPlan for
+    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (common.PaymentPlanResponse);
+    // ModifyPaymentPlan accepts a request from Core service with user MetaData to modify an existing Payment Plan
+    rpc ModifyPaymentPlan(common.UpdatePaymentPlanPlanRequest) returns (common.PaymentPlanResponse);
 
     //  CRUD METHODS
-    rpc GetPaymentPlan(GetPaymentPlanRequest) returns (PaymentPlan);
+    rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlan);
     rpc ListPaymentPlans(ListPaymentPlanRequest) returns (ListPaymentPlanResponse);
-    rpc UpdatePaymentPlan(UpdatePaymentPlanRequest) returns (PaymentPlan);
+    rpc UpdatePaymentPlan(UpdatePaymentPlanRequest) returns (common.PaymentPlan);
     rpc DeletePaymentPlan(DeletePaymentPlanRequest) returns (DeletePaymentPlanResponse);
 }
 
@@ -23,11 +24,3 @@ message CreatePaymentPlanRequest {
     repeated common.PaymentTask payment_tasks = 1;
 }
 
-message PaymentPlanResponse {
-    repeated planning.PaymentPlan payment_plans = 1;
-}
-
-message ModifyPaymentPlanRequest {
-    repeated planning.PaymentPlan payment_plans = 1;
-    MetaData meta_data = 2;
-}

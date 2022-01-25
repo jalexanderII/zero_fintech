@@ -10,18 +10,17 @@ import (
 
 // PaymentTask is a DB Serialization of Proto PaymentTask
 type PaymentTask struct {
-	ID            primitive.ObjectID `bson:"_id"`
-	UserId        primitive.ObjectID `bson:"user_id"`
-	TransactionId primitive.ObjectID `bson:"transaction_id"`
-	AccountId     primitive.ObjectID `bson:"account_id"`
-	Amount        float64            `bson:"amount"`
-	MetaData      MetaData           `bson:"meta_data"`
+	ID        primitive.ObjectID `bson:"_id"`
+	UserId    primitive.ObjectID `bson:"user_id"`
+	AccountId primitive.ObjectID `bson:"account_id"`
+	Amount    float64            `bson:"amount"`
 }
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
-	PreferredPlanType    common.PlanType         `bson:"preferred_plan_type" faker:"preferred_plan_type" `
-	PreferredPaymentFreq common.PaymentFrequency `bson:"preferred_payment_freq" faker:"preferred_payment_freq" `
+	PreferredPlanType         common.PlanType         `bson:"preferred_plan_type" faker:"preferred_plan_type" `
+	PreferredTimelineInMonths float64                 `bson:"preferred_timeline_in_months" faker:"preferred_timeline_in_months" `
+	PreferredPaymentFreq      common.PaymentFrequency `bson:"preferred_payment_freq" faker:"preferred_payment_freq" `
 }
 
 // AnnualPercentageRates is a DB Serialization of Proto AnnualPercentageRates

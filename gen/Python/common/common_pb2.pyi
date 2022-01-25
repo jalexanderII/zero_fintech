@@ -71,3 +71,71 @@ PAYMENT_FREQUENCY_MONTHLY: PaymentFrequency.ValueType = ...  # 3
 PAYMENT_FREQUENCY_QUARTERLY: PaymentFrequency.ValueType = ...  # 4
 global___PaymentFrequency = PaymentFrequency
 
+
+class _PaymentStatus:
+    ValueType = typing.NewType('ValueType', builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+class _PaymentStatusEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_PaymentStatus.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor = ...
+    PAYMENT_STATUS_UNKNOWN: PaymentStatus.ValueType = ...  # 0
+    PAYMENT_STATUS_CURRENT: PaymentStatus.ValueType = ...  # 1
+    """Payment plan is in good standing and all payments are current"""
+
+    PAYMENT_STATUS_COMPLETED: PaymentStatus.ValueType = ...  # 2
+    """This plan is fully paid"""
+
+    PAYMENT_STATUS_CANCELLED: PaymentStatus.ValueType = ...  # 3
+    """The user has requested this payment to be cancelled"""
+
+    PAYMENT_STATUS_IN_DEFAULT: PaymentStatus.ValueType = ...  # 4
+    """The payment plan is not current because the user has missed a payment and still have not paid it"""
+
+class PaymentStatus(_PaymentStatus, metaclass=_PaymentStatusEnumTypeWrapper):
+    pass
+
+PAYMENT_STATUS_UNKNOWN: PaymentStatus.ValueType = ...  # 0
+PAYMENT_STATUS_CURRENT: PaymentStatus.ValueType = ...  # 1
+"""Payment plan is in good standing and all payments are current"""
+
+PAYMENT_STATUS_COMPLETED: PaymentStatus.ValueType = ...  # 2
+"""This plan is fully paid"""
+
+PAYMENT_STATUS_CANCELLED: PaymentStatus.ValueType = ...  # 3
+"""The user has requested this payment to be cancelled"""
+
+PAYMENT_STATUS_IN_DEFAULT: PaymentStatus.ValueType = ...  # 4
+"""The payment plan is not current because the user has missed a payment and still have not paid it"""
+
+global___PaymentStatus = PaymentStatus
+
+
+class _PaymentActionStatus:
+    ValueType = typing.NewType('ValueType', builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+class _PaymentActionStatusEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_PaymentActionStatus.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor = ...
+    PAYMENT_ACTION_STATUS_UNKNOWN: PaymentActionStatus.ValueType = ...  # 0
+    PAYMENT_ACTION_STATUS_PENDING: PaymentActionStatus.ValueType = ...  # 1
+    """Payment is pending"""
+
+    PAYMENT_ACTION_STATUS_COMPLETED: PaymentActionStatus.ValueType = ...  # 2
+    """payment is completed"""
+
+    PAYMENT_ACTION_STATUS_IN_DEFAULT: PaymentActionStatus.ValueType = ...  # 3
+    """payment defaulted"""
+
+class PaymentActionStatus(_PaymentActionStatus, metaclass=_PaymentActionStatusEnumTypeWrapper):
+    pass
+
+PAYMENT_ACTION_STATUS_UNKNOWN: PaymentActionStatus.ValueType = ...  # 0
+PAYMENT_ACTION_STATUS_PENDING: PaymentActionStatus.ValueType = ...  # 1
+"""Payment is pending"""
+
+PAYMENT_ACTION_STATUS_COMPLETED: PaymentActionStatus.ValueType = ...  # 2
+"""payment is completed"""
+
+PAYMENT_ACTION_STATUS_IN_DEFAULT: PaymentActionStatus.ValueType = ...  # 3
+"""payment defaulted"""
+
+global___PaymentActionStatus = PaymentActionStatus
+

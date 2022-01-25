@@ -10,13 +10,10 @@ import pandas as pd
 from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from gen.Python.core.core_pb2_grpc import  CoreStub
-from gen.Python.core.accounts_pb2 import GetAccountRequest
-from gen.Python.common.common_pb2 import PaymentFrequency, PlanType
-from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
-from gen.Python.planning.payment_plan_pb2 import PAYMENT_STATUS_CURRENT, PaymentActionStatus, PaymentStatus
-from gen.Python.planning.payment_plan_pb2 import PaymentAction, PaymentPlan
-from services.planning.server.utils import paymentFrequencyToDays, shift_date_by_payment_frequency
+from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_MONTHLY, PAYMENT_ACTION_STATUS_PENDING
+from gen.Python.common.common_pb2 import PLAN_TYPE_OPTIM_CREDIT_SCORE, PAYMENT_STATUS_CURRENT
+from gen.Python.common.payment_task_pb2 import PaymentTask
+from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
 
 
 class PaymentPlanBuilder:
