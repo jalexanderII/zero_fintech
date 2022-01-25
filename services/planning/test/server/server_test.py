@@ -8,7 +8,7 @@ from pymongo.collection import Collection
 
 from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT, PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PLAN_TYPE_MIN_FEES, DELETE_STATUS_SUCCESS
-from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest
+from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, ListPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB
 from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
 from services.planning.database.database import initiate_mongo_client
@@ -57,11 +57,12 @@ def test_create_payment_plan(gen_server):
 def test_get_payment_plan(gen_server):
     payment_plan_id = '61e8cd4cb97f1108bcd23da9'
     paymentPlanGet = gen_server.GetPaymentPlan(GetPaymentPlanRequest(payment_plan_id=payment_plan_id), context=None)
-    assert payment_plan_id == paymentPlanGet.payment_plan_id, f"Plan inserted ID: {payment_plan_id}\nPlan retrieved ID: {paymentPlanGet.payment_plan_id}"
+    assert payment_plan_id == paymentPlanGet.payment_plan_id,\
+        f"Plan inserted ID: {payment_plan_id}\nPlan retrieved ID: {paymentPlanGet.payment_plan_id}"
 
 
 def test_list_payment_plans(gen_server):
-    payment_plans = gen_server.ListPaymentPlans(None, None).payment_plans
+    payment_plans = gen_server.ListPaymentPlans(ListPaymentPlanRequest(), None).payment_plans
     assert len(payment_plans) > 0, f"Server did not return any PaymentPlan"
 
 
@@ -118,11 +119,11 @@ def test_delete_payment_plan(gen_server):
             status=PaymentActionStatusDB.PAYMENT_ACTION_STATUS_UNKNOWN
         )]
     )
-    originalPaymentPlansLen = len(gen_server.ListPaymentPlans(None, None).payment_plans)
+    originalPaymentPlansLen = len(gen_server.ListPaymentPlans(ListPaymentPlanRequest(), None).payment_plans)
     new_payment_plan = gen_server.planning_collection.insert_one(pp.to_dict())
     new_id = new_payment_plan.inserted_id
     assert new_id is not None, f"Failed to create a new payment plan"
-    updatedPaymentPlansLen = len(gen_server.ListPaymentPlans(None, None).payment_plans)
+    updatedPaymentPlansLen = len(gen_server.ListPaymentPlans(ListPaymentPlanRequest(), None).payment_plans)
     assert updatedPaymentPlansLen == originalPaymentPlansLen + 1, f"Failed add a new payment plan"
     deleteResponse = gen_server.DeletePaymentPlan(
         request=DeletePaymentPlanRequest(payment_plan_id=str(new_id)),
