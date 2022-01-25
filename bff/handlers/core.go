@@ -7,21 +7,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
-	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 )
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
-	PreferredPlanType    int32 `json:"preferred_plan_type"`
-	PreferredPaymentFreq int32 `json:"preferred_payment_freq"`
+	PreferredPlanType         int32 `json:"preferred_plan_type"`
+	PreferredTimelineInMonths int32 `json:"preferred_timeline_in_months"`
+	PreferredPaymentFreq      int32 `json:"preferred_payment_freq"`
 }
 
 type PaymentTask struct {
-	UserId        string   `json:"user_id"`
-	TransactionId string   `json:"transaction_id"`
-	AccountId     string   `json:"account_id"`
-	Amount        float64  `json:"amount"`
-	MetaData      MetaData `json:"meta_data"`
+	UserId    string  `json:"user_id"`
+	AccountId string  `json:"account_id"`
+	Amount    float64 `json:"amount"`
 }
 
 type PaymentAction struct {
@@ -45,8 +43,19 @@ type PaymentPlan struct {
 	PaymentAction    []*PaymentAction `json:"payment_action,omitempty"`
 }
 
+type AccountInfo struct {
+	TransactionIds []string `json:"transaction_ids,omitempty"`
+	AccountId      string   `json:"account_id,omitempty"`
+	Amount         float64  `json:"amount,omitempty"`
+}
+
+type GetPaymentPlanRequest struct {
+	AccountInfo []AccountInfo `json:"account_info,omitempty"`
+	UserId      string        `json:"user_id,omitempty"`
+}
+
 // CreateResponsePaymentPlan Takes in a model and returns a serializer
-func CreateResponsePaymentPlan(paymentTaskModel *planning.PaymentPlan) PaymentPlan {
+func CreateResponsePaymentPlan(paymentTaskModel *common.PaymentPlan) PaymentPlan {
 	paymentActions := make([]*PaymentAction, len(paymentTaskModel.GetPaymentAction()))
 	for idx, paymentAction := range paymentTaskModel.GetPaymentAction() {
 		paymentActions[idx] = &PaymentAction{
@@ -74,26 +83,23 @@ func CreateResponsePaymentPlan(paymentTaskModel *planning.PaymentPlan) PaymentPl
 // CreateResponsePaymentTask Takes in a model and returns a serializer
 func CreateResponsePaymentTask(paymentTaskModel *common.PaymentTask) PaymentTask {
 	return PaymentTask{
-		UserId:        paymentTaskModel.PaymentTaskId,
-		TransactionId: paymentTaskModel.TransactionId,
-		AccountId:     paymentTaskModel.AccountId,
-		Amount:        paymentTaskModel.Amount,
-		MetaData: MetaData{
-			PreferredPlanType:    int32(paymentTaskModel.MetaData.PreferredPlanType),
-			PreferredPaymentFreq: int32(paymentTaskModel.MetaData.PreferredPaymentFreq),
-		}}
+		UserId:    paymentTaskModel.PaymentTaskId,
+		AccountId: paymentTaskModel.AccountId,
+		Amount:    paymentTaskModel.Amount,
+	}
 }
 
 func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		type GetPaymentPlanResponse struct {
-			PaymentTasksIds []string `json:"payment_tasks_ids"`
-		}
-		var input GetPaymentPlanResponse
+		var input GetPaymentPlanRequest
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
 		}
-		paymentPlanResponse, err := client.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{PaymentTasksIds: input.PaymentTasksIds})
+		accountInfoList := make([]*core.AccountInfo, len(input.AccountInfo))
+		for idx, accountInfo := range input.AccountInfo {
+			accountInfoList[idx] = AccountInfoDBToPB(accountInfo)
+		}
+		paymentPlanResponse, err := client.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: accountInfoList, UserId: input.UserId})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -113,7 +119,7 @@ func CreatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
 		}
-		paymentTask, err := client.CreatePaymentTask(ctx, &common.CreatePaymentTaskRequest{PaymentTask: PaymentTaskDBToPB(input)})
+		paymentTask, err := client.CreatePaymentTask(ctx, &core.CreatePaymentTaskRequest{PaymentTask: PaymentTaskDBToPB(input)})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Could not create payment task", "data": err})
 		}
@@ -123,7 +129,7 @@ func CreatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func ListPaymentTasks(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		listPaymentTasks, err := client.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
+		listPaymentTasks, err := client.ListPaymentTasks(ctx, &core.ListPaymentTaskRequest{})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -139,7 +145,7 @@ func ListPaymentTasks(client core.CoreClient, ctx context.Context) func(c *fiber
 
 func GetPaymentTask(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		getPaymentTask, err := client.GetPaymentTask(ctx, &common.GetPaymentTaskRequest{Id: c.Params("id")})
+		getPaymentTask, err := client.GetPaymentTask(ctx, &core.GetPaymentTaskRequest{Id: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -161,14 +167,10 @@ func UpdatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
 
-		updatePaymentTask, err := client.UpdatePaymentTask(ctx, &common.UpdatePaymentTaskRequest{
+		updatePaymentTask, err := client.UpdatePaymentTask(ctx, &core.UpdatePaymentTaskRequest{
 			Id: c.Params("id"),
 			PaymentTask: &common.PaymentTask{
 				Amount: updatePaymentTaskResponse.Amount,
-				MetaData: &common.MetaData{
-					PreferredPlanType:    common.PlanType(updatePaymentTaskResponse.PreferredPlanType),
-					PreferredPaymentFreq: common.PaymentFrequency(updatePaymentTaskResponse.PreferredPaymentFreq),
-				},
 			},
 		})
 		if err != nil {
@@ -181,7 +183,7 @@ func UpdatePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		response, err := client.DeletePaymentTask(ctx, &common.DeletePaymentTaskRequest{Id: c.Params("id")})
+		response, err := client.DeletePaymentTask(ctx, &core.DeletePaymentTaskRequest{Id: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
@@ -192,13 +194,17 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 // PaymentTaskDBToPB converts a PaymentTask DB object to its proto object
 func PaymentTaskDBToPB(paymentTask PaymentTask) *common.PaymentTask {
 	return &common.PaymentTask{
-		UserId:        paymentTask.UserId,
-		TransactionId: paymentTask.AccountId,
-		AccountId:     paymentTask.TransactionId,
-		Amount:        paymentTask.Amount,
-		MetaData: &common.MetaData{
-			PreferredPlanType:    common.PlanType(paymentTask.MetaData.PreferredPlanType),
-			PreferredPaymentFreq: common.PaymentFrequency(paymentTask.MetaData.PreferredPaymentFreq),
-		},
+		UserId:    paymentTask.UserId,
+		AccountId: paymentTask.AccountId,
+		Amount:    paymentTask.Amount,
+	}
+}
+
+// AccountInfoDBToPB converts a AccountInfo DB object to its proto object
+func AccountInfoDBToPB(accountInfo AccountInfo) *core.AccountInfo {
+	return &core.AccountInfo{
+		TransactionIds: accountInfo.TransactionIds,
+		AccountId:      accountInfo.AccountId,
+		Amount:         accountInfo.Amount,
 	}
 }

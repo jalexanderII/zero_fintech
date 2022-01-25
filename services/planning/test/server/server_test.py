@@ -6,19 +6,18 @@ from dotenv import load_dotenv
 from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 
+from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT, PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PLAN_TYPE_MIN_FEES, DELETE_STATUS_SUCCESS
 from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest
-from gen.Python.planning.payment_plan_pb2 import PAYMENT_STATUS_CURRENT, PAYMENT_ACTION_STATUS_PENDING
-from gen.Python.planning.payment_plan_pb2 import PaymentAction as PaymentActionPB
-from gen.Python.planning.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
+from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB
 from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
 from services.planning.database.database import initiate_mongo_client
 from services.planning.database.models.common import PaymentFrequency as PaymentFrequencyDB
 from services.planning.database.models.common import PlanType as PlanTypeDB
-from services.planning.database.models.planning import PaymentAction as PaymentActionDB
-from services.planning.database.models.planning import PaymentActionStatus as PaymentActionStatusDB
-from services.planning.database.models.planning import PaymentPlan as PaymentPlanDB
-from services.planning.database.models.planning import PaymentStatus as PaymentStatusDB
+from services.planning.database.models.common import PaymentAction as PaymentActionDB
+from services.planning.database.models.common import PaymentActionStatus as PaymentActionStatusDB
+from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
+from services.planning.database.models.common import PaymentStatus as PaymentStatusDB
 from services.planning.server.server import PlanningServicer
 
 

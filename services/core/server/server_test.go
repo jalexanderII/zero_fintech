@@ -53,9 +53,20 @@ func GenServer() (*CoreServer, context.Context) {
 func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	server, ctx := GenServer()
 
-	ids := []string{"61dfa8296c734067e6726761", "61dfa8a087ac88bb1559099c"}
+	user_selections := []*core.AccountInfo{
+		{
+			TransactionIds: []string{"61dfa20adebb9d4fb62b9703"},
+			AccountId:      "61df9b621d2c2b15a6e53ec9",
+			Amount:         325,
+		},
+		{
+			TransactionIds: []string{},
+			AccountId:      "61df9b621d2c2b15a6e53ec9",
+			Amount:         10000,
+		},
+	}
 
-	paymentPlans, err := server.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{PaymentTasksIds: ids})
+	paymentPlans, err := server.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: user_selections, UserId: "61ce2e19014fbb650838306c"})
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}

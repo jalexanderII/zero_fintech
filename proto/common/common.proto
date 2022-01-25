@@ -28,3 +28,25 @@ enum PaymentFrequency {
   PAYMENT_FREQUENCY_MONTHLY = 3;
   PAYMENT_FREQUENCY_QUARTERLY = 4;
 }
+
+enum PaymentStatus {
+  PAYMENT_STATUS_UNKNOWN = 0;
+  // Payment plan is in good standing and all payments are current
+  PAYMENT_STATUS_CURRENT = 1;
+  // This plan is fully paid
+  PAYMENT_STATUS_COMPLETED = 2;
+  // The user has requested this payment to be cancelled
+  PAYMENT_STATUS_CANCELLED = 3;
+  // The payment plan is not current because the user has missed a payment and still have not paid it
+  PAYMENT_STATUS_IN_DEFAULT = 4;
+}
+
+enum PaymentActionStatus {
+  PAYMENT_ACTION_STATUS_UNKNOWN = 0;
+  // Payment is pending
+  PAYMENT_ACTION_STATUS_PENDING = 1;
+  // payment is completed
+  PAYMENT_ACTION_STATUS_COMPLETED = 2;
+  // payment defaulted
+  PAYMENT_ACTION_STATUS_IN_DEFAULT = 3;
+}

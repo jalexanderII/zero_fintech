@@ -1,13 +1,22 @@
+import logging
+import sys
 from typing import List
 
 from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_MONTHLY
-from gen.Python.common.common_pb2 import PLAN_TYPE_OPTIM_CREDIT_SCORE
+from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_MONTHLY, PAYMENT_ACTION_STATUS_PENDING
+from gen.Python.common.common_pb2 import PLAN_TYPE_OPTIM_CREDIT_SCORE, PAYMENT_STATUS_CURRENT
 from gen.Python.common.payment_task_pb2 import PaymentTask
-from gen.Python.planning.payment_plan_pb2 import PAYMENT_ACTION_STATUS_PENDING, PAYMENT_STATUS_CURRENT
-from gen.Python.planning.payment_plan_pb2 import PaymentAction, PaymentPlan
+from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
+logger = logging.getLogger('Server')
 
 
 class PaymentPlanBuilder:

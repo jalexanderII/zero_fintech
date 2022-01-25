@@ -7,11 +7,7 @@ import (
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/sirupsen/logrus"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -36,32 +32,34 @@ func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collect
 	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, planningClient: pc, l: l}
 }
 
-func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*core.GetPaymentPlanResponse, error) {
-	// fetch payment plans from the database
-	var results []database.PaymentTask
-	listOfIds := bson.A{}
-	// convert strings to their representative MongoDB primitive ID
-	for _, id := range in.GetPaymentTasksIds() {
-		hex, _ := primitive.ObjectIDFromHex(id)
-		listOfIds = append(listOfIds, hex)
-	}
-	cursor, err := s.PaymentTaskDB.Find(ctx, bson.D{{Key: "_id", Value: bson.D{{Key: "$in", Value: listOfIds}}}})
-	if err != nil {
-		return nil, err
-	}
-	if err = cursor.All(ctx, &results); err != nil {
-		s.l.Error("[PaymentTaskDB] Error getting all PaymentTasks", "error", err)
-		return nil, err
-	}
-	req := make([]*common.PaymentTask, len(results))
-	for idx, paymentTask := range results {
-		req[idx] = PaymentTaskDBToPB(paymentTask)
+func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {
+	// create payment task from user inputs
+	payment_tasks := make([]*common.PaymentTask, len(in.GetAccountInfo()))
+	for idx, item := range in.GetAccountInfo() {
+		task := &common.PaymentTask{
+			UserId:    in.UserId,
+			AccountId: item.AccountId,
+			Amount:    item.Amount,
+		}
+		payment_tasks[idx] = task
 	}
 
-	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: req})
+	// save payment tasks to DB
+	listOfIds, err := s.CreateManyPaymentTask(ctx, &core.CreateManyPaymentTaskRequest{PaymentTasks: payment_tasks})
+	if err != nil {
+		s.l.Error("[PaymentTask] Error creating PaymentTasks", "error", err)
+		return nil, err
+	}
+	for idx, id := range listOfIds.GetPaymentTaskIds() {
+		pt, _ := s.GetPaymentTask(ctx, &core.GetPaymentTaskRequest{Id: id})
+		payment_tasks[idx] = pt
+	}
+
+	// send payment tasks to planning to get payment plans
+	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: payment_tasks})
 	if err != nil {
 		return nil, err
 	}
 	s.l.Info("[Payment Plans] Response", "PaymentPlans", res)
-	return &core.GetPaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
+	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }

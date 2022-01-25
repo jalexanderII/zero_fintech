@@ -7,7 +7,6 @@ import common.payment_task_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import planning.payment_plan_pb2
 import typing
 import typing_extensions
 
@@ -24,15 +23,3 @@ class CreatePaymentPlanRequest(google.protobuf.message.Message):
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal["payment_tasks",b"payment_tasks"]) -> None: ...
 global___CreatePaymentPlanRequest = CreatePaymentPlanRequest
-
-class CreatePaymentPlanResponse(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    PAYMENT_PLANS_FIELD_NUMBER: builtins.int
-    @property
-    def payment_plans(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[planning.payment_plan_pb2.PaymentPlan]: ...
-    def __init__(self,
-        *,
-        payment_plans : typing.Optional[typing.Iterable[planning.payment_plan_pb2.PaymentPlan]] = ...,
-        ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["payment_plans",b"payment_plans"]) -> None: ...
-global___CreatePaymentPlanResponse = CreatePaymentPlanResponse

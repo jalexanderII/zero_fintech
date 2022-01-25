@@ -2,64 +2,139 @@
 # sources: planning/payment_plan.proto, planning/planning.proto
 # plugin: python-betterproto
 from dataclasses import dataclass
-from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 import betterproto
+import grpclib
 
 from . import common
-
-
-class PaymentStatus(betterproto.Enum):
-    PAYMENT_STATUS_UNKNOWN = 0
-    # Payment plan is in good standing and all payments are current
-    PAYMENT_STATUS_CURRENT = 1
-    # This plan is fully paid
-    PAYMENT_STATUS_COMPLETED = 2
-    # The user has requested this payment to be cancelled
-    PAYMENT_STATUS_CANCELLED = 3
-    # The payment plan is not current because the user has missed a payment and
-    # still have not paid it
-    PAYMENT_STATUS_IN_DEFAULT = 4
-
-
-class PaymentActionStatus(betterproto.Enum):
-    PAYMENT_ACTION_STATUS_UNKNOWN = 0
-    # Payment is pending
-    PAYMENT_ACTION_STATUS_PENDING = 1
-    # payment is completed
-    PAYMENT_ACTION_STATUS_COMPLETED = 2
-    # payment defaulted
-    PAYMENT_ACTION_STATUS_IN_DEFAULT = 3
+from .google import protobuf
 
 
 @dataclass
-class PaymentAction(betterproto.Message):
-    # account to which payment shall be made
-    account_id: str = betterproto.string_field(1)
-    # amount of payment
-    amount: float = betterproto.float_field(2)
-    # Planned date of transaction
-    transaction_date: datetime = betterproto.message_field(3)
-    # status of payment action
-    status: "PaymentActionStatus" = betterproto.enum_field(4)
+class GetPaymentPlanRequest(betterproto.Message):
+    """CRUD Methods"""
 
-
-@dataclass
-class PaymentPlan(betterproto.Message):
     payment_plan_id: str = betterproto.string_field(1)
-    user_id: str = betterproto.string_field(2)
-    payment_task_id: List[str] = betterproto.string_field(3)
-    timeline: float = betterproto.float_field(4)
-    payment_freq: common.PaymentFrequency = betterproto.enum_field(5)
-    amount_per_payment: float = betterproto.float_field(6)
-    plan_type: common.PlanType = betterproto.enum_field(7)
-    # Expected date the plan should be completed
-    end_date: datetime = betterproto.message_field(8)
-    # This Payment plan has not completed and is still active
-    active: bool = betterproto.bool_field(9)
-    # Current status of this plan
-    status: "PaymentStatus" = betterproto.enum_field(10)
-    # payment actions of the plan
-    payment_action: List["PaymentAction"] = betterproto.message_field(11)
 
+
+@dataclass
+class ListPaymentPlanRequest(betterproto.Message):
+    pass
+
+
+@dataclass
+class ListPaymentPlanResponse(betterproto.Message):
+    payment_plans: List[common.PaymentPlan] = betterproto.message_field(1)
+
+
+@dataclass
+class UpdatePaymentPlanRequest(betterproto.Message):
+    payment_plan_id: str = betterproto.string_field(1)
+    payment_plan: common.PaymentPlan = betterproto.message_field(2)
+    mask: protobuf.FieldMask = betterproto.message_field(3)
+
+
+@dataclass
+class DeletePaymentPlanRequest(betterproto.Message):
+    payment_plan_id: str = betterproto.string_field(1)
+
+
+@dataclass
+class DeletePaymentPlanResponse(betterproto.Message):
+    status: common.DELETE_STATUS = betterproto.enum_field(1)
+    payment_plan: common.PaymentPlan = betterproto.message_field(2)
+
+
+@dataclass
+class CreatePaymentPlanRequest(betterproto.Message):
+    payment_tasks: List[common.PaymentTask] = betterproto.message_field(1)
+
+
+class PlanningStub(betterproto.ServiceStub):
+    async def create_payment_plan(
+        self, *, payment_tasks: List[common.PaymentTask] = []
+    ) -> common.PaymentPlanResponse:
+        """
+        CreatePaymentPlan accepts a request from Core service with PaymentTasks
+        to create a PaymentPlan for
+        """
+
+        request = CreatePaymentPlanRequest()
+        if payment_tasks is not None:
+            request.payment_tasks = payment_tasks
+
+        return await self._unary_unary(
+            "/planning.Planning/CreatePaymentPlan",
+            request,
+            common.PaymentPlanResponse,
+        )
+
+    async def modify_payment_plan(self) -> common.PaymentPlanResponse:
+        """
+        ModifyPaymentPlan accepts a request from Core service with user
+        MetaData to modify an existing Payment Plan
+        """
+
+        request = common.UpdatePaymentPlanPlanRequest()
+
+        return await self._unary_unary(
+            "/planning.Planning/ModifyPaymentPlan",
+            request,
+            common.PaymentPlanResponse,
+        )
+
+    async def get_payment_plan(
+        self, *, payment_plan_id: str = ""
+    ) -> common.PaymentPlan:
+        """CRUD METHODS"""
+
+        request = GetPaymentPlanRequest()
+        request.payment_plan_id = payment_plan_id
+
+        return await self._unary_unary(
+            "/planning.Planning/GetPaymentPlan",
+            request,
+            common.PaymentPlan,
+        )
+
+    async def list_payment_plans(self) -> ListPaymentPlanResponse:
+        request = ListPaymentPlanRequest()
+
+        return await self._unary_unary(
+            "/planning.Planning/ListPaymentPlans",
+            request,
+            ListPaymentPlanResponse,
+        )
+
+    async def update_payment_plan(
+        self,
+        *,
+        payment_plan_id: str = "",
+        payment_plan: Optional[common.PaymentPlan] = None,
+        mask: Optional[protobuf.FieldMask] = None,
+    ) -> common.PaymentPlan:
+        request = UpdatePaymentPlanRequest()
+        request.payment_plan_id = payment_plan_id
+        if payment_plan is not None:
+            request.payment_plan = payment_plan
+        if mask is not None:
+            request.mask = mask
+
+        return await self._unary_unary(
+            "/planning.Planning/UpdatePaymentPlan",
+            request,
+            common.PaymentPlan,
+        )
+
+    async def delete_payment_plan(
+        self, *, payment_plan_id: str = ""
+    ) -> DeletePaymentPlanResponse:
+        request = DeletePaymentPlanRequest()
+        request.payment_plan_id = payment_plan_id
+
+        return await self._unary_unary(
+            "/planning.Planning/DeletePaymentPlan",
+            request,
+            DeletePaymentPlanResponse,
+        )
