@@ -9,8 +9,10 @@ from pymongo.collection import Collection
 
 from database.database import initiate_mongo_client
 from gen.Python.core import core_pb2_grpc as coreClient, accounts_pb2 as Accounts
+from gen.Python.core.core_pb2_grpc import CoreStub
 from gen.Python.planning import planning_pb2_grpc as PlanningServicePB
 from server.server import PlanningServicer
+from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,6 +26,7 @@ def serve():
     logger.info('Load .env file')
     load_dotenv()
 
+
     logger.info('Initiate Mongo client and servicer')
     planning_collection: Collection = initiate_mongo_client()
 
@@ -35,6 +38,8 @@ def serve():
     logger.info('Server running')
     server.start()
     server.wait_for_termination()
+
+
 
 
 def run_client():

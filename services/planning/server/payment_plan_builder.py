@@ -5,15 +5,18 @@ from datetime import timedelta
 from itertools import product
 from typing import List, Tuple
 
-import numpy as np
+import grpc
 import pandas as pd
 from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_MONTHLY, PAYMENT_ACTION_STATUS_PENDING
-from gen.Python.common.common_pb2 import PLAN_TYPE_OPTIM_CREDIT_SCORE, PAYMENT_STATUS_CURRENT
-from gen.Python.common.payment_task_pb2 import PaymentTask
+from gen.Python.common.common_pb2 import PaymentFrequency, PlanType, PaymentActionStatus, PaymentStatus
+from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT
+from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
 from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
+from gen.Python.core.accounts_pb2 import GetAccountRequest
+from gen.Python.core.core_pb2_grpc import CoreStub
+from services.planning.server.utils import paymentFrequencyToDays, shift_date_by_payment_frequency
 
 
 class PaymentPlanBuilder:
@@ -36,13 +39,14 @@ class PaymentPlanBuilder:
 
         if metaData:
             planType = metaData.preferred_plan_type
-            timelineInMonths = metaData.timeline_in_months
+            timelineInMonths = metaData.preferred_timeline_in_months
+            paymentFreq = metaData.preferred_payment_freq
         else:
             planType = PlanType.PLAN_TYPE_UNKNOWN
             timelineInMonths = 0.0
             paymentFreq = PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN
 
-        typeTimelineFrequencyOptions = self._createTypeTimelineFrequencyOptions(planType=planType,
+        typeTimelineFrequencyOptions: List[Tuple[PlanType, float, PaymentFrequency]] = self._createTypeTimelineFrequencyOptions(planType=planType,
             timelineInMonths=timelineInMonths, paymentFreq=paymentFreq, totalAmount=sum(amounts))
 
         paymentPlans = []
@@ -97,9 +101,9 @@ class PaymentPlanBuilder:
                 apr.append((acc.annual_percentage_rate.high_end + acc.annual_percentage_rate.low_end) / 2)
             df = pd.DataFrame({'account_id': accountIds, 'apr': apr, 'amount': amounts,
                                'payment_task_id': paymentTaskIds}).sort_values('apr', ascending=False)
-            accountIds = df['account_id'].values
-            amounts = df['amount'].values
-            paymentTaskIds = df['payment_task_id'].values
+            accountIds = df['account_id'].values.tolist()
+            amounts = df['amount'].values.tolist()
+            paymentTaskIds = df['payment_task_id'].values.tolist()
 
             paymentActions = []
             startDate = datetime.datetime.now()
@@ -122,6 +126,7 @@ class PaymentPlanBuilder:
                     # move to next date
                     payThisDate = 0
                     dateDt = shift_date_by_payment_frequency(date=dateDt, payment_freq=paymentFreq)
+                    datePB.FromDatetime(dateDt)
         elif planType == PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
             balance = []
             creditLimit = []
@@ -171,7 +176,7 @@ class PaymentPlanBuilder:
             paymentFreqAsTimelineInMonths = 1.0
         elif paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY:
             paymentFreqAsTimelineInMonths = 3.0
-        timeline = paymentFreqAsTimelineInMonths * len(set([pa.transaction_date for pa in paymentActions]))
+        timeline = paymentFreqAsTimelineInMonths * len(set([pa.transaction_date.ToDatetime() for pa in paymentActions]))
 
         return PaymentPlan(user_id=userId, payment_task_id=paymentTaskIds, timeline=timeline, payment_freq=paymentFreq,
                            amount_per_payment=amountPerPayment, plan_type=planType, end_date=endDatePB, active=True,
@@ -212,5 +217,4 @@ class PaymentPlanBuilder:
         plans.append(plan)
         return plans
 
-
-# payment_plan_builder = PaymentPlanBuilder()
+payment_plan_builder = PaymentPlanBuilder(coreClient=CoreStub(channel=grpc.insecure_channel('localhost:9090')))

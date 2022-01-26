@@ -7,8 +7,6 @@ from typing import List
 
 import betterproto
 
-from .google import protobuf
-
 
 class DELETE_STATUS(betterproto.Enum):
     """Status message for Delete database action"""
@@ -105,21 +103,6 @@ class PaymentTask(betterproto.Message):
 
 
 @dataclass
-class PaymentPlanResponse(betterproto.Message):
-    """Response for CreatePaymentPlan"""
-
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
-
-
-@dataclass
-class UpdatePaymentPlanPlanRequest(betterproto.Message):
-    """Request for UpdatePaymentPlanPlan"""
-
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
-    meta_data: "MetaData" = betterproto.message_field(2)
-
-
-@dataclass
 class MetaData(betterproto.Message):
     """
     MetaData is any preferences a user may have regarding how a payment task
@@ -129,53 +112,3 @@ class MetaData(betterproto.Message):
     preferred_plan_type: "PlanType" = betterproto.enum_field(1)
     preferred_timeline_in_months: float = betterproto.double_field(2)
     preferred_payment_freq: "PaymentFrequency" = betterproto.enum_field(3)
-
-
-@dataclass
-class CreatePaymentTaskRequest(betterproto.Message):
-    """CRUD Methods"""
-
-    payment_task: "PaymentTask" = betterproto.message_field(1)
-
-
-@dataclass
-class GetPaymentTaskRequest(betterproto.Message):
-    id: str = betterproto.string_field(1)
-
-
-@dataclass
-class UpdatePaymentTaskRequest(betterproto.Message):
-    id: str = betterproto.string_field(1)
-    payment_task: "PaymentTask" = betterproto.message_field(2)
-    mask: protobuf.FieldMask = betterproto.message_field(3)
-
-
-@dataclass
-class DeletePaymentTaskRequest(betterproto.Message):
-    id: str = betterproto.string_field(1)
-
-
-@dataclass
-class ListPaymentTaskRequest(betterproto.Message):
-    pass
-
-
-@dataclass
-class ListPaymentTaskResponse(betterproto.Message):
-    payment_tasks: List["PaymentTask"] = betterproto.message_field(1)
-
-
-@dataclass
-class DeletePaymentTaskResponse(betterproto.Message):
-    status: "DELETE_STATUS" = betterproto.enum_field(1)
-    payment_task: "PaymentTask" = betterproto.message_field(2)
-
-
-@dataclass
-class CreateManyPaymentTaskRequest(betterproto.Message):
-    payment_tasks: List["PaymentTask"] = betterproto.message_field(1)
-
-
-@dataclass
-class CreateManyPaymentTaskResponse(betterproto.Message):
-    pass
