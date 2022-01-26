@@ -3,7 +3,8 @@ from __future__ import annotations
 import datetime
 from datetime import timedelta
 from itertools import product
-from typing import List, Tuple
+from math import ceil
+from typing import List, Tuple, Generator
 
 import grpc
 import pandas as pd
@@ -18,9 +19,12 @@ from gen.Python.core.accounts_pb2 import GetAccountRequest
 from gen.Python.core.core_pb2_grpc import CoreStub
 from services.planning.server.utils import paymentFrequencyToDays, shift_date_by_payment_frequency
 
+PAYMENT_FREQ_TO_TIMELINE = {PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY: 0.25,
+                                PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY: 0.5,
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY: 1.0,
+                                PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY: 3.0}
 
 class PaymentPlanBuilder:
-
     def __init__(self, coreClient: CoreStub):
         self.coreClient = coreClient
 
@@ -46,11 +50,9 @@ class PaymentPlanBuilder:
             timelineInMonths = 0.0
             paymentFreq = PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN
 
-        typeTimelineFrequencyOptions: List[Tuple[PlanType, float, PaymentFrequency]] = self._createTypeTimelineFrequencyOptions(planType=planType,
-            timelineInMonths=timelineInMonths, paymentFreq=paymentFreq, totalAmount=sum(amounts))
-
         paymentPlans = []
-        for prefPlanType, prefTimelineInMonths, prefPaymentFreq in typeTimelineFrequencyOptions:
+        for prefPlanType, prefTimelineInMonths, prefPaymentFreq in self._createTypeTimelineFrequencyOptions(planType=planType,
+                    timelineInMonths=timelineInMonths, paymentFreq=paymentFreq, totalAmount=sum(amounts)):
             paymentPlan = self._createPaymentPlanSameTypeFreq(userId=userId, planType=prefPlanType,
                 timelineInMonths=prefTimelineInMonths, paymentFreq=prefPaymentFreq, paymentTaskIds=paymentTaskIds,
                 accountIds=accountIds, amounts=amounts)
@@ -59,7 +61,7 @@ class PaymentPlanBuilder:
         return paymentPlans
 
     def _createTypeTimelineFrequencyOptions(self, planType: PlanType, timelineInMonths: float, paymentFreq: PaymentFrequency,
-            totalAmount: float) -> List[Tuple[PlanType, float, PaymentFrequency]]:
+            totalAmount: float) -> Generator[Tuple[PlanType, float, PaymentFrequency]]:
         """ Creates options for what kind of plans to create given type, timeline, frequency and total amount. """
         typeOptions = [planType] if planType != PlanType.PLAN_TYPE_UNKNOWN else [PlanType.PLAN_TYPE_MIN_FEES,
                                                                                  PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE]
@@ -83,16 +85,23 @@ class PaymentPlanBuilder:
                 timelineOptions = [timelineInMonths]
             else:
                 timelineOptions = [3.0, 6.0, 12.0]
-        return list(product(typeOptions, timelineOptions, freqOptions))
+        return product(typeOptions, timelineOptions, freqOptions)
 
     def _createPaymentPlanSameTypeFreq(self, userId: str, planType: PlanType, timelineInMonths: float,
             paymentFreq: PaymentFrequency, paymentTaskIds: List[str], accountIds: List[str], amounts: List[float],
             ) -> PaymentPlan:
         """Creates a PaymentPlan for given choices of PaymentFrequency and PlanType for the Accounts and Amounts. """
-        assert planType != PlanType.PLAN_TYPE_UNKNOWN, "PlanType needs to be chosen"
+        if planType == PlanType.PLAN_TYPE_UNKNOWN:
+            raise ValueError("Using PLAN_TYPE_UNKNOWN not permitted")
+        if timelineInMonths <= 0:
+            raise ValueError("Need to specify timeline > 0")
+        if paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN:
+            raise ValueError("Using PAYMENT_FREQUENCY_UNKNOWN not permitted")
 
         totalAmount = sum(amounts)
         amountPerPayment = totalAmount / (timedelta(days=30) * timelineInMonths / paymentFrequencyToDays(paymentFreq))
+        amountPerPayment = round(ceil(amountPerPayment * 100) / 100, 2)
+        print(f"amountPerPayment: {amountPerPayment}")
 
         if planType == PlanType.PLAN_TYPE_MIN_FEES:
             apr = []
@@ -151,6 +160,8 @@ class PaymentPlanBuilder:
                     _amount = row['amount']
                     _balance = row['balance']
                     _amountThisDate = min(amountPerPayment - payThisDate, _amount)
+                    if _amountThisDate == 0:
+                        break
                     paymentActions.append(PaymentAction(account_id=_accId, amount=_amountThisDate, transaction_date=datePB,
                                       status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
                     payThisDate += _amountThisDate
@@ -168,53 +179,11 @@ class PaymentPlanBuilder:
 
         endDatePB = paymentActions[-1].transaction_date
         # calculate timeline from how many dates were chosen
-        if paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY:
-            paymentFreqAsTimelineInMonths = 0.25
-        elif paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY:
-            paymentFreqAsTimelineInMonths = 0.5
-        elif paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY:
-            paymentFreqAsTimelineInMonths = 1.0
-        elif paymentFreq == PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY:
-            paymentFreqAsTimelineInMonths = 3.0
+        paymentFreqAsTimelineInMonths = PAYMENT_FREQ_TO_TIMELINE[paymentFreq]
         timeline = paymentFreqAsTimelineInMonths * len(set([pa.transaction_date.ToDatetime() for pa in paymentActions]))
 
         return PaymentPlan(user_id=userId, payment_task_id=paymentTaskIds, timeline=timeline, payment_freq=paymentFreq,
                            amount_per_payment=amountPerPayment, plan_type=planType, end_date=endDatePB, active=True,
                            status=PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=paymentActions)
-
-    @staticmethod
-    def _mock_payment_plan(paymentTasks: List[PaymentTask]) -> List[PaymentPlan]:
-        """A mock payment plan for end-to-end testing"""
-        ids: List[str] = []
-        plans: List[PaymentPlan] = []
-        actions: List[PaymentAction] = []
-        total = 0
-        pb_timestamp = Timestamp()
-        for task in paymentTasks:
-            ids.append(task.payment_task_id)
-            total += task.amount
-            a = PaymentAction(
-                account_id=task.account_id,
-                amount=task.amount,
-                transaction_date=pb_timestamp.GetCurrentTime(),
-                status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
-            )
-            actions.append(a)
-        bson_id = ObjectId()
-        plan = PaymentPlan(
-            payment_plan_id=str(bson_id),
-            user_id=paymentTasks[0].user_id,
-            payment_task_id=ids,
-            timeline=12,
-            payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
-            amount_per_payment=total / 12,
-            plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE,
-            end_date=pb_timestamp.GetCurrentTime(),
-            active=True,
-            status=PAYMENT_STATUS_CURRENT,
-            payment_action=actions,
-        )
-        plans.append(plan)
-        return plans
 
 payment_plan_builder = PaymentPlanBuilder(coreClient=CoreStub(channel=grpc.insecure_channel('localhost:9090')))

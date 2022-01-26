@@ -1,5 +1,6 @@
 import logging
 import sys
+from typing import List
 
 from bson.objectid import ObjectId
 
@@ -57,7 +58,7 @@ class PlanningServicer(PlanningServicerPB):
     def ListPaymentPlans(self, request: ListPaymentPlanRequest, context) -> ListPaymentPlanResponse:
         logger.info('ListPaymentPlans called')
         payment_plans = self.planning_collection.find()
-        paymentPlansPB = []
+        paymentPlansPB: List[PaymentPlanPB] = []
         for payment_plan in payment_plans:
             pp_id = payment_plan["_id"]
             paymentPlanDB = PaymentPlanDB().from_dict(payment_plan)

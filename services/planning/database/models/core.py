@@ -76,7 +76,6 @@ class PromotionalRate(betterproto.Message):
     # Date this APR expires
     expiration_date: datetime = betterproto.message_field(2)
 
-
 @dataclass
 class Transaction(betterproto.Message):
     """Transaction represents any credit line item in a credit card account"""

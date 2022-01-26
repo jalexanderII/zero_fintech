@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x19\x63ommon/payment_plan.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x06status\x18\x04 \x01(\x0e\x32\x1b.common.PaymentActionStatus\"\xe7\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12.\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12#\n\tplan_type\x18\x07 \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12%\n\x06status\x18\n \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\x0b \x03(\x0b\x32\x15.common.PaymentActionB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
+  serialized_pb=b'\n\x19\x63ommon/payment_plan.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x01\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x06status\x18\x04 \x01(\x0e\x32\x1b.common.PaymentActionStatus\"\xe7\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x10\n\x08timeline\x18\x04 \x01(\x01\x12.\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x01\x12#\n\tplan_type\x18\x07 \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12%\n\x06status\x18\n \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\x0b \x03(\x0b\x32\x15.common.PaymentActionB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
   ,
   dependencies=[common_dot_common__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -45,7 +45,7 @@ _PAYMENTACTION = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='amount', full_name='common.PaymentAction.amount', index=1,
-      number=2, type=2, cpp_type=6, label=1,
+      number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -112,7 +112,7 @@ _PAYMENTPLAN = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='timeline', full_name='common.PaymentPlan.timeline', index=3,
-      number=4, type=2, cpp_type=6, label=1,
+      number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -126,7 +126,7 @@ _PAYMENTPLAN = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='amount_per_payment', full_name='common.PaymentPlan.amount_per_payment', index=5,
-      number=6, type=2, cpp_type=6, label=1,
+      number=6, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
