@@ -101,7 +101,6 @@ class PaymentPlanBuilder:
         totalAmount = sum(amounts)
         amountPerPayment = totalAmount / (timedelta(days=30) * timelineInMonths / paymentFrequencyToDays(paymentFreq))
         amountPerPayment = round(ceil(amountPerPayment * 100) / 100, 2)
-        print(f"amountPerPayment: {amountPerPayment}")
 
         if planType == PlanType.PLAN_TYPE_MIN_FEES:
             apr = []
