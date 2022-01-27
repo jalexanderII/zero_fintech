@@ -3,7 +3,6 @@ syntax = "proto3";
 package planning;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
-import "planning/payment_plan.proto";
 import "common/payment_task.proto";
 import "common/payment_plan.proto";
 
@@ -14,10 +13,10 @@ service Planning {
     rpc ModifyPaymentPlan(common.UpdatePaymentPlanPlanRequest) returns (common.PaymentPlanResponse);
 
     //  CRUD METHODS
-    rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlan);
-    rpc ListPaymentPlans(ListPaymentPlanRequest) returns (ListPaymentPlanResponse);
-    rpc UpdatePaymentPlan(UpdatePaymentPlanRequest) returns (common.PaymentPlan);
-    rpc DeletePaymentPlan(DeletePaymentPlanRequest) returns (DeletePaymentPlanResponse);
+    rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
+    rpc ListPaymentPlans(common.ListPaymentPlanRequest) returns (common.ListPaymentPlanResponse);
+    rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlan);
+    rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
 }
 
 message CreatePaymentPlanRequest {

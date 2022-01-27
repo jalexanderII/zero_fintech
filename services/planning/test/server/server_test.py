@@ -6,15 +6,16 @@ from dotenv import load_dotenv
 from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 
-import gen.Python.common.payment_plan_pb2
+# import gen.Python.common.payment_plan_pb2
 # from gen.Python.common.payment_plan_pb2 import *
 # from gen.Python.common.payment_plan_pb2_grpc import *
 from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT, PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PLAN_TYPE_MIN_FEES, DELETE_STATUS_SUCCESS
-# from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentAction, PaymentPlan as PaymentPlan
-from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, \
-    ListPaymentPlanRequest, ListPaymentPlanResponse, UpdatePaymentPlanRequest
-from common.payment_plan_pb2 import *
+from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentAction, PaymentPlan as PaymentPlan, \
+    DeletePaymentPlanRequest, GetPaymentPlanRequest, ListPaymentPlanRequest, ListPaymentPlanResponse, UpdatePaymentPlanRequest
+# from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, \
+#     ListPaymentPlanRequest, ListPaymentPlanResponse, UpdatePaymentPlanRequest
+# from common.payment_plan_pb2 import *
 from services.planning.database.database import initiate_mongo_client
 from services.planning.database.models.common import PaymentFrequency as PaymentFrequencyDB
 from services.planning.database.models.common import PlanType as PlanTypeDB
@@ -98,7 +99,7 @@ def test_list_payment_plans(gen_server):
 
 
 def test_update_payment_plan(gen_server):
-    payment_plan_id = '61e8cd4cb97f1108bcd23da9'
+    payment_plan_id = '61e8e60a186cad9b7e6db48f'
     tt = Timestamp()
     pp = PaymentPlan(
         payment_plan_id=payment_plan_id,

@@ -3,9 +3,13 @@
 # plugin: python-betterproto
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 import betterproto
+import grpclib
+
+from . import common
+from .google import protobuf
 
 
 class PenaltyAPRPenaltyReason(betterproto.Enum):
@@ -104,7 +108,6 @@ class TransactionDetails(betterproto.Message):
     # Date the transaction was processed by the charger
     date_processed: datetime = betterproto.message_field(3)
 
-
 @dataclass
 class User(betterproto.Message):
     id: str = betterproto.string_field(1)
@@ -112,6 +115,10 @@ class User(betterproto.Message):
     email: str = betterproto.string_field(3)
     password: str = betterproto.string_field(4)
 
+
+@dataclass
+class GetUserRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
 
 @dataclass
 class AccountInfo(betterproto.Message):

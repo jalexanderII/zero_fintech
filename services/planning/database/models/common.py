@@ -89,7 +89,6 @@ class PaymentPlan(betterproto.Message):
     # payment actions of the plan
     payment_action: List["PaymentAction"] = betterproto.message_field(11)
 
-
 @dataclass
 class PaymentTask(betterproto.Message):
     """
@@ -100,7 +99,6 @@ class PaymentTask(betterproto.Message):
     user_id: str = betterproto.string_field(2)
     account_id: str = betterproto.string_field(4)
     amount: float = betterproto.double_field(5)
-
 
 @dataclass
 class MetaData(betterproto.Message):

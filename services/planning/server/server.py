@@ -8,10 +8,10 @@ from database.models.common import PaymentPlan as PaymentPlanDB
 from pymongo.collection import Collection
 
 from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
-from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
-from gen.Python.common.payment_task_pb2 import PaymentPlanResponse
-from gen.Python.planning.payment_plan_pb2 import GetPaymentPlanRequest, ListPaymentPlanRequest, ListPaymentPlanResponse, \
+from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB, GetPaymentPlanRequest, ListPaymentPlanRequest, ListPaymentPlanResponse, \
     UpdatePaymentPlanRequest, DeletePaymentPlanRequest, DeletePaymentPlanResponse
+from gen.Python.common.payment_task_pb2 import PaymentPlanResponse
+# from gen.Python.planning.payment_plan_pb2 import
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.server import payment_plan_builder
@@ -52,9 +52,7 @@ class PlanningServicer(PlanningServicer):
         pp_id = paymentPlanDB["_id"]
         paymentPlanDB = PaymentPlanDB().from_dict(paymentPlanDB)
         paymentPlanDB.payment_plan_id = str(pp_id)
-        _paymentPlanPB = paymentPlanDBToPB(paymentPlanDB)
-        print(_paymentPlanPB.__class__)
-        return _paymentPlanPB
+        return paymentPlanDBToPB(paymentPlanDB)
 
     def ListPaymentPlans(self, request: ListPaymentPlanRequest, context) -> ListPaymentPlanResponse:
         logger.info('ListPaymentPlans called')
@@ -64,9 +62,7 @@ class PlanningServicer(PlanningServicer):
             pp_id = payment_plan["_id"]
             paymentPlanDB = PaymentPlanDB().from_dict(payment_plan)
             paymentPlanDB.payment_plan_id = str(pp_id)
-            _paymentPlanPB = paymentPlanDBToPB(paymentPlanDB)
-            paymentPlansPB.append(_paymentPlanPB)
-            print(_paymentPlanPB.__class__)
+            paymentPlansPB.append(paymentPlanDBToPB(paymentPlanDB))
         return ListPaymentPlanResponse(payment_plans=paymentPlansPB)
 
     def UpdatePaymentPlan(self, request: UpdatePaymentPlanRequest, context) -> PaymentPlanPB:
