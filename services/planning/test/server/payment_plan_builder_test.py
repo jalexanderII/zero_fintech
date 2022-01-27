@@ -1,7 +1,5 @@
 import datetime
 
-import pytest
-# from pytest_lazyfixture import lazy_fixture
 from pytest_cases import parametrize_with_cases, fixture as cases_fixture
 from google.protobuf.timestamp_pb2 import Timestamp
 
@@ -11,15 +9,9 @@ from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder, payment_plan_builder
 from services.planning.server.utils import shift_date_by_payment_frequency
 
-
-# @pytest.fixture
 @cases_fixture
 def gen_payment_plan_builder() -> PaymentPlanBuilder:
     return payment_plan_builder
-
-
-user_id = '61df93c0ac601d1be8e64613'
-accName2Id = {'Amex': '61df9b621d2c2b15a6e53ec9', 'Chase': '61df9af7f18b94fc44d09fb9'}
 
 
 def datetime2timestamp(date: datetime) -> Timestamp:
@@ -30,7 +22,7 @@ def datetime2timestamp(date: datetime) -> Timestamp:
 
 
 def shift_now_by_payment_frequency_multiple_times(paymentFreq: PaymentFrequency, howOften: int) -> Timestamp:
-    """ Shifts current date/now by PaymentFrequency multiple times. """
+    """ Helper function to shift current date/now by PaymentFrequency multiple times. """
     date = datetime.datetime.now()
     for _ in range(howOften):
         date = shift_date_by_payment_frequency(date=date, payment_freq=paymentFreq)
@@ -320,19 +312,19 @@ def test_create_payment_plan(paymentTasks, metaData, paymentPlans, gen_payment_p
     assert len(paymentPlans) == len(paymentPlansCreated), f"Tests asks for {len(paymentPlans)} but" \
                                                           f"{len(paymentPlansCreated)} were created"
 
-    for paymentPlan, paymentPlanCreated in zip(paymentPlans, paymentPlansCreated):
-        assert paymentPlan.user_id == paymentPlanCreated.user_id
-        assert sorted(paymentPlan.payment_task_id) == sorted(paymentPlanCreated.payment_task_id)
-        assert paymentPlan.timeline == paymentPlanCreated.timeline
-        assert paymentPlan.payment_freq == paymentPlanCreated.payment_freq
-        assert paymentPlan.plan_type == paymentPlanCreated.plan_type
-        assert (paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment) < 1e-3
-        assert paymentPlan.end_date == paymentPlanCreated.end_date
-        assert paymentPlan.active == paymentPlanCreated.active
-        assert paymentPlan.status == paymentPlanCreated.status
-        assert len(paymentPlan.payment_action) == len(paymentPlanCreated.payment_action)
-        for paymentAction, paymentActionCreated in zip(paymentPlan.payment_action, paymentPlanCreated.payment_action):
-            assert paymentAction.account_id == paymentActionCreated.account_id
-            assert (paymentAction.amount - paymentActionCreated.amount) < 1e-3
-            assert paymentAction.transaction_date == paymentActionCreated.transaction_date
-            assert paymentAction.status == paymentAction.status
+    for i, (paymentPlan, paymentPlanCreated) in enumerate(zip(paymentPlans, paymentPlansCreated)):
+        assert paymentPlan.user_id == paymentPlanCreated.user_id, f"Plan {i} differs"
+        assert sorted(paymentPlan.payment_task_id) == sorted(paymentPlanCreated.payment_task_id), f"Plan {i} differs"
+        assert paymentPlan.timeline == paymentPlanCreated.timeline, f"Plan {i} differs"
+        assert paymentPlan.payment_freq == paymentPlanCreated.payment_freq, f"Plan {i} differs"
+        assert paymentPlan.plan_type == paymentPlanCreated.plan_type, f"Plan {i} differs"
+        assert (paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment) < 1e-3, f"Plan {i} differs"
+        assert paymentPlan.end_date == paymentPlanCreated.end_date, f"Plan {i} differs"
+        assert paymentPlan.active == paymentPlanCreated.active, f"Plan {i} differs"
+        assert paymentPlan.status == paymentPlanCreated.status, f"Plan {i} differs"
+        assert len(paymentPlan.payment_action) == len(paymentPlanCreated.payment_action), f"Plan {i} differs"
+        for ii, (paymentAction, paymentActionCreated) in enumerate(zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)):
+            assert paymentAction.account_id == paymentActionCreated.account_id, f"Action {ii} of plan {i} differs"
+            assert (paymentAction.amount - paymentActionCreated.amount) < 1e-3, f"Action {ii} of plan {i} differs"
+            assert paymentAction.transaction_date == paymentActionCreated.transaction_date, f"Action {ii} of plan {i} differs"
+            assert paymentAction.status == paymentAction.status, f"Action {ii} of plan {i} differs"
