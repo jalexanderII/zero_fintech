@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
-	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -17,7 +16,7 @@ func TestCoreServer_CreatePaymentTask(t *testing.T) {
 		Amount:    325,
 	}
 
-	paymentTask, err := server.CreatePaymentTask(ctx, &core.CreatePaymentTaskRequest{PaymentTask: equinoxPT})
+	paymentTask, err := server.CreatePaymentTask(ctx, &common.CreatePaymentTaskRequest{PaymentTask: equinoxPT})
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}
@@ -30,7 +29,7 @@ func TestCoreServer_CreatePaymentTask(t *testing.T) {
 func TestCoreServer_GetPaymentTask(t *testing.T) {
 	server, ctx := GenServer()
 
-	paymentTask, err := server.GetPaymentTask(ctx, &core.GetPaymentTaskRequest{Id: "61dfa8296c734067e6726761"})
+	paymentTask, err := server.GetPaymentTask(ctx, &common.GetPaymentTaskRequest{Id: "61dfa8296c734067e6726761"})
 	if err != nil {
 		t.Errorf("1: An error was returned: %v", err)
 	}
@@ -42,7 +41,7 @@ func TestCoreServer_GetPaymentTask(t *testing.T) {
 func TestCoreServer_ListPaymentTasks(t *testing.T) {
 	server, ctx := GenServer()
 
-	paymentTasks, err := server.ListPaymentTasks(ctx, &core.ListPaymentTaskRequest{})
+	paymentTasks, err := server.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
 	if err != nil {
 		t.Errorf("1: An error was returned: %v", err)
 	}
@@ -60,7 +59,7 @@ func TestCoreServer_UpdatePaymentTask(t *testing.T) {
 		Amount:    325,
 	}
 
-	paymentTask, err := server.UpdatePaymentTask(ctx, &core.UpdatePaymentTaskRequest{Id: "61dfa8296c734067e6726761", PaymentTask: u})
+	paymentTask, err := server.UpdatePaymentTask(ctx, &common.UpdatePaymentTaskRequest{Id: "61dfa8296c734067e6726761", PaymentTask: u})
 	if err != nil {
 		t.Errorf("1: An error was returned: %v", err)
 	}
@@ -72,7 +71,7 @@ func TestCoreServer_UpdatePaymentTask(t *testing.T) {
 func TestCoreServer_DeletePaymentTask(t *testing.T) {
 	server, ctx := GenServer()
 
-	u, _ := server.ListPaymentTasks(ctx, &core.ListPaymentTaskRequest{})
+	u, _ := server.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
 	originalLen := len(u.GetPaymentTasks())
 
 	newPaymentTask := PaymentTaskPBToDB(
@@ -88,7 +87,7 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 		t.Errorf("1: Error creating new paymentTask:: %v", err)
 	}
 
-	paymentTasks, err := server.ListPaymentTasks(ctx, &core.ListPaymentTaskRequest{})
+	paymentTasks, err := server.ListPaymentTasks(ctx, &common.ListPaymentTaskRequest{})
 	if err != nil {
 		t.Errorf("2: An error was returned: %v", err)
 	}
@@ -97,7 +96,7 @@ func TestCoreServer_DeletePaymentTask(t *testing.T) {
 		t.Errorf("3: An error adding a temp paymentTask, number of paymentTasks in DB: %v", newLen)
 	}
 
-	deleted, err := server.DeletePaymentTask(ctx, &core.DeletePaymentTaskRequest{Id: newPaymentTask.ID.Hex()})
+	deleted, err := server.DeletePaymentTask(ctx, &common.DeletePaymentTaskRequest{Id: newPaymentTask.ID.Hex()})
 	if err != nil {
 		t.Errorf("4: An error was returned: %v", err)
 	}
@@ -117,7 +116,7 @@ func TestCoreServer_CreateManyPaymentTasks(t *testing.T) {
 		c++
 	}
 
-	_, err := server.CreateManyPaymentTask(ctx, &core.CreateManyPaymentTaskRequest{PaymentTasks: res})
+	_, err := server.CreateManyPaymentTask(ctx, &common.CreateManyPaymentTaskRequest{PaymentTasks: res})
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}

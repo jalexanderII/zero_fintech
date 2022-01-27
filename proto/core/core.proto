@@ -4,7 +4,6 @@ package core;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
 import "common/payment_task.proto";
-import "core/payment_task.proto";
 import "core/accounts.proto";
 import "core/transactions.proto";
 import "core/users.proto";
@@ -13,9 +12,6 @@ service Core {
   // GetPaymentPlan makes request to the Planning service by passing it a list
   // of PaymentTasks and expects to receive a list of PaymentPlans
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlanResponse);
-  // UpdatePaymentPlan makes request to the Planning service by passing to update
-  // its current Payment Plan with based on user specified MetaData
-  rpc UpdatePaymentPlan(common.UpdatePaymentPlanPlanRequest) returns (common.PaymentPlanResponse);
 
   //  CRUD METHODS
   // Account
@@ -31,12 +27,12 @@ service Core {
   rpc UpdateTransaction(UpdateTransactionRequest) returns (Transaction);
   rpc DeleteTransaction(DeleteTransactionRequest) returns (DeleteTransactionResponse);
   //Payment Task
-  rpc CreatePaymentTask(core.CreatePaymentTaskRequest) returns (common.PaymentTask);
-  rpc CreateManyPaymentTask(core.CreateManyPaymentTaskRequest) returns (core.CreateManyPaymentTaskResponse);
-  rpc GetPaymentTask(core.GetPaymentTaskRequest) returns (common.PaymentTask);
-  rpc ListPaymentTasks(core.ListPaymentTaskRequest) returns (core.ListPaymentTaskResponse);
-  rpc UpdatePaymentTask(core.UpdatePaymentTaskRequest) returns (common.PaymentTask);
-  rpc DeletePaymentTask(core.DeletePaymentTaskRequest) returns (core.DeletePaymentTaskResponse);
+  rpc CreatePaymentTask(common.CreatePaymentTaskRequest) returns (common.PaymentTask);
+  rpc CreateManyPaymentTask(common.CreateManyPaymentTaskRequest) returns (common.CreateManyPaymentTaskResponse);
+  rpc GetPaymentTask(common.GetPaymentTaskRequest) returns (common.PaymentTask);
+  rpc ListPaymentTasks(common.ListPaymentTaskRequest) returns (common.ListPaymentTaskResponse);
+  rpc UpdatePaymentTask(common.UpdatePaymentTaskRequest) returns (common.PaymentTask);
+  rpc DeletePaymentTask(common.DeletePaymentTaskRequest) returns (common.DeletePaymentTaskResponse);
   // Users
   rpc GetUser(GetUserRequest) returns (User);
   rpc ListUsers(ListUserRequest) returns (ListUserResponse);
