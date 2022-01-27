@@ -1,7 +1,8 @@
 import datetime
 
 import pytest
-from pytest_lazyfixture import lazy_fixture
+# from pytest_lazyfixture import lazy_fixture
+from pytest_cases import parametrize_with_cases, fixture as cases_fixture
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from gen.Python.common.common_pb2 import PlanType, PaymentFrequency, PaymentActionStatus, PaymentStatus
@@ -11,12 +12,15 @@ from services.planning.server.payment_plan_builder import PaymentPlanBuilder, pa
 from services.planning.server.utils import shift_date_by_payment_frequency
 
 
-@pytest.fixture
+# @pytest.fixture
+@cases_fixture
 def gen_payment_plan_builder() -> PaymentPlanBuilder:
     return payment_plan_builder
 
+
 user_id = '61df93c0ac601d1be8e64613'
 accName2Id = {'Amex': '61df9b621d2c2b15a6e53ec9', 'Chase': '61df9af7f18b94fc44d09fb9'}
+
 
 def datetime2timestamp(date: datetime) -> Timestamp:
     """ Helper function for pytest.mark.paramterize"""
@@ -24,49 +28,293 @@ def datetime2timestamp(date: datetime) -> Timestamp:
     timestamp.FromDatetime(date)
     return timestamp
 
-def shift_now_by_payement_frequency_multiple_times(paymentFreq: PaymentFrequency, howOften: int) -> Timestamp:
+
+def shift_now_by_payment_frequency_multiple_times(paymentFreq: PaymentFrequency, howOften: int) -> Timestamp:
     """ Shifts current date/now by PaymentFrequency multiple times. """
     date = datetime.datetime.now()
     for _ in range(howOften):
         date = shift_date_by_payment_frequency(date=date, payment_freq=paymentFreq)
     return datetime2timestamp(date)
 
-@pytest.mark.parametrize("paymentTasks, metaData, paymentPlans", [
-    (   # first tuple
-        [
-            PaymentTask(user_id=user_id, account_id=accName2Id['Amex'], amount=500), # Amex
-            PaymentTask(user_id=user_id, account_id=accName2Id['Chase'], amount=500), # Chase
-        ],
-        MetaData(preferred_plan_type=PlanType.PLAN_TYPE_MIN_FEES, preferred_timeline_in_months=2.0,
-            preferred_payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY),
-        [
-            PaymentPlan(
-                user_id=user_id,
-                payment_task_id=['', ''],
-                timeline=2.0,
-                payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
-                amount_per_payment=500,
-                plan_type=PlanType.PLAN_TYPE_MIN_FEES,
-                end_date=shift_now_by_payement_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2),
-                active=True,
-                status=PaymentStatus.PAYMENT_STATUS_CURRENT,
-                payment_action=[
-                    PaymentAction(
-                        account_id=accName2Id['Chase'],
-                        amount=500,
-                        status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
-                        transaction_date=shift_now_by_payement_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 1)),
-                    PaymentAction(
-                        account_id=accName2Id['Amex'],
-                        amount=500,
-                        status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
-                        transaction_date=shift_now_by_payement_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2))
-                ])
-        ]
-    )
-])
-def test_create_payment_plan_all_meta_data(paymentTasks, metaData, paymentPlans, request):
-    gen_payment_plan_builder = request.getfixturevalue('gen_payment_plan_builder')
+
+class Cases:
+    def __init__(self):
+        self.user_id = '61df93c0ac601d1be8e64613'
+        self.accName2Id = {'Amex': '61df9b621d2c2b15a6e53ec9', 'Chase': '61df9af7f18b94fc44d09fb9'}
+
+    def case_min_fees_2_month_monthly(self):
+        return (  # first tuple
+            [
+                PaymentTask(user_id=self.user_id, account_id=self.accName2Id['Amex'], amount=500),  # Amex
+                PaymentTask(user_id=self.user_id, account_id=self.accName2Id['Chase'], amount=500),  # Chase
+            ],
+            MetaData(preferred_plan_type=PlanType.PLAN_TYPE_MIN_FEES, preferred_timeline_in_months=2.0,
+                     preferred_payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY),
+            [
+                PaymentPlan(
+                    user_id=self.user_id,
+                    payment_task_id=['', ''],
+                    timeline=2.0,
+                    payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                    amount_per_payment=500,
+                    plan_type=PlanType.PLAN_TYPE_MIN_FEES,
+                    end_date=shift_now_by_payment_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                                                                           2),
+                    active=True,
+                    status=PaymentStatus.PAYMENT_STATUS_CURRENT,
+                    payment_action=[
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=500,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 1)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=500,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2))
+                    ])
+            ]
+        )
+
+    def case_credit_score_2_month_monthly(self):
+        return (  # first tuple
+            [
+                PaymentTask(user_id=self.user_id, account_id=self.accName2Id['Amex'], amount=500),  # Amex
+                PaymentTask(user_id=self.user_id, account_id=self.accName2Id['Chase'], amount=500),  # Chase
+            ],
+            MetaData(preferred_plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE, preferred_timeline_in_months=2.0,
+                     preferred_payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY),
+            [
+                PaymentPlan(
+                    user_id=self.user_id,
+                    payment_task_id=['', ''],
+                    timeline=2.0,
+                    payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                    amount_per_payment=500,
+                    plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    end_date=shift_now_by_payment_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                                                                           2),
+                    active=True,
+                    status=PaymentStatus.PAYMENT_STATUS_CURRENT,
+                    payment_action=[
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=500,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 1)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=500,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2))
+                    ])
+            ]
+        )
+
+    def case_credit_score_no_other_meta_data(self):
+        return (  # first tuple
+            [
+                PaymentTask(user_id=self.user_id, account_id=self.accName2Id['Amex'], amount=500),  # Amex
+                PaymentTask(user_id=self.user_id, account_id=self.accName2Id['Chase'], amount=500),  # Chase
+            ],
+            MetaData(preferred_plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE, preferred_timeline_in_months=0.0,
+                     preferred_payment_freq=None),
+            [
+                PaymentPlan(
+                    user_id=self.user_id,
+                    payment_task_id=['', ''],
+                    timeline=3.0,
+                    payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                    amount_per_payment=333.34,
+                    plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    end_date=shift_now_by_payment_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                                                                           3),
+                    active=True,
+                    status=PaymentStatus.PAYMENT_STATUS_CURRENT,
+                    payment_action=[
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=333.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 1)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=166.66,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=166.68,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=333.32,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 3))
+                    ]),
+                PaymentPlan(
+                    user_id=self.user_id,
+                    payment_task_id=['', ''],
+                    timeline=6.0,
+                    payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                    amount_per_payment=166.67,
+                    plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    end_date=shift_now_by_payment_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                                                                           6),
+                    active=True,
+                    status=PaymentStatus.PAYMENT_STATUS_CURRENT,
+                    payment_action=[
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=166.67,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 1)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=166.67,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=166.66,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 3)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=0.01,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 3)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=166.67,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 4)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=166.67,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 5)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=166.65,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 6))
+                    ]),
+                PaymentPlan(
+                    user_id=self.user_id,
+                    payment_task_id=['', ''],
+                    timeline=12.0,
+                    payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                    amount_per_payment=83.34,
+                    plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    end_date=shift_now_by_payment_frequency_multiple_times(PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY,
+                                                                           12),
+                    active=True,
+                    status=PaymentStatus.PAYMENT_STATUS_CURRENT,
+                    payment_action=[
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 1)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 2)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 3)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 4)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 5)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Amex'],
+                            amount=83.30,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 6)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=0.04,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 6)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 7)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 8)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 9)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 10)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=83.34,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 11)),
+                        PaymentAction(
+                            account_id=self.accName2Id['Chase'],
+                            amount=83.26,
+                            status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
+                            transaction_date=shift_now_by_payment_frequency_multiple_times(
+                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY, 12)),
+                    ])
+            ]
+        )
+
+
+@parametrize_with_cases("paymentTasks, metaData, paymentPlans", cases=[Cases.case_min_fees_2_month_monthly,
+    Cases.case_credit_score_2_month_monthly, Cases.case_credit_score_no_other_meta_data])
+def test_create_payment_plan(paymentTasks, metaData, paymentPlans, gen_payment_plan_builder):
     paymentPlansCreated = gen_payment_plan_builder.createPaymentPlan(paymentTasks=paymentTasks, metaData=metaData)
 
     assert len(paymentPlans) == len(paymentPlansCreated), f"Tests asks for {len(paymentPlans)} but" \
@@ -88,194 +336,3 @@ def test_create_payment_plan_all_meta_data(paymentTasks, metaData, paymentPlans,
             assert (paymentAction.amount - paymentActionCreated.amount) < 1e-3
             assert paymentAction.transaction_date == paymentActionCreated.transaction_date
             assert paymentAction.status == paymentAction.status
-
-def test_create_payment_plan_min_fees_2_month_monthly(gen_payment_plan_builder):
-    paymentTasks = [
-        PaymentTask(user_id=user_id, account_id=accName2Id['Amex'], amount=500), # Amex
-        PaymentTask(user_id=user_id, account_id=accName2Id['Chase'], amount=500), # Chase
-    ]
-    metaData = MetaData(preferred_plan_type=PlanType.PLAN_TYPE_MIN_FEES, preferred_timeline_in_months=2.0,
-        preferred_payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-
-    paymentPlans = gen_payment_plan_builder.createPaymentPlan(paymentTasks=paymentTasks, metaData=metaData)
-
-    assert len(paymentPlans) == 1
-
-    paymentPlan = paymentPlans[0]
-    assert paymentPlan.plan_type == PlanType.PLAN_TYPE_MIN_FEES
-    assert paymentPlan.user_id == user_id
-    assert paymentPlan.timeline == 2.0
-    assert paymentPlan.payment_freq == PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY
-    assert paymentPlan.amount_per_payment == 500
-    assert paymentPlan.active == True
-    assert paymentPlan.status == PaymentStatus.PAYMENT_STATUS_CURRENT
-    assert len(paymentPlan.payment_action) == 2
-
-    assert paymentPlan.payment_action[0].account_id == accName2Id['Chase']
-    assert paymentPlan.payment_action[0].amount == 500
-    assert paymentPlan.payment_action[0].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(datetime.datetime.now(), PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB = Timestamp()
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[0].transaction_date == transactionDatePB
-
-    assert paymentPlan.payment_action[1].account_id == accName2Id['Amex']
-    assert paymentPlan.payment_action[1].amount == 500
-    assert paymentPlan.payment_action[1].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[1].transaction_date == transactionDatePB
-
-    assert paymentPlan.end_date == transactionDatePB
-
-def test_create_payment_plan_credit_score_2_month_monthly(gen_payment_plan_builder):
-    paymentTasks = [
-        PaymentTask(user_id=user_id, account_id=accName2Id['Amex'], amount=500), # Amex
-        PaymentTask(user_id=user_id, account_id=accName2Id['Chase'], amount=500), # Chase
-    ]
-    metaData = MetaData(preferred_plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE, preferred_timeline_in_months=2.0,
-        preferred_payment_freq=PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-
-    paymentPlans = gen_payment_plan_builder.createPaymentPlan(paymentTasks=paymentTasks, metaData=metaData)
-
-    assert len(paymentPlans) == 1
-
-    paymentPlan = paymentPlans[0]
-    assert paymentPlan.plan_type == PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE
-    assert paymentPlan.user_id == user_id
-    assert paymentPlan.timeline == 2.0
-    assert paymentPlan.payment_freq == PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY
-    assert paymentPlan.amount_per_payment == 500
-    assert paymentPlan.active == True
-    assert paymentPlan.status == PaymentStatus.PAYMENT_STATUS_CURRENT
-    assert len(paymentPlan.payment_action) == 2
-
-    assert paymentPlan.payment_action[0].account_id == accName2Id['Amex']
-    assert paymentPlan.payment_action[0].amount == 500
-    assert paymentPlan.payment_action[0].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(datetime.datetime.now(), PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB = Timestamp()
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[0].transaction_date == transactionDatePB
-
-    assert paymentPlan.payment_action[1].account_id == accName2Id['Chase']
-    assert paymentPlan.payment_action[1].amount == 500
-    assert paymentPlan.payment_action[1].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[1].transaction_date == transactionDatePB
-
-    assert paymentPlan.end_date == transactionDatePB
-
-
-def test_create_payment_plan_credit_score_no_other_prefs(gen_payment_plan_builder):
-    paymentTasks = [
-        PaymentTask(user_id=user_id, account_id=accName2Id['Amex'], amount=500), # Amex
-        PaymentTask(user_id=user_id, account_id=accName2Id['Chase'], amount=500), # Chase
-    ]
-    metaData = MetaData(preferred_plan_type=PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE, preferred_timeline_in_months=0.0,
-        preferred_payment_freq=None)
-
-    paymentPlans = gen_payment_plan_builder.createPaymentPlan(paymentTasks=paymentTasks, metaData=metaData)
-
-    assert len(paymentPlans) == 3
-
-    ### PaymentPlan 0
-    paymentPlan = paymentPlans[0]
-    assert paymentPlan.plan_type == PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE
-    assert paymentPlan.user_id == user_id
-    assert paymentPlan.timeline == 3.0
-    assert paymentPlan.payment_freq == PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY
-    assert (paymentPlan.amount_per_payment - 333.34) < 1e-3
-    assert paymentPlan.active == True
-    assert paymentPlan.status == PaymentStatus.PAYMENT_STATUS_CURRENT
-    assert len(paymentPlan.payment_action) == 4
-    # PaymentAction 0
-    assert paymentPlan.payment_action[0].account_id == accName2Id['Amex']
-    assert (paymentPlan.payment_action[0].amount - 333.34) < 1e-3
-    assert paymentPlan.payment_action[0].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(datetime.datetime.now(), PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB = Timestamp()
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[0].transaction_date == transactionDatePB
-    # PaymentAction 1
-    assert paymentPlan.payment_action[1].account_id == accName2Id['Amex']
-    assert (paymentPlan.payment_action[1].amount - 166.66) < 1e-3
-    assert paymentPlan.payment_action[1].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[1].transaction_date == transactionDatePB
-    # PaymentAction 2
-    assert paymentPlan.payment_action[2].account_id == accName2Id['Chase']
-    assert (paymentPlan.payment_action[2].amount - 166.68) < 1e-3
-    assert paymentPlan.payment_action[2].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    assert paymentPlan.payment_action[2].transaction_date == transactionDatePB
-    # PaymentAction 3
-    assert paymentPlan.payment_action[3].account_id == accName2Id['Chase']
-    assert (paymentPlan.payment_action[3].amount - 333.32) < 1e-3
-    assert paymentPlan.payment_action[3].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[3].transaction_date == transactionDatePB
-    #
-    assert paymentPlan.end_date == transactionDatePB
-    ### PaymentPlan 1
-    paymentPlan = paymentPlans[1]
-    assert paymentPlan.plan_type == PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE
-    assert paymentPlan.user_id == user_id
-    assert paymentPlan.timeline == 6.0
-    assert paymentPlan.payment_freq == PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY
-    assert (paymentPlan.amount_per_payment - 166.67) < 1e-3
-    assert paymentPlan.active == True
-    assert paymentPlan.status == PaymentStatus.PAYMENT_STATUS_CURRENT
-    assert len(paymentPlan.payment_action) == 7
-    # PaymentAction 0
-    assert paymentPlan.payment_action[0].account_id == accName2Id['Amex']
-    assert (paymentPlan.payment_action[0].amount - 166.67) < 1e-3
-    assert paymentPlan.payment_action[0].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(datetime.datetime.now(), PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB = Timestamp()
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[0].transaction_date == transactionDatePB
-    # PaymentAction 1
-    assert paymentPlan.payment_action[1].account_id == accName2Id['Amex']
-    assert (paymentPlan.payment_action[1].amount - 166.67) < 1e-3
-    assert paymentPlan.payment_action[1].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[1].transaction_date == transactionDatePB
-    # PaymentAction 2
-    assert paymentPlan.payment_action[2].account_id == accName2Id['Amex']
-    assert (paymentPlan.payment_action[2].amount - 166.66) < 1e-3
-    assert paymentPlan.payment_action[2].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[2].transaction_date == transactionDatePB
-    # PaymentAction 3
-    assert paymentPlan.payment_action[3].account_id == accName2Id['Chase']
-    assert (paymentPlan.payment_action[3].amount - 0.01) < 1e-3
-    assert paymentPlan.payment_action[3].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    assert paymentPlan.payment_action[3].transaction_date == transactionDatePB
-    # PaymentAction 4
-    assert paymentPlan.payment_action[4].account_id == accName2Id['Chase']
-    assert (paymentPlan.payment_action[4].amount - 166.67) < 1e-3
-    assert paymentPlan.payment_action[4].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[4].transaction_date == transactionDatePB
-    # PaymentAction 5
-    assert paymentPlan.payment_action[5].account_id == accName2Id['Chase']
-    assert (paymentPlan.payment_action[5].amount - 166.67) < 1e-3
-    assert paymentPlan.payment_action[5].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[5].transaction_date == transactionDatePB
-    # PaymentAction 6
-    assert paymentPlan.payment_action[6].account_id == accName2Id['Chase']
-    assert (paymentPlan.payment_action[6].amount - 166.65) < 1e-3
-    assert paymentPlan.payment_action[6].status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
-    transactionDateDt = shift_date_by_payment_frequency(transactionDateDt, PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY)
-    transactionDatePB.FromDatetime(transactionDateDt)
-    assert paymentPlan.payment_action[6].transaction_date == transactionDatePB
-    #
-    assert paymentPlan.end_date == transactionDatePB
