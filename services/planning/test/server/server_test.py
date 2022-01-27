@@ -6,11 +6,15 @@ from dotenv import load_dotenv
 from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 
+import gen.Python.common.payment_plan_pb2
+# from gen.Python.common.payment_plan_pb2 import *
+# from gen.Python.common.payment_plan_pb2_grpc import *
 from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT, PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PLAN_TYPE_MIN_FEES, DELETE_STATUS_SUCCESS
-from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, ListPaymentPlanRequest
-from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB
-from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
+# from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentAction, PaymentPlan as PaymentPlan
+from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, \
+    ListPaymentPlanRequest, ListPaymentPlanResponse, UpdatePaymentPlanRequest
+from common.payment_plan_pb2 import *
 from services.planning.database.database import initiate_mongo_client
 from services.planning.database.models.common import PaymentFrequency as PaymentFrequencyDB
 from services.planning.database.models.common import PlanType as PlanTypeDB
@@ -19,6 +23,33 @@ from services.planning.database.models.common import PaymentActionStatus as Paym
 from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
 from services.planning.database.models.common import PaymentStatus as PaymentStatusDB
 from services.planning.server.server import PlanningServicer
+
+
+def test_list_payment_plan(gen_server):
+    # import sys
+    # print()
+    # print('\n'.join(sys.path))
+    # print('-----------')
+    # for mod in sys.modules:
+    #     if "payment_plan_pb2" in mod:
+    #         print(f"{mod}: {sys.modules[mod]}")
+    #         try:
+    #             print(id(sys.modules[mod].PaymentPlan))
+    #         finally:
+    #             print("Could'nt find ID")
+    # print("Python version")
+    # print(sys.version)
+    # print("Version info.")
+    # print(sys.version_info)
+    payment_plan_id = '61e8e60a186cad9b7e6db48f'
+    paymentPlanGet = gen_server.GetPaymentPlan(GetPaymentPlanRequest(payment_plan_id=payment_plan_id), context=None)
+    assert payment_plan_id == paymentPlanGet.payment_plan_id,\
+        f"Plan inserted ID: {payment_plan_id}\nPlan retrieved ID: {paymentPlanGet.payment_plan_id}"
+    response = ListPaymentPlanResponse(payment_plans=[paymentPlanGet])
+    # response = UpdatePaymentPlanRequest(payment_plan_id=paymentPlanGet.payment_plan_id, payment_plan=paymentPlanGet)
+    response = UpdatePaymentPlanRequest()
+    response.payment_plan_id = payment_plan_id
+    response.payment_plan.ParseFromString(paymentPlanGet.SerializeToString())
 
 
 @pytest.fixture
@@ -30,7 +61,7 @@ def gen_server() -> PlanningServicer:
 
 def test_create_payment_plan(gen_server):
     tt = Timestamp()
-    pp = PaymentPlanPB(
+    pp = PaymentPlan(
         payment_plan_id=str(ObjectId()),
         user_id="61df93c0ac601d1be8e6af28",
         payment_task_id=['61dfa8296c734067e6726761', 'a2ffa82f6c734067e6726761'],
@@ -42,7 +73,7 @@ def test_create_payment_plan(gen_server):
         active=True,
         status=PAYMENT_STATUS_CURRENT,
         payment_action=[
-            PaymentActionPB(
+            PaymentAction(
                 account_id='61df9b621d2c2b15a6e53ec9',
                 amount=100.0,
                 transaction_date=tt.GetCurrentTime(),
@@ -55,7 +86,7 @@ def test_create_payment_plan(gen_server):
 
 
 def test_get_payment_plan(gen_server):
-    payment_plan_id = '61e8cd4cb97f1108bcd23da9'
+    payment_plan_id = '61e8e60a186cad9b7e6db48f'
     paymentPlanGet = gen_server.GetPaymentPlan(GetPaymentPlanRequest(payment_plan_id=payment_plan_id), context=None)
     assert payment_plan_id == paymentPlanGet.payment_plan_id,\
         f"Plan inserted ID: {payment_plan_id}\nPlan retrieved ID: {paymentPlanGet.payment_plan_id}"
@@ -69,7 +100,7 @@ def test_list_payment_plans(gen_server):
 def test_update_payment_plan(gen_server):
     payment_plan_id = '61e8cd4cb97f1108bcd23da9'
     tt = Timestamp()
-    pp = PaymentPlanPB(
+    pp = PaymentPlan(
         payment_plan_id=payment_plan_id,
         user_id="61df93c0ac601d1be8e6af28",
         payment_task_id=['61dfa8296c734067e6726761', 'a2ffa82f6c734067e6726761', 'a2ffa82f6c734067e6726761'],
@@ -81,7 +112,7 @@ def test_update_payment_plan(gen_server):
         active=True,
         status=PAYMENT_STATUS_CURRENT,
         payment_action=[
-            PaymentActionPB(
+            PaymentAction(
                 account_id='61df9b621d2c2b15a6e53ec9',
                 amount=150.0,
                 transaction_date=tt.GetCurrentTime(),
