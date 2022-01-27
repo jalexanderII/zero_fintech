@@ -13,6 +13,7 @@ _sym_db = _symbol_database.Default()
 
 from common import common_pb2 as common_dot_common__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -21,9 +22,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x19\x63ommon/payment_plan.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x06status\x18\x04 \x01(\x0e\x32\x1b.common.PaymentActionStatus\"\xe7\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12.\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12#\n\tplan_type\x18\x07 \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12%\n\x06status\x18\n \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\x0b \x03(\x0b\x32\x15.common.PaymentActionB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
+  serialized_pb=b'\n\x19\x63ommon/payment_plan.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\"\x96\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x02\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x06status\x18\x04 \x01(\x0e\x32\x1b.common.PaymentActionStatus\"\xe7\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x10\n\x08timeline\x18\x04 \x01(\x02\x12.\n\x0cpayment_freq\x18\x05 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x06 \x01(\x02\x12#\n\tplan_type\x18\x07 \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\t \x01(\x08\x12%\n\x06status\x18\n \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\x0b \x03(\x0b\x32\x15.common.PaymentAction\"0\n\x15GetPaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentPlanRequest\"E\n\x17ListPaymentPlanResponse\x12*\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x13.common.PaymentPlan\"\x88\x01\n\x18UpdatePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12)\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x13.common.PaymentPlan\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"3\n\x18\x44\x65letePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"m\n\x19\x44\x65letePaymentPlanResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12)\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x13.common.PaymentPlanB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
   ,
-  dependencies=[common_dot_common__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
+  dependencies=[common_dot_common__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 
 
 
@@ -76,8 +77,8 @@ _PAYMENTACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=92,
-  serialized_end=242,
+  serialized_start=126,
+  serialized_end=276,
 )
 
 
@@ -178,8 +179,214 @@ _PAYMENTPLAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=245,
-  serialized_end=604,
+  serialized_start=279,
+  serialized_end=638,
+)
+
+
+_GETPAYMENTPLANREQUEST = _descriptor.Descriptor(
+  name='GetPaymentPlanRequest',
+  full_name='common.GetPaymentPlanRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='payment_plan_id', full_name='common.GetPaymentPlanRequest.payment_plan_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=640,
+  serialized_end=688,
+)
+
+
+_LISTPAYMENTPLANREQUEST = _descriptor.Descriptor(
+  name='ListPaymentPlanRequest',
+  full_name='common.ListPaymentPlanRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=690,
+  serialized_end=714,
+)
+
+
+_LISTPAYMENTPLANRESPONSE = _descriptor.Descriptor(
+  name='ListPaymentPlanResponse',
+  full_name='common.ListPaymentPlanResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='payment_plans', full_name='common.ListPaymentPlanResponse.payment_plans', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=716,
+  serialized_end=785,
+)
+
+
+_UPDATEPAYMENTPLANREQUEST = _descriptor.Descriptor(
+  name='UpdatePaymentPlanRequest',
+  full_name='common.UpdatePaymentPlanRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='payment_plan_id', full_name='common.UpdatePaymentPlanRequest.payment_plan_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='payment_plan', full_name='common.UpdatePaymentPlanRequest.payment_plan', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='mask', full_name='common.UpdatePaymentPlanRequest.mask', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=788,
+  serialized_end=924,
+)
+
+
+_DELETEPAYMENTPLANREQUEST = _descriptor.Descriptor(
+  name='DeletePaymentPlanRequest',
+  full_name='common.DeletePaymentPlanRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='payment_plan_id', full_name='common.DeletePaymentPlanRequest.payment_plan_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=926,
+  serialized_end=977,
+)
+
+
+_DELETEPAYMENTPLANRESPONSE = _descriptor.Descriptor(
+  name='DeletePaymentPlanResponse',
+  full_name='common.DeletePaymentPlanResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='status', full_name='common.DeletePaymentPlanResponse.status', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='payment_plan', full_name='common.DeletePaymentPlanResponse.payment_plan', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=979,
+  serialized_end=1088,
 )
 
 _PAYMENTACTION.fields_by_name['transaction_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -189,8 +396,19 @@ _PAYMENTPLAN.fields_by_name['plan_type'].enum_type = common_dot_common__pb2._PLA
 _PAYMENTPLAN.fields_by_name['end_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _PAYMENTPLAN.fields_by_name['status'].enum_type = common_dot_common__pb2._PAYMENTSTATUS
 _PAYMENTPLAN.fields_by_name['payment_action'].message_type = _PAYMENTACTION
+_LISTPAYMENTPLANRESPONSE.fields_by_name['payment_plans'].message_type = _PAYMENTPLAN
+_UPDATEPAYMENTPLANREQUEST.fields_by_name['payment_plan'].message_type = _PAYMENTPLAN
+_UPDATEPAYMENTPLANREQUEST.fields_by_name['mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
+_DELETEPAYMENTPLANRESPONSE.fields_by_name['status'].enum_type = common_dot_common__pb2._DELETE_STATUS
+_DELETEPAYMENTPLANRESPONSE.fields_by_name['payment_plan'].message_type = _PAYMENTPLAN
 DESCRIPTOR.message_types_by_name['PaymentAction'] = _PAYMENTACTION
 DESCRIPTOR.message_types_by_name['PaymentPlan'] = _PAYMENTPLAN
+DESCRIPTOR.message_types_by_name['GetPaymentPlanRequest'] = _GETPAYMENTPLANREQUEST
+DESCRIPTOR.message_types_by_name['ListPaymentPlanRequest'] = _LISTPAYMENTPLANREQUEST
+DESCRIPTOR.message_types_by_name['ListPaymentPlanResponse'] = _LISTPAYMENTPLANRESPONSE
+DESCRIPTOR.message_types_by_name['UpdatePaymentPlanRequest'] = _UPDATEPAYMENTPLANREQUEST
+DESCRIPTOR.message_types_by_name['DeletePaymentPlanRequest'] = _DELETEPAYMENTPLANREQUEST
+DESCRIPTOR.message_types_by_name['DeletePaymentPlanResponse'] = _DELETEPAYMENTPLANRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 PaymentAction = _reflection.GeneratedProtocolMessageType('PaymentAction', (_message.Message,), {
@@ -206,6 +424,48 @@ PaymentPlan = _reflection.GeneratedProtocolMessageType('PaymentPlan', (_message.
   # @@protoc_insertion_point(class_scope:common.PaymentPlan)
   })
 _sym_db.RegisterMessage(PaymentPlan)
+
+GetPaymentPlanRequest = _reflection.GeneratedProtocolMessageType('GetPaymentPlanRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETPAYMENTPLANREQUEST,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.GetPaymentPlanRequest)
+  })
+_sym_db.RegisterMessage(GetPaymentPlanRequest)
+
+ListPaymentPlanRequest = _reflection.GeneratedProtocolMessageType('ListPaymentPlanRequest', (_message.Message,), {
+  'DESCRIPTOR' : _LISTPAYMENTPLANREQUEST,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.ListPaymentPlanRequest)
+  })
+_sym_db.RegisterMessage(ListPaymentPlanRequest)
+
+ListPaymentPlanResponse = _reflection.GeneratedProtocolMessageType('ListPaymentPlanResponse', (_message.Message,), {
+  'DESCRIPTOR' : _LISTPAYMENTPLANRESPONSE,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.ListPaymentPlanResponse)
+  })
+_sym_db.RegisterMessage(ListPaymentPlanResponse)
+
+UpdatePaymentPlanRequest = _reflection.GeneratedProtocolMessageType('UpdatePaymentPlanRequest', (_message.Message,), {
+  'DESCRIPTOR' : _UPDATEPAYMENTPLANREQUEST,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.UpdatePaymentPlanRequest)
+  })
+_sym_db.RegisterMessage(UpdatePaymentPlanRequest)
+
+DeletePaymentPlanRequest = _reflection.GeneratedProtocolMessageType('DeletePaymentPlanRequest', (_message.Message,), {
+  'DESCRIPTOR' : _DELETEPAYMENTPLANREQUEST,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.DeletePaymentPlanRequest)
+  })
+_sym_db.RegisterMessage(DeletePaymentPlanRequest)
+
+DeletePaymentPlanResponse = _reflection.GeneratedProtocolMessageType('DeletePaymentPlanResponse', (_message.Message,), {
+  'DESCRIPTOR' : _DELETEPAYMENTPLANRESPONSE,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.DeletePaymentPlanResponse)
+  })
+_sym_db.RegisterMessage(DeletePaymentPlanResponse)
 
 
 DESCRIPTOR._options = None

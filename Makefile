@@ -13,13 +13,14 @@ clear_protos_go:
 	rm ./gen/Go/core/*.go
 
 gen_protos_py:
-	python3 -m grpc_tools.protoc -I proto --python_betterproto_out=services/planning/database/models --python_out=gen/Python --mypy_out=gen/Python --grpc_python_out=gen/Python proto/auth/*.proto
+	python3 -m grpc_tools.protoc -I proto --python_out=gen/Python --mypy_out=gen/Python --grpc_python_out=gen/Python proto/auth/*.proto
 	python3 -m grpc_tools.protoc -I proto --python_betterproto_out=services/planning/database/models --python_out=gen/Python --mypy_out=gen/Python --grpc_python_out=gen/Python proto/common/*.proto
 	python3 -m grpc_tools.protoc -I proto --python_betterproto_out=services/planning/database/models --python_out=gen/Python --mypy_out=gen/Python --grpc_python_out=gen/Python proto/core/*.proto
-	python3 -m grpc_tools.protoc -I proto --python_betterproto_out=services/planning/database/models --python_out=gen/Python --mypy_out=gen/Python --grpc_python_out=gen/Python proto/planning/*.proto
+	python3 -m grpc_tools.protoc -I proto --python_out=gen/Python --mypy_out=gen/Python --grpc_python_out=gen/Python proto/planning/*.proto
 
 clear_protos_py:
 	rm ./gen/Python/common/*.py
 	rm ./gen/Python/auth/*.py
 	rm ./gen/Python/planning/*.py
 	rm ./gen/Python/core/*.py
+	rm ./services/planning/database/models/*.py

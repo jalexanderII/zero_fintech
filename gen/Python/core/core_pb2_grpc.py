@@ -5,7 +5,6 @@ import grpc
 from common import payment_task_pb2 as common_dot_payment__task__pb2
 from core import accounts_pb2 as core_dot_accounts__pb2
 from core import core_pb2 as core_dot_core__pb2
-from core import payment_task_pb2 as core_dot_payment__task__pb2
 from core import transactions_pb2 as core_dot_transactions__pb2
 from core import users_pb2 as core_dot_users__pb2
 
@@ -22,11 +21,6 @@ class CoreStub(object):
         self.GetPaymentPlan = channel.unary_unary(
                 '/core.Core/GetPaymentPlan',
                 request_serializer=core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
-                response_deserializer=common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
-                )
-        self.UpdatePaymentPlan = channel.unary_unary(
-                '/core.Core/UpdatePaymentPlan',
-                request_serializer=common_dot_payment__task__pb2.UpdatePaymentPlanPlanRequest.SerializeToString,
                 response_deserializer=common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
                 )
         self.CreateAccount = channel.unary_unary(
@@ -81,33 +75,33 @@ class CoreStub(object):
                 )
         self.CreatePaymentTask = channel.unary_unary(
                 '/core.Core/CreatePaymentTask',
-                request_serializer=core_dot_payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
+                request_serializer=common_dot_payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
                 response_deserializer=common_dot_payment__task__pb2.PaymentTask.FromString,
                 )
         self.CreateManyPaymentTask = channel.unary_unary(
                 '/core.Core/CreateManyPaymentTask',
-                request_serializer=core_dot_payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
-                response_deserializer=core_dot_payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
+                request_serializer=common_dot_payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
+                response_deserializer=common_dot_payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
                 )
         self.GetPaymentTask = channel.unary_unary(
                 '/core.Core/GetPaymentTask',
-                request_serializer=core_dot_payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
+                request_serializer=common_dot_payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
                 response_deserializer=common_dot_payment__task__pb2.PaymentTask.FromString,
                 )
         self.ListPaymentTasks = channel.unary_unary(
                 '/core.Core/ListPaymentTasks',
-                request_serializer=core_dot_payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
-                response_deserializer=core_dot_payment__task__pb2.ListPaymentTaskResponse.FromString,
+                request_serializer=common_dot_payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
+                response_deserializer=common_dot_payment__task__pb2.ListPaymentTaskResponse.FromString,
                 )
         self.UpdatePaymentTask = channel.unary_unary(
                 '/core.Core/UpdatePaymentTask',
-                request_serializer=core_dot_payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
+                request_serializer=common_dot_payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
                 response_deserializer=common_dot_payment__task__pb2.PaymentTask.FromString,
                 )
         self.DeletePaymentTask = channel.unary_unary(
                 '/core.Core/DeletePaymentTask',
-                request_serializer=core_dot_payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
-                response_deserializer=core_dot_payment__task__pb2.DeletePaymentTaskResponse.FromString,
+                request_serializer=common_dot_payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
+                response_deserializer=common_dot_payment__task__pb2.DeletePaymentTaskResponse.FromString,
                 )
         self.GetUser = channel.unary_unary(
                 '/core.Core/GetUser',
@@ -137,14 +131,6 @@ class CoreServicer(object):
     def GetPaymentPlan(self, request, context):
         """GetPaymentPlan makes request to the Planning service by passing it a list
         of PaymentTasks and expects to receive a list of PaymentPlans
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def UpdatePaymentPlan(self, request, context):
-        """UpdatePaymentPlan makes request to the Planning service by passing to update
-        its current Payment Plan with based on user specified MetaData
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -283,11 +269,6 @@ def add_CoreServicer_to_server(servicer, server):
                     request_deserializer=core_dot_core__pb2.GetPaymentPlanRequest.FromString,
                     response_serializer=common_dot_payment__task__pb2.PaymentPlanResponse.SerializeToString,
             ),
-            'UpdatePaymentPlan': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdatePaymentPlan,
-                    request_deserializer=common_dot_payment__task__pb2.UpdatePaymentPlanPlanRequest.FromString,
-                    response_serializer=common_dot_payment__task__pb2.PaymentPlanResponse.SerializeToString,
-            ),
             'CreateAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateAccount,
                     request_deserializer=core_dot_accounts__pb2.CreateAccountRequest.FromString,
@@ -340,33 +321,33 @@ def add_CoreServicer_to_server(servicer, server):
             ),
             'CreatePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.CreatePaymentTask,
-                    request_deserializer=core_dot_payment__task__pb2.CreatePaymentTaskRequest.FromString,
+                    request_deserializer=common_dot_payment__task__pb2.CreatePaymentTaskRequest.FromString,
                     response_serializer=common_dot_payment__task__pb2.PaymentTask.SerializeToString,
             ),
             'CreateManyPaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateManyPaymentTask,
-                    request_deserializer=core_dot_payment__task__pb2.CreateManyPaymentTaskRequest.FromString,
-                    response_serializer=core_dot_payment__task__pb2.CreateManyPaymentTaskResponse.SerializeToString,
+                    request_deserializer=common_dot_payment__task__pb2.CreateManyPaymentTaskRequest.FromString,
+                    response_serializer=common_dot_payment__task__pb2.CreateManyPaymentTaskResponse.SerializeToString,
             ),
             'GetPaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentTask,
-                    request_deserializer=core_dot_payment__task__pb2.GetPaymentTaskRequest.FromString,
+                    request_deserializer=common_dot_payment__task__pb2.GetPaymentTaskRequest.FromString,
                     response_serializer=common_dot_payment__task__pb2.PaymentTask.SerializeToString,
             ),
             'ListPaymentTasks': grpc.unary_unary_rpc_method_handler(
                     servicer.ListPaymentTasks,
-                    request_deserializer=core_dot_payment__task__pb2.ListPaymentTaskRequest.FromString,
-                    response_serializer=core_dot_payment__task__pb2.ListPaymentTaskResponse.SerializeToString,
+                    request_deserializer=common_dot_payment__task__pb2.ListPaymentTaskRequest.FromString,
+                    response_serializer=common_dot_payment__task__pb2.ListPaymentTaskResponse.SerializeToString,
             ),
             'UpdatePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdatePaymentTask,
-                    request_deserializer=core_dot_payment__task__pb2.UpdatePaymentTaskRequest.FromString,
+                    request_deserializer=common_dot_payment__task__pb2.UpdatePaymentTaskRequest.FromString,
                     response_serializer=common_dot_payment__task__pb2.PaymentTask.SerializeToString,
             ),
             'DeletePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.DeletePaymentTask,
-                    request_deserializer=core_dot_payment__task__pb2.DeletePaymentTaskRequest.FromString,
-                    response_serializer=core_dot_payment__task__pb2.DeletePaymentTaskResponse.SerializeToString,
+                    request_deserializer=common_dot_payment__task__pb2.DeletePaymentTaskRequest.FromString,
+                    response_serializer=common_dot_payment__task__pb2.DeletePaymentTaskResponse.SerializeToString,
             ),
             'GetUser': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUser,
@@ -411,23 +392,6 @@ class Core(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetPaymentPlan',
             core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
-            common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def UpdatePaymentPlan(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/UpdatePaymentPlan',
-            common_dot_payment__task__pb2.UpdatePaymentPlanPlanRequest.SerializeToString,
             common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -614,7 +578,7 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/CreatePaymentTask',
-            core_dot_payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
+            common_dot_payment__task__pb2.CreatePaymentTaskRequest.SerializeToString,
             common_dot_payment__task__pb2.PaymentTask.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -631,8 +595,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/CreateManyPaymentTask',
-            core_dot_payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
-            core_dot_payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
+            common_dot_payment__task__pb2.CreateManyPaymentTaskRequest.SerializeToString,
+            common_dot_payment__task__pb2.CreateManyPaymentTaskResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -648,7 +612,7 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetPaymentTask',
-            core_dot_payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
+            common_dot_payment__task__pb2.GetPaymentTaskRequest.SerializeToString,
             common_dot_payment__task__pb2.PaymentTask.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -665,8 +629,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListPaymentTasks',
-            core_dot_payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
-            core_dot_payment__task__pb2.ListPaymentTaskResponse.FromString,
+            common_dot_payment__task__pb2.ListPaymentTaskRequest.SerializeToString,
+            common_dot_payment__task__pb2.ListPaymentTaskResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -682,7 +646,7 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/UpdatePaymentTask',
-            core_dot_payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
+            common_dot_payment__task__pb2.UpdatePaymentTaskRequest.SerializeToString,
             common_dot_payment__task__pb2.PaymentTask.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -699,8 +663,8 @@ class Core(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/DeletePaymentTask',
-            core_dot_payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
-            core_dot_payment__task__pb2.DeletePaymentTaskResponse.FromString,
+            common_dot_payment__task__pb2.DeletePaymentTaskRequest.SerializeToString,
+            common_dot_payment__task__pb2.DeletePaymentTaskResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

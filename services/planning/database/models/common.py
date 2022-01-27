@@ -103,21 +103,6 @@ class PaymentTask(betterproto.Message):
 
 
 @dataclass
-class PaymentPlanResponse(betterproto.Message):
-    """Response for CreatePaymentPlan"""
-
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
-
-
-@dataclass
-class UpdatePaymentPlanPlanRequest(betterproto.Message):
-    """Request for UpdatePaymentPlanPlan"""
-
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
-    meta_data: "MetaData" = betterproto.message_field(2)
-
-
-@dataclass
 class MetaData(betterproto.Message):
     """
     MetaData is any preferences a user may have regarding how a payment task
