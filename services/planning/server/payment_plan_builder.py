@@ -41,6 +41,16 @@ class PaymentPlanBuilder:
             accountIds.append(paymentTask.account_id)
             amounts.append(paymentTask.amount)
 
+        paymentPlans = []
+        for metaData in self._createMetaDataOptions(metaData=metaData, totalAmount=sum(amounts)):
+            paymentPlan = self._createPaymentPlanMetaDataChosen(userId=userId, metaData=metaData,
+                                paymentTaskIds=paymentTaskIds, accountIds=accountIds, amounts=amounts)
+            paymentPlans.append(paymentPlan)
+
+        return paymentPlans
+
+    def _createMetaDataOptions(self, metaData: MetaData, totalAmount: float) -> List[MetaData]:
+        """ Creates options for what kind of plans to create given type, timeline, frequency and total amount. """
         if metaData:
             planType = metaData.preferred_plan_type
             timelineInMonths = metaData.preferred_timeline_in_months
@@ -50,19 +60,6 @@ class PaymentPlanBuilder:
             timelineInMonths = 0.0
             paymentFreq = PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN
 
-        paymentPlans = []
-        for prefPlanType, prefTimelineInMonths, prefPaymentFreq in self._createTypeTimelineFrequencyOptions(planType=planType,
-                    timelineInMonths=timelineInMonths, paymentFreq=paymentFreq, totalAmount=sum(amounts)):
-            paymentPlan = self._createPaymentPlanSameTypeFreq(userId=userId, planType=prefPlanType,
-                timelineInMonths=prefTimelineInMonths, paymentFreq=prefPaymentFreq, paymentTaskIds=paymentTaskIds,
-                accountIds=accountIds, amounts=amounts)
-            paymentPlans.append(paymentPlan)
-
-        return paymentPlans
-
-    def _createTypeTimelineFrequencyOptions(self, planType: PlanType, timelineInMonths: float, paymentFreq: PaymentFrequency,
-            totalAmount: float) -> Generator[Tuple[PlanType, float, PaymentFrequency]]:
-        """ Creates options for what kind of plans to create given type, timeline, frequency and total amount. """
         typeOptions = [planType] if planType != PlanType.PLAN_TYPE_UNKNOWN else [PlanType.PLAN_TYPE_MIN_FEES,
                                                                                  PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE]
         freqOptions = [paymentFreq]
@@ -85,12 +82,20 @@ class PaymentPlanBuilder:
                 timelineOptions = [timelineInMonths]
             else:
                 timelineOptions = [3.0, 6.0, 12.0]
-        return product(typeOptions, timelineOptions, freqOptions)
 
-    def _createPaymentPlanSameTypeFreq(self, userId: str, planType: PlanType, timelineInMonths: float,
-            paymentFreq: PaymentFrequency, paymentTaskIds: List[str], accountIds: List[str], amounts: List[float],
-            ) -> PaymentPlan:
-        """Creates a PaymentPlan for given choices of PaymentFrequency and PlanType for the Accounts and Amounts. """
+        metaDataOptions = []
+        for _type, _timeline, _freq in product(typeOptions, timelineOptions, freqOptions):
+            metaDataOptions.append(MetaData(preferred_plan_type=_type, preferred_timeline_in_months=_timeline,
+                                            preferred_payment_freq=_freq))
+        return metaDataOptions
+
+    def _createPaymentPlanMetaDataChosen(self, userId: str, metaData: MetaData, paymentTaskIds: List[str],
+            accountIds: List[str], amounts: List[float]) -> PaymentPlan:
+        """Creates a PaymentPlan for given choices of MetaData."""
+        planType = metaData.preferred_plan_type
+        timelineInMonths = metaData.preferred_timeline_in_months
+        paymentFreq = metaData.preferred_payment_freq
+
         if planType == PlanType.PLAN_TYPE_UNKNOWN:
             raise ValueError("Using PLAN_TYPE_UNKNOWN not permitted")
         if timelineInMonths <= 0:
@@ -99,7 +104,7 @@ class PaymentPlanBuilder:
             raise ValueError("Using PAYMENT_FREQUENCY_UNKNOWN not permitted")
 
         totalAmount = sum(amounts)
-        amountPerPayment = totalAmount / (timedelta(days=30) * timelineInMonths / paymentFrequencyToDays(paymentFreq))
+        amountPerPayment = totalAmount / (timelineInMonths / PAYMENT_FREQ_TO_TIMELINE[paymentFreq])
         amountPerPayment = round(ceil(amountPerPayment * 100) / 100, 2)
 
         if planType == PlanType.PLAN_TYPE_MIN_FEES:
@@ -128,7 +133,7 @@ class PaymentPlanBuilder:
                     paymentActions.append(PaymentAction(account_id=_accId, amount=_amountThisDate, transaction_date=datePB,
                                                         status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING))
                     payThisDate += _amount
-                elif _amountNextDates > 0:
+                if _amountNextDates > 0:
                     amounts.insert(0, _amountNextDates)
                     accountIds.insert(0, _accId)
                     # move to next date
@@ -170,6 +175,7 @@ class PaymentPlanBuilder:
                 df = df.loc[df.amount > 0]
                 # update credit card usage
                 df['usage'] = df['balance'] / df['credit_limit']
+                df = df.sort_values('usage', ascending=False)
                 # move to next date
                 datePB.FromDatetime(dateDt)
                 payThisDate = 0
@@ -177,11 +183,8 @@ class PaymentPlanBuilder:
                 datePB.FromDatetime(dateDt)
 
         endDatePB = paymentActions[-1].transaction_date
-        # calculate timeline from how many dates were chosen
-        paymentFreqAsTimelineInMonths = PAYMENT_FREQ_TO_TIMELINE[paymentFreq]
-        timeline = paymentFreqAsTimelineInMonths * len(set([pa.transaction_date.ToDatetime() for pa in paymentActions]))
 
-        return PaymentPlan(user_id=userId, payment_task_id=paymentTaskIds, timeline=timeline, payment_freq=paymentFreq,
+        return PaymentPlan(user_id=userId, payment_task_id=paymentTaskIds, timeline=timelineInMonths, payment_freq=paymentFreq,
                            amount_per_payment=amountPerPayment, plan_type=planType, end_date=endDatePB, active=True,
                            status=PaymentStatus.PAYMENT_STATUS_CURRENT, payment_action=paymentActions)
 
