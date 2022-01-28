@@ -10,8 +10,7 @@ from pymongo.collection import Collection
 from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB, GetPaymentPlanRequest, ListPaymentPlanRequest, ListPaymentPlanResponse, \
     UpdatePaymentPlanRequest, DeletePaymentPlanRequest, DeletePaymentPlanResponse
-from gen.Python.common.payment_task_pb2 import PaymentPlanResponse, UpdatePaymentPlanPlanRequest
-# from gen.Python.planning.payment_plan_pb2 import
+from gen.Python.common.payment_task_pb2 import PaymentPlanResponse
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.server import payment_plan_builder
@@ -35,7 +34,7 @@ class PlanningServicer(PlanningServicer):
     def CreatePaymentPlan(self, request: CreatePaymentPlanRequest, context) -> PaymentPlanResponse:
         """ Creates PaymentPlan(s) for given request containing a list of PaymentTasks"""
         logger.info('CreatePaymentPlan called')
-        paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks)
+        paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks, request.meta_data)
         for paymentPlanPB in paymentPlanListPB:
             self._createPaymentPlan(paymentPlanPB)
         return PaymentPlanResponse(payment_plans=paymentPlanListPB)
@@ -45,11 +44,6 @@ class PlanningServicer(PlanningServicer):
         paymentPlanDB = paymentPlanPBToDB(payment_plan_PB).to_dict()
         new_payment_plan = self.planning_collection.insert_one(paymentPlanDB)
         return new_payment_plan.inserted_id
-
-    def ModifyPaymentPlan(self, request: UpdatePaymentPlanPlanRequest, context) -> PaymentPlanResponse:
-        """ Creates updated PaymentPlan(s) for given PaymentPlan but now also getting MetaData"""
-        logger.info('ModifyPaymentPlan called')
-
 
     # CRUD functionality
 

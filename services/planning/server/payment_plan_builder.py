@@ -8,21 +8,20 @@ from typing import List, Tuple, Generator
 
 import grpc
 import pandas as pd
-from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from gen.Python.common.common_pb2 import PaymentFrequency, PlanType, PaymentActionStatus, PaymentStatus
-from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT
 from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
 from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
 from gen.Python.core.accounts_pb2 import GetAccountRequest
 from gen.Python.core.core_pb2_grpc import CoreStub
-from services.planning.server.utils import paymentFrequencyToDays, shift_date_by_payment_frequency
+from services.planning.server.utils import shift_date_by_payment_frequency
 
 PAYMENT_FREQ_TO_TIMELINE = {PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY: 0.25,
-                                PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY: 0.5,
-                                PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY: 1.0,
-                                PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY: 3.0}
+                            PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY: 0.5,
+                            PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY: 1.0,
+                            PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY: 3.0}
+
 
 class PaymentPlanBuilder:
     def __init__(self, coreClient: CoreStub):

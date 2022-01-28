@@ -541,7 +541,7 @@ def test_create_payment_plan_end_to_end(paymentTasks, metaData, paymentPlans, ge
         assert paymentPlan.payment_freq == paymentPlanCreated.payment_freq, f"Plan {i} differs"
         assert paymentPlan.plan_type == paymentPlanCreated.plan_type, f"Plan {i} differs"
         assert abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment) < 1e-3, f"Plan {i} differs"
-        assert paymentPlan.end_date.seconds == paymentPlanCreated.end_date.seconds, f"Plan {i} differs"
+        assert abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2, f"Plan {i} differs"
         assert paymentPlan.active == paymentPlanCreated.active, f"Plan {i} differs"
         assert paymentPlan.status == paymentPlanCreated.status, f"Plan {i} differs"
         assert len(paymentPlan.payment_action) == len(paymentPlanCreated.payment_action), f"Plan {i} differs"
@@ -549,7 +549,7 @@ def test_create_payment_plan_end_to_end(paymentTasks, metaData, paymentPlans, ge
                 zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)):
             assert paymentAction.account_id == paymentActionCreated.account_id, f"Action {ii} of plan {i} differs"
             assert abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3, f"Action {ii} of plan {i} differs"
-            assert paymentAction.transaction_date.seconds == paymentActionCreated.transaction_date.seconds, f"Action {ii} of plan {i} differs"
+            assert abs(paymentAction.transaction_date.seconds - paymentActionCreated.transaction_date.seconds) < 2, f"Action {ii} of plan {i} differs"
             assert paymentAction.status == paymentAction.status, f"Action {ii} of plan {i} differs"
 
 
@@ -567,7 +567,7 @@ def test_create_single_payment_plan(userId: str, metaData: MetaData, paymentTask
     assert paymentPlan.plan_type == paymentPlanCreated.plan_type
     print(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
     assert abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment) < 1e-3
-    assert paymentPlan.end_date.seconds == paymentPlanCreated.end_date.seconds
+    assert abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2
     assert paymentPlan.active == paymentPlanCreated.active
     assert paymentPlan.status == paymentPlanCreated.status
     assert len(paymentPlan.payment_action) == len(paymentPlanCreated.payment_action)
@@ -575,7 +575,7 @@ def test_create_single_payment_plan(userId: str, metaData: MetaData, paymentTask
             zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)):
         assert paymentAction.account_id == paymentActionCreated.account_id, f"Action {ii} differs"
         assert abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3, f"Action {ii} differs"
-        assert paymentAction.transaction_date.seconds == paymentActionCreated.transaction_date.seconds, f"Action {ii} differs"
+        assert abs(paymentAction.transaction_date.seconds - paymentActionCreated.transaction_date.seconds) < 2, f"Action {ii} differs"
         assert paymentAction.status == paymentAction.status, f"Action {ii} differs"
 
 

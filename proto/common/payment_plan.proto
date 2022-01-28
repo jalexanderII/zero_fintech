@@ -6,8 +6,6 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 import "common/common.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/field_mask.proto";
-
 
 message PaymentAction {
   // account to which payment shall be made

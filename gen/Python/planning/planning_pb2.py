@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z4github.com/jalexanderII/zero_fintech/gen/Go/planning',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\"F\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask2\xa1\x03\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
+  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\"k\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\x12#\n\tmeta_data\x18\x02 \x01(\x0b\x32\x10.common.MetaData2\xa1\x03\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
   ,
   dependencies=[common_dot_payment__task__pb2.DESCRIPTOR,common_dot_payment__plan__pb2.DESCRIPTOR,])
 
@@ -43,6 +43,13 @@ _CREATEPAYMENTPLANREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='meta_data', full_name='planning.CreatePaymentPlanRequest.meta_data', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -56,10 +63,11 @@ _CREATEPAYMENTPLANREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=91,
-  serialized_end=161,
+  serialized_end=198,
 )
 
 _CREATEPAYMENTPLANREQUEST.fields_by_name['payment_tasks'].message_type = common_dot_payment__task__pb2._PAYMENTTASK
+_CREATEPAYMENTPLANREQUEST.fields_by_name['meta_data'].message_type = common_dot_payment__task__pb2._METADATA
 DESCRIPTOR.message_types_by_name['CreatePaymentPlanRequest'] = _CREATEPAYMENTPLANREQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -80,8 +88,8 @@ _PLANNING = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=164,
-  serialized_end=581,
+  serialized_start=201,
+  serialized_end=618,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreatePaymentPlan',
