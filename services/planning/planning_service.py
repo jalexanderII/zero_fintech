@@ -3,6 +3,8 @@ import os
 import sys
 from concurrent import futures
 
+print('\n'.join(sys.path))
+
 import grpc
 from dotenv import load_dotenv
 from pymongo.collection import Collection
@@ -24,6 +26,7 @@ def serve():
     logger.info('Load .env file')
     load_dotenv()
 
+
     logger.info('Initiate Mongo client and servicer')
     planning_collection: Collection = initiate_mongo_client()
 
@@ -35,6 +38,8 @@ def serve():
     logger.info('Server running')
     server.start()
     server.wait_for_termination()
+
+
 
 
 def run_client():

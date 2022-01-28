@@ -4,14 +4,14 @@ package common;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 
 import "common/common.proto";
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
 
 message PaymentAction {
   // account to which payment shall be made
   string account_id = 1;
   // amount of payment
-  float amount = 2;
+  double amount = 2;
   // Planned date of transaction
   google.protobuf.Timestamp transaction_date = 3;
   // status of payment action
@@ -22,9 +22,9 @@ message PaymentPlan {
   string payment_plan_id = 1;
   string user_id = 2;
   repeated string payment_task_id = 3;
-  float timeline = 4;
+  double timeline = 4;
   common.PaymentFrequency payment_freq = 5;
-  float amount_per_payment = 6;
+  double amount_per_payment = 6;
   common.PlanType plan_type = 7;
   // Expected date the plan should be completed
   google.protobuf.Timestamp end_date = 8;

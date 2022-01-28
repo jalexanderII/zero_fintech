@@ -19,5 +19,6 @@ service Planning {
 
 message CreatePaymentPlanRequest {
     repeated common.PaymentTask payment_tasks = 1;
+    common.MetaData meta_data = 2;
 }
 

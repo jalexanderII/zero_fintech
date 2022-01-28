@@ -8,9 +8,8 @@ from pymongo.collection import Collection
 
 from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT, PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PLAN_TYPE_MIN_FEES, DELETE_STATUS_SUCCESS
-from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest, GetPaymentPlanRequest, ListPaymentPlanRequest
-from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB
-from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
+from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB, PaymentPlan as PaymentPlanPB, \
+    DeletePaymentPlanRequest, GetPaymentPlanRequest, ListPaymentPlanRequest, ListPaymentPlanResponse, UpdatePaymentPlanRequest
 from services.planning.database.database import initiate_mongo_client
 from services.planning.database.models.common import PaymentFrequency as PaymentFrequencyDB
 from services.planning.database.models.common import PlanType as PlanTypeDB
@@ -55,7 +54,7 @@ def test_create_payment_plan(gen_server):
 
 
 def test_get_payment_plan(gen_server):
-    payment_plan_id = '61e8cd4cb97f1108bcd23da9'
+    payment_plan_id = '61e8e60a186cad9b7e6db48f'
     paymentPlanGet = gen_server.GetPaymentPlan(GetPaymentPlanRequest(payment_plan_id=payment_plan_id), context=None)
     assert payment_plan_id == paymentPlanGet.payment_plan_id,\
         f"Plan inserted ID: {payment_plan_id}\nPlan retrieved ID: {paymentPlanGet.payment_plan_id}"
@@ -67,7 +66,7 @@ def test_list_payment_plans(gen_server):
 
 
 def test_update_payment_plan(gen_server):
-    payment_plan_id = '61e8cd4cb97f1108bcd23da9'
+    payment_plan_id = '61e8e60a186cad9b7e6db48f'
     tt = Timestamp()
     pp = PaymentPlanPB(
         payment_plan_id=payment_plan_id,

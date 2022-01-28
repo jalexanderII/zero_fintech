@@ -1,5 +1,6 @@
 import logging
 import sys
+from typing import List
 
 from bson.objectid import ObjectId
 
@@ -7,16 +8,14 @@ from database.models.common import PaymentPlan as PaymentPlanDB
 from pymongo.collection import Collection
 
 from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
-from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanRequest
-from gen.Python.planning.payment_plan_pb2 import DeletePaymentPlanResponse, ListPaymentPlanResponse
-from gen.Python.planning.payment_plan_pb2 import GetPaymentPlanRequest, ListPaymentPlanRequest
-from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
+from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB, GetPaymentPlanRequest, ListPaymentPlanRequest, ListPaymentPlanResponse, \
+    UpdatePaymentPlanRequest, DeletePaymentPlanRequest, DeletePaymentPlanResponse
 from gen.Python.common.payment_task_pb2 import PaymentPlanResponse
-from gen.Python.planning.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest
-from gen.Python.planning.planning_pb2_grpc import PlanningServicer as PlanningServicerPB
-from .payment_plan_builder import PaymentPlanBuilder, payment_plan_builder
-from .utils import paymentPlanDBToPB, paymentPlanPBToDB
+from gen.Python.planning.planning_pb2_grpc import PlanningServicer
+from services.planning.server import payment_plan_builder
+from services.planning.server.payment_plan_builder import PaymentPlanBuilder
+from services.planning.server.utils import paymentPlanPBToDB, paymentPlanDBToPB
 
 logging.basicConfig(
     level=logging.INFO,
@@ -26,7 +25,7 @@ logging.basicConfig(
 logger = logging.getLogger('PlanningServicer')
 
 
-class PlanningServicer(PlanningServicerPB):
+class PlanningServicer(PlanningServicer):
 
     def __init__(self, planning_collection: Collection) -> None:
         self.planning_collection = planning_collection
@@ -35,7 +34,7 @@ class PlanningServicer(PlanningServicerPB):
     def CreatePaymentPlan(self, request: CreatePaymentPlanRequest, context) -> PaymentPlanResponse:
         """ Creates PaymentPlan(s) for given request containing a list of PaymentTasks"""
         logger.info('CreatePaymentPlan called')
-        paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks)
+        paymentPlanListPB = self.payment_plan_builder.createPaymentPlan(request.payment_tasks, request.meta_data)
         for paymentPlanPB in paymentPlanListPB:
             self._createPaymentPlan(paymentPlanPB)
         return PaymentPlanResponse(payment_plans=paymentPlanListPB)
@@ -45,6 +44,8 @@ class PlanningServicer(PlanningServicerPB):
         paymentPlanDB = paymentPlanPBToDB(payment_plan_PB).to_dict()
         new_payment_plan = self.planning_collection.insert_one(paymentPlanDB)
         return new_payment_plan.inserted_id
+
+    # CRUD functionality
 
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, context) -> PaymentPlanPB:
         logger.info('GetPaymentPlan called')
@@ -57,7 +58,7 @@ class PlanningServicer(PlanningServicerPB):
     def ListPaymentPlans(self, request: ListPaymentPlanRequest, context) -> ListPaymentPlanResponse:
         logger.info('ListPaymentPlans called')
         payment_plans = self.planning_collection.find()
-        paymentPlansPB = []
+        paymentPlansPB: List[PaymentPlanPB] = []
         for payment_plan in payment_plans:
             pp_id = payment_plan["_id"]
             paymentPlanDB = PaymentPlanDB().from_dict(payment_plan)
