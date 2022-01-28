@@ -5,13 +5,12 @@ import (
 	"log"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
-	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (s CoreServer) CreatePaymentTask(ctx context.Context, in *core.CreatePaymentTaskRequest) (*common.PaymentTask, error) {
+func (s CoreServer) CreatePaymentTask(ctx context.Context, in *common.CreatePaymentTaskRequest) (*common.PaymentTask, error) {
 	paymentTask := in.GetPaymentTask()
 	newPaymentTask := PaymentTaskPBToDB(paymentTask, primitive.NewObjectID())
 
@@ -23,7 +22,7 @@ func (s CoreServer) CreatePaymentTask(ctx context.Context, in *core.CreatePaymen
 	return paymentTask, nil
 }
 
-func (s CoreServer) GetPaymentTask(ctx context.Context, in *core.GetPaymentTaskRequest) (*common.PaymentTask, error) {
+func (s CoreServer) GetPaymentTask(ctx context.Context, in *common.GetPaymentTaskRequest) (*common.PaymentTask, error) {
 	var paymentTask database.PaymentTask
 	id, err := primitive.ObjectIDFromHex(in.GetId())
 	if err != nil {
@@ -38,7 +37,7 @@ func (s CoreServer) GetPaymentTask(ctx context.Context, in *core.GetPaymentTaskR
 	return PaymentTaskDBToPB(paymentTask), nil
 }
 
-func (s CoreServer) ListPaymentTasks(ctx context.Context, in *core.ListPaymentTaskRequest) (*core.ListPaymentTaskResponse, error) {
+func (s CoreServer) ListPaymentTasks(ctx context.Context, in *common.ListPaymentTaskRequest) (*common.ListPaymentTaskResponse, error) {
 	var results []database.PaymentTask
 	cursor, err := s.PaymentTaskDB.Find(ctx, bson.D{})
 	if err != nil {
@@ -52,10 +51,10 @@ func (s CoreServer) ListPaymentTasks(ctx context.Context, in *core.ListPaymentTa
 	for idx, paymentTask := range results {
 		res[idx] = PaymentTaskDBToPB(paymentTask)
 	}
-	return &core.ListPaymentTaskResponse{PaymentTasks: res}, nil
+	return &common.ListPaymentTaskResponse{PaymentTasks: res}, nil
 }
 
-func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymentTaskRequest) (*common.PaymentTask, error) {
+func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *common.UpdatePaymentTaskRequest) (*common.PaymentTask, error) {
 	paymentTask := in.GetPaymentTask()
 	id, err := primitive.ObjectIDFromHex(in.GetId())
 	if err != nil {
@@ -75,7 +74,7 @@ func (s CoreServer) UpdatePaymentTask(ctx context.Context, in *core.UpdatePaymen
 	}
 	return PaymentTaskDBToPB(payment_task), nil
 }
-func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymentTaskRequest) (*core.DeletePaymentTaskResponse, error) {
+func (s CoreServer) DeletePaymentTask(ctx context.Context, in *common.DeletePaymentTaskRequest) (*common.DeletePaymentTaskResponse, error) {
 	id, err := primitive.ObjectIDFromHex(in.GetId())
 	if err != nil {
 		return nil, err
@@ -90,11 +89,11 @@ func (s CoreServer) DeletePaymentTask(ctx context.Context, in *core.DeletePaymen
 	if err != nil {
 		return nil, err
 	}
-	return &core.DeletePaymentTaskResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
+	return &common.DeletePaymentTaskResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, PaymentTask: PaymentTaskDBToPB(paymentTask)}, nil
 }
 
 // CreateManyPaymentTask - Insert multiple documents at once in the collection.
-func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *core.CreateManyPaymentTaskRequest) (*core.CreateManyPaymentTaskResponse, error) {
+func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *common.CreateManyPaymentTaskRequest) (*common.CreateManyPaymentTaskResponse, error) {
 	// Map struct slice to interface slice as InsertMany accepts interface slice as parameter
 	insertableList := make([]interface{}, len(in.GetPaymentTasks()))
 	for i, v := range in.GetPaymentTasks() {
@@ -114,7 +113,7 @@ func (s CoreServer) CreateManyPaymentTask(ctx context.Context, in *core.CreateMa
 	}
 
 	// Return success without any error.
-	return &core.CreateManyPaymentTaskResponse{PaymentTaskIds: resp}, nil
+	return &common.CreateManyPaymentTaskResponse{PaymentTaskIds: resp}, nil
 }
 
 // PaymentTaskPBToDB converts a PaymentTask proto object to its serialized DB object

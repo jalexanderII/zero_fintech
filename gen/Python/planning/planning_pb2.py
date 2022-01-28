@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z4github.com/jalexanderII/zero_fintech/gen/Go/planning',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\"F\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask2\xf9\x03\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12V\n\x11ModifyPaymentPlan\x12$.common.UpdatePaymentPlanPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
+  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\"F\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask2\xa1\x03\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
   ,
   dependencies=[common_dot_payment__task__pb2.DESCRIPTOR,common_dot_payment__plan__pb2.DESCRIPTOR,])
 
@@ -81,7 +81,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=164,
-  serialized_end=669,
+  serialized_end=581,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreatePaymentPlan',
@@ -94,19 +94,9 @@ _PLANNING = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='ModifyPaymentPlan',
-    full_name='planning.Planning.ModifyPaymentPlan',
-    index=1,
-    containing_service=None,
-    input_type=common_dot_payment__task__pb2._UPDATEPAYMENTPLANPLANREQUEST,
-    output_type=common_dot_payment__task__pb2._PAYMENTPLANRESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
     name='GetPaymentPlan',
     full_name='planning.Planning.GetPaymentPlan',
-    index=2,
+    index=1,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._GETPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._PAYMENTPLAN,
@@ -116,7 +106,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='ListPaymentPlans',
     full_name='planning.Planning.ListPaymentPlans',
-    index=3,
+    index=2,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._LISTPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._LISTPAYMENTPLANRESPONSE,
@@ -126,7 +116,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='UpdatePaymentPlan',
     full_name='planning.Planning.UpdatePaymentPlan',
-    index=4,
+    index=3,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._UPDATEPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._PAYMENTPLAN,
@@ -136,7 +126,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DeletePaymentPlan',
     full_name='planning.Planning.DeletePaymentPlan',
-    index=5,
+    index=4,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._DELETEPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._DELETEPAYMENTPLANRESPONSE,

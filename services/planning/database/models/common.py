@@ -64,7 +64,7 @@ class PaymentAction(betterproto.Message):
     # account to which payment shall be made
     account_id: str = betterproto.string_field(1)
     # amount of payment
-    amount: float = betterproto.double_field(2)
+    amount: float = betterproto.float_field(2)
     # Planned date of transaction
     transaction_date: datetime = betterproto.message_field(3)
     # status of payment action
@@ -76,9 +76,9 @@ class PaymentPlan(betterproto.Message):
     payment_plan_id: str = betterproto.string_field(1)
     user_id: str = betterproto.string_field(2)
     payment_task_id: List[str] = betterproto.string_field(3)
-    timeline: float = betterproto.double_field(4)
+    timeline: float = betterproto.float_field(4)
     payment_freq: "PaymentFrequency" = betterproto.enum_field(5)
-    amount_per_payment: float = betterproto.double_field(6)
+    amount_per_payment: float = betterproto.float_field(6)
     plan_type: "PlanType" = betterproto.enum_field(7)
     # Expected date the plan should be completed
     end_date: datetime = betterproto.message_field(8)
@@ -88,6 +88,7 @@ class PaymentPlan(betterproto.Message):
     status: "PaymentStatus" = betterproto.enum_field(10)
     # payment actions of the plan
     payment_action: List["PaymentAction"] = betterproto.message_field(11)
+
 
 @dataclass
 class PaymentTask(betterproto.Message):
@@ -99,6 +100,7 @@ class PaymentTask(betterproto.Message):
     user_id: str = betterproto.string_field(2)
     account_id: str = betterproto.string_field(4)
     amount: float = betterproto.double_field(5)
+
 
 @dataclass
 class MetaData(betterproto.Message):

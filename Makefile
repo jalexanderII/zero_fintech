@@ -23,3 +23,4 @@ clear_protos_py:
 	rm ./gen/Python/auth/*.py
 	rm ./gen/Python/planning/*.py
 	rm ./gen/Python/core/*.py
+	rm ./services/planning/database/models/*.py

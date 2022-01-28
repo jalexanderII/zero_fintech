@@ -21,11 +21,6 @@ class PlanningStub(object):
                 request_serializer=planning_dot_planning__pb2.CreatePaymentPlanRequest.SerializeToString,
                 response_deserializer=common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
                 )
-        self.ModifyPaymentPlan = channel.unary_unary(
-                '/planning.Planning/ModifyPaymentPlan',
-                request_serializer=common_dot_payment__task__pb2.UpdatePaymentPlanPlanRequest.SerializeToString,
-                response_deserializer=common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
-                )
         self.GetPaymentPlan = channel.unary_unary(
                 '/planning.Planning/GetPaymentPlan',
                 request_serializer=common_dot_payment__plan__pb2.GetPaymentPlanRequest.SerializeToString,
@@ -53,13 +48,6 @@ class PlanningServicer(object):
 
     def CreatePaymentPlan(self, request, context):
         """CreatePaymentPlan accepts a request from Core service with PaymentTasks to create a PaymentPlan for
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ModifyPaymentPlan(self, request, context):
-        """ModifyPaymentPlan accepts a request from Core service with user MetaData to modify an existing Payment Plan
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -96,11 +84,6 @@ def add_PlanningServicer_to_server(servicer, server):
             'CreatePaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.CreatePaymentPlan,
                     request_deserializer=planning_dot_planning__pb2.CreatePaymentPlanRequest.FromString,
-                    response_serializer=common_dot_payment__task__pb2.PaymentPlanResponse.SerializeToString,
-            ),
-            'ModifyPaymentPlan': grpc.unary_unary_rpc_method_handler(
-                    servicer.ModifyPaymentPlan,
-                    request_deserializer=common_dot_payment__task__pb2.UpdatePaymentPlanPlanRequest.FromString,
                     response_serializer=common_dot_payment__task__pb2.PaymentPlanResponse.SerializeToString,
             ),
             'GetPaymentPlan': grpc.unary_unary_rpc_method_handler(
@@ -146,23 +129,6 @@ class Planning(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/planning.Planning/CreatePaymentPlan',
             planning_dot_planning__pb2.CreatePaymentPlanRequest.SerializeToString,
-            common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ModifyPaymentPlan(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/planning.Planning/ModifyPaymentPlan',
-            common_dot_payment__task__pb2.UpdatePaymentPlanPlanRequest.SerializeToString,
             common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

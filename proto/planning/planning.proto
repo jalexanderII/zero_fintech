@@ -9,8 +9,6 @@ import "common/payment_plan.proto";
 service Planning {
     // CreatePaymentPlan accepts a request from Core service with PaymentTasks to create a PaymentPlan for
     rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (common.PaymentPlanResponse);
-    // ModifyPaymentPlan accepts a request from Core service with user MetaData to modify an existing Payment Plan
-    rpc ModifyPaymentPlan(common.UpdatePaymentPlanPlanRequest) returns (common.PaymentPlanResponse);
 
     //  CRUD METHODS
     rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);

@@ -34,30 +34,30 @@ func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collect
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {
 	// create payment task from user inputs
-	payment_tasks := make([]*common.PaymentTask, len(in.GetAccountInfo()))
+	paymentTasks := make([]*common.PaymentTask, len(in.GetAccountInfo()))
 	for idx, item := range in.GetAccountInfo() {
 		task := &common.PaymentTask{
 			UserId:    in.UserId,
 			AccountId: item.AccountId,
 			Amount:    item.Amount,
 		}
-		payment_tasks[idx] = task
+		paymentTasks[idx] = task
 	}
 
 	// save payment tasks to DB
-	listOfIds, err := s.CreateManyPaymentTask(ctx, &core.CreateManyPaymentTaskRequest{PaymentTasks: payment_tasks})
+	listOfIds, err := s.CreateManyPaymentTask(ctx, &common.CreateManyPaymentTaskRequest{PaymentTasks: paymentTasks})
 	if err != nil {
 		s.l.Error("[PaymentTask] Error creating PaymentTasks", "error", err)
 		return nil, err
 	}
 
 	for idx, id := range listOfIds.GetPaymentTaskIds() {
-		pt, _ := s.GetPaymentTask(ctx, &core.GetPaymentTaskRequest{Id: id})
-		payment_tasks[idx] = pt
+		pt, _ := s.GetPaymentTask(ctx, &common.GetPaymentTaskRequest{Id: id})
+		paymentTasks[idx] = pt
 	}
 
 	// send payment tasks to planning to get payment plans
-	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: payment_tasks})
+	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: paymentTasks})
 	if err != nil {
 		return nil, err
 	}
