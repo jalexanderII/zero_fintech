@@ -45,7 +45,9 @@ logging.basicConfig(
 logger = logging.getLogger("PaymentPlanBuilder")
 
 load_dotenv()
-CORE_CLIENT = CoreStub(grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}'))
+CORE_CLIENT = CoreStub(
+    grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
+)
 
 
 @define
@@ -56,7 +58,7 @@ class PaymentPlanBuilder:
         self, payment_tasks: List[PaymentTask], meta_data: Optional[MetaData] = None
     ) -> List[PaymentPlan]:
         """Creates a PaymentPlan given a list of PaymentTasks"""
-        user_id: str = payment_tasks[-1].user_id
+        user_id: str = payment_tasks[0].user_id
         payment_task_ids: List[str] = []
         account_ids: List[str] = []
         amounts: List[float] = []
@@ -75,7 +77,9 @@ class PaymentPlanBuilder:
                 account_ids=account_ids,
                 amounts=amounts,
             )
-            for meta_data in self._get_meta_data_options(meta_data, sum(amounts) > 250.0)
+            for meta_data in self._get_meta_data_options(
+                meta_data, sum(amounts) > 250.0
+            )
         ]
 
     @staticmethod
@@ -95,8 +99,14 @@ class PaymentPlanBuilder:
             plan_type = meta_data.preferred_plan_type
             timeline_months = meta_data.preferred_timeline_in_months
             payment_freq = meta_data.preferred_payment_freq
-            plan_type_options = [plan_type] if plan_type != PLAN_TYPE_UNKNOWN else plan_type_options
-            freq_options = [payment_freq] if payment_freq != PAYMENT_FREQUENCY_UNKNOWN else freq_options
+            plan_type_options = (
+                [plan_type] if plan_type != PLAN_TYPE_UNKNOWN else plan_type_options
+            )
+            freq_options = (
+                [payment_freq]
+                if payment_freq != PAYMENT_FREQUENCY_UNKNOWN
+                else freq_options
+            )
 
         payment_freq_to_timeline_options: Dict[PaymentFrequency, List[float]] = {
             PAYMENT_FREQUENCY_UNKNOWN: [3.0, 6.0, 12.0] if gt_threshold else [1.0],
@@ -133,6 +143,8 @@ class PaymentPlanBuilder:
         amounts: List[float],
     ) -> PaymentPlan:
         """Creates a PaymentPlan for given choices of MetaData."""
+        # TODO (JB): I think this should be pulled out as some form of
+        #  validation function and prob run before this is called
         if plan_type == PLAN_TYPE_UNKNOWN:
             raise ValueError("Using PLAN_TYPE_UNKNOWN not permitted")
         elif timeline_months <= 0:
@@ -179,6 +191,7 @@ class PaymentPlanBuilder:
         amount_per_payment = sum(amounts) / num_payments
         amount_per_payment = round(ceil(amount_per_payment * 100) / 100, 2)
 
+        # TODO (JB): This these cases can be made into two separate functions with minimal code repetition
         if plan_type == PLAN_TYPE_MIN_FEES:
             df.sort_values("apr", ascending=False)
             account_ids = df["account_id"].values.tolist()

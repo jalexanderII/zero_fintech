@@ -4,11 +4,20 @@ from typing import List
 from google.protobuf.timestamp_pb2 import Timestamp
 from pytest_cases import parametrize_with_cases, case, fixture as cases_fixture
 
-from gen.Python.common.common_pb2 import PLAN_TYPE_MIN_FEES, PAYMENT_FREQUENCY_MONTHLY, \
-    PAYMENT_FREQUENCY_UNKNOWN, PLAN_TYPE_OPTIM_CREDIT_SCORE, PLAN_TYPE_UNKNOWN, PAYMENT_ACTION_STATUS_PENDING, \
-    PAYMENT_FREQUENCY_BIWEEKLY, PAYMENT_FREQUENCY_QUARTERLY, PAYMENT_STATUS_CURRENT
+from gen.Python.common.common_pb2 import PAYMENT_ACTION_STATUS_PENDING
+from gen.Python.common.common_pb2 import (
+    PAYMENT_FREQUENCY_MONTHLY,
+    PAYMENT_FREQUENCY_UNKNOWN,
+    PAYMENT_FREQUENCY_BIWEEKLY,
+    PAYMENT_FREQUENCY_QUARTERLY,
+)
+from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT
+from gen.Python.common.common_pb2 import (
+    PLAN_TYPE_MIN_FEES,
+    PLAN_TYPE_OPTIM_CREDIT_SCORE,
+    PLAN_TYPE_UNKNOWN,
+)
 from gen.Python.common.common_pb2 import PaymentFrequency
-from gen.Python.common.common_pb2 import PaymentStatus
 from gen.Python.common.payment_plan_pb2 import PaymentPlan, PaymentAction
 from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
@@ -22,7 +31,7 @@ def gen_payment_plan_builder() -> PaymentPlanBuilder:
 
 
 def shift_now_by_payment_frequency_multiple_times(
-        paymentFreq: PaymentFrequency, howOften: int
+    paymentFreq: PaymentFrequency, howOften: int
 ) -> Timestamp:
     """Helper function to shift current date/now by PaymentFrequency multiple times."""
     date = datetime.datetime.now()
@@ -31,6 +40,8 @@ def shift_now_by_payment_frequency_multiple_times(
     return datetime_to_pb_timestamp(date)
 
 
+# TODO (JB): Need to create a mock to return a example list of Accounts, so you are not calling the core Client.
+#  See https://stackoverflow.com/questions/18191275/using-pythons-mock-patch-object-to-change-the-return-value-of-a-method-called-w
 class Cases:
     user_id = "61df93c0ac601d1be8e64613"
     accName2Id = {
@@ -730,11 +741,9 @@ class Cases:
     "paymentTasks, metaData, paymentPlans", cases=Cases, has_tag="end_to_end"
 )
 def test_create_payment_plan_end_to_end(
-        paymentTasks, metaData, paymentPlans, gen_payment_plan_builder
+    paymentTasks, metaData, paymentPlans, gen_payment_plan_builder
 ):
-    paymentPlansCreated = gen_payment_plan_builder.create(
-        paymentTasks, metaData
-    )
+    paymentPlansCreated = gen_payment_plan_builder.create(paymentTasks, metaData)
 
     assert len(paymentPlans) == len(paymentPlansCreated), (
         f"Tests asks for {len(paymentPlans)} but"
@@ -742,7 +751,7 @@ def test_create_payment_plan_end_to_end(
     )
 
     for i, (paymentPlan, paymentPlanCreated) in enumerate(
-            zip(paymentPlans, paymentPlansCreated)
+        zip(paymentPlans, paymentPlansCreated)
     ):
         assert paymentPlan.user_id == paymentPlanCreated.user_id, f"Plan {i} differs"
         assert sorted(paymentPlan.payment_task_id) == sorted(
@@ -750,17 +759,17 @@ def test_create_payment_plan_end_to_end(
         ), f"Plan {i} differs"
         assert paymentPlan.timeline == paymentPlanCreated.timeline, f"Plan {i} differs"
         assert (
-                paymentPlan.payment_freq == paymentPlanCreated.payment_freq
+            paymentPlan.payment_freq == paymentPlanCreated.payment_freq
         ), f"Plan {i} differs"
         assert (
-                paymentPlan.plan_type == paymentPlanCreated.plan_type
+            paymentPlan.plan_type == paymentPlanCreated.plan_type
         ), f"Plan {i} differs"
         assert (
-                abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
-                < 1e-3
+            abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
+            < 1e-3
         ), f"Plan {i} differs"
         assert (
-                abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2
+            abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2
         ), f"Plan {i} differs"
         assert paymentPlan.active == paymentPlanCreated.active, f"Plan {i} differs"
         assert paymentPlan.status == paymentPlanCreated.status, f"Plan {i} differs"
@@ -768,16 +777,16 @@ def test_create_payment_plan_end_to_end(
             paymentPlanCreated.payment_action
         ), f"Plan {i} differs"
         for ii, (paymentAction, paymentActionCreated) in enumerate(
-                zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)
+            zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)
         ):
             assert (
-                    paymentAction.account_id == paymentActionCreated.account_id
+                paymentAction.account_id == paymentActionCreated.account_id
             ), f"Action {ii} of plan {i} differs"
             assert (
-                    abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3
+                abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3
             ), f"Action {ii} of plan {i} differs"
             assert (
-                    paymentAction.status == paymentAction.status
+                paymentAction.status == paymentAction.status
             ), f"Action {ii} of plan {i} differs"
 
 
@@ -787,13 +796,13 @@ def test_create_payment_plan_end_to_end(
     has_tag="create_single_payment_plan",
 )
 def test_create_single_payment_plan(
-        userId: str,
-        metaData: MetaData,
-        paymentTaskIds: List[str],
-        accountIds: List[str],
-        amounts: List[float],
-        paymentPlan: PaymentPlan,
-        gen_payment_plan_builder,
+    userId: str,
+    metaData: MetaData,
+    paymentTaskIds: List[str],
+    accountIds: List[str],
+    amounts: List[float],
+    paymentPlan: PaymentPlan,
+    gen_payment_plan_builder,
 ):
     paymentPlanCreated = gen_payment_plan_builder._create_from_meta_data(
         user_id=userId,
@@ -814,28 +823,28 @@ def test_create_single_payment_plan(
     assert paymentPlan.plan_type == paymentPlanCreated.plan_type
     print(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
     assert (
-            abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
-            < 1e-3
+        abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
+        < 1e-3
     )
     assert abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2
     assert paymentPlan.active == paymentPlanCreated.active
     assert paymentPlan.status == paymentPlanCreated.status
     assert len(paymentPlan.payment_action) == len(paymentPlanCreated.payment_action)
     for ii, (paymentAction, paymentActionCreated) in enumerate(
-            zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)
+        zip(paymentPlan.payment_action, paymentPlanCreated.payment_action)
     ):
         assert (
-                paymentAction.account_id == paymentActionCreated.account_id
+            paymentAction.account_id == paymentActionCreated.account_id
         ), f"Action {ii} differs"
         assert (
-                abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3
+            abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3
         ), f"Action {ii} differs"
         assert (
-                abs(
-                    paymentAction.transaction_date.seconds
-                    - paymentActionCreated.transaction_date.seconds
-                )
-                < 2
+            abs(
+                paymentAction.transaction_date.seconds
+                - paymentActionCreated.transaction_date.seconds
+            )
+            < 2
         ), f"Action {ii} differs"
         assert paymentAction.status == paymentAction.status, f"Action {ii} differs"
 
@@ -844,10 +853,10 @@ def test_create_single_payment_plan(
     "metaData, totalAmount, metaDataOptions", cases=Cases, has_tag="meta_data_options"
 )
 def test_create_meta_data_options(
-        metaData: MetaData,
-        totalAmount: float,
-        metaDataOptions: List[MetaData],
-        gen_payment_plan_builder,
+    metaData: MetaData,
+    totalAmount: float,
+    metaDataOptions: List[MetaData],
+    gen_payment_plan_builder,
 ):
     metaDataOptionsCreated = gen_payment_plan_builder._get_meta_data_options(
         metaData, totalAmount > 250.0
@@ -858,15 +867,15 @@ def test_create_meta_data_options(
         f"{len(metaDataOptionsCreated)} were created"
     )
     for i, (metaData, metaDataCreated) in enumerate(
-            zip(metaDataOptions, metaDataOptionsCreated)
+        zip(metaDataOptions, metaDataOptionsCreated)
     ):
         assert (
-                metaData.preferred_plan_type == metaDataCreated.preferred_plan_type
+            metaData.preferred_plan_type == metaDataCreated.preferred_plan_type
         ), f"MetaData {i} differs"
         assert (
-                metaData.preferred_timeline_in_months
-                == metaDataCreated.preferred_timeline_in_months
+            metaData.preferred_timeline_in_months
+            == metaDataCreated.preferred_timeline_in_months
         ), f"MetaData {i} differs"
         assert (
-                metaData.preferred_payment_freq == metaDataCreated.preferred_payment_freq
+            metaData.preferred_payment_freq == metaDataCreated.preferred_payment_freq
         ), f"MetaData {i} differs"
