@@ -119,4 +119,3 @@ class AccountInfo(betterproto.Message):
     transaction_ids: List[str] = betterproto.string_field(1)
     account_id: str = betterproto.string_field(2)
     amount: float = betterproto.double_field(3)
-

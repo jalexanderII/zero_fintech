@@ -4,7 +4,6 @@ package common;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 
 import "common/common.proto";
-import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 
 message PaymentAction {
@@ -50,7 +49,6 @@ message ListPaymentPlanResponse {
 message UpdatePaymentPlanRequest {
   string payment_plan_id = 1;
   PaymentPlan payment_plan = 2;
-  google.protobuf.FieldMask mask = 3;
 }
 
 message DeletePaymentPlanRequest {

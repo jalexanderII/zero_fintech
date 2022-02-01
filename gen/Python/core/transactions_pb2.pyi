@@ -5,7 +5,6 @@ isort:skip_file
 import builtins
 import common.common_pb2
 import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.message
 import google.protobuf.timestamp_pb2
@@ -114,20 +113,16 @@ class UpdateTransactionRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     ID_FIELD_NUMBER: builtins.int
     TRANSACTION_FIELD_NUMBER: builtins.int
-    MASK_FIELD_NUMBER: builtins.int
     id: typing.Text = ...
     @property
     def transaction(self) -> global___Transaction: ...
-    @property
-    def mask(self) -> google.protobuf.field_mask_pb2.FieldMask: ...
     def __init__(self,
         *,
         id : typing.Text = ...,
         transaction : typing.Optional[global___Transaction] = ...,
-        mask : typing.Optional[google.protobuf.field_mask_pb2.FieldMask] = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["mask",b"mask","transaction",b"transaction"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","mask",b"mask","transaction",b"transaction"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["transaction",b"transaction"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","transaction",b"transaction"]) -> None: ...
 global___UpdateTransactionRequest = UpdateTransactionRequest
 
 class DeleteTransactionRequest(google.protobuf.message.Message):

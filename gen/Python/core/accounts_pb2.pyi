@@ -5,7 +5,6 @@ isort:skip_file
 import builtins
 import common.common_pb2
 import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
@@ -197,20 +196,16 @@ class UpdateAccountRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     ID_FIELD_NUMBER: builtins.int
     ACCOUNT_FIELD_NUMBER: builtins.int
-    MASK_FIELD_NUMBER: builtins.int
     id: typing.Text = ...
     @property
     def account(self) -> global___Account: ...
-    @property
-    def mask(self) -> google.protobuf.field_mask_pb2.FieldMask: ...
     def __init__(self,
         *,
         id : typing.Text = ...,
         account : typing.Optional[global___Account] = ...,
-        mask : typing.Optional[google.protobuf.field_mask_pb2.FieldMask] = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["account",b"account","mask",b"mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account",b"account","id",b"id","mask",b"mask"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["account",b"account"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["account",b"account","id",b"id"]) -> None: ...
 global___UpdateAccountRequest = UpdateAccountRequest
 
 class DeleteAccountRequest(google.protobuf.message.Message):

@@ -6,7 +6,6 @@ import builtins
 import common.common_pb2
 import common.payment_plan_pb2
 import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.message
 import typing
@@ -95,20 +94,16 @@ class UpdatePaymentTaskRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     ID_FIELD_NUMBER: builtins.int
     PAYMENT_TASK_FIELD_NUMBER: builtins.int
-    MASK_FIELD_NUMBER: builtins.int
     id: typing.Text = ...
     @property
     def payment_task(self) -> global___PaymentTask: ...
-    @property
-    def mask(self) -> google.protobuf.field_mask_pb2.FieldMask: ...
     def __init__(self,
         *,
         id : typing.Text = ...,
         payment_task : typing.Optional[global___PaymentTask] = ...,
-        mask : typing.Optional[google.protobuf.field_mask_pb2.FieldMask] = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["mask",b"mask","payment_task",b"payment_task"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","mask",b"mask","payment_task",b"payment_task"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["payment_task",b"payment_task"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","payment_task",b"payment_task"]) -> None: ...
 global___UpdatePaymentTaskRequest = UpdatePaymentTaskRequest
 
 class DeletePaymentTaskRequest(google.protobuf.message.Message):

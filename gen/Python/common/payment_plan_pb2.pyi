@@ -5,7 +5,6 @@ isort:skip_file
 import builtins
 import common.common_pb2
 import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.message
 import google.protobuf.timestamp_pb2
@@ -131,20 +130,16 @@ class UpdatePaymentPlanRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     PAYMENT_PLAN_ID_FIELD_NUMBER: builtins.int
     PAYMENT_PLAN_FIELD_NUMBER: builtins.int
-    MASK_FIELD_NUMBER: builtins.int
     payment_plan_id: typing.Text = ...
     @property
     def payment_plan(self) -> global___PaymentPlan: ...
-    @property
-    def mask(self) -> google.protobuf.field_mask_pb2.FieldMask: ...
     def __init__(self,
         *,
         payment_plan_id : typing.Text = ...,
         payment_plan : typing.Optional[global___PaymentPlan] = ...,
-        mask : typing.Optional[google.protobuf.field_mask_pb2.FieldMask] = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["mask",b"mask","payment_plan",b"payment_plan"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["mask",b"mask","payment_plan",b"payment_plan","payment_plan_id",b"payment_plan_id"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["payment_plan",b"payment_plan"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["payment_plan",b"payment_plan","payment_plan_id",b"payment_plan_id"]) -> None: ...
 global___UpdatePaymentPlanRequest = UpdatePaymentPlanRequest
 
 class DeletePaymentPlanRequest(google.protobuf.message.Message):
