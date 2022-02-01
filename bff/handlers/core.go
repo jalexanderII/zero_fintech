@@ -24,7 +24,7 @@ type PaymentTask struct {
 
 type PaymentAction struct {
 	AccountId       string    `json:"account_id,omitempty"`
-	Amount          float32   `json:"amount,omitempty"`
+	Amount          float64   `json:"amount,omitempty"`
 	TransactionDate time.Time `json:"transaction_date,omitempty"`
 	Status          int32     `json:"status,omitempty"`
 }
@@ -33,9 +33,9 @@ type PaymentPlan struct {
 	PaymentPlanId    string           `json:"payment_plan_id,omitempty"`
 	UserId           string           `json:"user_id,omitempty"`
 	PaymentTaskId    []string         `json:"payment_task_id,omitempty"`
-	Timeline         float32          `json:"timeline,omitempty"`
+	Timeline         float64          `json:"timeline,omitempty"`
 	PaymentFreq      int32            `json:"payment_freq,omitempty"`
-	AmountPerPayment float32          `json:"amount_per_payment,omitempty"`
+	AmountPerPayment float64          `json:"amount_per_payment,omitempty"`
 	PlanType         int32            `json:"plan_type,omitempty"`
 	EndDate          time.Time        `json:"end_date,omitempty"`
 	Active           bool             `json:"active,omitempty"`

@@ -70,7 +70,7 @@ func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}
-	if paymentPlans.PaymentPlans[0].Timeline != 12 {
+	if paymentPlans.PaymentPlans[0].Timeline != 3 {
 		t.Errorf("2: Error creating payment plan from DB response: %v", paymentPlans)
 	}
 	if len(paymentPlans.PaymentPlans[0].PaymentTaskId) != 2 {
