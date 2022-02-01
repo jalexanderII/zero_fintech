@@ -12,7 +12,6 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
-from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 from common import common_pb2 as common_dot_common__pb2
 
 
@@ -22,9 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x13\x63ommon/common.proto\"\xda\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12.\n\ncreated_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12;\n\x16\x61nnual_percentage_rate\x18\x05 \x01(\x0b\x32\x1b.core.AnnualPercentageRates\x12%\n\x0bpenalty_apr\x18\x06 \x01(\x0b\x32\x10.core.PenaltyAPR\x12\x0f\n\x07\x64ue_day\x18\x07 \x01(\x05\x12\x1f\n\x17minimum_interest_charge\x18\x08 \x01(\x01\x12\x1a\n\x12\x61nnual_account_fee\x18\t \x01(\x01\x12\x1f\n\x17\x66oreign_transaction_fee\x18\n \x01(\x01\x12/\n\x10promotional_rate\x18\x0b \x01(\x0b\x32\x15.core.PromotionalRate\x12\x1b\n\x13minimum_payment_due\x18\x0c \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\r \x01(\x01\x12\x1c\n\x14pending_transactions\x18\x0e \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\x0f \x01(\x01\":\n\x15\x41nnualPercentageRates\x12\x0f\n\x07low_end\x18\x01 \x01(\x01\x12\x10\n\x08high_end\x18\x02 \x01(\x01\"\xa7\x01\n\nPenaltyAPR\x12\x13\n\x0bpenalty_apr\x18\x01 \x01(\x01\x12\x36\n\x0epenalty_reason\x18\x02 \x01(\x0e\x32\x1e.core.PenaltyAPR.PenaltyReason\"L\n\rPenaltyReason\x12\x1a\n\x16PENALTY_REASON_UNKNOWN\x10\x00\x12\x1f\n\x1bPENALTY_REASON_LATE_PAYMENT\x10\x01\"]\n\x0fPromotionalRate\x12\x15\n\rtemporary_apr\x18\x01 \x01(\x01\x12\x33\n\x0f\x65xpiration_date\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"l\n\x14UpdateAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x1e\n\x07\x61\x63\x63ount\x18\x02 \x01(\x0b\x32\r.core.Account\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"\"\n\x14\x44\x65leteAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x12ListAccountRequest\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.Account\"^\n\x15\x44\x65leteAccountResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x1e\n\x07\x61\x63\x63ount\x18\x02 \x01(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
+  serialized_pb=b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13\x63ommon/common.proto\"\xda\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12.\n\ncreated_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12;\n\x16\x61nnual_percentage_rate\x18\x05 \x01(\x0b\x32\x1b.core.AnnualPercentageRates\x12%\n\x0bpenalty_apr\x18\x06 \x01(\x0b\x32\x10.core.PenaltyAPR\x12\x0f\n\x07\x64ue_day\x18\x07 \x01(\x05\x12\x1f\n\x17minimum_interest_charge\x18\x08 \x01(\x01\x12\x1a\n\x12\x61nnual_account_fee\x18\t \x01(\x01\x12\x1f\n\x17\x66oreign_transaction_fee\x18\n \x01(\x01\x12/\n\x10promotional_rate\x18\x0b \x01(\x0b\x32\x15.core.PromotionalRate\x12\x1b\n\x13minimum_payment_due\x18\x0c \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\r \x01(\x01\x12\x1c\n\x14pending_transactions\x18\x0e \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\x0f \x01(\x01\":\n\x15\x41nnualPercentageRates\x12\x0f\n\x07low_end\x18\x01 \x01(\x01\x12\x10\n\x08high_end\x18\x02 \x01(\x01\"\xa7\x01\n\nPenaltyAPR\x12\x13\n\x0bpenalty_apr\x18\x01 \x01(\x01\x12\x36\n\x0epenalty_reason\x18\x02 \x01(\x0e\x32\x1e.core.PenaltyAPR.PenaltyReason\"L\n\rPenaltyReason\x12\x1a\n\x16PENALTY_REASON_UNKNOWN\x10\x00\x12\x1f\n\x1bPENALTY_REASON_LATE_PAYMENT\x10\x01\"]\n\x0fPromotionalRate\x12\x15\n\rtemporary_apr\x18\x01 \x01(\x01\x12\x33\n\x0f\x65xpiration_date\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"B\n\x14UpdateAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x1e\n\x07\x61\x63\x63ount\x18\x02 \x01(\x0b\x32\r.core.Account\"\"\n\x14\x44\x65leteAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x12ListAccountRequest\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.Account\"^\n\x15\x44\x65leteAccountResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x1e\n\x07\x61\x63\x63ount\x18\x02 \x01(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
   ,
-  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,common_dot_common__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,common_dot_common__pb2.DESCRIPTOR,])
 
 
 
@@ -48,8 +47,8 @@ _PENALTYAPR_PENALTYREASON = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=746,
-  serialized_end=822,
+  serialized_start=712,
+  serialized_end=788,
 )
 _sym_db.RegisterEnumDescriptor(_PENALTYAPR_PENALTYREASON)
 
@@ -179,8 +178,8 @@ _ACCOUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=118,
-  serialized_end=592,
+  serialized_start=84,
+  serialized_end=558,
 )
 
 
@@ -218,8 +217,8 @@ _ANNUALPERCENTAGERATES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=594,
-  serialized_end=652,
+  serialized_start=560,
+  serialized_end=618,
 )
 
 
@@ -258,8 +257,8 @@ _PENALTYAPR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=655,
-  serialized_end=822,
+  serialized_start=621,
+  serialized_end=788,
 )
 
 
@@ -297,8 +296,8 @@ _PROMOTIONALRATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=824,
-  serialized_end=917,
+  serialized_start=790,
+  serialized_end=883,
 )
 
 
@@ -329,8 +328,8 @@ _CREATEACCOUNTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=919,
-  serialized_end=973,
+  serialized_start=885,
+  serialized_end=939,
 )
 
 
@@ -361,8 +360,8 @@ _GETACCOUNTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=975,
-  serialized_end=1006,
+  serialized_start=941,
+  serialized_end=972,
 )
 
 
@@ -388,13 +387,6 @@ _UPDATEACCOUNTREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='mask', full_name='core.UpdateAccountRequest.mask', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -407,8 +399,8 @@ _UPDATEACCOUNTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1008,
-  serialized_end=1116,
+  serialized_start=974,
+  serialized_end=1040,
 )
 
 
@@ -439,8 +431,8 @@ _DELETEACCOUNTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1118,
-  serialized_end=1152,
+  serialized_start=1042,
+  serialized_end=1076,
 )
 
 
@@ -464,8 +456,8 @@ _LISTACCOUNTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1154,
-  serialized_end=1174,
+  serialized_start=1078,
+  serialized_end=1098,
 )
 
 
@@ -496,8 +488,8 @@ _LISTACCOUNTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1176,
-  serialized_end=1230,
+  serialized_start=1100,
+  serialized_end=1154,
 )
 
 
@@ -535,8 +527,8 @@ _DELETEACCOUNTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1232,
-  serialized_end=1326,
+  serialized_start=1156,
+  serialized_end=1250,
 )
 
 _ACCOUNT.fields_by_name['created_at'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -548,7 +540,6 @@ _PENALTYAPR_PENALTYREASON.containing_type = _PENALTYAPR
 _PROMOTIONALRATE.fields_by_name['expiration_date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _CREATEACCOUNTREQUEST.fields_by_name['account'].message_type = _ACCOUNT
 _UPDATEACCOUNTREQUEST.fields_by_name['account'].message_type = _ACCOUNT
-_UPDATEACCOUNTREQUEST.fields_by_name['mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
 _LISTACCOUNTRESPONSE.fields_by_name['accounts'].message_type = _ACCOUNT
 _DELETEACCOUNTRESPONSE.fields_by_name['status'].enum_type = common_dot_common__pb2._DELETE_STATUS
 _DELETEACCOUNTRESPONSE.fields_by_name['account'].message_type = _ACCOUNT

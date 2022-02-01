@@ -5,7 +5,6 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 
 import "common/common.proto";
 import "common/payment_plan.proto";
-import "google/protobuf/field_mask.proto";
 
 // PaymentTask encapsulates the payment goals a user has per credit account
 message PaymentTask {
@@ -39,7 +38,6 @@ message GetPaymentTaskRequest {
 message UpdatePaymentTaskRequest {
   string id = 1;
   PaymentTask payment_task = 2;
-  google.protobuf.FieldMask mask = 3;
 }
 
 message DeletePaymentTaskRequest {

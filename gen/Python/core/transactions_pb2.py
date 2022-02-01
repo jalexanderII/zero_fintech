@@ -12,7 +12,6 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
-from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 from common import common_pb2 as common_dot_common__pb2
 
 
@@ -22,9 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17\x63ore/transactions.proto\x12\x04\x63ore\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x13\x63ommon/common.proto\"\xe1\x01\n\x0bTransaction\x12\x16\n\x0etransaction_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12(\n\x04\x64\x61te\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x16\n\x0erewards_earned\x18\x07 \x01(\x05\x12\x35\n\x13transaction_details\x18\x08 \x01(\x0b\x32\x18.core.TransactionDetails\"t\n\x12TransactionDetails\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x19\n\x11\x64oing_business_as\x18\x02 \x01(\t\x12\x32\n\x0e\x64\x61te_processed\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"B\n\x18\x43reateTransactionRequest\x12&\n\x0btransaction\x18\x01 \x01(\x0b\x32\x11.core.Transaction\"#\n\x15GetTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"x\n\x18UpdateTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12&\n\x0btransaction\x18\x02 \x01(\x0b\x32\x11.core.Transaction\x12(\n\x04mask\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"&\n\x18\x44\x65leteTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListTransactionRequest\"B\n\x17ListTransactionResponse\x12\'\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x11.core.Transaction\"j\n\x19\x44\x65leteTransactionResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12&\n\x0btransaction\x18\x02 \x01(\x0b\x32\x11.core.TransactionB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
+  serialized_pb=b'\n\x17\x63ore/transactions.proto\x12\x04\x63ore\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x13\x63ommon/common.proto\"\xe1\x01\n\x0bTransaction\x12\x16\n\x0etransaction_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12(\n\x04\x64\x61te\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x16\n\x0erewards_earned\x18\x07 \x01(\x05\x12\x35\n\x13transaction_details\x18\x08 \x01(\x0b\x32\x18.core.TransactionDetails\"t\n\x12TransactionDetails\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x19\n\x11\x64oing_business_as\x18\x02 \x01(\t\x12\x32\n\x0e\x64\x61te_processed\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"B\n\x18\x43reateTransactionRequest\x12&\n\x0btransaction\x18\x01 \x01(\x0b\x32\x11.core.Transaction\"#\n\x15GetTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"N\n\x18UpdateTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12&\n\x0btransaction\x18\x02 \x01(\x0b\x32\x11.core.Transaction\"&\n\x18\x44\x65leteTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListTransactionRequest\"B\n\x17ListTransactionResponse\x12\'\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x11.core.Transaction\"j\n\x19\x44\x65leteTransactionResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12&\n\x0btransaction\x18\x02 \x01(\x0b\x32\x11.core.TransactionB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
   ,
-  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,common_dot_common__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,common_dot_common__pb2.DESCRIPTOR,])
 
 
 
@@ -105,8 +104,8 @@ _TRANSACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=122,
-  serialized_end=347,
+  serialized_start=88,
+  serialized_end=313,
 )
 
 
@@ -151,8 +150,8 @@ _TRANSACTIONDETAILS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=349,
-  serialized_end=465,
+  serialized_start=315,
+  serialized_end=431,
 )
 
 
@@ -183,8 +182,8 @@ _CREATETRANSACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=467,
-  serialized_end=533,
+  serialized_start=433,
+  serialized_end=499,
 )
 
 
@@ -215,8 +214,8 @@ _GETTRANSACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=535,
-  serialized_end=570,
+  serialized_start=501,
+  serialized_end=536,
 )
 
 
@@ -242,13 +241,6 @@ _UPDATETRANSACTIONREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='mask', full_name='core.UpdateTransactionRequest.mask', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -261,8 +253,8 @@ _UPDATETRANSACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=572,
-  serialized_end=692,
+  serialized_start=538,
+  serialized_end=616,
 )
 
 
@@ -293,8 +285,8 @@ _DELETETRANSACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=694,
-  serialized_end=732,
+  serialized_start=618,
+  serialized_end=656,
 )
 
 
@@ -318,8 +310,8 @@ _LISTTRANSACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=734,
-  serialized_end=758,
+  serialized_start=658,
+  serialized_end=682,
 )
 
 
@@ -350,8 +342,8 @@ _LISTTRANSACTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=760,
-  serialized_end=826,
+  serialized_start=684,
+  serialized_end=750,
 )
 
 
@@ -389,8 +381,8 @@ _DELETETRANSACTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=828,
-  serialized_end=934,
+  serialized_start=752,
+  serialized_end=858,
 )
 
 _TRANSACTION.fields_by_name['date'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -398,7 +390,6 @@ _TRANSACTION.fields_by_name['transaction_details'].message_type = _TRANSACTIONDE
 _TRANSACTIONDETAILS.fields_by_name['date_processed'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _CREATETRANSACTIONREQUEST.fields_by_name['transaction'].message_type = _TRANSACTION
 _UPDATETRANSACTIONREQUEST.fields_by_name['transaction'].message_type = _TRANSACTION
-_UPDATETRANSACTIONREQUEST.fields_by_name['mask'].message_type = google_dot_protobuf_dot_field__mask__pb2._FIELDMASK
 _LISTTRANSACTIONRESPONSE.fields_by_name['transactions'].message_type = _TRANSACTION
 _DELETETRANSACTIONRESPONSE.fields_by_name['status'].enum_type = common_dot_common__pb2._DELETE_STATUS
 _DELETETRANSACTIONRESPONSE.fields_by_name['transaction'].message_type = _TRANSACTION

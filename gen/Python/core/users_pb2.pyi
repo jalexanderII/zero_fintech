@@ -5,7 +5,6 @@ isort:skip_file
 import builtins
 import common.common_pb2
 import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.message
 import typing
@@ -48,20 +47,16 @@ class UpdateUserRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     ID_FIELD_NUMBER: builtins.int
     USER_FIELD_NUMBER: builtins.int
-    MASK_FIELD_NUMBER: builtins.int
     id: typing.Text = ...
     @property
     def user(self) -> global___User: ...
-    @property
-    def mask(self) -> google.protobuf.field_mask_pb2.FieldMask: ...
     def __init__(self,
         *,
         id : typing.Text = ...,
         user : typing.Optional[global___User] = ...,
-        mask : typing.Optional[google.protobuf.field_mask_pb2.FieldMask] = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["mask",b"mask","user",b"user"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","mask",b"mask","user",b"user"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["user",b"user"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","user",b"user"]) -> None: ...
 global___UpdateUserRequest = UpdateUserRequest
 
 class DeleteUserRequest(google.protobuf.message.Message):

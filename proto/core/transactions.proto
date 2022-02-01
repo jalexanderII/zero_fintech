@@ -4,7 +4,6 @@ package core;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/field_mask.proto";
 
 import "common/common.proto";
 
@@ -46,7 +45,6 @@ message GetTransactionRequest {
 message UpdateTransactionRequest {
   string id = 1;
   Transaction transaction = 2;
-  google.protobuf.FieldMask mask = 3;
 }
 
 message DeleteTransactionRequest {
