@@ -1,4 +1,5 @@
 import datetime
+from types import MethodType
 from typing import List
 
 from google.protobuf.timestamp_pb2 import Timestamp
@@ -20,14 +21,74 @@ from gen.Python.common.common_pb2 import (
 from gen.Python.common.common_pb2 import PaymentFrequency
 from gen.Python.common.payment_plan_pb2 import PaymentPlan, PaymentAction
 from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
+from gen.Python.core.accounts_pb2 import GetAccountRequest, Account, AnnualPercentageRates, \
+    PenaltyAPR, PromotionalRate
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.utils import datetime_to_pb_timestamp
 from services.planning.server.utils import shift_date_by_payment_frequency
 
-
 @cases_fixture
 def gen_payment_plan_builder() -> PaymentPlanBuilder:
-    return PaymentPlanBuilder()
+    ppb = PaymentPlanBuilder()
+    ppb.core_client.GetAccount = MethodType(GetAccountMock, ppb)
+    return ppb
+
+def GetAccountMock(ctx, request: GetAccountRequest) -> Account:
+    timestamp = Timestamp()
+    id2account = {
+        '61df9af7f18b94fc44d09fb9': Account(
+            account_id='61df9af7f18b94fc44d09fb9',
+            user_id="61df93c0ac601d1be8e64613",
+            name="Chase",
+            created_at=timestamp.FromSeconds(1642044151),
+            annual_percentage_rate=AnnualPercentageRates(low_end=0.099, high_end=0.296),
+            penalty_apr=PenaltyAPR(penalty_apr=0.4, penalty_reason=PenaltyAPR.PenaltyReason.PENALTY_REASON_LATE_PAYMENT),
+            due_day=5,
+            minimum_interest_charge=1.5,
+            annual_account_fee=500.0,
+            foreign_transaction_fee= 0.15,
+            promotional_rate=PromotionalRate(temporary_apr=1, expiration_date=timestamp.FromSeconds(1642044151)),
+            minimum_payment_due=250.0,
+            current_balance=9000.0,
+            pending_transactions=23.65,
+            credit_limit=25000.0,
+        ),
+        '61df9b621d2c2b15a6e53ec9': Account(
+            account_id='61df9b621d2c2b15a6e53ec9',
+            user_id="61df93c0ac601d1be8e64613",
+            name="Amex",
+            created_at=timestamp.FromSeconds(1642044258),
+            annual_percentage_rate=AnnualPercentageRates(low_end=0.004, high_end=0.196),
+            penalty_apr=PenaltyAPR(penalty_apr=0.53, penalty_reason=PenaltyAPR.PenaltyReason.PENALTY_REASON_LATE_PAYMENT),
+            due_day=1,
+            minimum_interest_charge=1.5,
+            annual_account_fee=500.0,
+            foreign_transaction_fee=0.15,
+            promotional_rate=PromotionalRate(temporary_apr=0.19, expiration_date=timestamp.FromSeconds(1642044258)),
+            minimum_payment_due=300.0,
+            current_balance=10000.0,
+            credit_limit=15000.0,
+        ),
+        '61df9f3397fa9f3b7a9b67a8': Account(
+            account_id='61df9f3397fa9f3b7a9b67a8',
+            user_id="61df93c0ac601d1be8e64613",
+            name="Barclay",
+            created_at=timestamp.FromSeconds(1642045235),
+            annual_percentage_rate=AnnualPercentageRates(low_end=0.23, high_end=0.45),
+            penalty_apr=PenaltyAPR(penalty_apr=0.67, penalty_reason=PenaltyAPR.PenaltyReason.PENALTY_REASON_LATE_PAYMENT),
+            due_day=2,
+            minimum_interest_charge=10.0,
+            # annual_account_fee=,
+            foreign_transaction_fee=0.01,
+            # promotional_rate=PromotionalRate(temporary_apr=, expiration_date=timestamp.FromSeconds()),
+            minimum_payment_due=10.0,
+            current_balance=345.23,
+            pending_transactions=123.99,
+            credit_limit=5000.0,
+        ),
+    }
+
+    return id2account[request.id]
 
 
 def shift_now_by_payment_frequency_multiple_times(
@@ -40,8 +101,6 @@ def shift_now_by_payment_frequency_multiple_times(
     return datetime_to_pb_timestamp(date)
 
 
-# TODO (JB): Need to create a mock to return a example list of Accounts, so you are not calling the core Client.
-#  See https://stackoverflow.com/questions/18191275/using-pythons-mock-patch-object-to-change-the-return-value-of-a-method-called-w
 class Cases:
     user_id = "61df93c0ac601d1be8e64613"
     accName2Id = {
@@ -92,7 +151,7 @@ class Cases:
                             amount=500,
                             status=PAYMENT_ACTION_STATUS_PENDING,
                             transaction_date=shift_now_by_payment_frequency_multiple_times(
-                                PAYMENT_FREQUENCY_MONTHLY, 2
+                                PAYMENT_FREQUENCY_MONTHLY, 1
                             ),
                         ),
                         PaymentAction(
@@ -100,7 +159,7 @@ class Cases:
                             amount=500,
                             status=PAYMENT_ACTION_STATUS_PENDING,
                             transaction_date=shift_now_by_payment_frequency_multiple_times(
-                                PAYMENT_FREQUENCY_MONTHLY, 1
+                                PAYMENT_FREQUENCY_MONTHLY, 2
                             ),
                         ),
                     ],
@@ -769,7 +828,7 @@ def test_create_payment_plan_end_to_end(
             < 1e-3
         ), f"Plan {i} differs"
         assert (
-            abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2
+                paymentPlan.end_date.ToDatetime().date() == paymentPlanCreated.end_date.ToDatetime().date()
         ), f"Plan {i} differs"
         assert paymentPlan.active == paymentPlanCreated.active, f"Plan {i} differs"
         assert paymentPlan.status == paymentPlanCreated.status, f"Plan {i} differs"
@@ -781,6 +840,10 @@ def test_create_payment_plan_end_to_end(
         ):
             assert (
                 paymentAction.account_id == paymentActionCreated.account_id
+            ), f"Action {ii} of plan {i} differs"
+            assert (
+                paymentAction.transaction_date.ToDatetime().date() ==
+                paymentActionCreated.transaction_date.ToDatetime().date()
             ), f"Action {ii} of plan {i} differs"
             assert (
                 abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3
@@ -826,7 +889,7 @@ def test_create_single_payment_plan(
         abs(paymentPlan.amount_per_payment - paymentPlanCreated.amount_per_payment)
         < 1e-3
     )
-    assert abs(paymentPlan.end_date.seconds - paymentPlanCreated.end_date.seconds) < 2
+    assert paymentPlan.end_date.ToDatetime().date() == paymentPlanCreated.end_date.ToDatetime().date()
     assert paymentPlan.active == paymentPlanCreated.active
     assert paymentPlan.status == paymentPlanCreated.status
     assert len(paymentPlan.payment_action) == len(paymentPlanCreated.payment_action)
@@ -840,11 +903,8 @@ def test_create_single_payment_plan(
             abs(paymentAction.amount - paymentActionCreated.amount) < 1e-3
         ), f"Action {ii} differs"
         assert (
-            abs(
-                paymentAction.transaction_date.seconds
-                - paymentActionCreated.transaction_date.seconds
-            )
-            < 2
+                paymentAction.transaction_date.ToDatetime().date() ==
+                paymentActionCreated.transaction_date.ToDatetime().date()
         ), f"Action {ii} differs"
         assert paymentAction.status == paymentAction.status, f"Action {ii} differs"
 

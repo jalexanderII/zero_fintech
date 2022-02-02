@@ -121,6 +121,14 @@ class PaymentPlanBuilder:
             if timeline_months > 0
             else payment_freq_to_timeline_options[payment_freq]
         )
+
+        if PLAN_TYPE_UNKNOWN in plan_type_options:
+            raise ValueError(f"Chosen PlanTypes contains PLAN_TYPE_UNKNOWN: {plan_type_options}")
+        elif len(list(filter(lambda x: x <= 0.0, timeline_options))) > 0:
+            raise ValueError(f"Chosen timeline options contain non-positive values: {timeline_options}")
+        elif PAYMENT_FREQUENCY_UNKNOWN in freq_options:
+            raise ValueError(f"Chosen PaymentFrequency options contains PAYMENT_FREQUENCY_UNKNOWN: {freq_options}")
+
         return [
             MetaData(
                 preferred_plan_type=pref_type,
@@ -143,19 +151,7 @@ class PaymentPlanBuilder:
         amounts: List[float],
     ) -> PaymentPlan:
         """Creates a PaymentPlan for given choices of MetaData."""
-        # TODO (JB): I think this should be pulled out as some form of
-        #  validation function and prob run before this is called
-        if plan_type == PLAN_TYPE_UNKNOWN:
-            raise ValueError("Using PLAN_TYPE_UNKNOWN not permitted")
-        elif timeline_months <= 0:
-            raise ValueError("Need to specify timeline > 0")
-        elif payment_freq == PAYMENT_FREQUENCY_UNKNOWN:
-            raise ValueError("Using PAYMENT_FREQUENCY_UNKNOWN not permitted")
-
-        datePB = Timestamp()
         start_date = datetime.datetime.now()
-
-        payment_actions: List[PaymentAction] = []
 
         balance: List[float] = []
         credit_limit: List[float] = []
@@ -191,82 +187,15 @@ class PaymentPlanBuilder:
         amount_per_payment = sum(amounts) / num_payments
         amount_per_payment = round(ceil(amount_per_payment * 100) / 100, 2)
 
-        # TODO (JB): This these cases can be made into two separate functions with minimal code repetition
+        payment_actions: List[PaymentAction] = []
         if plan_type == PLAN_TYPE_MIN_FEES:
-            df.sort_values("apr", ascending=False)
-            account_ids = df["account_id"].values.tolist()
-            amounts = df["amount"].values.tolist()
-            payment_task_ids = df["payment_task_id"].values.tolist()
-
-            shifted_date = shift_date_by_payment_frequency(start_date, payment_freq)
-            datePB.FromDatetime(shifted_date)
-
-            pay_on_date = 0
-            while len(amounts) > 0:
-                _amount = amounts.pop(0)
-                _accId = account_ids.pop(0)
-                _amountThisDate = min(amount_per_payment - pay_on_date, _amount)
-                _amountNextDates = _amount - _amountThisDate
-                if _amountThisDate > 0:
-                    payment_actions.append(
-                        PaymentAction(
-                            account_id=_accId,
-                            amount=_amountThisDate,
-                            transaction_date=datePB,
-                            status=PAYMENT_ACTION_STATUS_PENDING,
-                        )
-                    )
-                    pay_on_date += _amount
-                if _amountNextDates > 0:
-                    amounts.insert(0, _amountNextDates)
-                    account_ids.insert(0, _accId)
-                    # move to next date
-                    pay_on_date = 0
-                    shifted_date = shift_date_by_payment_frequency(
-                        shifted_date, payment_freq
-                    )
-                    datePB.FromDatetime(shifted_date)
+            payment_actions = self._create_payment_actions_min_fees(payment_freq=payment_freq, df=df,
+                                                                    start_date=start_date,
+                                                                    amount_per_payment=amount_per_payment)
         elif plan_type == PLAN_TYPE_OPTIM_CREDIT_SCORE:
-            df["usage"] = df["balance"] / df["credit_limit"]
-            df = df.sort_values("usage", ascending=False)
-
-            shifted_date = shift_date_by_payment_frequency(start_date, payment_freq)
-            datePB.FromDatetime(shifted_date)
-            pay_on_date = 0
-            while len(df) > 0:
-                # pay off until hit limit for this payment date
-                for _, row in df.iterrows():
-                    _accId = row["account_id"]
-                    _amount = row["amount"]
-                    _balance = row["balance"]
-                    _amountThisDate = min(amount_per_payment - pay_on_date, _amount)
-                    if _amountThisDate == 0:
-                        break
-                    payment_actions.append(
-                        PaymentAction(
-                            account_id=_accId,
-                            amount=_amountThisDate,
-                            transaction_date=datePB,
-                            status=PAYMENT_ACTION_STATUS_PENDING,
-                        )
-                    )
-                    pay_on_date += _amountThisDate
-                    remaining_amount = _amount - _amountThisDate
-                    remaining_balance = _balance - _amountThisDate
-                    df.loc[df["account_id"] == _accId, "amount"] = remaining_amount
-                    df.loc[df["account_id"] == _accId, "balance"] = remaining_balance
-
-                # drop any accounts which don't have any amounts left to pay off
-                df = df.loc[df.amount > 0]
-                # update credit card usage
-                df["usage"] = df["balance"] / df["credit_limit"]
-                df = df.sort_values("usage", ascending=False)
-                # move to next date
-                pay_on_date = 0
-                shifted_date = shift_date_by_payment_frequency(
-                    shifted_date, payment_freq
-                )
-                datePB.FromDatetime(shifted_date)
+            payment_actions = self._create_payment_actions_optim_credit_score(payment_freq=payment_freq,
+                                                                              df=df, start_date=start_date,
+                                                                              amount_per_payment=amount_per_payment)
 
         return PaymentPlan(
             user_id=user_id,
@@ -280,6 +209,108 @@ class PaymentPlanBuilder:
             status=PAYMENT_STATUS_CURRENT,
             payment_action=payment_actions,
         )
+
+    @staticmethod
+    def _create_payment_actions_min_fees(
+            payment_freq: PaymentFrequency,
+            df: pd.DataFrame,
+            start_date: datetime.datetime,
+            amount_per_payment: float
+    ) -> List[PaymentAction]:
+        """ Creates a list of PaymentActions to minimize fees for given freq, start date, amount per payment and
+                DataFrame on the accounts. """
+        payment_actions: List[PaymentAction] = []
+        datePB = Timestamp()
+
+        df.sort_values("apr", ascending=False)
+        account_ids = df["account_id"].values.tolist()
+        amounts = df["amount"].values.tolist()
+
+        shifted_date = shift_date_by_payment_frequency(start_date, payment_freq)
+        datePB.FromDatetime(shifted_date)
+
+        pay_on_date = 0
+        while len(amounts) > 0:
+            _amount = amounts.pop(0)
+            _accId = account_ids.pop(0)
+            _amountThisDate = min(amount_per_payment - pay_on_date, _amount)
+            _amountNextDates = _amount - _amountThisDate
+            if _amountThisDate > 0:
+                payment_actions.append(
+                    PaymentAction(
+                        account_id=_accId,
+                        amount=_amountThisDate,
+                        transaction_date=datePB,
+                        status=PAYMENT_ACTION_STATUS_PENDING,
+                    )
+                )
+                pay_on_date += _amount
+            if _amountNextDates > 0:
+                amounts.insert(0, _amountNextDates)
+                account_ids.insert(0, _accId)
+                # move to next date
+                pay_on_date = 0
+                shifted_date = shift_date_by_payment_frequency(
+                    shifted_date, payment_freq
+                )
+                datePB.FromDatetime(shifted_date)
+
+        return payment_actions
+
+    @staticmethod
+    def _create_payment_actions_optim_credit_score(
+            payment_freq: PaymentFrequency,
+            df: pd.DataFrame,
+            start_date: datetime.datetime,
+            amount_per_payment: float
+    ) -> List[PaymentAction]:
+        """ Creates a list of PaymentActions to optimize credit score for given freq, start date, amount per payment and
+        DataFrame on the accounts. """
+        payment_actions: List[PaymentAction] = []
+        datePB = Timestamp()
+
+        df["usage"] = df["balance"] / df["credit_limit"]
+        df = df.sort_values("usage", ascending=False)
+
+        shifted_date = shift_date_by_payment_frequency(start_date, payment_freq)
+        datePB.FromDatetime(shifted_date)
+        pay_on_date = 0
+        while len(df) > 0:
+            # pay off until hit limit for this payment date
+            for _, row in df.iterrows():
+                _accId = row["account_id"]
+                _amount = row["amount"]
+                _balance = row["balance"]
+                _amountThisDate = min(amount_per_payment - pay_on_date, _amount)
+                if _amountThisDate == 0:
+                    break
+                payment_actions.append(
+                    PaymentAction(
+                        account_id=_accId,
+                        amount=_amountThisDate,
+                        transaction_date=datePB,
+                        status=PAYMENT_ACTION_STATUS_PENDING,
+                    )
+                )
+                pay_on_date += _amountThisDate
+                remaining_amount = _amount - _amountThisDate
+                remaining_balance = _balance - _amountThisDate
+                df.loc[df["account_id"] == _accId, "amount"] = remaining_amount
+                df.loc[df["account_id"] == _accId, "balance"] = remaining_balance
+
+            # drop any accounts which don't have any amounts left to pay off
+            df = df.loc[df.amount > 0]
+            # update credit card usage
+            df["usage"] = df["balance"] / df["credit_limit"]
+            df = df.sort_values("usage", ascending=False)
+            # move to next date
+            pay_on_date = 0
+            shifted_date = shift_date_by_payment_frequency(
+                shifted_date, payment_freq
+            )
+            datePB.FromDatetime(shifted_date)
+
+        return payment_actions
 
 
 def avg_apr(apr: AnnualPercentageRates) -> float:
