@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -13,7 +12,7 @@ import (
 func StartServerWithGracefulShutdown(a *fiber.App) {
 	// Create a channel for idle connections.
 	idleConnsClosed := make(chan struct{})
-	fmt.Println("I am here!!!")
+
 	go func() {
 		sigint := make(chan os.Signal, 1)
 		signal.Notify(sigint, os.Interrupt) // Catch OS signals.
@@ -29,7 +28,7 @@ func StartServerWithGracefulShutdown(a *fiber.App) {
 	}()
 
 	// Run server.
-	if err := a.Listen("0.0.0.0:8080"); err != nil {
+	if err := a.Listen("0.0.0.0:8000"); err != nil {
 		log.Printf("Oops... Server is not running! Reason: %v", err)
 	}
 	<-idleConnsClosed
