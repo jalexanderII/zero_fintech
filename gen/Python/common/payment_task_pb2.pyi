@@ -4,7 +4,6 @@ isort:skip_file
 """
 import builtins
 import common.common_pb2
-import common.payment_plan_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
@@ -33,19 +32,6 @@ class PaymentTask(google.protobuf.message.Message):
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal["account_id",b"account_id","amount",b"amount","payment_task_id",b"payment_task_id","user_id",b"user_id"]) -> None: ...
 global___PaymentTask = PaymentTask
-
-class PaymentPlanResponse(google.protobuf.message.Message):
-    """Response for CreatePaymentPlan"""
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    PAYMENT_PLANS_FIELD_NUMBER: builtins.int
-    @property
-    def payment_plans(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[common.payment_plan_pb2.PaymentPlan]: ...
-    def __init__(self,
-        *,
-        payment_plans : typing.Optional[typing.Iterable[common.payment_plan_pb2.PaymentPlan]] = ...,
-        ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["payment_plans",b"payment_plans"]) -> None: ...
-global___PaymentPlanResponse = PaymentPlanResponse
 
 class MetaData(google.protobuf.message.Message):
     """MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan"""

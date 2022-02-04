@@ -12,7 +12,6 @@ _sym_db = _symbol_database.Default()
 
 
 from common import common_pb2 as common_dot_common__pb2
-from common import payment_plan_pb2 as common_dot_payment__plan__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -21,9 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x19\x63ommon/payment_task.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x19\x63ommon/payment_plan.proto\"[\n\x0bPaymentTask\x12\x17\n\x0fpayment_task_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\"A\n\x13PaymentPlanResponse\x12*\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x13.common.PaymentPlan\"\x99\x01\n\x08MetaData\x12-\n\x13preferred_plan_type\x18\x01 \x01(\x0e\x32\x10.common.PlanType\x12$\n\x1cpreferred_timeline_in_months\x18\x02 \x01(\x01\x12\x38\n\x16preferred_payment_freq\x18\x03 \x01(\x0e\x32\x18.common.PaymentFrequency\"E\n\x18\x43reatePaymentTaskRequest\x12)\n\x0cpayment_task\x18\x01 \x01(\x0b\x32\x13.common.PaymentTask\"#\n\x15GetPaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"Q\n\x18UpdatePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\"&\n\x18\x44\x65letePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentTaskRequest\"E\n\x17ListPaymentTaskResponse\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"m\n\x19\x44\x65letePaymentTaskResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\"J\n\x1c\x43reateManyPaymentTaskRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"9\n\x1d\x43reateManyPaymentTaskResponse\x12\x18\n\x10payment_task_ids\x18\x01 \x03(\tB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
+  serialized_pb=b'\n\x19\x63ommon/payment_task.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\"[\n\x0bPaymentTask\x12\x17\n\x0fpayment_task_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x12\n\naccount_id\x18\x04 \x01(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\"\x99\x01\n\x08MetaData\x12-\n\x13preferred_plan_type\x18\x01 \x01(\x0e\x32\x10.common.PlanType\x12$\n\x1cpreferred_timeline_in_months\x18\x02 \x01(\x01\x12\x38\n\x16preferred_payment_freq\x18\x03 \x01(\x0e\x32\x18.common.PaymentFrequency\"E\n\x18\x43reatePaymentTaskRequest\x12)\n\x0cpayment_task\x18\x01 \x01(\x0b\x32\x13.common.PaymentTask\"#\n\x15GetPaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"Q\n\x18UpdatePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\"&\n\x18\x44\x65letePaymentTaskRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentTaskRequest\"E\n\x17ListPaymentTaskResponse\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"m\n\x19\x44\x65letePaymentTaskResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12)\n\x0cpayment_task\x18\x02 \x01(\x0b\x32\x13.common.PaymentTask\"J\n\x1c\x43reateManyPaymentTaskRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\"9\n\x1d\x43reateManyPaymentTaskResponse\x12\x18\n\x10payment_task_ids\x18\x01 \x03(\tB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
   ,
-  dependencies=[common_dot_common__pb2.DESCRIPTOR,common_dot_payment__plan__pb2.DESCRIPTOR,])
+  dependencies=[common_dot_common__pb2.DESCRIPTOR,])
 
 
 
@@ -76,40 +75,8 @@ _PAYMENTTASK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=85,
-  serialized_end=176,
-)
-
-
-_PAYMENTPLANRESPONSE = _descriptor.Descriptor(
-  name='PaymentPlanResponse',
-  full_name='common.PaymentPlanResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='payment_plans', full_name='common.PaymentPlanResponse.payment_plans', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=178,
-  serialized_end=243,
+  serialized_start=58,
+  serialized_end=149,
 )
 
 
@@ -154,8 +121,8 @@ _METADATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=246,
-  serialized_end=399,
+  serialized_start=152,
+  serialized_end=305,
 )
 
 
@@ -186,8 +153,8 @@ _CREATEPAYMENTTASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=401,
-  serialized_end=470,
+  serialized_start=307,
+  serialized_end=376,
 )
 
 
@@ -218,8 +185,8 @@ _GETPAYMENTTASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=472,
-  serialized_end=507,
+  serialized_start=378,
+  serialized_end=413,
 )
 
 
@@ -257,8 +224,8 @@ _UPDATEPAYMENTTASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=509,
-  serialized_end=590,
+  serialized_start=415,
+  serialized_end=496,
 )
 
 
@@ -289,8 +256,8 @@ _DELETEPAYMENTTASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=592,
-  serialized_end=630,
+  serialized_start=498,
+  serialized_end=536,
 )
 
 
@@ -314,8 +281,8 @@ _LISTPAYMENTTASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=632,
-  serialized_end=656,
+  serialized_start=538,
+  serialized_end=562,
 )
 
 
@@ -346,8 +313,8 @@ _LISTPAYMENTTASKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=658,
-  serialized_end=727,
+  serialized_start=564,
+  serialized_end=633,
 )
 
 
@@ -385,8 +352,8 @@ _DELETEPAYMENTTASKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=729,
-  serialized_end=838,
+  serialized_start=635,
+  serialized_end=744,
 )
 
 
@@ -417,8 +384,8 @@ _CREATEMANYPAYMENTTASKREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=840,
-  serialized_end=914,
+  serialized_start=746,
+  serialized_end=820,
 )
 
 
@@ -449,11 +416,10 @@ _CREATEMANYPAYMENTTASKRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=916,
-  serialized_end=973,
+  serialized_start=822,
+  serialized_end=879,
 )
 
-_PAYMENTPLANRESPONSE.fields_by_name['payment_plans'].message_type = common_dot_payment__plan__pb2._PAYMENTPLAN
 _METADATA.fields_by_name['preferred_plan_type'].enum_type = common_dot_common__pb2._PLANTYPE
 _METADATA.fields_by_name['preferred_payment_freq'].enum_type = common_dot_common__pb2._PAYMENTFREQUENCY
 _CREATEPAYMENTTASKREQUEST.fields_by_name['payment_task'].message_type = _PAYMENTTASK
@@ -463,7 +429,6 @@ _DELETEPAYMENTTASKRESPONSE.fields_by_name['status'].enum_type = common_dot_commo
 _DELETEPAYMENTTASKRESPONSE.fields_by_name['payment_task'].message_type = _PAYMENTTASK
 _CREATEMANYPAYMENTTASKREQUEST.fields_by_name['payment_tasks'].message_type = _PAYMENTTASK
 DESCRIPTOR.message_types_by_name['PaymentTask'] = _PAYMENTTASK
-DESCRIPTOR.message_types_by_name['PaymentPlanResponse'] = _PAYMENTPLANRESPONSE
 DESCRIPTOR.message_types_by_name['MetaData'] = _METADATA
 DESCRIPTOR.message_types_by_name['CreatePaymentTaskRequest'] = _CREATEPAYMENTTASKREQUEST
 DESCRIPTOR.message_types_by_name['GetPaymentTaskRequest'] = _GETPAYMENTTASKREQUEST
@@ -482,13 +447,6 @@ PaymentTask = _reflection.GeneratedProtocolMessageType('PaymentTask', (_message.
   # @@protoc_insertion_point(class_scope:common.PaymentTask)
   })
 _sym_db.RegisterMessage(PaymentTask)
-
-PaymentPlanResponse = _reflection.GeneratedProtocolMessageType('PaymentPlanResponse', (_message.Message,), {
-  'DESCRIPTOR' : _PAYMENTPLANRESPONSE,
-  '__module__' : 'common.payment_task_pb2'
-  # @@protoc_insertion_point(class_scope:common.PaymentPlanResponse)
-  })
-_sym_db.RegisterMessage(PaymentPlanResponse)
 
 MetaData = _reflection.GeneratedProtocolMessageType('MetaData', (_message.Message,), {
   'DESCRIPTOR' : _METADATA,

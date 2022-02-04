@@ -3,7 +3,6 @@
 import grpc
 
 from common import payment_plan_pb2 as common_dot_payment__plan__pb2
-from common import payment_task_pb2 as common_dot_payment__task__pb2
 from planning import planning_pb2 as planning_dot_planning__pb2
 
 
@@ -19,7 +18,7 @@ class PlanningStub(object):
         self.CreatePaymentPlan = channel.unary_unary(
                 '/planning.Planning/CreatePaymentPlan',
                 request_serializer=planning_dot_planning__pb2.CreatePaymentPlanRequest.SerializeToString,
-                response_deserializer=common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
+                response_deserializer=common_dot_payment__plan__pb2.PaymentPlanResponse.FromString,
                 )
         self.GetPaymentPlan = channel.unary_unary(
                 '/planning.Planning/GetPaymentPlan',
@@ -84,7 +83,7 @@ def add_PlanningServicer_to_server(servicer, server):
             'CreatePaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.CreatePaymentPlan,
                     request_deserializer=planning_dot_planning__pb2.CreatePaymentPlanRequest.FromString,
-                    response_serializer=common_dot_payment__task__pb2.PaymentPlanResponse.SerializeToString,
+                    response_serializer=common_dot_payment__plan__pb2.PaymentPlanResponse.SerializeToString,
             ),
             'GetPaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentPlan,
@@ -129,7 +128,7 @@ class Planning(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/planning.Planning/CreatePaymentPlan',
             planning_dot_planning__pb2.CreatePaymentPlanRequest.SerializeToString,
-            common_dot_payment__task__pb2.PaymentPlanResponse.FromString,
+            common_dot_payment__plan__pb2.PaymentPlanResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

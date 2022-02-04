@@ -4,7 +4,6 @@ package common;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 
 import "common/common.proto";
-import "common/payment_plan.proto";
 
 // PaymentTask encapsulates the payment goals a user has per credit account
 message PaymentTask {
@@ -12,11 +11,6 @@ message PaymentTask {
   string user_id = 2;
   string account_id = 4;
   double amount = 5;
-}
-
-// Response for CreatePaymentPlan
-message PaymentPlanResponse {
-  repeated common.PaymentPlan payment_plans = 1;
 }
 
 // MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan

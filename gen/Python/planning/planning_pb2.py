@@ -97,7 +97,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
     index=0,
     containing_service=None,
     input_type=_CREATEPAYMENTPLANREQUEST,
-    output_type=common_dot_payment__task__pb2._PAYMENTPLANRESPONSE,
+    output_type=common_dot_payment__plan__pb2._PAYMENTPLANRESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

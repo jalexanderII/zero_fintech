@@ -15,7 +15,7 @@ from gen.Python.common.payment_plan_pb2 import ListPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
-from gen.Python.common.payment_task_pb2 import PaymentPlanResponse
+from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
@@ -38,7 +38,7 @@ class PlanningService(PlanningServicer):
     )
 
     def CreatePaymentPlan(
-            self, request: CreatePaymentPlanRequest, ctx=None
+        self, request: CreatePaymentPlanRequest, ctx=None
     ) -> PaymentPlanResponse:
         """Calls PaymentPlanBuilder to generate a list of Payments plans given a list of PaymentTasks"""
         logger.info("CreatePaymentPlan called")
@@ -68,7 +68,7 @@ class PlanningService(PlanningServicer):
         return payment_plan_DB_to_PB(payment_plan_db)
 
     def ListPaymentPlans(
-            self, request: ListPaymentPlanRequest, ctx=None
+        self, request: ListPaymentPlanRequest, ctx=None
     ) -> ListPaymentPlanResponse:
         logger.info("ListPaymentPlans called")
         payment_plans_pb: List[PaymentPlanPB] = []
@@ -81,7 +81,7 @@ class PlanningService(PlanningServicer):
         return ListPaymentPlanResponse(payment_plans=payment_plans_pb)
 
     def UpdatePaymentPlan(
-            self, request: UpdatePaymentPlanRequest, ctx=None
+        self, request: UpdatePaymentPlanRequest, ctx=None
     ) -> PaymentPlanPB:
         logger.info("UpdatePaymentPlan called")
         payment_plan = {
@@ -102,7 +102,7 @@ class PlanningService(PlanningServicer):
         return payment_plan_DB_to_PB(payment_plan_db)
 
     def DeletePaymentPlan(
-            self, request: DeletePaymentPlanRequest, ctx=None
+        self, request: DeletePaymentPlanRequest, ctx=None
     ) -> DeletePaymentPlanResponse:
         logger.info("DeletePaymentPlan called")
 
