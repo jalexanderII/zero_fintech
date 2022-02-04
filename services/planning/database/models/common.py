@@ -89,7 +89,6 @@ class PaymentPlan(betterproto.Message):
     # payment actions of the plan
     payment_action: List["PaymentAction"] = betterproto.message_field(11)
 
-
 @dataclass
 class PaymentTask(betterproto.Message):
     """

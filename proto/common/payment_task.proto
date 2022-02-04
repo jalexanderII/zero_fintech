@@ -14,11 +14,6 @@ message PaymentTask {
   double amount = 5;
 }
 
-// Response for CreatePaymentPlan
-message PaymentPlanResponse {
-  repeated common.PaymentPlan payment_plans = 1;
-}
-
 // MetaData is any preferences a user may have regarding how a payment task should be incorporated into a Payment Plan
 message MetaData {
   common.PlanType preferred_plan_type = 1;

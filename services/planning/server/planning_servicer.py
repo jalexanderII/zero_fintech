@@ -15,7 +15,7 @@ from gen.Python.common.payment_plan_pb2 import ListPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
-from gen.Python.common.payment_task_pb2 import PaymentPlanResponse
+from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder

@@ -4,6 +4,7 @@ package core;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
 import "common/payment_task.proto";
+import "common/payment_plan.proto";
 import "core/accounts.proto";
 import "core/transactions.proto";
 import "core/users.proto";

@@ -35,6 +35,11 @@ message PaymentPlan {
   repeated PaymentAction payment_action = 11;
 }
 
+// Response for CreatePaymentPlan
+message PaymentPlanResponse {
+  repeated common.PaymentPlan payment_plans = 1;
+}
+
 // CRUD Methods
 message GetPaymentPlanRequest {
   string payment_plan_id = 1;
