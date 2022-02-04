@@ -45,6 +45,11 @@ message GetPaymentPlanRequest {
   string payment_plan_id = 1;
 }
 
+// Response for CreatePaymentPlan
+message PaymentPlanResponse {
+  repeated common.PaymentPlan payment_plans = 1;
+}
+
 message ListPaymentPlanRequest {}
 
 message ListPaymentPlanResponse {

@@ -61,6 +61,5 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	if err != nil {
 		return nil, err
 	}
-	s.l.Info("[Payment Plans] Response", "PaymentPlans", res)
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }

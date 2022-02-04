@@ -54,7 +54,7 @@ func init() {
 func main() {
 	r := gin.Default()
 
-	r.POST("/api/info", info)
+	r.POST("/api/info", info) // 1
 
 	// For OAuth flows, the process looks as follows.
 	// 1. Create a link token with the redirectURI (as white listed at https://dashboard.plaid.com/team/api).
@@ -63,7 +63,7 @@ func main() {
 	// 3. Re-initialize with the link token (from step 1) and the full received redirect URI
 	// from step 2.
 
-	r.POST("/api/set_access_token", getAccessToken)
+	r.POST("/api/set_access_token", getAccessToken) // 3
 	r.POST("/api/create_link_token_for_payment", createLinkTokenForPayment)
 	r.GET("/api/auth", auth)
 	r.GET("/api/accounts", accounts)
@@ -75,8 +75,8 @@ func main() {
 	r.POST("/api/transactions", transactions)
 	r.GET("/api/liabilities", liabilities)
 	r.GET("/api/payment", payment)
-	r.GET("/api/create_public_token", createPublicToken)
-	r.POST("/api/create_link_token", createLinkToken)
+	r.GET("/api/create_public_token", createPublicToken) // 2b
+	r.POST("/api/create_link_token", createLinkToken)    // 2
 	r.GET("/api/investment_transactions", investmentTransactions)
 	r.GET("/api/holdings", holdings)
 	r.GET("/api/assets", assets)

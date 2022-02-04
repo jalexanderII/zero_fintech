@@ -4,7 +4,6 @@ package common;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/common";
 
 import "common/common.proto";
-import "common/payment_plan.proto";
 
 // PaymentTask encapsulates the payment goals a user has per credit account
 message PaymentTask {
