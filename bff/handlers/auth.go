@@ -5,10 +5,6 @@ import (
 	"github.com/jalexanderII/zero_fintech/bff/client"
 )
 
-func HI(authClient *client.AuthClient) func(c *fiber.Ctx) error {
-	return func(c *fiber.Ctx) error { return c.SendString("Hello, Auth!") }
-}
-
 func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type LoginData struct {
