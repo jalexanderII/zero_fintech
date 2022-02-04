@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
@@ -27,6 +28,7 @@ func TestAuthServer_ListUsers(t *testing.T) {
 	server, ctx := GenServer()
 
 	users, err := server.ListUsers(ctx, &core.ListUserRequest{})
+	fmt.Println(users)
 	if err != nil {
 		t.Errorf("1: An error was returned: %v", err)
 	}
