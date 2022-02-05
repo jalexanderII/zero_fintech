@@ -34,11 +34,16 @@ var environments = map[string]plaid.Environment{
 	"production":  plaid.Production,
 }
 
+var environmentSecret = map[string]string{
+	"sandbox":     "PLAID_SECRET_SANDBOX",
+	"development": "PLAID_SECRET_DEV",
+}
+
 func init() {
 	// set constants from env
 	PLAID_CLIENT_ID = utils.GetEnv("PLAID_CLIENT_ID")
-	PLAID_SECRET = utils.GetEnv("PLAID_SECRET")
 	PLAID_ENV = utils.GetEnv("PLAID_ENV")
+	PLAID_SECRET = utils.GetEnv(environmentSecret[PLAID_ENV])
 	PLAID_PRODUCTS = utils.GetEnv("PLAID_PRODUCTS")
 	PLAID_COUNTRY_CODES = utils.GetEnv("PLAID_COUNTRY_CODES")
 	PLAID_REDIRECT_URI = utils.GetEnv("PLAID_REDIRECT_URI")
