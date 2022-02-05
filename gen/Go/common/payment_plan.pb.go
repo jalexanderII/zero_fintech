@@ -227,54 +227,6 @@ func (x *PaymentPlan) GetPaymentAction() []*PaymentAction {
 	return nil
 }
 
-// CRUD Methods
-type GetPaymentPlanRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	PaymentPlanId string `protobuf:"bytes,1,opt,name=payment_plan_id,json=paymentPlanId,proto3" json:"payment_plan_id,omitempty"`
-}
-
-func (x *GetPaymentPlanRequest) Reset() {
-	*x = GetPaymentPlanRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_common_payment_plan_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *GetPaymentPlanRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetPaymentPlanRequest) ProtoMessage() {}
-
-func (x *GetPaymentPlanRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_common_payment_plan_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetPaymentPlanRequest.ProtoReflect.Descriptor instead.
-func (*GetPaymentPlanRequest) Descriptor() ([]byte, []int) {
-	return file_common_payment_plan_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *GetPaymentPlanRequest) GetPaymentPlanId() string {
-	if x != nil {
-		return x.PaymentPlanId
-	}
-	return ""
-}
-
 // Response for CreatePaymentPlan
 type PaymentPlanResponse struct {
 	state         protoimpl.MessageState
@@ -287,7 +239,7 @@ type PaymentPlanResponse struct {
 func (x *PaymentPlanResponse) Reset() {
 	*x = PaymentPlanResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_common_payment_plan_proto_msgTypes[3]
+		mi := &file_common_payment_plan_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -300,7 +252,7 @@ func (x *PaymentPlanResponse) String() string {
 func (*PaymentPlanResponse) ProtoMessage() {}
 
 func (x *PaymentPlanResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_common_payment_plan_proto_msgTypes[3]
+	mi := &file_common_payment_plan_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -313,7 +265,7 @@ func (x *PaymentPlanResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentPlanResponse.ProtoReflect.Descriptor instead.
 func (*PaymentPlanResponse) Descriptor() ([]byte, []int) {
-	return file_common_payment_plan_proto_rawDescGZIP(), []int{3}
+	return file_common_payment_plan_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PaymentPlanResponse) GetPaymentPlans() []*PaymentPlan {
@@ -321,6 +273,54 @@ func (x *PaymentPlanResponse) GetPaymentPlans() []*PaymentPlan {
 		return x.PaymentPlans
 	}
 	return nil
+}
+
+// CRUD Methods
+type GetPaymentPlanRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	PaymentPlanId string `protobuf:"bytes,1,opt,name=payment_plan_id,json=paymentPlanId,proto3" json:"payment_plan_id,omitempty"`
+}
+
+func (x *GetPaymentPlanRequest) Reset() {
+	*x = GetPaymentPlanRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_common_payment_plan_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetPaymentPlanRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPaymentPlanRequest) ProtoMessage() {}
+
+func (x *GetPaymentPlanRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_payment_plan_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPaymentPlanRequest.ProtoReflect.Descriptor instead.
+func (*GetPaymentPlanRequest) Descriptor() ([]byte, []int) {
+	return file_common_payment_plan_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetPaymentPlanRequest) GetPaymentPlanId() string {
+	if x != nil {
+		return x.PaymentPlanId
+	}
+	return ""
 }
 
 type ListPaymentPlanRequest struct {
@@ -616,16 +616,16 @@ var file_common_payment_plan_proto_rawDesc = []byte{
 	0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x0b, 0x20,
 	0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x50, 0x61, 0x79,
 	0x6d, 0x65, 0x6e, 0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0d, 0x70, 0x61, 0x79, 0x6d,
-	0x65, 0x6e, 0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x3f, 0x0a, 0x15, 0x47, 0x65, 0x74,
-	0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x26, 0x0a, 0x0f, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x70, 0x6c,
-	0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x70, 0x61, 0x79,
-	0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x49, 0x64, 0x22, 0x4f, 0x0a, 0x13, 0x50, 0x61,
-	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x12, 0x38, 0x0a, 0x0d, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x70, 0x6c, 0x61,
-	0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f,
-	0x6e, 0x2e, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x0c, 0x70,
-	0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x73, 0x22, 0x18, 0x0a, 0x16, 0x4c,
+	0x65, 0x6e, 0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x4f, 0x0a, 0x13, 0x50, 0x61, 0x79,
+	0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x38, 0x0a, 0x0d, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x70, 0x6c, 0x61, 0x6e,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e,
+	0x2e, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x0c, 0x70, 0x61,
+	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x73, 0x22, 0x3f, 0x0a, 0x15, 0x47, 0x65,
+	0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x26, 0x0a, 0x0f, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x70,
+	0x6c, 0x61, 0x6e, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x70, 0x61,
+	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x49, 0x64, 0x22, 0x18, 0x0a, 0x16, 0x4c,
 	0x69, 0x73, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x53, 0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x61, 0x79,
 	0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
@@ -675,8 +675,8 @@ var file_common_payment_plan_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_common_payment_plan_proto_goTypes = []interface{}{
 	(*PaymentAction)(nil),             // 0: common.PaymentAction
 	(*PaymentPlan)(nil),               // 1: common.PaymentPlan
-	(*GetPaymentPlanRequest)(nil),     // 2: common.GetPaymentPlanRequest
-	(*PaymentPlanResponse)(nil),       // 3: common.PaymentPlanResponse
+	(*PaymentPlanResponse)(nil),       // 2: common.PaymentPlanResponse
+	(*GetPaymentPlanRequest)(nil),     // 3: common.GetPaymentPlanRequest
 	(*ListPaymentPlanRequest)(nil),    // 4: common.ListPaymentPlanRequest
 	(*ListPaymentPlanResponse)(nil),   // 5: common.ListPaymentPlanResponse
 	(*UpdatePaymentPlanRequest)(nil),  // 6: common.UpdatePaymentPlanRequest
@@ -741,7 +741,7 @@ func file_common_payment_plan_proto_init() {
 			}
 		}
 		file_common_payment_plan_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetPaymentPlanRequest); i {
+			switch v := v.(*PaymentPlanResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -753,7 +753,7 @@ func file_common_payment_plan_proto_init() {
 			}
 		}
 		file_common_payment_plan_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PaymentPlanResponse); i {
+			switch v := v.(*GetPaymentPlanRequest); i {
 			case 0:
 				return &v.state
 			case 1:

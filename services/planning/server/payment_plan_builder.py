@@ -45,6 +45,7 @@ logging.basicConfig(
 logger = logging.getLogger("PaymentPlanBuilder")
 
 load_dotenv()
+
 CORE_CLIENT = CoreStub(
     grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
 )
@@ -123,11 +124,17 @@ class PaymentPlanBuilder:
         )
 
         if PLAN_TYPE_UNKNOWN in plan_type_options:
-            raise ValueError(f"Chosen PlanTypes contains PLAN_TYPE_UNKNOWN: {plan_type_options}")
+            raise ValueError(
+                f"Chosen PlanTypes contains PLAN_TYPE_UNKNOWN: {plan_type_options}"
+            )
         elif len(list(filter(lambda x: x <= 0.0, timeline_options))) > 0:
-            raise ValueError(f"Chosen timeline options contain non-positive values: {timeline_options}")
+            raise ValueError(
+                f"Chosen timeline options contain non-positive values: {timeline_options}"
+            )
         elif PAYMENT_FREQUENCY_UNKNOWN in freq_options:
-            raise ValueError(f"Chosen PaymentFrequency options contains PAYMENT_FREQUENCY_UNKNOWN: {freq_options}")
+            raise ValueError(
+                f"Chosen PaymentFrequency options contains PAYMENT_FREQUENCY_UNKNOWN: {freq_options}"
+            )
 
         return [
             MetaData(
@@ -189,13 +196,19 @@ class PaymentPlanBuilder:
 
         payment_actions: List[PaymentAction] = []
         if plan_type == PLAN_TYPE_MIN_FEES:
-            payment_actions = self._create_payment_actions_min_fees(payment_freq=payment_freq, df=df,
-                                                                    start_date=start_date,
-                                                                    amount_per_payment=amount_per_payment)
+            payment_actions = self._create_payment_actions_min_fees(
+                payment_freq=payment_freq,
+                df=df,
+                start_date=start_date,
+                amount_per_payment=amount_per_payment,
+            )
         elif plan_type == PLAN_TYPE_OPTIM_CREDIT_SCORE:
-            payment_actions = self._create_payment_actions_optim_credit_score(payment_freq=payment_freq,
-                                                                              df=df, start_date=start_date,
-                                                                              amount_per_payment=amount_per_payment)
+            payment_actions = self._create_payment_actions_optim_credit_score(
+                payment_freq=payment_freq,
+                df=df,
+                start_date=start_date,
+                amount_per_payment=amount_per_payment,
+            )
 
         return PaymentPlan(
             user_id=user_id,
@@ -212,13 +225,13 @@ class PaymentPlanBuilder:
 
     @staticmethod
     def _create_payment_actions_min_fees(
-            payment_freq: PaymentFrequency,
-            df: pd.DataFrame,
-            start_date: datetime.datetime,
-            amount_per_payment: float
+        payment_freq: PaymentFrequency,
+        df: pd.DataFrame,
+        start_date: datetime.datetime,
+        amount_per_payment: float,
     ) -> List[PaymentAction]:
-        """ Creates a list of PaymentActions to minimize fees for given freq, start date, amount per payment and
-                DataFrame on the accounts. """
+        """Creates a list of PaymentActions to minimize fees for given freq, start date, amount per payment and
+        DataFrame on the accounts."""
         payment_actions: List[PaymentAction] = []
         datePB = Timestamp()
 
@@ -259,13 +272,13 @@ class PaymentPlanBuilder:
 
     @staticmethod
     def _create_payment_actions_optim_credit_score(
-            payment_freq: PaymentFrequency,
-            df: pd.DataFrame,
-            start_date: datetime.datetime,
-            amount_per_payment: float
+        payment_freq: PaymentFrequency,
+        df: pd.DataFrame,
+        start_date: datetime.datetime,
+        amount_per_payment: float,
     ) -> List[PaymentAction]:
-        """ Creates a list of PaymentActions to optimize credit score for given freq, start date, amount per payment and
-        DataFrame on the accounts. """
+        """Creates a list of PaymentActions to optimize credit score for given freq, start date, amount per payment and
+        DataFrame on the accounts."""
         payment_actions: List[PaymentAction] = []
         datePB = Timestamp()
 
@@ -305,9 +318,7 @@ class PaymentPlanBuilder:
             df = df.sort_values("usage", ascending=False)
             # move to next date
             pay_on_date = 0
-            shifted_date = shift_date_by_payment_frequency(
-                shifted_date, payment_freq
-            )
+            shifted_date = shift_date_by_payment_frequency(shifted_date, payment_freq)
             datePB.FromDatetime(shifted_date)
 
         return payment_actions

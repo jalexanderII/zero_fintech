@@ -24,7 +24,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0f\x63ore/core.proto\x12\x04\x63ore\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\x1a\x13\x63ore/accounts.proto\x1a\x17\x63ore/transactions.proto\x1a\x10\x63ore/users.proto\"Q\n\x15GetPaymentPlanRequest\x12\'\n\x0c\x61\x63\x63ount_info\x18\x01 \x03(\x0b\x32\x11.core.AccountInfo\x12\x0f\n\x07user_id\x18\x02 \x01(\t\"J\n\x0b\x41\x63\x63ountInfo\x12\x17\n\x0ftransaction_ids\x18\x01 \x03(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x01\x32\xd8\x0b\n\x04\x43ore\x12J\n\x0eGetPaymentPlan\x12\x1b.core.GetPaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12:\n\rCreateAccount\x12\x1a.core.CreateAccountRequest\x1a\r.core.Account\x12\x34\n\nGetAccount\x12\x17.core.GetAccountRequest\x1a\r.core.Account\x12\x43\n\x0cListAccounts\x12\x18.core.ListAccountRequest\x1a\x19.core.ListAccountResponse\x12:\n\rUpdateAccount\x12\x1a.core.UpdateAccountRequest\x1a\r.core.Account\x12H\n\rDeleteAccount\x12\x1a.core.DeleteAccountRequest\x1a\x1b.core.DeleteAccountResponse\x12\x46\n\x11\x43reateTransaction\x12\x1e.core.CreateTransactionRequest\x1a\x11.core.Transaction\x12@\n\x0eGetTransaction\x12\x1b.core.GetTransactionRequest\x1a\x11.core.Transaction\x12O\n\x10ListTransactions\x12\x1c.core.ListTransactionRequest\x1a\x1d.core.ListTransactionResponse\x12\x46\n\x11UpdateTransaction\x12\x1e.core.UpdateTransactionRequest\x1a\x11.core.Transaction\x12T\n\x11\x44\x65leteTransaction\x12\x1e.core.DeleteTransactionRequest\x1a\x1f.core.DeleteTransactionResponse\x12J\n\x11\x43reatePaymentTask\x12 .common.CreatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12\x64\n\x15\x43reateManyPaymentTask\x12$.common.CreateManyPaymentTaskRequest\x1a%.common.CreateManyPaymentTaskResponse\x12\x44\n\x0eGetPaymentTask\x12\x1d.common.GetPaymentTaskRequest\x1a\x13.common.PaymentTask\x12S\n\x10ListPaymentTasks\x12\x1e.common.ListPaymentTaskRequest\x1a\x1f.common.ListPaymentTaskResponse\x12J\n\x11UpdatePaymentTask\x12 .common.UpdatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12X\n\x11\x44\x65letePaymentTask\x12 .common.DeletePaymentTaskRequest\x1a!.common.DeletePaymentTaskResponse\x12+\n\x07GetUser\x12\x14.core.GetUserRequest\x1a\n.core.User\x12:\n\tListUsers\x12\x15.core.ListUserRequest\x1a\x16.core.ListUserResponse\x12\x31\n\nUpdateUser\x12\x17.core.UpdateUserRequest\x1a\n.core.User\x12?\n\nDeleteUser\x12\x17.core.DeleteUserRequest\x1a\x18.core.DeleteUserResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
+  serialized_pb=b'\n\x0f\x63ore/core.proto\x12\x04\x63ore\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\x1a\x13\x63ore/accounts.proto\x1a\x17\x63ore/transactions.proto\x1a\x10\x63ore/users.proto\"v\n\x15GetPaymentPlanRequest\x12\'\n\x0c\x61\x63\x63ount_info\x18\x01 \x03(\x0b\x32\x11.core.AccountInfo\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12#\n\tmeta_data\x18\x03 \x01(\x0b\x32\x10.common.MetaData\"J\n\x0b\x41\x63\x63ountInfo\x12\x17\n\x0ftransaction_ids\x18\x01 \x03(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x01\x32\xd8\x0b\n\x04\x43ore\x12J\n\x0eGetPaymentPlan\x12\x1b.core.GetPaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12:\n\rCreateAccount\x12\x1a.core.CreateAccountRequest\x1a\r.core.Account\x12\x34\n\nGetAccount\x12\x17.core.GetAccountRequest\x1a\r.core.Account\x12\x43\n\x0cListAccounts\x12\x18.core.ListAccountRequest\x1a\x19.core.ListAccountResponse\x12:\n\rUpdateAccount\x12\x1a.core.UpdateAccountRequest\x1a\r.core.Account\x12H\n\rDeleteAccount\x12\x1a.core.DeleteAccountRequest\x1a\x1b.core.DeleteAccountResponse\x12\x46\n\x11\x43reateTransaction\x12\x1e.core.CreateTransactionRequest\x1a\x11.core.Transaction\x12@\n\x0eGetTransaction\x12\x1b.core.GetTransactionRequest\x1a\x11.core.Transaction\x12O\n\x10ListTransactions\x12\x1c.core.ListTransactionRequest\x1a\x1d.core.ListTransactionResponse\x12\x46\n\x11UpdateTransaction\x12\x1e.core.UpdateTransactionRequest\x1a\x11.core.Transaction\x12T\n\x11\x44\x65leteTransaction\x12\x1e.core.DeleteTransactionRequest\x1a\x1f.core.DeleteTransactionResponse\x12J\n\x11\x43reatePaymentTask\x12 .common.CreatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12\x64\n\x15\x43reateManyPaymentTask\x12$.common.CreateManyPaymentTaskRequest\x1a%.common.CreateManyPaymentTaskResponse\x12\x44\n\x0eGetPaymentTask\x12\x1d.common.GetPaymentTaskRequest\x1a\x13.common.PaymentTask\x12S\n\x10ListPaymentTasks\x12\x1e.common.ListPaymentTaskRequest\x1a\x1f.common.ListPaymentTaskResponse\x12J\n\x11UpdatePaymentTask\x12 .common.UpdatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12X\n\x11\x44\x65letePaymentTask\x12 .common.DeletePaymentTaskRequest\x1a!.common.DeletePaymentTaskResponse\x12+\n\x07GetUser\x12\x14.core.GetUserRequest\x1a\n.core.User\x12:\n\tListUsers\x12\x15.core.ListUserRequest\x1a\x16.core.ListUserResponse\x12\x31\n\nUpdateUser\x12\x17.core.UpdateUserRequest\x1a\n.core.User\x12?\n\nDeleteUser\x12\x17.core.DeleteUserRequest\x1a\x18.core.DeleteUserResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
   ,
   dependencies=[common_dot_payment__task__pb2.DESCRIPTOR,common_dot_payment__plan__pb2.DESCRIPTOR,core_dot_accounts__pb2.DESCRIPTOR,core_dot_transactions__pb2.DESCRIPTOR,core_dot_users__pb2.DESCRIPTOR,])
 
@@ -53,6 +53,13 @@ _GETPAYMENTPLANREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='meta_data', full_name='core.GetPaymentPlanRequest.meta_data', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -66,7 +73,7 @@ _GETPAYMENTPLANREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=143,
-  serialized_end=224,
+  serialized_end=261,
 )
 
 
@@ -111,11 +118,12 @@ _ACCOUNTINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=226,
-  serialized_end=300,
+  serialized_start=263,
+  serialized_end=337,
 )
 
 _GETPAYMENTPLANREQUEST.fields_by_name['account_info'].message_type = _ACCOUNTINFO
+_GETPAYMENTPLANREQUEST.fields_by_name['meta_data'].message_type = common_dot_payment__task__pb2._METADATA
 DESCRIPTOR.message_types_by_name['GetPaymentPlanRequest'] = _GETPAYMENTPLANREQUEST
 DESCRIPTOR.message_types_by_name['AccountInfo'] = _ACCOUNTINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -144,8 +152,8 @@ _CORE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=303,
-  serialized_end=1799,
+  serialized_start=340,
+  serialized_end=1836,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetPaymentPlan',

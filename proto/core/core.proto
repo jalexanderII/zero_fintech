@@ -44,6 +44,7 @@ service Core {
 message GetPaymentPlanRequest {
   repeated AccountInfo account_info = 1;
   string user_id = 2;
+  common.MetaData meta_data = 3;
 }
 
 message AccountInfo {

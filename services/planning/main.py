@@ -7,7 +7,6 @@ import grpc
 from dotenv import load_dotenv
 
 from database.db import initiate_mongo_client
-from gen.Python.core import core_pb2_grpc as coreClient, accounts_pb2 as Accounts
 from gen.Python.planning import planning_pb2_grpc as PlanningServicePB
 from server.planning_servicer import PlanningService
 
@@ -34,13 +33,5 @@ def serve():
     server.wait_for_termination()
 
 
-def run_client():
-    with grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}') as channel:
-        core_client_stub = coreClient.CoreStub(channel=channel)
-        response = core_client_stub.ListAccounts(request=Accounts.ListAccountRequest())
-        print(response)
-
-
 if __name__ == "__main__":
     serve()
-    # run_client()

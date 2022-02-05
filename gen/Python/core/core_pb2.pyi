@@ -3,6 +3,7 @@
 isort:skip_file
 """
 import builtins
+import common.payment_task_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
@@ -15,15 +16,20 @@ class GetPaymentPlanRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     ACCOUNT_INFO_FIELD_NUMBER: builtins.int
     USER_ID_FIELD_NUMBER: builtins.int
+    META_DATA_FIELD_NUMBER: builtins.int
     @property
     def account_info(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___AccountInfo]: ...
     user_id: typing.Text = ...
+    @property
+    def meta_data(self) -> common.payment_task_pb2.MetaData: ...
     def __init__(self,
         *,
         account_info : typing.Optional[typing.Iterable[global___AccountInfo]] = ...,
         user_id : typing.Text = ...,
+        meta_data : typing.Optional[common.payment_task_pb2.MetaData] = ...,
         ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account_info",b"account_info","user_id",b"user_id"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["meta_data",b"meta_data"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["account_info",b"account_info","meta_data",b"meta_data","user_id",b"user_id"]) -> None: ...
 global___GetPaymentPlanRequest = GetPaymentPlanRequest
 
 class AccountInfo(google.protobuf.message.Message):

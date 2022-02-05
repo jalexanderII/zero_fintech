@@ -121,19 +121,6 @@ class GetPaymentPlanRequest(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["payment_plan_id",b"payment_plan_id"]) -> None: ...
 global___GetPaymentPlanRequest = GetPaymentPlanRequest
 
-class PaymentPlanResponse(google.protobuf.message.Message):
-    """Response for CreatePaymentPlan"""
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    PAYMENT_PLANS_FIELD_NUMBER: builtins.int
-    @property
-    def payment_plans(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PaymentPlan]: ...
-    def __init__(self,
-        *,
-        payment_plans : typing.Optional[typing.Iterable[global___PaymentPlan]] = ...,
-        ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["payment_plans",b"payment_plans"]) -> None: ...
-global___PaymentPlanResponse = PaymentPlanResponse
-
 class ListPaymentPlanRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     def __init__(self,

@@ -30,8 +30,9 @@ type GetPaymentPlanRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AccountInfo []*AccountInfo `protobuf:"bytes,1,rep,name=account_info,json=accountInfo,proto3" json:"account_info,omitempty"`
-	UserId      string         `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AccountInfo []*AccountInfo   `protobuf:"bytes,1,rep,name=account_info,json=accountInfo,proto3" json:"account_info,omitempty"`
+	UserId      string           `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	MetaData    *common.MetaData `protobuf:"bytes,3,opt,name=meta_data,json=metaData,proto3" json:"meta_data,omitempty"`
 }
 
 func (x *GetPaymentPlanRequest) Reset() {
@@ -78,6 +79,13 @@ func (x *GetPaymentPlanRequest) GetUserId() string {
 		return x.UserId
 	}
 	return ""
+}
+
+func (x *GetPaymentPlanRequest) GetMetaData() *common.MetaData {
+	if x != nil {
+		return x.MetaData
+	}
+	return nil
 }
 
 type AccountInfo struct {
@@ -154,14 +162,17 @@ var file_core_core_proto_rawDesc = []byte{
 	0x6f, 0x72, 0x65, 0x2f, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x1a, 0x17, 0x63, 0x6f, 0x72, 0x65, 0x2f, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63,
 	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x10, 0x63, 0x6f, 0x72,
-	0x65, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x66, 0x0a,
-	0x15, 0x47, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x34, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e,
-	0x74, 0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63,
-	0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52,
-	0x0b, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x17, 0x0a, 0x07,
-	0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75,
-	0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x6d, 0x0a, 0x0b, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
+	0x65, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x95, 0x01,
+	0x0a, 0x15, 0x47, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x34, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x6f, 0x75,
+	0x6e, 0x74, 0x5f, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e,
+	0x63, 0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x6e, 0x66, 0x6f,
+	0x52, 0x0b, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x17, 0x0a,
+	0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06,
+	0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x2d, 0x0a, 0x09, 0x6d, 0x65, 0x74, 0x61, 0x5f, 0x64,
+	0x61, 0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x63, 0x6f, 0x6d, 0x6d,
+	0x6f, 0x6e, 0x2e, 0x4d, 0x65, 0x74, 0x61, 0x44, 0x61, 0x74, 0x61, 0x52, 0x08, 0x6d, 0x65, 0x74,
+	0x61, 0x44, 0x61, 0x74, 0x61, 0x22, 0x6d, 0x0a, 0x0b, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
 	0x49, 0x6e, 0x66, 0x6f, 0x12, 0x27, 0x0a, 0x0f, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74,
 	0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0e, 0x74,
 	0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x73, 0x12, 0x1d, 0x0a,
@@ -284,90 +295,92 @@ var file_core_core_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_core_core_proto_goTypes = []interface{}{
 	(*GetPaymentPlanRequest)(nil),                // 0: core.GetPaymentPlanRequest
 	(*AccountInfo)(nil),                          // 1: core.AccountInfo
-	(*CreateAccountRequest)(nil),                 // 2: core.CreateAccountRequest
-	(*GetAccountRequest)(nil),                    // 3: core.GetAccountRequest
-	(*ListAccountRequest)(nil),                   // 4: core.ListAccountRequest
-	(*UpdateAccountRequest)(nil),                 // 5: core.UpdateAccountRequest
-	(*DeleteAccountRequest)(nil),                 // 6: core.DeleteAccountRequest
-	(*CreateTransactionRequest)(nil),             // 7: core.CreateTransactionRequest
-	(*GetTransactionRequest)(nil),                // 8: core.GetTransactionRequest
-	(*ListTransactionRequest)(nil),               // 9: core.ListTransactionRequest
-	(*UpdateTransactionRequest)(nil),             // 10: core.UpdateTransactionRequest
-	(*DeleteTransactionRequest)(nil),             // 11: core.DeleteTransactionRequest
-	(*common.CreatePaymentTaskRequest)(nil),      // 12: common.CreatePaymentTaskRequest
-	(*common.CreateManyPaymentTaskRequest)(nil),  // 13: common.CreateManyPaymentTaskRequest
-	(*common.GetPaymentTaskRequest)(nil),         // 14: common.GetPaymentTaskRequest
-	(*common.ListPaymentTaskRequest)(nil),        // 15: common.ListPaymentTaskRequest
-	(*common.UpdatePaymentTaskRequest)(nil),      // 16: common.UpdatePaymentTaskRequest
-	(*common.DeletePaymentTaskRequest)(nil),      // 17: common.DeletePaymentTaskRequest
-	(*GetUserRequest)(nil),                       // 18: core.GetUserRequest
-	(*ListUserRequest)(nil),                      // 19: core.ListUserRequest
-	(*UpdateUserRequest)(nil),                    // 20: core.UpdateUserRequest
-	(*DeleteUserRequest)(nil),                    // 21: core.DeleteUserRequest
-	(*common.PaymentPlanResponse)(nil),           // 22: common.PaymentPlanResponse
-	(*Account)(nil),                              // 23: core.Account
-	(*ListAccountResponse)(nil),                  // 24: core.ListAccountResponse
-	(*DeleteAccountResponse)(nil),                // 25: core.DeleteAccountResponse
-	(*Transaction)(nil),                          // 26: core.Transaction
-	(*ListTransactionResponse)(nil),              // 27: core.ListTransactionResponse
-	(*DeleteTransactionResponse)(nil),            // 28: core.DeleteTransactionResponse
-	(*common.PaymentTask)(nil),                   // 29: common.PaymentTask
-	(*common.CreateManyPaymentTaskResponse)(nil), // 30: common.CreateManyPaymentTaskResponse
-	(*common.ListPaymentTaskResponse)(nil),       // 31: common.ListPaymentTaskResponse
-	(*common.DeletePaymentTaskResponse)(nil),     // 32: common.DeletePaymentTaskResponse
-	(*User)(nil),                                 // 33: core.User
-	(*ListUserResponse)(nil),                     // 34: core.ListUserResponse
-	(*DeleteUserResponse)(nil),                   // 35: core.DeleteUserResponse
+	(*common.MetaData)(nil),                      // 2: common.MetaData
+	(*CreateAccountRequest)(nil),                 // 3: core.CreateAccountRequest
+	(*GetAccountRequest)(nil),                    // 4: core.GetAccountRequest
+	(*ListAccountRequest)(nil),                   // 5: core.ListAccountRequest
+	(*UpdateAccountRequest)(nil),                 // 6: core.UpdateAccountRequest
+	(*DeleteAccountRequest)(nil),                 // 7: core.DeleteAccountRequest
+	(*CreateTransactionRequest)(nil),             // 8: core.CreateTransactionRequest
+	(*GetTransactionRequest)(nil),                // 9: core.GetTransactionRequest
+	(*ListTransactionRequest)(nil),               // 10: core.ListTransactionRequest
+	(*UpdateTransactionRequest)(nil),             // 11: core.UpdateTransactionRequest
+	(*DeleteTransactionRequest)(nil),             // 12: core.DeleteTransactionRequest
+	(*common.CreatePaymentTaskRequest)(nil),      // 13: common.CreatePaymentTaskRequest
+	(*common.CreateManyPaymentTaskRequest)(nil),  // 14: common.CreateManyPaymentTaskRequest
+	(*common.GetPaymentTaskRequest)(nil),         // 15: common.GetPaymentTaskRequest
+	(*common.ListPaymentTaskRequest)(nil),        // 16: common.ListPaymentTaskRequest
+	(*common.UpdatePaymentTaskRequest)(nil),      // 17: common.UpdatePaymentTaskRequest
+	(*common.DeletePaymentTaskRequest)(nil),      // 18: common.DeletePaymentTaskRequest
+	(*GetUserRequest)(nil),                       // 19: core.GetUserRequest
+	(*ListUserRequest)(nil),                      // 20: core.ListUserRequest
+	(*UpdateUserRequest)(nil),                    // 21: core.UpdateUserRequest
+	(*DeleteUserRequest)(nil),                    // 22: core.DeleteUserRequest
+	(*common.PaymentPlanResponse)(nil),           // 23: common.PaymentPlanResponse
+	(*Account)(nil),                              // 24: core.Account
+	(*ListAccountResponse)(nil),                  // 25: core.ListAccountResponse
+	(*DeleteAccountResponse)(nil),                // 26: core.DeleteAccountResponse
+	(*Transaction)(nil),                          // 27: core.Transaction
+	(*ListTransactionResponse)(nil),              // 28: core.ListTransactionResponse
+	(*DeleteTransactionResponse)(nil),            // 29: core.DeleteTransactionResponse
+	(*common.PaymentTask)(nil),                   // 30: common.PaymentTask
+	(*common.CreateManyPaymentTaskResponse)(nil), // 31: common.CreateManyPaymentTaskResponse
+	(*common.ListPaymentTaskResponse)(nil),       // 32: common.ListPaymentTaskResponse
+	(*common.DeletePaymentTaskResponse)(nil),     // 33: common.DeletePaymentTaskResponse
+	(*User)(nil),                                 // 34: core.User
+	(*ListUserResponse)(nil),                     // 35: core.ListUserResponse
+	(*DeleteUserResponse)(nil),                   // 36: core.DeleteUserResponse
 }
 var file_core_core_proto_depIdxs = []int32{
 	1,  // 0: core.GetPaymentPlanRequest.account_info:type_name -> core.AccountInfo
-	0,  // 1: core.Core.GetPaymentPlan:input_type -> core.GetPaymentPlanRequest
-	2,  // 2: core.Core.CreateAccount:input_type -> core.CreateAccountRequest
-	3,  // 3: core.Core.GetAccount:input_type -> core.GetAccountRequest
-	4,  // 4: core.Core.ListAccounts:input_type -> core.ListAccountRequest
-	5,  // 5: core.Core.UpdateAccount:input_type -> core.UpdateAccountRequest
-	6,  // 6: core.Core.DeleteAccount:input_type -> core.DeleteAccountRequest
-	7,  // 7: core.Core.CreateTransaction:input_type -> core.CreateTransactionRequest
-	8,  // 8: core.Core.GetTransaction:input_type -> core.GetTransactionRequest
-	9,  // 9: core.Core.ListTransactions:input_type -> core.ListTransactionRequest
-	10, // 10: core.Core.UpdateTransaction:input_type -> core.UpdateTransactionRequest
-	11, // 11: core.Core.DeleteTransaction:input_type -> core.DeleteTransactionRequest
-	12, // 12: core.Core.CreatePaymentTask:input_type -> common.CreatePaymentTaskRequest
-	13, // 13: core.Core.CreateManyPaymentTask:input_type -> common.CreateManyPaymentTaskRequest
-	14, // 14: core.Core.GetPaymentTask:input_type -> common.GetPaymentTaskRequest
-	15, // 15: core.Core.ListPaymentTasks:input_type -> common.ListPaymentTaskRequest
-	16, // 16: core.Core.UpdatePaymentTask:input_type -> common.UpdatePaymentTaskRequest
-	17, // 17: core.Core.DeletePaymentTask:input_type -> common.DeletePaymentTaskRequest
-	18, // 18: core.Core.GetUser:input_type -> core.GetUserRequest
-	19, // 19: core.Core.ListUsers:input_type -> core.ListUserRequest
-	20, // 20: core.Core.UpdateUser:input_type -> core.UpdateUserRequest
-	21, // 21: core.Core.DeleteUser:input_type -> core.DeleteUserRequest
-	22, // 22: core.Core.GetPaymentPlan:output_type -> common.PaymentPlanResponse
-	23, // 23: core.Core.CreateAccount:output_type -> core.Account
-	23, // 24: core.Core.GetAccount:output_type -> core.Account
-	24, // 25: core.Core.ListAccounts:output_type -> core.ListAccountResponse
-	23, // 26: core.Core.UpdateAccount:output_type -> core.Account
-	25, // 27: core.Core.DeleteAccount:output_type -> core.DeleteAccountResponse
-	26, // 28: core.Core.CreateTransaction:output_type -> core.Transaction
-	26, // 29: core.Core.GetTransaction:output_type -> core.Transaction
-	27, // 30: core.Core.ListTransactions:output_type -> core.ListTransactionResponse
-	26, // 31: core.Core.UpdateTransaction:output_type -> core.Transaction
-	28, // 32: core.Core.DeleteTransaction:output_type -> core.DeleteTransactionResponse
-	29, // 33: core.Core.CreatePaymentTask:output_type -> common.PaymentTask
-	30, // 34: core.Core.CreateManyPaymentTask:output_type -> common.CreateManyPaymentTaskResponse
-	29, // 35: core.Core.GetPaymentTask:output_type -> common.PaymentTask
-	31, // 36: core.Core.ListPaymentTasks:output_type -> common.ListPaymentTaskResponse
-	29, // 37: core.Core.UpdatePaymentTask:output_type -> common.PaymentTask
-	32, // 38: core.Core.DeletePaymentTask:output_type -> common.DeletePaymentTaskResponse
-	33, // 39: core.Core.GetUser:output_type -> core.User
-	34, // 40: core.Core.ListUsers:output_type -> core.ListUserResponse
-	33, // 41: core.Core.UpdateUser:output_type -> core.User
-	35, // 42: core.Core.DeleteUser:output_type -> core.DeleteUserResponse
-	22, // [22:43] is the sub-list for method output_type
-	1,  // [1:22] is the sub-list for method input_type
-	1,  // [1:1] is the sub-list for extension type_name
-	1,  // [1:1] is the sub-list for extension extendee
-	0,  // [0:1] is the sub-list for field type_name
+	2,  // 1: core.GetPaymentPlanRequest.meta_data:type_name -> common.MetaData
+	0,  // 2: core.Core.GetPaymentPlan:input_type -> core.GetPaymentPlanRequest
+	3,  // 3: core.Core.CreateAccount:input_type -> core.CreateAccountRequest
+	4,  // 4: core.Core.GetAccount:input_type -> core.GetAccountRequest
+	5,  // 5: core.Core.ListAccounts:input_type -> core.ListAccountRequest
+	6,  // 6: core.Core.UpdateAccount:input_type -> core.UpdateAccountRequest
+	7,  // 7: core.Core.DeleteAccount:input_type -> core.DeleteAccountRequest
+	8,  // 8: core.Core.CreateTransaction:input_type -> core.CreateTransactionRequest
+	9,  // 9: core.Core.GetTransaction:input_type -> core.GetTransactionRequest
+	10, // 10: core.Core.ListTransactions:input_type -> core.ListTransactionRequest
+	11, // 11: core.Core.UpdateTransaction:input_type -> core.UpdateTransactionRequest
+	12, // 12: core.Core.DeleteTransaction:input_type -> core.DeleteTransactionRequest
+	13, // 13: core.Core.CreatePaymentTask:input_type -> common.CreatePaymentTaskRequest
+	14, // 14: core.Core.CreateManyPaymentTask:input_type -> common.CreateManyPaymentTaskRequest
+	15, // 15: core.Core.GetPaymentTask:input_type -> common.GetPaymentTaskRequest
+	16, // 16: core.Core.ListPaymentTasks:input_type -> common.ListPaymentTaskRequest
+	17, // 17: core.Core.UpdatePaymentTask:input_type -> common.UpdatePaymentTaskRequest
+	18, // 18: core.Core.DeletePaymentTask:input_type -> common.DeletePaymentTaskRequest
+	19, // 19: core.Core.GetUser:input_type -> core.GetUserRequest
+	20, // 20: core.Core.ListUsers:input_type -> core.ListUserRequest
+	21, // 21: core.Core.UpdateUser:input_type -> core.UpdateUserRequest
+	22, // 22: core.Core.DeleteUser:input_type -> core.DeleteUserRequest
+	23, // 23: core.Core.GetPaymentPlan:output_type -> common.PaymentPlanResponse
+	24, // 24: core.Core.CreateAccount:output_type -> core.Account
+	24, // 25: core.Core.GetAccount:output_type -> core.Account
+	25, // 26: core.Core.ListAccounts:output_type -> core.ListAccountResponse
+	24, // 27: core.Core.UpdateAccount:output_type -> core.Account
+	26, // 28: core.Core.DeleteAccount:output_type -> core.DeleteAccountResponse
+	27, // 29: core.Core.CreateTransaction:output_type -> core.Transaction
+	27, // 30: core.Core.GetTransaction:output_type -> core.Transaction
+	28, // 31: core.Core.ListTransactions:output_type -> core.ListTransactionResponse
+	27, // 32: core.Core.UpdateTransaction:output_type -> core.Transaction
+	29, // 33: core.Core.DeleteTransaction:output_type -> core.DeleteTransactionResponse
+	30, // 34: core.Core.CreatePaymentTask:output_type -> common.PaymentTask
+	31, // 35: core.Core.CreateManyPaymentTask:output_type -> common.CreateManyPaymentTaskResponse
+	30, // 36: core.Core.GetPaymentTask:output_type -> common.PaymentTask
+	32, // 37: core.Core.ListPaymentTasks:output_type -> common.ListPaymentTaskResponse
+	30, // 38: core.Core.UpdatePaymentTask:output_type -> common.PaymentTask
+	33, // 39: core.Core.DeletePaymentTask:output_type -> common.DeletePaymentTaskResponse
+	34, // 40: core.Core.GetUser:output_type -> core.User
+	35, // 41: core.Core.ListUsers:output_type -> core.ListUserResponse
+	34, // 42: core.Core.UpdateUser:output_type -> core.User
+	36, // 43: core.Core.DeleteUser:output_type -> core.DeleteUserResponse
+	23, // [23:44] is the sub-list for method output_type
+	2,  // [2:23] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_core_core_proto_init() }
