@@ -24,6 +24,7 @@ var (
 	PLAID_COUNTRY_CODES                  = ""
 	PLAID_REDIRECT_URI                   = ""
 	APP_PORT                             = ""
+	PLAID_JA_AT                          = ""
 	client              *plaid.APIClient = nil
 )
 
@@ -42,6 +43,7 @@ func init() {
 	PLAID_COUNTRY_CODES = utils.GetEnv("PLAID_COUNTRY_CODES")
 	PLAID_REDIRECT_URI = utils.GetEnv("PLAID_REDIRECT_URI")
 	APP_PORT = utils.GetEnv("PLAID_APP_PORT")
+	PLAID_JA_AT = utils.GetEnv("PLAID_JA_AT")
 
 	// create Plaid client
 	configuration := plaid.NewConfiguration()
@@ -63,7 +65,7 @@ func main() {
 	// 3. Re-initialize with the link token (from step 1) and the full received redirect URI
 	// from step 2.
 
-	r.POST("/api/set_access_token", getAccessToken) // 3
+	r.POST("/api/set_access_token", getAccessToken)
 	r.POST("/api/create_link_token_for_payment", createLinkTokenForPayment)
 	r.GET("/api/auth", auth)
 	r.GET("/api/accounts", accounts)
@@ -75,8 +77,8 @@ func main() {
 	r.POST("/api/transactions", transactions)
 	r.GET("/api/liabilities", liabilities)
 	r.GET("/api/payment", payment)
-	r.GET("/api/create_public_token", createPublicToken) // 2b
-	r.POST("/api/create_link_token", createLinkToken)    // 2
+	r.GET("/api/create_public_token", createPublicToken)
+	r.POST("/api/create_link_token", createLinkToken)
 	r.GET("/api/investment_transactions", investmentTransactions)
 	r.GET("/api/holdings", holdings)
 	r.GET("/api/assets", assets)
@@ -90,7 +92,7 @@ func main() {
 
 // We store the access_token in memory - in production, store it in a secure
 // persistent data store.
-var accessToken string
+var accessToken = utils.GetEnv("PLAID_JA_AT")
 var itemID string
 
 var paymentID string
