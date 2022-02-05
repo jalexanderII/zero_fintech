@@ -38,6 +38,7 @@ func main() {
 	}
 
 	planningClient := client.SetUpPlanningClient()
+	plaidClient := client.SetUpPlaidClient()
 	// jwtManger to manage user authentication using tokens
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), TokenDuration)
 	authInterceptor := interceptor.NewAuthInterceptor(jwtManager, interceptor.AccessibleRoles(), l)
@@ -60,7 +61,7 @@ func main() {
 
 	// Bind grpcServer to CoreService Server defined by proto
 	core.RegisterCoreServer(grpcServer,
-		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, planningClient, l),
+		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, planningClient, plaidClient, l),
 	)
 	methods := config.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package payments;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/payments";
+
+import "core/users.proto";
+
+service Plaid {
+  // GetLiabilities fetches the access token for a user and makes a call to Plaid service
+  rpc GetLiabilities(GetLiabilitiesRequest) returns (GetLiabilitiesResponse);
+}
+
+message GetLiabilitiesRequest {
+  core.User user = 1;
+  string access_token = 2;
+}
+
+message GetLiabilitiesResponse {
+  bytes liabilities_get_response = 1;
+}
+

@@ -2,11 +2,14 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -24,12 +27,13 @@ type CoreServer struct {
 	jwtm *middleware.JWTManager
 	// clients
 	planningClient planning.PlanningClient
+	plaidClient    payments.PlaidClient
 	// custom logger
 	l *logrus.Logger
 }
 
-func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient, l *logrus.Logger) *CoreServer {
-	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, planningClient: pc, l: l}
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient, plaid payments.PlaidClient, l *logrus.Logger) *CoreServer {
+	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, planningClient: pc, plaidClient: plaid, l: l}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {
@@ -62,4 +66,17 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 		return nil, err
 	}
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
+}
+
+func (s CoreServer) GetLiabilities(ctx context.Context, in *payments.GetLiabilitiesRequest) (database.LiabilitiesResponse, error) {
+	resp, err := s.plaidClient.GetLiabilities(ctx, in)
+	if err != nil {
+		return database.LiabilitiesResponse{}, err
+	}
+	var obj database.LiabilitiesResponse
+	if err := json.Unmarshal(resp.GetLiabilitiesGetResponse(), &obj); err != nil {
+		panic(err)
+	}
+
+	return obj, nil
 }

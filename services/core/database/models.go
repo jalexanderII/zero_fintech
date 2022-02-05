@@ -86,3 +86,24 @@ type User struct {
 	Email    string             `bson:"email"`
 	Password string             `bson:"password"`
 }
+
+type LiabilitiesResponse struct {
+	Liabilities struct {
+		Credit []struct {
+			AccountId string `json:"account_id,omitempty"`
+			Aprs      []struct {
+				AprPercentage        float64     `json:"apr_percentage,omitempty"`
+				AprType              string      `json:"apr_type,omitempty"`
+				BalanceSubjectToApr  float64     `json:"balance_subject_to_apr,omitempty"`
+				InterestChargeAmount interface{} `json:"interest_charge_amount,omitempty"`
+			} `json:"aprs"`
+			IsOverdue              interface{} `json:"is_overdue,omitempty"`
+			LastPaymentAmount      int         `json:"last_payment_amount,omitempty"`
+			LastPaymentDate        string      `json:"last_payment_date,omitempty"`
+			LastStatementBalance   float64     `json:"last_statement_balance,omitempty"`
+			LastStatementIssueDate string      `json:"last_statement_issue_date,omitempty"`
+			MinimumPaymentAmount   int         `json:"minimum_payment_amount,omitempty"`
+			NextPaymentDueDate     string      `json:"next_payment_due_date,omitempty"`
+		} `json:"credit,omitempty"`
+	} `json:"liabilities,omitempty"`
+}

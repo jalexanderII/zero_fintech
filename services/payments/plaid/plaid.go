@@ -81,7 +81,7 @@ func main() {
 	r.GET("/api/transactions", transactions)
 	r.POST("/api/transactions", transactions)
 	r.GET("/api/liabilities", liabilities)
-	r.GET("/api/liabilities/internal", liabilitiesInternal)
+	r.POST("/api/liabilities/internal", liabilitiesInternal)
 	r.GET("/api/payment", payment)
 	r.GET("/api/create_public_token", createPublicToken)
 	r.POST("/api/create_link_token", createLinkToken)
@@ -334,7 +334,6 @@ func liabilities(c *gin.Context) {
 
 func liabilitiesInternal(c *gin.Context) {
 	ctx := context.Background()
-
 	type Input struct {
 		Token string `json:"access_token"`
 	}

@@ -10,16 +10,16 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/utils"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-
-	_ "github.com/joho/godotenv/autoload"
 )
 
 var L = logrus.New()
@@ -35,6 +35,17 @@ func MockPlanningClient() planning.PlanningClient {
 	return planning.NewPlanningClient(planningConn)
 }
 
+func MockPaymentsClient() payments.PlaidClient {
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	plaidConn, err := grpc.Dial("localhost:9095", opts...)
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+	return payments.NewPlaidClient(plaidConn)
+}
+
 func GenServer() (*CoreServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)
 	DB, err := database.InitiateMongoClient()
@@ -46,7 +57,7 @@ func GenServer() (*CoreServer, context.Context) {
 	transactionCollection := *DB.Collection(utils.GetEnv("TRANSACTION_COLLECTION"))
 	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
 
-	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, MockPlanningClient(), L)
+	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, MockPlanningClient(), MockPaymentsClient(), L)
 	return server, context.TODO()
 }
 
@@ -97,6 +108,35 @@ func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	}
 	if total != expectedTotal {
 		t.Errorf("4: Error from Planning, payment action total does not match, expected %v, got %v", expectedTotal, total)
+	}
+}
+
+func TestCoreServer_GetLiabilities(t *testing.T) {
+	server, ctx := GenServer()
+	u := &core.User{
+		Id:       "61df93c0ac601d1be8e64613",
+		Username: "joel_admin",
+		Email:    "fudoshin2596@gmail.com",
+	}
+
+	resp, err := server.GetLiabilities(ctx,
+		&payments.GetLiabilitiesRequest{
+			User:        u,
+			AccessToken: utils.GetEnv("PLAID_JA_AT"),
+		})
+	if err != nil {
+		t.Errorf("1: Error calling plaid API: %v", err)
+	}
+
+	if resp.Liabilities.Credit == nil {
+		t.Errorf("2: Error calling plaid API : %v", resp.Liabilities)
+	}
+	credit := resp.Liabilities.Credit[0]
+	if credit.AccountId != "dROgn7DjN0hMjE8qOpedfvjV9w3KrvHb8LwzY" {
+		t.Errorf("3: Error calling plaid API : %v", credit)
+	}
+	if len(credit.Aprs) != 2 {
+		t.Errorf("4: Error calling plaid API : %v", credit)
 	}
 }
 
