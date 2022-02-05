@@ -27,4 +27,9 @@ clear_protos_py:
 	rm ./gen/Python/planning/*.py
 	rm ./gen/Python/core/*.py
 	rm ./gen/Python/payments/*.py
+	rm ./gen/Python/common/*.pyi
+	rm ./gen/Python/auth/*.pyi
+	rm ./gen/Python/planning/*.pyi
+	rm ./gen/Python/core/*.pyi
+	rm ./gen/Python/payments/*.pyi
 	rm ./services/planning/database/models/*.py
