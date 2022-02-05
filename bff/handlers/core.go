@@ -11,9 +11,9 @@ import (
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
-	PreferredPlanType         int32 `json:"preferred_plan_type"`
-	PreferredTimelineInMonths int32 `json:"preferred_timeline_in_months"`
-	PreferredPaymentFreq      int32 `json:"preferred_payment_freq"`
+	PreferredPlanType         int32   `json:"preferred_plan_type"`
+	PreferredTimelineInMonths float64 `json:"preferred_timeline_in_months"`
+	PreferredPaymentFreq      int32   `json:"preferred_payment_freq"`
 }
 
 type PaymentTask struct {
@@ -52,6 +52,7 @@ type AccountInfo struct {
 type GetPaymentPlanRequest struct {
 	AccountInfo []AccountInfo `json:"account_info,omitempty"`
 	UserId      string        `json:"user_id,omitempty"`
+	MetaData    MetaData      `json:"meta_data,omitempty"`
 }
 
 // CreateResponsePaymentPlan Takes in a model and returns a serializer
@@ -99,7 +100,12 @@ func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.C
 		for idx, accountInfo := range input.AccountInfo {
 			accountInfoList[idx] = AccountInfoDBToPB(accountInfo)
 		}
-		paymentPlanResponse, err := client.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: accountInfoList, UserId: input.UserId})
+		metaData := &common.MetaData{
+			PreferredPlanType:         common.PlanType(input.MetaData.PreferredPlanType),
+			PreferredTimelineInMonths: input.MetaData.PreferredTimelineInMonths,
+			PreferredPaymentFreq:      common.PaymentFrequency(input.MetaData.PreferredPaymentFreq),
+		}
+		paymentPlanResponse, err := client.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: accountInfoList, UserId: input.UserId, MetaData: metaData})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}

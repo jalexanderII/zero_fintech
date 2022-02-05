@@ -52,29 +52,51 @@ func GenServer() (*CoreServer, context.Context) {
 
 func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	server, ctx := GenServer()
+	var uId = "61df93c0ac601d1be8e64613"
 
 	userSelections := []*core.AccountInfo{
 		{
-			TransactionIds: []string{"61dfa20adebb9d4fb62b9703"},
-			AccountId:      "61df9b621d2c2b15a6e53ec9",
+			TransactionIds: []string{"61dfa20adebb9d4fb62b9703"}, // Pay Equinox charge
+			AccountId:      "61df9b621d2c2b15a6e53ec9",           // Amex
 			Amount:         325,
 		},
 		{
-			TransactionIds: []string{},
-			AccountId:      "61df9b621d2c2b15a6e53ec9",
-			Amount:         10000,
+			TransactionIds: []string{},                 // Pay full account
+			AccountId:      "61df9af7f18b94fc44d09fb9", // Chase
+			Amount:         9000,
 		},
 	}
-
-	paymentPlans, err := server.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: userSelections, UserId: "61ce2e19014fbb650838306c"})
+	metaData := &common.MetaData{
+		PreferredPlanType:         common.PlanType_PLAN_TYPE_OPTIM_CREDIT_SCORE,
+		PreferredTimelineInMonths: 3,
+		PreferredPaymentFreq:      common.PaymentFrequency_PAYMENT_FREQUENCY_MONTHLY,
+	}
+	paymentPlans, err := server.GetPaymentPlan(ctx,
+		&core.GetPaymentPlanRequest{
+			AccountInfo: userSelections,
+			UserId:      uId,
+			MetaData:    metaData,
+		})
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)
 	}
-	if paymentPlans.PaymentPlans[0].Timeline != 3 {
-		t.Errorf("2: Error creating payment plan from DB response: %v", paymentPlans)
+	if len(paymentPlans.PaymentPlans) != 1 {
+		t.Errorf("2: Error from Planning, should have only 1 payment plan, but have: %v", len(paymentPlans.PaymentPlans))
 	}
-	if len(paymentPlans.PaymentPlans[0].PaymentTaskId) != 2 {
-		t.Errorf("3: Error payment plan doesnt have enough tasks ids: %v", paymentPlans.PaymentPlans[0].PaymentTaskId)
+	if paymentPlans.PaymentPlans[0].GetUserId() != uId {
+		t.Errorf("3: Error from Planning, wrong user_id, expected %v, got %v", uId, paymentPlans.PaymentPlans[0].GetUserId())
+	}
+	expectedTotal := userSelections[0].Amount + userSelections[1].Amount
+	expectedAmount := expectedTotal / metaData.PreferredTimelineInMonths
+	if int(paymentPlans.PaymentPlans[0].GetAmountPerPayment()) != int(expectedAmount) {
+		t.Errorf("3: Error from Planning, amount per payment is off, expected %v, got %v", expectedAmount, paymentPlans.PaymentPlans[0].GetAmountPerPayment())
+	}
+	var total = 0.0
+	for _, action := range paymentPlans.PaymentPlans[0].GetPaymentAction() {
+		total += action.GetAmount()
+	}
+	if total != expectedTotal {
+		t.Errorf("4: Error from Planning, payment action total does not match, expected %v, got %v", expectedTotal, total)
 	}
 }
 
