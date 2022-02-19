@@ -2,14 +2,12 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -68,15 +66,10 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }
 
-func (s CoreServer) GetLiabilities(ctx context.Context, in *payments.GetLiabilitiesRequest) (database.LiabilitiesResponse, error) {
-	resp, err := s.plaidClient.GetLiabilities(ctx, in)
+func (s CoreServer) GetAccountDetails(ctx context.Context, in *payments.GetAccountDetailsRequest) (*payments.GetAccountDetailsResponse, error) {
+	resp, err := s.plaidClient.GetAccountDetails(ctx, in)
 	if err != nil {
-		return database.LiabilitiesResponse{}, err
+		return nil, err
 	}
-	var obj database.LiabilitiesResponse
-	if err := json.Unmarshal(resp.GetLiabilitiesGetResponse(), &obj); err != nil {
-		panic(err)
-	}
-
-	return obj, nil
+	return &payments.GetAccountDetailsResponse{AccountDetailsResponse: resp.GetAccountDetailsResponse()}, nil
 }

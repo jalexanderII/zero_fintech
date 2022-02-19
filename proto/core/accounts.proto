@@ -3,66 +3,61 @@ syntax = "proto3";
 package core;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
-import "google/protobuf/timestamp.proto";
-import "common/common.proto";
-
 // Account balances we be calculated using the “average daily balance (including new Purchases)" method.
 message Account {
+  // DB unique id
   string account_id = 1;
   // User id this account is associated with
   string user_id = 2;
-  // Name of account
+  // The name of the account, either assigned by the user or by the financial institution itself
   string name = 3;
-  // Date account was opened and approved
-  google.protobuf.Timestamp created_at = 4;
-  // Represents a percentage range. E.g 9.99% to 23.99%
-  // The APR corresponds to the Daily Periodic Rates (DPRs): the APR is equal to the DPR multiplied by 365,
-  // and the DPR is equal to the APR divided by 365.
-  // Interest charges are calculated by using the DPR. We calculate interest by multiplying each transaction by
-  // its applicable DPR and that result is multiplied by the number of days in the billing cycle.
-  AnnualPercentageRates annual_percentage_rate = 5;
-  // New APR if some penalty is levied
-  PenaltyAPR penalty_apr = 6;
-  // day of each month a minimum payment is due. No interest is charged on purchases if the
-  // entire account balance is paid by the due date each month.
-  int32 due_day = 7;
-  // Minimum amount of interest charged on account balance per month
-  double minimum_interest_charge = 8;
-  // Fee paid once a year in dollars for access to credit card
-  double annual_account_fee = 9;
-  // One time fee as a % of transaction charged on any foreign transaction
-  double foreign_transaction_fee = 10;
-  // Temporary APR as % and its expiration date
-  PromotionalRate promotional_rate = 11;
-  // Monthly minimum payment due on the due day
-  double minimum_payment_due = 12;
-  // Current balance in dollars on the account (may not reflect pending transactions)
-  double current_balance = 13;
-  // Balance in dollars of all transactions that are pending
-  double pending_transactions = 14;
-  // Total credit limit of the account
-  double credit_limit = 15;
+  // The official name of the account as given by the financial institution
+  string official_name = 4;
+  string type = 5;
+  string subtype = 6;
+  // The amount of funds available to be withdrawn from the account, as determined by the financial institution.
+  // For `credit`-type accounts, the `available` balance typically equals the `limit` less the `current` balance,
+  // less any pending outflows plus any pending inflows.
+  double available_balance = 7;
+  // The total amount of funds in or owed by the account.  For `credit`-type accounts, a positive balance
+  // indicates the amount owed; a negative amount indicates the lender owing the account holder.
+  double current_balance = 8;
+  // For `credit`-type accounts, this represents the credit limit.
+  double credit_limit = 9;
+  // The ISO-4217 currency code of the balance. Always null if `unofficial_currency_code` is non-null.
+  string iso_currency_code = 10;
+  // The various interest rates that apply to the account.
+  repeated AnnualPercentageRates annual_percentage_rate = 12;
+  // true if a payment is currently overdue.
+  bool is_overdue = 13;
+  // The amount of the last payment.
+  double last_payment_amount = 14;
+  // The date of the last statement.
+  // Dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format (YYYY-MM-DD).
+  string last_statement_issue_date = 16;
+  // The total amount owed as of the last statement issued
+  double last_statement_balance = 17;
+  // The minimum payment due for the next billing cycle.
+  double minimum_payment_amount = 18;
+  // The due date for the next payment. The due date is `null` if a payment is not expected.
+  // Dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format (YYYY-MM-DD).
+  string next_payment_due_date = 19;
+  // Plaid’s unique identifier for the account. This value will not change unless Plaid can't reconcile the account
+  // with the data returned by the financial institution. This may occur, for example, when the name of the account
+  // changes. If this happens a new `account_id` will be assigned to the account.  The `account_id` can also change
+  // if the `access_token` is deleted and the same credentials that were used to generate that `access_token` are used
+  // to generate a new `access_token` on a later date. In that case, the new `account_id` will be different from the
+  // old `account_id`.  If an account with a specific `account_id` disappears instead of changing, the account is
+  // likely closed. Closed accounts are not returned by the Plaid API.  Like all Plaid identifiers, the `account_id`
+  // is case sensitive.
+  string plaid_account_id = 20;
 }
 
 message AnnualPercentageRates {
-  double low_end = 1;
-  double high_end = 2;
-}
-
-message PenaltyAPR {
-  enum PenaltyReason {
-    PENALTY_REASON_UNKNOWN = 0;
-    PENALTY_REASON_LATE_PAYMENT = 1;
-  }
-
-  double penalty_apr = 1;
-  PenaltyReason penalty_reason = 2;
-}
-
-message PromotionalRate {
-  double temporary_apr = 1;
-  // Date this APR expires
-  google.protobuf.Timestamp expiration_date = 2;
+  double apr_percentage = 1;
+  string apr_type = 2;
+  double balance_subject_to_apr = 3;
+  double interest_charge_amount = 4;
 }
 
 // CRUD Methods
@@ -74,22 +69,8 @@ message GetAccountRequest {
   string id = 1;
 }
 
-message UpdateAccountRequest {
-  string id = 1;
-  Account account = 2;
-}
-
-message DeleteAccountRequest {
-  string id = 1;
-}
-
 message ListAccountRequest {}
 
 message ListAccountResponse {
   repeated Account accounts = 1;
-}
-
-message DeleteAccountResponse {
-  common.DELETE_STATUS status = 1;
-  Account account = 2;
 }

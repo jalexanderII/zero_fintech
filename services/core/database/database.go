@@ -43,3 +43,23 @@ func InitiateMongoClient() (mongo.Database, error) {
 
 	return *clientInstance.Database(utils.GetEnv("CORE_DB_NAME")), clientInstanceError
 }
+
+// InitiateMongoTestClient connects to MongoDB URI and binds a test database
+func InitiateMongoTestClient() (mongo.Database, error) {
+	mongoOnce.Do(func() {
+		clientOptions := options.Client().ApplyURI(utils.GetEnv("MONGOURI"))
+		ctx, cancel := config.NewDBContext(10 * time.Second)
+		defer cancel()
+		client, err := mongo.Connect(ctx, clientOptions)
+		if err != nil {
+			clientInstanceError = err
+		}
+		err = client.Ping(ctx, nil)
+		if err != nil {
+			clientInstanceError = err
+		}
+		clientInstance = client
+	})
+
+	return *clientInstance.Database(utils.GetEnv("CORE_DB_NAME") + "_TEST"), clientInstanceError
+}
