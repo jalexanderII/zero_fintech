@@ -7,7 +7,7 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/services/core/config"
-	"github.com/jalexanderII/zero_fintech/services/payments/plaid/server"
+	"github.com/jalexanderII/zero_fintech/services/payments/plaidExternal/server"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"

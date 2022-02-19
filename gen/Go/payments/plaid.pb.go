@@ -127,6 +127,116 @@ func (x *GetLiabilitiesResponse) GetLiabilitiesGetResponse() []byte {
 	return nil
 }
 
+type GetTransactionsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	User        *core.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	AccessToken string     `protobuf:"bytes,2,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	Months      int64      `protobuf:"varint,3,opt,name=months,proto3" json:"months,omitempty"`
+}
+
+func (x *GetTransactionsRequest) Reset() {
+	*x = GetTransactionsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_payments_plaid_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetTransactionsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionsRequest) ProtoMessage() {}
+
+func (x *GetTransactionsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_payments_plaid_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionsRequest.ProtoReflect.Descriptor instead.
+func (*GetTransactionsRequest) Descriptor() ([]byte, []int) {
+	return file_payments_plaid_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetTransactionsRequest) GetUser() *core.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+func (x *GetTransactionsRequest) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *GetTransactionsRequest) GetMonths() int64 {
+	if x != nil {
+		return x.Months
+	}
+	return 0
+}
+
+type GetTransactionsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TransactionsGetResponse []byte `protobuf:"bytes,1,opt,name=transactions_get_response,json=transactionsGetResponse,proto3" json:"transactions_get_response,omitempty"`
+}
+
+func (x *GetTransactionsResponse) Reset() {
+	*x = GetTransactionsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_payments_plaid_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetTransactionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTransactionsResponse) ProtoMessage() {}
+
+func (x *GetTransactionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_payments_plaid_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTransactionsResponse.ProtoReflect.Descriptor instead.
+func (*GetTransactionsResponse) Descriptor() ([]byte, []int) {
+	return file_payments_plaid_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetTransactionsResponse) GetTransactionsGetResponse() []byte {
+	if x != nil {
+		return x.TransactionsGetResponse
+	}
+	return nil
+}
+
 var File_payments_plaid_proto protoreflect.FileDescriptor
 
 var file_payments_plaid_proto_rawDesc = []byte{
@@ -144,16 +254,35 @@ var file_payments_plaid_proto_rawDesc = []byte{
 	0x69, 0x6c, 0x69, 0x74, 0x69, 0x65, 0x73, 0x5f, 0x67, 0x65, 0x74, 0x5f, 0x72, 0x65, 0x73, 0x70,
 	0x6f, 0x6e, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x16, 0x6c, 0x69, 0x61, 0x62,
 	0x69, 0x6c, 0x69, 0x74, 0x69, 0x65, 0x73, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x32, 0x5c, 0x0a, 0x05, 0x50, 0x6c, 0x61, 0x69, 0x64, 0x12, 0x53, 0x0a, 0x0e, 0x47,
-	0x65, 0x74, 0x4c, 0x69, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x69, 0x65, 0x73, 0x12, 0x1f, 0x2e,
-	0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x4c, 0x69, 0x61, 0x62,
-	0x69, 0x6c, 0x69, 0x74, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20,
-	0x2e, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x4c, 0x69, 0x61,
-	0x62, 0x69, 0x6c, 0x69, 0x74, 0x69, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a,
-	0x61, 0x6c, 0x65, 0x78, 0x61, 0x6e, 0x64, 0x65, 0x72, 0x49, 0x49, 0x2f, 0x7a, 0x65, 0x72, 0x6f,
-	0x5f, 0x66, 0x69, 0x6e, 0x74, 0x65, 0x63, 0x68, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x47, 0x6f, 0x2f,
-	0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x65, 0x22, 0x73, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x04,
+	0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x63, 0x6f, 0x72,
+	0x65, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x12, 0x21, 0x0a, 0x0c,
+	0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12,
+	0x16, 0x0a, 0x06, 0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x06, 0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x73, 0x22, 0x55, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x54, 0x72,
+	0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x3a, 0x0a, 0x19, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f,
+	0x6e, 0x73, 0x5f, 0x67, 0x65, 0x74, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x17, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x73, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xb4,
+	0x01, 0x0a, 0x05, 0x50, 0x6c, 0x61, 0x69, 0x64, 0x12, 0x53, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x4c,
+	0x69, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x69, 0x65, 0x73, 0x12, 0x1f, 0x2e, 0x70, 0x61, 0x79,
+	0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x4c, 0x69, 0x61, 0x62, 0x69, 0x6c, 0x69,
+	0x74, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x70, 0x61,
+	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x4c, 0x69, 0x61, 0x62, 0x69, 0x6c,
+	0x69, 0x74, 0x69, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x56, 0x0a,
+	0x0f, 0x47, 0x65, 0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73,
+	0x12, 0x20, 0x2e, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x54,
+	0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x21, 0x2e, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65,
+	0x74, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x36, 0x5a, 0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x61, 0x6c, 0x65, 0x78, 0x61, 0x6e, 0x64, 0x65, 0x72, 0x49, 0x49,
+	0x2f, 0x7a, 0x65, 0x72, 0x6f, 0x5f, 0x66, 0x69, 0x6e, 0x74, 0x65, 0x63, 0x68, 0x2f, 0x67, 0x65,
+	0x6e, 0x2f, 0x47, 0x6f, 0x2f, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -168,21 +297,26 @@ func file_payments_plaid_proto_rawDescGZIP() []byte {
 	return file_payments_plaid_proto_rawDescData
 }
 
-var file_payments_plaid_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_payments_plaid_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_payments_plaid_proto_goTypes = []interface{}{
-	(*GetLiabilitiesRequest)(nil),  // 0: payments.GetLiabilitiesRequest
-	(*GetLiabilitiesResponse)(nil), // 1: payments.GetLiabilitiesResponse
-	(*core.User)(nil),              // 2: core.User
+	(*GetLiabilitiesRequest)(nil),   // 0: payments.GetLiabilitiesRequest
+	(*GetLiabilitiesResponse)(nil),  // 1: payments.GetLiabilitiesResponse
+	(*GetTransactionsRequest)(nil),  // 2: payments.GetTransactionsRequest
+	(*GetTransactionsResponse)(nil), // 3: payments.GetTransactionsResponse
+	(*core.User)(nil),               // 4: core.User
 }
 var file_payments_plaid_proto_depIdxs = []int32{
-	2, // 0: payments.GetLiabilitiesRequest.user:type_name -> core.User
-	0, // 1: payments.Plaid.GetLiabilities:input_type -> payments.GetLiabilitiesRequest
-	1, // 2: payments.Plaid.GetLiabilities:output_type -> payments.GetLiabilitiesResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	4, // 0: payments.GetLiabilitiesRequest.user:type_name -> core.User
+	4, // 1: payments.GetTransactionsRequest.user:type_name -> core.User
+	0, // 2: payments.Plaid.GetLiabilities:input_type -> payments.GetLiabilitiesRequest
+	2, // 3: payments.Plaid.GetTransactions:input_type -> payments.GetTransactionsRequest
+	1, // 4: payments.Plaid.GetLiabilities:output_type -> payments.GetLiabilitiesResponse
+	3, // 5: payments.Plaid.GetTransactions:output_type -> payments.GetTransactionsResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_payments_plaid_proto_init() }
@@ -215,6 +349,30 @@ func file_payments_plaid_proto_init() {
 				return nil
 			}
 		}
+		file_payments_plaid_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetTransactionsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_payments_plaid_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetTransactionsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -222,7 +380,7 @@ func file_payments_plaid_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_payments_plaid_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -248,8 +406,10 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PlaidClient interface {
-	// GetLiabilities fetches the access token for a user and makes a call to Plaid service
+	// GetLiabilities fetches Plaid Liabilities Endpoint
 	GetLiabilities(ctx context.Context, in *GetLiabilitiesRequest, opts ...grpc.CallOption) (*GetLiabilitiesResponse, error)
+	// GetTransactions fetches Plaid Transactions Endpoint
+	GetTransactions(ctx context.Context, in *GetTransactionsRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error)
 }
 
 type plaidClient struct {
@@ -269,10 +429,21 @@ func (c *plaidClient) GetLiabilities(ctx context.Context, in *GetLiabilitiesRequ
 	return out, nil
 }
 
+func (c *plaidClient) GetTransactions(ctx context.Context, in *GetTransactionsRequest, opts ...grpc.CallOption) (*GetTransactionsResponse, error) {
+	out := new(GetTransactionsResponse)
+	err := c.cc.Invoke(ctx, "/payments.Plaid/GetTransactions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PlaidServer is the server API for Plaid service.
 type PlaidServer interface {
-	// GetLiabilities fetches the access token for a user and makes a call to Plaid service
+	// GetLiabilities fetches Plaid Liabilities Endpoint
 	GetLiabilities(context.Context, *GetLiabilitiesRequest) (*GetLiabilitiesResponse, error)
+	// GetTransactions fetches Plaid Transactions Endpoint
+	GetTransactions(context.Context, *GetTransactionsRequest) (*GetTransactionsResponse, error)
 }
 
 // UnimplementedPlaidServer can be embedded to have forward compatible implementations.
@@ -281,6 +452,9 @@ type UnimplementedPlaidServer struct {
 
 func (*UnimplementedPlaidServer) GetLiabilities(context.Context, *GetLiabilitiesRequest) (*GetLiabilitiesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLiabilities not implemented")
+}
+func (*UnimplementedPlaidServer) GetTransactions(context.Context, *GetTransactionsRequest) (*GetTransactionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTransactions not implemented")
 }
 
 func RegisterPlaidServer(s *grpc.Server, srv PlaidServer) {
@@ -305,6 +479,24 @@ func _Plaid_GetLiabilities_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plaid_GetTransactions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTransactionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlaidServer).GetTransactions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/payments.Plaid/GetTransactions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlaidServer).GetTransactions(ctx, req.(*GetTransactionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Plaid_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "payments.Plaid",
 	HandlerType: (*PlaidServer)(nil),
@@ -312,6 +504,10 @@ var _Plaid_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLiabilities",
 			Handler:    _Plaid_GetLiabilities_Handler,
+		},
+		{
+			MethodName: "GetTransactions",
+			Handler:    _Plaid_GetTransactions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
