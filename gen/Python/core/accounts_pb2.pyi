@@ -3,12 +3,9 @@
 isort:skip_file
 """
 import builtins
-import common.common_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
-import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
-import google.protobuf.timestamp_pb2
 import typing
 import typing_extensions
 
@@ -20,152 +17,132 @@ class Account(google.protobuf.message.Message):
     ACCOUNT_ID_FIELD_NUMBER: builtins.int
     USER_ID_FIELD_NUMBER: builtins.int
     NAME_FIELD_NUMBER: builtins.int
-    CREATED_AT_FIELD_NUMBER: builtins.int
-    ANNUAL_PERCENTAGE_RATE_FIELD_NUMBER: builtins.int
-    PENALTY_APR_FIELD_NUMBER: builtins.int
-    DUE_DAY_FIELD_NUMBER: builtins.int
-    MINIMUM_INTEREST_CHARGE_FIELD_NUMBER: builtins.int
-    ANNUAL_ACCOUNT_FEE_FIELD_NUMBER: builtins.int
-    FOREIGN_TRANSACTION_FEE_FIELD_NUMBER: builtins.int
-    PROMOTIONAL_RATE_FIELD_NUMBER: builtins.int
-    MINIMUM_PAYMENT_DUE_FIELD_NUMBER: builtins.int
+    OFFICIAL_NAME_FIELD_NUMBER: builtins.int
+    TYPE_FIELD_NUMBER: builtins.int
+    SUBTYPE_FIELD_NUMBER: builtins.int
+    AVAILABLE_BALANCE_FIELD_NUMBER: builtins.int
     CURRENT_BALANCE_FIELD_NUMBER: builtins.int
-    PENDING_TRANSACTIONS_FIELD_NUMBER: builtins.int
     CREDIT_LIMIT_FIELD_NUMBER: builtins.int
+    ISO_CURRENCY_CODE_FIELD_NUMBER: builtins.int
+    ANNUAL_PERCENTAGE_RATE_FIELD_NUMBER: builtins.int
+    IS_OVERDUE_FIELD_NUMBER: builtins.int
+    LAST_PAYMENT_AMOUNT_FIELD_NUMBER: builtins.int
+    LAST_STATEMENT_ISSUE_DATE_FIELD_NUMBER: builtins.int
+    LAST_STATEMENT_BALANCE_FIELD_NUMBER: builtins.int
+    MINIMUM_PAYMENT_AMOUNT_FIELD_NUMBER: builtins.int
+    NEXT_PAYMENT_DUE_DATE_FIELD_NUMBER: builtins.int
+    PLAID_ACCOUNT_ID_FIELD_NUMBER: builtins.int
     account_id: typing.Text = ...
+    """DB unique id"""
+
     user_id: typing.Text = ...
     """User id this account is associated with"""
 
     name: typing.Text = ...
-    """Name of account"""
+    """The name of the account, either assigned by the user or by the financial institution itself"""
 
-    @property
-    def created_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
-        """Date account was opened and approved"""
-        pass
-    @property
-    def annual_percentage_rate(self) -> global___AnnualPercentageRates:
-        """Represents a percentage range. E.g 9.99% to 23.99%
-        The APR corresponds to the Daily Periodic Rates (DPRs): the APR is equal to the DPR multiplied by 365,
-        and the DPR is equal to the APR divided by 365.
-        Interest charges are calculated by using the DPR. We calculate interest by multiplying each transaction by
-        its applicable DPR and that result is multiplied by the number of days in the billing cycle.
-        """
-        pass
-    @property
-    def penalty_apr(self) -> global___PenaltyAPR:
-        """New APR if some penalty is levied"""
-        pass
-    due_day: builtins.int = ...
-    """day of each month a minimum payment is due. No interest is charged on purchases if the
-    entire account balance is paid by the due date each month.
+    official_name: typing.Text = ...
+    """The official name of the account as given by the financial institution"""
+
+    type: typing.Text = ...
+    subtype: typing.Text = ...
+    available_balance: builtins.float = ...
+    """The amount of funds available to be withdrawn from the account, as determined by the financial institution.
+    For `credit`-type accounts, the `available` balance typically equals the `limit` less the `current` balance,
+    less any pending outflows plus any pending inflows.
     """
 
-    minimum_interest_charge: builtins.float = ...
-    """Minimum amount of interest charged on account balance per month"""
-
-    annual_account_fee: builtins.float = ...
-    """Fee paid once a year in dollars for access to credit card"""
-
-    foreign_transaction_fee: builtins.float = ...
-    """One time fee as a % of transaction charged on any foreign transaction"""
-
-    @property
-    def promotional_rate(self) -> global___PromotionalRate:
-        """Temporary APR as % and its expiration date"""
-        pass
-    minimum_payment_due: builtins.float = ...
-    """Monthly minimum payment due on the due day"""
-
     current_balance: builtins.float = ...
-    """Current balance in dollars on the account (may not reflect pending transactions)"""
-
-    pending_transactions: builtins.float = ...
-    """Balance in dollars of all transactions that are pending"""
+    """The total amount of funds in or owed by the account.  For `credit`-type accounts, a positive balance
+    indicates the amount owed; a negative amount indicates the lender owing the account holder.
+    """
 
     credit_limit: builtins.float = ...
-    """Total credit limit of the account"""
+    """For `credit`-type accounts, this represents the credit limit."""
+
+    iso_currency_code: typing.Text = ...
+    """The ISO-4217 currency code of the balance. Always null if `unofficial_currency_code` is non-null."""
+
+    @property
+    def annual_percentage_rate(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___AnnualPercentageRates]:
+        """The various interest rates that apply to the account."""
+        pass
+    is_overdue: builtins.bool = ...
+    """true if a payment is currently overdue."""
+
+    last_payment_amount: builtins.float = ...
+    """The amount of the last payment."""
+
+    last_statement_issue_date: typing.Text = ...
+    """The date of the last statement.
+    Dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format (YYYY-MM-DD).
+    """
+
+    last_statement_balance: builtins.float = ...
+    """The total amount owed as of the last statement issued"""
+
+    minimum_payment_amount: builtins.float = ...
+    """The minimum payment due for the next billing cycle."""
+
+    next_payment_due_date: typing.Text = ...
+    """The due date for the next payment. The due date is `null` if a payment is not expected.
+    Dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format (YYYY-MM-DD).
+    """
+
+    plaid_account_id: typing.Text = ...
+    """Plaid’s unique identifier for the account. This value will not change unless Plaid can't reconcile the account
+    with the data returned by the financial institution. This may occur, for example, when the name of the account
+    changes. If this happens a new `account_id` will be assigned to the account.  The `account_id` can also change
+    if the `access_token` is deleted and the same credentials that were used to generate that `access_token` are used
+    to generate a new `access_token` on a later date. In that case, the new `account_id` will be different from the
+    old `account_id`.  If an account with a specific `account_id` disappears instead of changing, the account is
+    likely closed. Closed accounts are not returned by the Plaid API.  Like all Plaid identifiers, the `account_id`
+    is case sensitive.
+    """
 
     def __init__(self,
         *,
         account_id : typing.Text = ...,
         user_id : typing.Text = ...,
         name : typing.Text = ...,
-        created_at : typing.Optional[google.protobuf.timestamp_pb2.Timestamp] = ...,
-        annual_percentage_rate : typing.Optional[global___AnnualPercentageRates] = ...,
-        penalty_apr : typing.Optional[global___PenaltyAPR] = ...,
-        due_day : builtins.int = ...,
-        minimum_interest_charge : builtins.float = ...,
-        annual_account_fee : builtins.float = ...,
-        foreign_transaction_fee : builtins.float = ...,
-        promotional_rate : typing.Optional[global___PromotionalRate] = ...,
-        minimum_payment_due : builtins.float = ...,
+        official_name : typing.Text = ...,
+        type : typing.Text = ...,
+        subtype : typing.Text = ...,
+        available_balance : builtins.float = ...,
         current_balance : builtins.float = ...,
-        pending_transactions : builtins.float = ...,
         credit_limit : builtins.float = ...,
+        iso_currency_code : typing.Text = ...,
+        annual_percentage_rate : typing.Optional[typing.Iterable[global___AnnualPercentageRates]] = ...,
+        is_overdue : builtins.bool = ...,
+        last_payment_amount : builtins.float = ...,
+        last_statement_issue_date : typing.Text = ...,
+        last_statement_balance : builtins.float = ...,
+        minimum_payment_amount : builtins.float = ...,
+        next_payment_due_date : typing.Text = ...,
+        plaid_account_id : typing.Text = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["annual_percentage_rate",b"annual_percentage_rate","created_at",b"created_at","penalty_apr",b"penalty_apr","promotional_rate",b"promotional_rate"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account_id",b"account_id","annual_account_fee",b"annual_account_fee","annual_percentage_rate",b"annual_percentage_rate","created_at",b"created_at","credit_limit",b"credit_limit","current_balance",b"current_balance","due_day",b"due_day","foreign_transaction_fee",b"foreign_transaction_fee","minimum_interest_charge",b"minimum_interest_charge","minimum_payment_due",b"minimum_payment_due","name",b"name","penalty_apr",b"penalty_apr","pending_transactions",b"pending_transactions","promotional_rate",b"promotional_rate","user_id",b"user_id"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["account_id",b"account_id","annual_percentage_rate",b"annual_percentage_rate","available_balance",b"available_balance","credit_limit",b"credit_limit","current_balance",b"current_balance","is_overdue",b"is_overdue","iso_currency_code",b"iso_currency_code","last_payment_amount",b"last_payment_amount","last_statement_balance",b"last_statement_balance","last_statement_issue_date",b"last_statement_issue_date","minimum_payment_amount",b"minimum_payment_amount","name",b"name","next_payment_due_date",b"next_payment_due_date","official_name",b"official_name","plaid_account_id",b"plaid_account_id","subtype",b"subtype","type",b"type","user_id",b"user_id"]) -> None: ...
 global___Account = Account
 
 class AnnualPercentageRates(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    LOW_END_FIELD_NUMBER: builtins.int
-    HIGH_END_FIELD_NUMBER: builtins.int
-    low_end: builtins.float = ...
-    high_end: builtins.float = ...
+    APR_PERCENTAGE_FIELD_NUMBER: builtins.int
+    APR_TYPE_FIELD_NUMBER: builtins.int
+    BALANCE_SUBJECT_TO_APR_FIELD_NUMBER: builtins.int
+    INTEREST_CHARGE_AMOUNT_FIELD_NUMBER: builtins.int
+    apr_percentage: builtins.float = ...
+    apr_type: typing.Text = ...
+    balance_subject_to_apr: builtins.float = ...
+    interest_charge_amount: builtins.float = ...
     def __init__(self,
         *,
-        low_end : builtins.float = ...,
-        high_end : builtins.float = ...,
+        apr_percentage : builtins.float = ...,
+        apr_type : typing.Text = ...,
+        balance_subject_to_apr : builtins.float = ...,
+        interest_charge_amount : builtins.float = ...,
         ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["high_end",b"high_end","low_end",b"low_end"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["apr_percentage",b"apr_percentage","apr_type",b"apr_type","balance_subject_to_apr",b"balance_subject_to_apr","interest_charge_amount",b"interest_charge_amount"]) -> None: ...
 global___AnnualPercentageRates = AnnualPercentageRates
-
-class PenaltyAPR(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    class _PenaltyReason:
-        ValueType = typing.NewType('ValueType', builtins.int)
-        V: typing_extensions.TypeAlias = ValueType
-    class _PenaltyReasonEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_PenaltyReason.ValueType], builtins.type):
-        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor = ...
-        PENALTY_REASON_UNKNOWN: PenaltyAPR.PenaltyReason.ValueType = ...  # 0
-        PENALTY_REASON_LATE_PAYMENT: PenaltyAPR.PenaltyReason.ValueType = ...  # 1
-    class PenaltyReason(_PenaltyReason, metaclass=_PenaltyReasonEnumTypeWrapper):
-        pass
-
-    PENALTY_REASON_UNKNOWN: PenaltyAPR.PenaltyReason.ValueType = ...  # 0
-    PENALTY_REASON_LATE_PAYMENT: PenaltyAPR.PenaltyReason.ValueType = ...  # 1
-
-    PENALTY_APR_FIELD_NUMBER: builtins.int
-    PENALTY_REASON_FIELD_NUMBER: builtins.int
-    penalty_apr: builtins.float = ...
-    penalty_reason: global___PenaltyAPR.PenaltyReason.ValueType = ...
-    def __init__(self,
-        *,
-        penalty_apr : builtins.float = ...,
-        penalty_reason : global___PenaltyAPR.PenaltyReason.ValueType = ...,
-        ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["penalty_apr",b"penalty_apr","penalty_reason",b"penalty_reason"]) -> None: ...
-global___PenaltyAPR = PenaltyAPR
-
-class PromotionalRate(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    TEMPORARY_APR_FIELD_NUMBER: builtins.int
-    EXPIRATION_DATE_FIELD_NUMBER: builtins.int
-    temporary_apr: builtins.float = ...
-    @property
-    def expiration_date(self) -> google.protobuf.timestamp_pb2.Timestamp:
-        """Date this APR expires"""
-        pass
-    def __init__(self,
-        *,
-        temporary_apr : builtins.float = ...,
-        expiration_date : typing.Optional[google.protobuf.timestamp_pb2.Timestamp] = ...,
-        ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["expiration_date",b"expiration_date"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["expiration_date",b"expiration_date","temporary_apr",b"temporary_apr"]) -> None: ...
-global___PromotionalRate = PromotionalRate
 
 class CreateAccountRequest(google.protobuf.message.Message):
     """CRUD Methods"""
@@ -192,33 +169,6 @@ class GetAccountRequest(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["id",b"id"]) -> None: ...
 global___GetAccountRequest = GetAccountRequest
 
-class UpdateAccountRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    ID_FIELD_NUMBER: builtins.int
-    ACCOUNT_FIELD_NUMBER: builtins.int
-    id: typing.Text = ...
-    @property
-    def account(self) -> global___Account: ...
-    def __init__(self,
-        *,
-        id : typing.Text = ...,
-        account : typing.Optional[global___Account] = ...,
-        ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["account",b"account"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account",b"account","id",b"id"]) -> None: ...
-global___UpdateAccountRequest = UpdateAccountRequest
-
-class DeleteAccountRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    ID_FIELD_NUMBER: builtins.int
-    id: typing.Text = ...
-    def __init__(self,
-        *,
-        id : typing.Text = ...,
-        ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id",b"id"]) -> None: ...
-global___DeleteAccountRequest = DeleteAccountRequest
-
 class ListAccountRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     def __init__(self,
@@ -236,19 +186,3 @@ class ListAccountResponse(google.protobuf.message.Message):
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal["accounts",b"accounts"]) -> None: ...
 global___ListAccountResponse = ListAccountResponse
-
-class DeleteAccountResponse(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    STATUS_FIELD_NUMBER: builtins.int
-    ACCOUNT_FIELD_NUMBER: builtins.int
-    status: common.common_pb2.DELETE_STATUS.ValueType = ...
-    @property
-    def account(self) -> global___Account: ...
-    def __init__(self,
-        *,
-        status : common.common_pb2.DELETE_STATUS.ValueType = ...,
-        account : typing.Optional[global___Account] = ...,
-        ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["account",b"account"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account",b"account","status",b"status"]) -> None: ...
-global___DeleteAccountResponse = DeleteAccountResponse

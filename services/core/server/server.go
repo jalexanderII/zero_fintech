@@ -30,8 +30,14 @@ type CoreServer struct {
 	l *logrus.Logger
 }
 
-func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient, plaid payments.PlaidClient, l *logrus.Logger) *CoreServer {
-	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, planningClient: pc, plaidClient: plaid, l: l}
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection,
+	udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient,
+	plaid payments.PlaidClient, l *logrus.Logger,
+) *CoreServer {
+	return &CoreServer{
+		PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb,
+		UserDB: udb, jwtm: jwtm, planningClient: pc, plaidClient: plaid, l: l,
+	}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {

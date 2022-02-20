@@ -2,15 +2,9 @@
 # sources: core/accounts.proto, core/transactions.proto, core/users.proto, core/core.proto
 # plugin: python-betterproto
 from dataclasses import dataclass
-from datetime import datetime
-from typing import List
+from typing import Dict, List
 
 import betterproto
-
-
-class PenaltyAPRPenaltyReason(betterproto.Enum):
-    PENALTY_REASON_UNKNOWN = 0
-    PENALTY_REASON_LATE_PAYMENT = 1
 
 
 @dataclass
@@ -20,90 +14,162 @@ class Account(betterproto.Message):
     (including new Purchases)" method.
     """
 
+    # DB unique id
     account_id: str = betterproto.string_field(1)
     # User id this account is associated with
     user_id: str = betterproto.string_field(2)
-    # Name of account
+    # The name of the account, either assigned by the user or by the financial
+    # institution itself
     name: str = betterproto.string_field(3)
-    # Date account was opened and approved
-    created_at: datetime = betterproto.message_field(4)
-    # Represents a percentage range. E.g 9.99% to 23.99% The APR corresponds to
-    # the Daily Periodic Rates (DPRs): the APR is equal to the DPR multiplied by
-    # 365, and the DPR is equal to the APR divided by 365. Interest charges are
-    # calculated by using the DPR. We calculate interest by multiplying each
-    # transaction by its applicable DPR and that result is multiplied by the
-    # number of days in the billing cycle.
-    annual_percentage_rate: "AnnualPercentageRates" = betterproto.message_field(5)
-    # New APR if some penalty is levied
-    penalty_apr: "PenaltyAPR" = betterproto.message_field(6)
-    # day of each month a minimum payment is due. No interest is charged on
-    # purchases if the entire account balance is paid by the due date each month.
-    due_day: int = betterproto.int32_field(7)
-    # Minimum amount of interest charged on account balance per month
-    minimum_interest_charge: float = betterproto.double_field(8)
-    # Fee paid once a year in dollars for access to credit card
-    annual_account_fee: float = betterproto.double_field(9)
-    # One time fee as a % of transaction charged on any foreign transaction
-    foreign_transaction_fee: float = betterproto.double_field(10)
-    # Temporary APR as % and its expiration date
-    promotional_rate: "PromotionalRate" = betterproto.message_field(11)
-    # Monthly minimum payment due on the due day
-    minimum_payment_due: float = betterproto.double_field(12)
-    # Current balance in dollars on the account (may not reflect pending
-    # transactions)
-    current_balance: float = betterproto.double_field(13)
-    # Balance in dollars of all transactions that are pending
-    pending_transactions: float = betterproto.double_field(14)
-    # Total credit limit of the account
-    credit_limit: float = betterproto.double_field(15)
+    # The official name of the account as given by the financial institution
+    official_name: str = betterproto.string_field(4)
+    type: str = betterproto.string_field(5)
+    subtype: str = betterproto.string_field(6)
+    # The amount of funds available to be withdrawn from the account, as
+    # determined by the financial institution. For `credit`-type accounts, the
+    # `available` balance typically equals the `limit` less the `current`
+    # balance, less any pending outflows plus any pending inflows.
+    available_balance: float = betterproto.double_field(7)
+    # The total amount of funds in or owed by the account.  For `credit`-type
+    # accounts, a positive balance indicates the amount owed; a negative amount
+    # indicates the lender owing the account holder.
+    current_balance: float = betterproto.double_field(8)
+    # For `credit`-type accounts, this represents the credit limit.
+    credit_limit: float = betterproto.double_field(9)
+    # The ISO-4217 currency code of the balance. Always null if
+    # `unofficial_currency_code` is non-null.
+    iso_currency_code: str = betterproto.string_field(10)
+    # The various interest rates that apply to the account.
+    annual_percentage_rate: List["AnnualPercentageRates"] = betterproto.message_field(
+        12
+    )
+    # true if a payment is currently overdue.
+    is_overdue: bool = betterproto.bool_field(13)
+    # The amount of the last payment.
+    last_payment_amount: float = betterproto.double_field(14)
+    # The date of the last statement. Dates are returned in an [ISO
+    # 8601](https://wikipedia.org/wiki/ISO_8601) format (YYYY-MM-DD).
+    last_statement_issue_date: str = betterproto.string_field(16)
+    # The total amount owed as of the last statement issued
+    last_statement_balance: float = betterproto.double_field(17)
+    # The minimum payment due for the next billing cycle.
+    minimum_payment_amount: float = betterproto.double_field(18)
+    # The due date for the next payment. The due date is `null` if a payment is
+    # not expected. Dates are returned in an [ISO
+    # 8601](https://wikipedia.org/wiki/ISO_8601) format (YYYY-MM-DD).
+    next_payment_due_date: str = betterproto.string_field(19)
+    # Plaid’s unique identifier for the account. This value will not change
+    # unless Plaid can't reconcile the account with the data returned by the
+    # financial institution. This may occur, for example, when the name of the
+    # account changes. If this happens a new `account_id` will be assigned to the
+    # account.  The `account_id` can also change if the `access_token` is deleted
+    # and the same credentials that were used to generate that `access_token` are
+    # used to generate a new `access_token` on a later date. In that case, the
+    # new `account_id` will be different from the old `account_id`.  If an
+    # account with a specific `account_id` disappears instead of changing, the
+    # account is likely closed. Closed accounts are not returned by the Plaid
+    # API.  Like all Plaid identifiers, the `account_id` is case sensitive.
+    plaid_account_id: str = betterproto.string_field(20)
 
 
 @dataclass
 class AnnualPercentageRates(betterproto.Message):
-    low_end: float = betterproto.double_field(1)
-    high_end: float = betterproto.double_field(2)
-
-
-@dataclass
-class PenaltyAPR(betterproto.Message):
-    penalty_apr: float = betterproto.double_field(1)
-    penalty_reason: "PenaltyAPRPenaltyReason" = betterproto.enum_field(2)
-
-
-@dataclass
-class PromotionalRate(betterproto.Message):
-    temporary_apr: float = betterproto.double_field(1)
-    # Date this APR expires
-    expiration_date: datetime = betterproto.message_field(2)
+    apr_percentage: float = betterproto.double_field(1)
+    apr_type: str = betterproto.string_field(2)
+    balance_subject_to_apr: float = betterproto.double_field(3)
+    interest_charge_amount: float = betterproto.double_field(4)
 
 
 @dataclass
 class Transaction(betterproto.Message):
-    """Transaction represents any credit line item in a credit card account"""
+    """Transaction A representation of a transaction"""
 
-    transaction_id: str = betterproto.string_field(1)
-    user_id: str = betterproto.string_field(2)
-    # Account Id this transaction is associated with
-    account_id: str = betterproto.string_field(3)
-    # Name of the charging entity
-    name: str = betterproto.string_field(4)
-    # Total amount in dollars of the transaction
-    amount: float = betterproto.double_field(5)
-    # Date the transaction was recognized by the account
-    date: datetime = betterproto.message_field(6)
-    # Number of points this transaction earned the user for a specific account
-    rewards_earned: int = betterproto.int32_field(7)
-    transaction_details: "TransactionDetails" = betterproto.message_field(8)
+    user_id: str = betterproto.string_field(1)
+    transaction_type: str = betterproto.string_field(2)
+    # The ID of a posted transaction's associated pending transaction, where
+    # applicable.
+    pending_transaction_id: str = betterproto.string_field(3)
+    # The ID of the category to which this transaction belongs. See
+    # [Categories](https://plaid.com/docs/#category-overview).
+    category_id: str = betterproto.string_field(4)
+    # A hierarchical array of the categories to which this transaction belongs.
+    # See [Categories](https://plaid.com/docs/#category-overview).
+    category: List[str] = betterproto.string_field(5)
+    transaction_details: "TransactionDetails" = betterproto.message_field(6)
+    # The merchant name or transaction description.
+    name: str = betterproto.string_field(7)
+    # The string returned by the financial institution to describe the
+    # transaction.
+    original_description: str = betterproto.string_field(8)
+    # DB account id
+    account_id: str = betterproto.string_field(9)
+    # The settled value of the transaction, denominated in the account's
+    # currency, as stated in `iso_currency_code`. Positive values when money
+    # moves out of the account; negative values when money moves in. For example,
+    # debit card purchases are positive; credit card payments, direct deposits,
+    # and refunds are negative.
+    amount: float = betterproto.double_field(10)
+    # The ISO-4217 currency code of the transaction.
+    iso_currency_code: str = betterproto.string_field(11)
+    # For pending transactions, the date that the transaction occurred; for
+    # posted transactions, the date that the transaction posted. Both dates are
+    # returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format (
+    # `YYYY-MM-DD` ).
+    date: str = betterproto.string_field(12)
+    # When `true`, identifies the transaction as pending or unsettled. Pending
+    # transaction details (name, type, amount, category ID) may change before
+    # they are settled.
+    pending: bool = betterproto.bool_field(13)
+    # DB specific id
+    transaction_id: str = betterproto.string_field(14)
+    # The merchant name, as extracted by Plaid from the `name` field.
+    merchant_name: str = betterproto.string_field(15)
+    # The channel used to make a payment. `online:` transactions that took place
+    # online. `in store:` transactions that were made at a physical location.
+    # `other:` transactions that relate to banks, e.g. fees or deposits.
+    payment_channel: str = betterproto.string_field(16)
+    # The date that the transaction was authorized. Dates are returned in an [ISO
+    # 8601](https://wikipedia.org/wiki/ISO_8601) format ( `YYYY-MM-DD` ).
+    authorized_date: str = betterproto.string_field(17)
+    # A high level category that communicates the broad category of the
+    # transaction.
+    primary_category: str = betterproto.string_field(18)
+    # Provides additional granularity to the primary categorization.
+    detailed_category: str = betterproto.string_field(19)
+    # The ID of the account in which this transaction occurred.
+    plaid_account_id: str = betterproto.string_field(20)
+    # The case sensitive unique ID of the transaction.
+    plaid_transaction_id: str = betterproto.string_field(21)
 
 
 @dataclass
 class TransactionDetails(betterproto.Message):
-    # Full address of the charging entity
+    """
+    PaymentMeta Transaction information specific to inter-bank transfers. If
+    the transaction was not an inter-bank transfer, all fields will be `null`.
+    If the `transactions` object was returned by a Transactions endpoint such
+    as `/transactions/get`, the `payment_meta` key will always appear, but no
+    data elements are guaranteed. If the `transactions` object was returned by
+    an Assets endpoint such as `/asset_report/get/` or `/asset_report/pdf/get`,
+    this field will only appear in an Asset Report with Insights.
+    """
+
+    # The street address where the transaction occurred.
     address: str = betterproto.string_field(1)
-    # Business name of the charging entity
-    doing_business_as: str = betterproto.string_field(2)
-    # Date the transaction was processed by the charger
-    date_processed: datetime = betterproto.message_field(3)
+    # The city where the transaction occurred.
+    city: str = betterproto.string_field(2)
+    # The region or state where the transaction occurred. In API versions
+    # 2018-05-22 and earlier, this field is called `state`.
+    state: str = betterproto.string_field(3)
+    # The postal code where the transaction occurred. In API versions 2018-05-22
+    # and earlier, this field is called `zip`.
+    zipcode: str = betterproto.string_field(4)
+    # The ISO 3166-1 alpha-2 country code where the transaction occurred.
+    country: str = betterproto.string_field(5)
+    # The merchant defined store number where the transaction occurred.
+    store_number: str = betterproto.string_field(6)
+    # The transaction reference number supplied by the financial institution.
+    reference_number: str = betterproto.string_field(7)
 
 
 @dataclass
@@ -112,6 +178,9 @@ class User(betterproto.Message):
     username: str = betterproto.string_field(2)
     email: str = betterproto.string_field(3)
     password: str = betterproto.string_field(4)
+    account_id_to_token: Dict[str, str] = betterproto.map_field(
+        5, betterproto.TYPE_STRING, betterproto.TYPE_STRING
+    )
 
 
 @dataclass

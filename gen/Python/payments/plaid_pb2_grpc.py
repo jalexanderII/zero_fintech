@@ -6,7 +6,8 @@ from payments import plaid_pb2 as payments_dot_plaid__pb2
 
 
 class PlaidStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """Plaid fetches the access token for a user and makes a call to Plaid API
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -14,18 +15,20 @@ class PlaidStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetLiabilities = channel.unary_unary(
-                '/payments.Plaid/GetLiabilities',
-                request_serializer=payments_dot_plaid__pb2.GetLiabilitiesRequest.SerializeToString,
-                response_deserializer=payments_dot_plaid__pb2.GetLiabilitiesResponse.FromString,
+        self.GetAccountDetails = channel.unary_unary(
+                '/payments.Plaid/GetAccountDetails',
+                request_serializer=payments_dot_plaid__pb2.GetAccountDetailsRequest.SerializeToString,
+                response_deserializer=payments_dot_plaid__pb2.GetAccountDetailsResponse.FromString,
                 )
 
 
 class PlaidServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """Plaid fetches the access token for a user and makes a call to Plaid API
+    """
 
-    def GetLiabilities(self, request, context):
-        """GetLiabilities fetches the access token for a user and makes a call to Plaid service
+    def GetAccountDetails(self, request, context):
+        """GetAccountDetails fetches Plaid Liabilities and Transactions Endpoint and returns
+        a list of Accounts and Transactions
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -34,10 +37,10 @@ class PlaidServicer(object):
 
 def add_PlaidServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetLiabilities': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetLiabilities,
-                    request_deserializer=payments_dot_plaid__pb2.GetLiabilitiesRequest.FromString,
-                    response_serializer=payments_dot_plaid__pb2.GetLiabilitiesResponse.SerializeToString,
+            'GetAccountDetails': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAccountDetails,
+                    request_deserializer=payments_dot_plaid__pb2.GetAccountDetailsRequest.FromString,
+                    response_serializer=payments_dot_plaid__pb2.GetAccountDetailsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -47,10 +50,11 @@ def add_PlaidServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class Plaid(object):
-    """Missing associated documentation comment in .proto file."""
+    """Plaid fetches the access token for a user and makes a call to Plaid API
+    """
 
     @staticmethod
-    def GetLiabilities(request,
+    def GetAccountDetails(request,
             target,
             options=(),
             channel_credentials=None,
@@ -60,8 +64,8 @@ class Plaid(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/payments.Plaid/GetLiabilities',
-            payments_dot_plaid__pb2.GetLiabilitiesRequest.SerializeToString,
-            payments_dot_plaid__pb2.GetLiabilitiesResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/payments.Plaid/GetAccountDetails',
+            payments_dot_plaid__pb2.GetAccountDetailsRequest.SerializeToString,
+            payments_dot_plaid__pb2.GetAccountDetailsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
