@@ -85,4 +85,4 @@ __pypackages__/
 # Python Environments
 venv/
 venv
-!/services/core/data/
+/services/core/data/
