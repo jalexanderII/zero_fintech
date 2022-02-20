@@ -83,9 +83,7 @@ func main() {
 	r.GET("/api/identity", identity)
 	r.GET("/api/transactions", transactions)
 	r.POST("/api/transactions", transactions)
-	r.POST("/api/transactions/internal", transactionsInternal)
 	r.GET("/api/liabilities", liabilities)
-	r.POST("/api/liabilities/internal", liabilitiesInternal)
 	r.GET("/api/payment", payment)
 	r.GET("/api/create_public_token", createPublicToken)
 	r.POST("/api/create_link_token", createLinkToken)
@@ -93,6 +91,9 @@ func main() {
 	r.GET("/api/holdings", holdings)
 	r.GET("/api/assets", assets)
 	r.GET("/api/transfer", transfer)
+
+	r.POST("/api/transactions/internal", transactionsInternal)
+	r.POST("/api/liabilities/internal", liabilitiesInternal)
 
 	err := r.Run(":" + APP_PORT)
 	if err != nil {

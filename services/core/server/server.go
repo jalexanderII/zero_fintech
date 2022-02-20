@@ -43,6 +43,7 @@ func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collect
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {
 	// create payment task from user inputs
 	paymentTasks := make([]*common.PaymentTask, len(in.GetAccountInfo()))
+
 	for idx, item := range in.GetAccountInfo() {
 		task := &common.PaymentTask{
 			UserId:    in.UserId,
