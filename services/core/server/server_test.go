@@ -3,23 +3,20 @@ package server
 import (
 	"context"
 	"log"
-	"reflect"
 	"testing"
 	"time"
 
-	"github.com/bxcodec/faker/v3"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
+	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/utils"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 )
 
 var L = logrus.New()
@@ -52,10 +49,10 @@ func GenServer() (*CoreServer, context.Context) {
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}
-	coreCollection := *DB.Collection(utils.GetEnv("CORE_COLLECTION"))
-	accountCollection := *DB.Collection(utils.GetEnv("ACCOUNT_COLLECTION"))
-	transactionCollection := *DB.Collection(utils.GetEnv("TRANSACTION_COLLECTION"))
-	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
+	coreCollection := *DB.Collection(utils.GetEnv("CORE_COLLECTION") + "_TEST")
+	accountCollection := *DB.Collection(utils.GetEnv("ACCOUNT_COLLECTION") + "_TEST")
+	transactionCollection := *DB.Collection(utils.GetEnv("TRANSACTION_COLLECTION") + "_TEST")
+	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION") + "_TEST")
 
 	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, MockPlanningClient(), MockPaymentsClient(), L)
 	return server, context.TODO()
@@ -109,58 +106,4 @@ func TestCoreServer_GetPaymentPlan(t *testing.T) {
 	if total != expectedTotal {
 		t.Errorf("4: Error from Planning, payment action total does not match, expected %v, got %v", expectedTotal, total)
 	}
-}
-
-func TestCoreServer_GetLiabilities(t *testing.T) {
-	server, ctx := GenServer()
-	u := &core.User{
-		Id:       "61df93c0ac601d1be8e64613",
-		Username: "joel_admin",
-		Email:    "fudoshin2596@gmail.com",
-	}
-
-	resp, err := server.GetLiabilities(ctx,
-		&payments.GetLiabilitiesRequest{
-			User:        u,
-			AccessToken: utils.GetEnv("PLAID_JA_AT"),
-		})
-	if err != nil {
-		t.Errorf("1: Error calling plaid API: %v", err)
-	}
-
-	if resp.Liabilities.Credit == nil {
-		t.Errorf("2: Error calling plaid API : %v", resp.Liabilities)
-	}
-	credit := resp.Liabilities.Credit[0]
-	if credit.AccountId != "dROgn7DjN0hMjE8qOpedfvjV9w3KrvHb8LwzY" {
-		t.Errorf("3: Error calling plaid API : %v", credit)
-	}
-	if len(credit.Aprs) != 2 {
-		t.Errorf("4: Error calling plaid API : %v", credit)
-	}
-}
-
-// CustomGenerator to handle enum fields
-func CustomGenerator() {
-	_ = faker.AddProvider("preferred_plan_type", func(v reflect.Value) (interface{}, error) {
-		return common.PlanType_PLAN_TYPE_OPTIM_CREDIT_SCORE, nil
-	})
-	_ = faker.AddProvider("preferred_payment_freq", func(v reflect.Value) (interface{}, error) {
-		return common.PaymentFrequency_PAYMENT_FREQUENCY_MONTHLY, nil
-	})
-
-	_ = faker.AddProvider("penalty_reason", func(v reflect.Value) (interface{}, error) {
-		return core.PenaltyAPR_PENALTY_REASON_LATE_PAYMENT, nil
-	})
-}
-
-func GenFakePaymentTask() (*common.PaymentTask, error) {
-	CustomGenerator()
-	var fake common.PaymentTask
-	err := faker.FakeData(&fake)
-	if err != nil {
-		L.Error("[Error] Could not fake this object", "error", err)
-		return nil, err
-	}
-	return &fake, nil
 }

@@ -57,7 +57,7 @@ func (s CoreServer) ListAccounts(ctx context.Context, in *core.ListAccountReques
 // AccountPBToDB converts an Account proto object to its serialized DB object
 func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Account {
 	userId, _ := primitive.ObjectIDFromHex(account.GetUserId())
-	aprs := make([]*database.AnnualPercentageRates, len(account.AnnualPercentageRate))
+	var aprs []*database.AnnualPercentageRates
 	for _, apr := range account.AnnualPercentageRate {
 		aprs = append(aprs, &database.AnnualPercentageRates{
 			AprPercentage:        apr.AprPercentage,
@@ -93,6 +93,7 @@ func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Accoun
 func AccountDBToPB(account database.Account) *core.Account {
 	aprs := make([]*core.AnnualPercentageRates, len(account.AnnualPercentageRate))
 	for _, apr := range account.AnnualPercentageRate {
+
 		aprs = append(aprs, &core.AnnualPercentageRates{
 			AprPercentage:        apr.AprPercentage,
 			AprType:              apr.AprType,

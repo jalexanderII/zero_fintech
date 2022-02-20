@@ -75,12 +75,12 @@ func PlaidResponseToPB(lr LiabilitiesResponse, tr TransactionsResponse, user *co
 	for _, al := range lr.Liabilities {
 		accountLiabilities[al.AccountId] = al
 	}
-	accounts := make([]*core.Account, len(tr.Accounts))
+	var accounts []*core.Account
 	for _, account := range tr.Accounts {
 		var acc CreditCardLiability
 		if _, ok := accountLiabilities[account.AccountId]; ok {
 			acc = accountLiabilities[account.AccountId]
-			aprs := make([]*core.AnnualPercentageRates, len(acc.Aprs))
+			var aprs []*core.AnnualPercentageRates
 			for _, apr := range acc.Aprs {
 				aprs = append(aprs, &core.AnnualPercentageRates{
 					AprPercentage:        apr.AprPercentage,
@@ -110,7 +110,7 @@ func PlaidResponseToPB(lr LiabilitiesResponse, tr TransactionsResponse, user *co
 			})
 		}
 	}
-	transactions := make([]*core.Transaction, len(tr.Transactions))
+	var transactions []*core.Transaction
 	for _, transaction := range tr.Transactions {
 		transactions = append(transactions, &core.Transaction{
 			UserId:               user.Id,

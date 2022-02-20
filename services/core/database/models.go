@@ -15,9 +15,9 @@ type PaymentTask struct {
 
 // MetaData is a DB Serialization of Proto MetaData
 type MetaData struct {
-	PreferredPlanType         common.PlanType         `bson:"preferred_plan_type" faker:"preferred_plan_type" `
-	PreferredTimelineInMonths float64                 `bson:"preferred_timeline_in_months" faker:"preferred_timeline_in_months" `
-	PreferredPaymentFreq      common.PaymentFrequency `bson:"preferred_payment_freq" faker:"preferred_payment_freq" `
+	PreferredPlanType         common.PlanType         `bson:"preferred_plan_type"`
+	PreferredTimelineInMonths float64                 `bson:"preferred_timeline_in_months"`
+	PreferredPaymentFreq      common.PaymentFrequency `bson:"preferred_payment_freq"`
 }
 
 // AnnualPercentageRates is a DB Serialization of Proto AnnualPercentageRates
@@ -50,17 +50,6 @@ type Account struct {
 	NextPaymentDueDate     string                   `bson:"next_payment_due_date"`
 }
 
-// TransactionDetails is a DB Serialization of Proto TransactionDetails
-type TransactionDetails struct {
-	Address         string `bson:"address"`
-	City            string `bson:"city"`
-	State           string `bson:"state"`
-	Zipcode         string `bson:"zipcode"`
-	Country         string `bson:"country"`
-	StoreNumber     string `bson:"store_number"`
-	ReferenceNumber string `bson:"reference_number"`
-}
-
 // Transaction is a DB Serialization of Proto Transaction
 type Transaction struct {
 	ID                   primitive.ObjectID  `bson:"_id"`
@@ -84,6 +73,17 @@ type Transaction struct {
 	AuthorizedDate       string              `bson:"authorized_date"`
 	PrimaryCategory      string              `bson:"primary_category"`
 	DetailedCategory     string              `bson:"detailed_category"`
+}
+
+// TransactionDetails is a DB Serialization of Proto TransactionDetails
+type TransactionDetails struct {
+	Address         string `bson:"address"`
+	City            string `bson:"city"`
+	State           string `bson:"state"`
+	Zipcode         string `bson:"zipcode"`
+	Country         string `bson:"country"`
+	StoreNumber     string `bson:"store_number"`
+	ReferenceNumber string `bson:"reference_number"`
 }
 
 // User is a DB Serialization of Proto User

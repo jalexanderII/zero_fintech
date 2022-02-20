@@ -6,20 +6,43 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/services/core/data"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
+func Test_authServer_CreateFakeUsers(t *testing.T) {
+	server, ctx := GenServer()
+	limit := 3
+	c := 0
+	for ok := true; ok; ok = c < limit {
+		fake, _ := data.GenFakeUser()
+		newUser := database.User{
+			ID:               primitive.NewObjectID(),
+			Email:            fake.Email,
+			Username:         fake.Username,
+			Password:         fake.Password,
+			AccountIdToToken: fake.AccountIdToToken,
+		}
+
+		_, err := server.UserDB.InsertOne(ctx, newUser)
+		if err != nil {
+			t.Errorf("1: Error creating new user: %v", err)
+		}
+		c++
+	}
+}
+
 func TestAuthServer_GetUser(t *testing.T) {
 	server, ctx := GenServer()
 
-	user, err := server.GetUser(ctx, &core.GetUserRequest{Id: "61df93c0ac601d1be8e64613"})
+	user, err := server.GetUser(ctx, &core.GetUserRequest{Id: "6212a0101fca9390a37a32d2"})
 	if err != nil {
 		t.Errorf("1: An error was returned: %v", err)
 	}
-	if user.Username != "joel_admin" {
+	if user.Email != "SOMOkGl@VnLrcvC.com" {
 		t.Errorf("2: Failed to fetch correct user: %+v", user)
 	}
 }
