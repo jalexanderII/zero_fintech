@@ -12,6 +12,8 @@ _sym_db = _symbol_database.Default()
 
 
 from core import users_pb2 as core_dot_users__pb2
+from core import accounts_pb2 as core_dot_accounts__pb2
+from core import transactions_pb2 as core_dot_transactions__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -20,32 +22,39 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z4github.com/jalexanderII/zero_fintech/gen/Go/payments',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x14payments/plaid.proto\x12\x08payments\x1a\x10\x63ore/users.proto\"G\n\x15GetLiabilitiesRequest\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.core.User\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x02 \x01(\t\":\n\x16GetLiabilitiesResponse\x12 \n\x18liabilities_get_response\x18\x01 \x01(\x0c\x32\\\n\x05Plaid\x12S\n\x0eGetLiabilities\x12\x1f.payments.GetLiabilitiesRequest\x1a .payments.GetLiabilitiesResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/paymentsb\x06proto3'
+  serialized_pb=b'\n\x14payments/plaid.proto\x12\x08payments\x1a\x10\x63ore/users.proto\x1a\x13\x63ore/accounts.proto\x1a\x17\x63ore/transactions.proto\"Z\n\x18GetAccountDetailsRequest\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.core.User\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x02 \x01(\t\x12\x0e\n\x06months\x18\x03 \x01(\x03\"_\n\x19GetAccountDetailsResponse\x12\x42\n\x18\x61\x63\x63ount_details_response\x18\x01 \x01(\x0b\x32 .payments.AccountDetailsResponse\"b\n\x16\x41\x63\x63ountDetailsResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.Account\x12\'\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x11.core.Transaction2e\n\x05Plaid\x12\\\n\x11GetAccountDetails\x12\".payments.GetAccountDetailsRequest\x1a#.payments.GetAccountDetailsResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/paymentsb\x06proto3'
   ,
-  dependencies=[core_dot_users__pb2.DESCRIPTOR,])
+  dependencies=[core_dot_users__pb2.DESCRIPTOR,core_dot_accounts__pb2.DESCRIPTOR,core_dot_transactions__pb2.DESCRIPTOR,])
 
 
 
 
-_GETLIABILITIESREQUEST = _descriptor.Descriptor(
-  name='GetLiabilitiesRequest',
-  full_name='payments.GetLiabilitiesRequest',
+_GETACCOUNTDETAILSREQUEST = _descriptor.Descriptor(
+  name='GetAccountDetailsRequest',
+  full_name='payments.GetAccountDetailsRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='user', full_name='payments.GetLiabilitiesRequest.user', index=0,
+      name='user', full_name='payments.GetAccountDetailsRequest.user', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='access_token', full_name='payments.GetLiabilitiesRequest.access_token', index=1,
+      name='access_token', full_name='payments.GetAccountDetailsRequest.access_token', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='months', full_name='payments.GetAccountDetailsRequest.months', index=2,
+      number=3, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -61,23 +70,23 @@ _GETLIABILITIESREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=52,
-  serialized_end=123,
+  serialized_start=98,
+  serialized_end=188,
 )
 
 
-_GETLIABILITIESRESPONSE = _descriptor.Descriptor(
-  name='GetLiabilitiesResponse',
-  full_name='payments.GetLiabilitiesResponse',
+_GETACCOUNTDETAILSRESPONSE = _descriptor.Descriptor(
+  name='GetAccountDetailsResponse',
+  full_name='payments.GetAccountDetailsResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='liabilities_get_response', full_name='payments.GetLiabilitiesResponse.liabilities_get_response', index=0,
-      number=1, type=12, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"",
+      name='account_details_response', full_name='payments.GetAccountDetailsResponse.account_details_response', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -93,28 +102,78 @@ _GETLIABILITIESRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=125,
-  serialized_end=183,
+  serialized_start=190,
+  serialized_end=285,
 )
 
-_GETLIABILITIESREQUEST.fields_by_name['user'].message_type = core_dot_users__pb2._USER
-DESCRIPTOR.message_types_by_name['GetLiabilitiesRequest'] = _GETLIABILITIESREQUEST
-DESCRIPTOR.message_types_by_name['GetLiabilitiesResponse'] = _GETLIABILITIESRESPONSE
+
+_ACCOUNTDETAILSRESPONSE = _descriptor.Descriptor(
+  name='AccountDetailsResponse',
+  full_name='payments.AccountDetailsResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='accounts', full_name='payments.AccountDetailsResponse.accounts', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='transactions', full_name='payments.AccountDetailsResponse.transactions', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=287,
+  serialized_end=385,
+)
+
+_GETACCOUNTDETAILSREQUEST.fields_by_name['user'].message_type = core_dot_users__pb2._USER
+_GETACCOUNTDETAILSRESPONSE.fields_by_name['account_details_response'].message_type = _ACCOUNTDETAILSRESPONSE
+_ACCOUNTDETAILSRESPONSE.fields_by_name['accounts'].message_type = core_dot_accounts__pb2._ACCOUNT
+_ACCOUNTDETAILSRESPONSE.fields_by_name['transactions'].message_type = core_dot_transactions__pb2._TRANSACTION
+DESCRIPTOR.message_types_by_name['GetAccountDetailsRequest'] = _GETACCOUNTDETAILSREQUEST
+DESCRIPTOR.message_types_by_name['GetAccountDetailsResponse'] = _GETACCOUNTDETAILSRESPONSE
+DESCRIPTOR.message_types_by_name['AccountDetailsResponse'] = _ACCOUNTDETAILSRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-GetLiabilitiesRequest = _reflection.GeneratedProtocolMessageType('GetLiabilitiesRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETLIABILITIESREQUEST,
+GetAccountDetailsRequest = _reflection.GeneratedProtocolMessageType('GetAccountDetailsRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTDETAILSREQUEST,
   '__module__' : 'payments.plaid_pb2'
-  # @@protoc_insertion_point(class_scope:payments.GetLiabilitiesRequest)
+  # @@protoc_insertion_point(class_scope:payments.GetAccountDetailsRequest)
   })
-_sym_db.RegisterMessage(GetLiabilitiesRequest)
+_sym_db.RegisterMessage(GetAccountDetailsRequest)
 
-GetLiabilitiesResponse = _reflection.GeneratedProtocolMessageType('GetLiabilitiesResponse', (_message.Message,), {
-  'DESCRIPTOR' : _GETLIABILITIESRESPONSE,
+GetAccountDetailsResponse = _reflection.GeneratedProtocolMessageType('GetAccountDetailsResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETACCOUNTDETAILSRESPONSE,
   '__module__' : 'payments.plaid_pb2'
-  # @@protoc_insertion_point(class_scope:payments.GetLiabilitiesResponse)
+  # @@protoc_insertion_point(class_scope:payments.GetAccountDetailsResponse)
   })
-_sym_db.RegisterMessage(GetLiabilitiesResponse)
+_sym_db.RegisterMessage(GetAccountDetailsResponse)
+
+AccountDetailsResponse = _reflection.GeneratedProtocolMessageType('AccountDetailsResponse', (_message.Message,), {
+  'DESCRIPTOR' : _ACCOUNTDETAILSRESPONSE,
+  '__module__' : 'payments.plaid_pb2'
+  # @@protoc_insertion_point(class_scope:payments.AccountDetailsResponse)
+  })
+_sym_db.RegisterMessage(AccountDetailsResponse)
 
 
 DESCRIPTOR._options = None
@@ -126,16 +185,16 @@ _PLAID = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=185,
-  serialized_end=277,
+  serialized_start=387,
+  serialized_end=488,
   methods=[
   _descriptor.MethodDescriptor(
-    name='GetLiabilities',
-    full_name='payments.Plaid.GetLiabilities',
+    name='GetAccountDetails',
+    full_name='payments.Plaid.GetAccountDetails',
     index=0,
     containing_service=None,
-    input_type=_GETLIABILITIESREQUEST,
-    output_type=_GETLIABILITIESRESPONSE,
+    input_type=_GETACCOUNTDETAILSREQUEST,
+    output_type=_GETACCOUNTDETAILSRESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

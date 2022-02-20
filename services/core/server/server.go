@@ -2,14 +2,12 @@ package server
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -32,13 +30,20 @@ type CoreServer struct {
 	l *logrus.Logger
 }
 
-func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection, udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient, plaid payments.PlaidClient, l *logrus.Logger) *CoreServer {
-	return &CoreServer{PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb, UserDB: udb, jwtm: jwtm, planningClient: pc, plaidClient: plaid, l: l}
+func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection,
+	udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient,
+	plaid payments.PlaidClient, l *logrus.Logger,
+) *CoreServer {
+	return &CoreServer{
+		PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb,
+		UserDB: udb, jwtm: jwtm, planningClient: pc, plaidClient: plaid, l: l,
+	}
 }
 
 func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {
 	// create payment task from user inputs
 	paymentTasks := make([]*common.PaymentTask, len(in.GetAccountInfo()))
+
 	for idx, item := range in.GetAccountInfo() {
 		task := &common.PaymentTask{
 			UserId:    in.UserId,
@@ -68,15 +73,10 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }
 
-func (s CoreServer) GetLiabilities(ctx context.Context, in *payments.GetLiabilitiesRequest) (database.LiabilitiesResponse, error) {
-	resp, err := s.plaidClient.GetLiabilities(ctx, in)
+func (s CoreServer) GetAccountDetails(ctx context.Context, in *payments.GetAccountDetailsRequest) (*payments.GetAccountDetailsResponse, error) {
+	resp, err := s.plaidClient.GetAccountDetails(ctx, in)
 	if err != nil {
-		return database.LiabilitiesResponse{}, err
+		return nil, err
 	}
-	var obj database.LiabilitiesResponse
-	if err := json.Unmarshal(resp.GetLiabilitiesGetResponse(), &obj); err != nil {
-		panic(err)
-	}
-
-	return obj, nil
+	return &payments.GetAccountDetailsResponse{AccountDetailsResponse: resp.GetAccountDetailsResponse()}, nil
 }

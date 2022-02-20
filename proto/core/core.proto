@@ -19,14 +19,10 @@ service Core {
   rpc CreateAccount(CreateAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
   rpc ListAccounts(ListAccountRequest) returns (ListAccountResponse);
-  rpc UpdateAccount(UpdateAccountRequest) returns (Account);
-  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
   // Transaction
   rpc CreateTransaction(CreateTransactionRequest) returns (Transaction);
   rpc GetTransaction(GetTransactionRequest) returns (Transaction);
   rpc ListTransactions(ListTransactionRequest) returns (ListTransactionResponse);
-  rpc UpdateTransaction(UpdateTransactionRequest) returns (Transaction);
-  rpc DeleteTransaction(DeleteTransactionRequest) returns (DeleteTransactionResponse);
   //Payment Task
   rpc CreatePaymentTask(common.CreatePaymentTaskRequest) returns (common.PaymentTask);
   rpc CreateManyPaymentTask(common.CreateManyPaymentTaskRequest) returns (common.CreateManyPaymentTaskResponse);

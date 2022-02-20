@@ -20,12 +20,50 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a\x13\x63ommon/common.proto\"E\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\"\x1c\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
+  serialized_pb=b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a\x13\x63ommon/common.proto\"\xbd\x01\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\x12=\n\x13\x61\x63\x63ount_id_to_token\x18\x05 \x03(\x0b\x32 .core.User.AccountIdToTokenEntry\x1a\x37\n\x15\x41\x63\x63ountIdToTokenEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x1c\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
   ,
   dependencies=[common_dot_common__pb2.DESCRIPTOR,])
 
 
 
+
+_USER_ACCOUNTIDTOTOKENENTRY = _descriptor.Descriptor(
+  name='AccountIdToTokenEntry',
+  full_name='core.User.AccountIdToTokenEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='core.User.AccountIdToTokenEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='core.User.AccountIdToTokenEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=182,
+  serialized_end=237,
+)
 
 _USER = _descriptor.Descriptor(
   name='User',
@@ -63,10 +101,17 @@ _USER = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='account_id_to_token', full_name='core.User.account_id_to_token', index=4,
+      number=5, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_USER_ACCOUNTIDTOTOKENENTRY, ],
   enum_types=[
   ],
   serialized_options=None,
@@ -75,8 +120,8 @@ _USER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=47,
-  serialized_end=116,
+  serialized_start=48,
+  serialized_end=237,
 )
 
 
@@ -107,8 +152,8 @@ _GETUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=118,
-  serialized_end=146,
+  serialized_start=239,
+  serialized_end=267,
 )
 
 
@@ -146,8 +191,8 @@ _UPDATEUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=148,
-  serialized_end=205,
+  serialized_start=269,
+  serialized_end=326,
 )
 
 
@@ -178,8 +223,8 @@ _DELETEUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=207,
-  serialized_end=238,
+  serialized_start=328,
+  serialized_end=359,
 )
 
 
@@ -203,8 +248,8 @@ _LISTUSERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=240,
-  serialized_end=257,
+  serialized_start=361,
+  serialized_end=378,
 )
 
 
@@ -235,8 +280,8 @@ _LISTUSERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=259,
-  serialized_end=304,
+  serialized_start=380,
+  serialized_end=425,
 )
 
 
@@ -274,10 +319,12 @@ _DELETEUSERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=306,
-  serialized_end=391,
+  serialized_start=427,
+  serialized_end=512,
 )
 
+_USER_ACCOUNTIDTOTOKENENTRY.containing_type = _USER
+_USER.fields_by_name['account_id_to_token'].message_type = _USER_ACCOUNTIDTOTOKENENTRY
 _UPDATEUSERREQUEST.fields_by_name['user'].message_type = _USER
 _LISTUSERRESPONSE.fields_by_name['users'].message_type = _USER
 _DELETEUSERRESPONSE.fields_by_name['status'].enum_type = common_dot_common__pb2._DELETE_STATUS
@@ -292,11 +339,19 @@ DESCRIPTOR.message_types_by_name['DeleteUserResponse'] = _DELETEUSERRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 User = _reflection.GeneratedProtocolMessageType('User', (_message.Message,), {
+
+  'AccountIdToTokenEntry' : _reflection.GeneratedProtocolMessageType('AccountIdToTokenEntry', (_message.Message,), {
+    'DESCRIPTOR' : _USER_ACCOUNTIDTOTOKENENTRY,
+    '__module__' : 'core.users_pb2'
+    # @@protoc_insertion_point(class_scope:core.User.AccountIdToTokenEntry)
+    })
+  ,
   'DESCRIPTOR' : _USER,
   '__module__' : 'core.users_pb2'
   # @@protoc_insertion_point(class_scope:core.User)
   })
 _sym_db.RegisterMessage(User)
+_sym_db.RegisterMessage(User.AccountIdToTokenEntry)
 
 GetUserRequest = _reflection.GeneratedProtocolMessageType('GetUserRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETUSERREQUEST,
@@ -342,4 +397,5 @@ _sym_db.RegisterMessage(DeleteUserResponse)
 
 
 DESCRIPTOR._options = None
+_USER_ACCOUNTIDTOTOKENENTRY._options = None
 # @@protoc_insertion_point(module_scope)

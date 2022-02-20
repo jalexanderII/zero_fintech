@@ -24,7 +24,7 @@ func GenServer() (*AuthServer, context.Context) {
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}
-	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
+	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION") + "_TEST")
 
 	server := NewAuthServer(userCollection, jwtManager, L)
 	return server, context.TODO()

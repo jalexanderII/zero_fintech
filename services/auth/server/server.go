@@ -105,7 +105,7 @@ func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.A
 // EmailUsed checks if the email is already present in the DB
 func (s AuthServer) EmailUsed(ctx context.Context, email string) (bool, error) {
 	var user database.AuthUser
-	filter := bson.D{{"email", email}}
+	filter := bson.D{{Key: "email", Value: email}}
 	err := s.UserDB.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		// ErrNoDocuments means that the filter did not match any documents in the collection.
@@ -121,7 +121,7 @@ func (s AuthServer) EmailUsed(ctx context.Context, email string) (bool, error) {
 // UsernameUsed checks if the username is already present in the DB
 func (s AuthServer) UsernameUsed(ctx context.Context, username string) (bool, error) {
 	var user database.AuthUser
-	filter := bson.D{{"username", username}}
+	filter := bson.D{{Key: "username", Value: username}}
 	err := s.UserDB.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		// ErrNoDocuments means that the filter did not match any documents in the collection.

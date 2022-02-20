@@ -3,85 +3,184 @@
 isort:skip_file
 """
 import builtins
-import common.common_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import google.protobuf.timestamp_pb2
 import typing
 import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor = ...
 
 class Transaction(google.protobuf.message.Message):
-    """Transaction represents any credit line item in a credit card account"""
+    """Transaction A representation of a transaction"""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    TRANSACTION_ID_FIELD_NUMBER: builtins.int
     USER_ID_FIELD_NUMBER: builtins.int
-    ACCOUNT_ID_FIELD_NUMBER: builtins.int
-    NAME_FIELD_NUMBER: builtins.int
-    AMOUNT_FIELD_NUMBER: builtins.int
-    DATE_FIELD_NUMBER: builtins.int
-    REWARDS_EARNED_FIELD_NUMBER: builtins.int
+    TRANSACTION_TYPE_FIELD_NUMBER: builtins.int
+    PENDING_TRANSACTION_ID_FIELD_NUMBER: builtins.int
+    CATEGORY_ID_FIELD_NUMBER: builtins.int
+    CATEGORY_FIELD_NUMBER: builtins.int
     TRANSACTION_DETAILS_FIELD_NUMBER: builtins.int
-    transaction_id: typing.Text = ...
+    NAME_FIELD_NUMBER: builtins.int
+    ORIGINAL_DESCRIPTION_FIELD_NUMBER: builtins.int
+    ACCOUNT_ID_FIELD_NUMBER: builtins.int
+    AMOUNT_FIELD_NUMBER: builtins.int
+    ISO_CURRENCY_CODE_FIELD_NUMBER: builtins.int
+    DATE_FIELD_NUMBER: builtins.int
+    PENDING_FIELD_NUMBER: builtins.int
+    TRANSACTION_ID_FIELD_NUMBER: builtins.int
+    MERCHANT_NAME_FIELD_NUMBER: builtins.int
+    PAYMENT_CHANNEL_FIELD_NUMBER: builtins.int
+    AUTHORIZED_DATE_FIELD_NUMBER: builtins.int
+    PRIMARY_CATEGORY_FIELD_NUMBER: builtins.int
+    DETAILED_CATEGORY_FIELD_NUMBER: builtins.int
+    PLAID_ACCOUNT_ID_FIELD_NUMBER: builtins.int
+    PLAID_TRANSACTION_ID_FIELD_NUMBER: builtins.int
     user_id: typing.Text = ...
-    account_id: typing.Text = ...
-    """Account Id this transaction is associated with"""
+    transaction_type: typing.Text = ...
+    pending_transaction_id: typing.Text = ...
+    """The ID of a posted transaction's associated pending transaction, where applicable."""
 
-    name: typing.Text = ...
-    """Name of the charging entity"""
-
-    amount: builtins.float = ...
-    """Total amount in dollars of the transaction"""
+    category_id: typing.Text = ...
+    """The ID of the category to which this transaction belongs.
+    See [Categories](https://plaid.com/docs/#category-overview).
+    """
 
     @property
-    def date(self) -> google.protobuf.timestamp_pb2.Timestamp:
-        """Date the transaction was recognized by the account"""
+    def category(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[typing.Text]:
+        """A hierarchical array of the categories to which this transaction belongs.
+        See [Categories](https://plaid.com/docs/#category-overview).
+        """
         pass
-    rewards_earned: builtins.int = ...
-    """Number of points this transaction earned the user for a specific account"""
-
     @property
     def transaction_details(self) -> global___TransactionDetails: ...
+    name: typing.Text = ...
+    """The merchant name or transaction description."""
+
+    original_description: typing.Text = ...
+    """The string returned by the financial institution to describe the transaction."""
+
+    account_id: typing.Text = ...
+    """DB account id"""
+
+    amount: builtins.float = ...
+    """The settled value of the transaction, denominated in the account's currency, as stated in `iso_currency_code`.
+    Positive values when money moves out of the account; negative values when money moves in.
+    For example, debit card purchases are positive; credit card payments, direct deposits, and refunds are negative.
+    """
+
+    iso_currency_code: typing.Text = ...
+    """The ISO-4217 currency code of the transaction."""
+
+    date: typing.Text = ...
+    """For pending transactions, the date that the transaction occurred;
+    for posted transactions, the date that the transaction posted.
+    Both dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format ( `YYYY-MM-DD` ).
+    """
+
+    pending: builtins.bool = ...
+    """When `true`, identifies the transaction as pending or unsettled.
+    Pending transaction details (name, type, amount, category ID) may change before they are settled.
+    """
+
+    transaction_id: typing.Text = ...
+    """DB specific id"""
+
+    merchant_name: typing.Text = ...
+    """The merchant name, as extracted by Plaid from the `name` field."""
+
+    payment_channel: typing.Text = ...
+    """The channel used to make a payment. `online:` transactions that took place online.
+    `in store:` transactions that were made at a physical location.
+    `other:` transactions that relate to banks, e.g. fees or deposits.
+    """
+
+    authorized_date: typing.Text = ...
+    """The date that the transaction was authorized.
+    Dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format ( `YYYY-MM-DD` ).
+    """
+
+    primary_category: typing.Text = ...
+    """A high level category that communicates the broad category of the transaction."""
+
+    detailed_category: typing.Text = ...
+    """Provides additional granularity to the primary categorization."""
+
+    plaid_account_id: typing.Text = ...
+    """The ID of the account in which this transaction occurred."""
+
+    plaid_transaction_id: typing.Text = ...
+    """The case sensitive unique ID of the transaction."""
+
     def __init__(self,
         *,
-        transaction_id : typing.Text = ...,
         user_id : typing.Text = ...,
-        account_id : typing.Text = ...,
-        name : typing.Text = ...,
-        amount : builtins.float = ...,
-        date : typing.Optional[google.protobuf.timestamp_pb2.Timestamp] = ...,
-        rewards_earned : builtins.int = ...,
+        transaction_type : typing.Text = ...,
+        pending_transaction_id : typing.Text = ...,
+        category_id : typing.Text = ...,
+        category : typing.Optional[typing.Iterable[typing.Text]] = ...,
         transaction_details : typing.Optional[global___TransactionDetails] = ...,
+        name : typing.Text = ...,
+        original_description : typing.Text = ...,
+        account_id : typing.Text = ...,
+        amount : builtins.float = ...,
+        iso_currency_code : typing.Text = ...,
+        date : typing.Text = ...,
+        pending : builtins.bool = ...,
+        transaction_id : typing.Text = ...,
+        merchant_name : typing.Text = ...,
+        payment_channel : typing.Text = ...,
+        authorized_date : typing.Text = ...,
+        primary_category : typing.Text = ...,
+        detailed_category : typing.Text = ...,
+        plaid_account_id : typing.Text = ...,
+        plaid_transaction_id : typing.Text = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["date",b"date","transaction_details",b"transaction_details"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["account_id",b"account_id","amount",b"amount","date",b"date","name",b"name","rewards_earned",b"rewards_earned","transaction_details",b"transaction_details","transaction_id",b"transaction_id","user_id",b"user_id"]) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["transaction_details",b"transaction_details"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["account_id",b"account_id","amount",b"amount","authorized_date",b"authorized_date","category",b"category","category_id",b"category_id","date",b"date","detailed_category",b"detailed_category","iso_currency_code",b"iso_currency_code","merchant_name",b"merchant_name","name",b"name","original_description",b"original_description","payment_channel",b"payment_channel","pending",b"pending","pending_transaction_id",b"pending_transaction_id","plaid_account_id",b"plaid_account_id","plaid_transaction_id",b"plaid_transaction_id","primary_category",b"primary_category","transaction_details",b"transaction_details","transaction_id",b"transaction_id","transaction_type",b"transaction_type","user_id",b"user_id"]) -> None: ...
 global___Transaction = Transaction
 
 class TransactionDetails(google.protobuf.message.Message):
+    """PaymentMeta Transaction information specific to inter-bank transfers. If the transaction was not an inter-bank transfer, all fields will be `null`.  If the `transactions` object was returned by a Transactions endpoint such as `/transactions/get`, the `payment_meta` key will always appear, but no data elements are guaranteed. If the `transactions` object was returned by an Assets endpoint such as `/asset_report/get/` or `/asset_report/pdf/get`, this field will only appear in an Asset Report with Insights."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     ADDRESS_FIELD_NUMBER: builtins.int
-    DOING_BUSINESS_AS_FIELD_NUMBER: builtins.int
-    DATE_PROCESSED_FIELD_NUMBER: builtins.int
+    CITY_FIELD_NUMBER: builtins.int
+    STATE_FIELD_NUMBER: builtins.int
+    ZIPCODE_FIELD_NUMBER: builtins.int
+    COUNTRY_FIELD_NUMBER: builtins.int
+    STORE_NUMBER_FIELD_NUMBER: builtins.int
+    REFERENCE_NUMBER_FIELD_NUMBER: builtins.int
     address: typing.Text = ...
-    """Full address of the charging entity"""
+    """The street address where the transaction occurred."""
 
-    doing_business_as: typing.Text = ...
-    """Business name of the charging entity"""
+    city: typing.Text = ...
+    """The city where the transaction occurred."""
 
-    @property
-    def date_processed(self) -> google.protobuf.timestamp_pb2.Timestamp:
-        """Date the transaction was processed by the charger"""
-        pass
+    state: typing.Text = ...
+    """The region or state where the transaction occurred. In API versions 2018-05-22 and earlier, this field is called `state`."""
+
+    zipcode: typing.Text = ...
+    """The postal code where the transaction occurred. In API versions 2018-05-22 and earlier, this field is called `zip`."""
+
+    country: typing.Text = ...
+    """The ISO 3166-1 alpha-2 country code where the transaction occurred."""
+
+    store_number: typing.Text = ...
+    """The merchant defined store number where the transaction occurred."""
+
+    reference_number: typing.Text = ...
+    """The transaction reference number supplied by the financial institution."""
+
     def __init__(self,
         *,
         address : typing.Text = ...,
-        doing_business_as : typing.Text = ...,
-        date_processed : typing.Optional[google.protobuf.timestamp_pb2.Timestamp] = ...,
+        city : typing.Text = ...,
+        state : typing.Text = ...,
+        zipcode : typing.Text = ...,
+        country : typing.Text = ...,
+        store_number : typing.Text = ...,
+        reference_number : typing.Text = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["date_processed",b"date_processed"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["address",b"address","date_processed",b"date_processed","doing_business_as",b"doing_business_as"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["address",b"address","city",b"city","country",b"country","reference_number",b"reference_number","state",b"state","store_number",b"store_number","zipcode",b"zipcode"]) -> None: ...
 global___TransactionDetails = TransactionDetails
 
 class CreateTransactionRequest(google.protobuf.message.Message):
@@ -109,33 +208,6 @@ class GetTransactionRequest(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal["id",b"id"]) -> None: ...
 global___GetTransactionRequest = GetTransactionRequest
 
-class UpdateTransactionRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    ID_FIELD_NUMBER: builtins.int
-    TRANSACTION_FIELD_NUMBER: builtins.int
-    id: typing.Text = ...
-    @property
-    def transaction(self) -> global___Transaction: ...
-    def __init__(self,
-        *,
-        id : typing.Text = ...,
-        transaction : typing.Optional[global___Transaction] = ...,
-        ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["transaction",b"transaction"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id",b"id","transaction",b"transaction"]) -> None: ...
-global___UpdateTransactionRequest = UpdateTransactionRequest
-
-class DeleteTransactionRequest(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    ID_FIELD_NUMBER: builtins.int
-    id: typing.Text = ...
-    def __init__(self,
-        *,
-        id : typing.Text = ...,
-        ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["id",b"id"]) -> None: ...
-global___DeleteTransactionRequest = DeleteTransactionRequest
-
 class ListTransactionRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     def __init__(self,
@@ -153,19 +225,3 @@ class ListTransactionResponse(google.protobuf.message.Message):
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal["transactions",b"transactions"]) -> None: ...
 global___ListTransactionResponse = ListTransactionResponse
-
-class DeleteTransactionResponse(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    STATUS_FIELD_NUMBER: builtins.int
-    TRANSACTION_FIELD_NUMBER: builtins.int
-    status: common.common_pb2.DELETE_STATUS.ValueType = ...
-    @property
-    def transaction(self) -> global___Transaction: ...
-    def __init__(self,
-        *,
-        status : common.common_pb2.DELETE_STATUS.ValueType = ...,
-        transaction : typing.Optional[global___Transaction] = ...,
-        ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal["transaction",b"transaction"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["status",b"status","transaction",b"transaction"]) -> None: ...
-global___DeleteTransactionResponse = DeleteTransactionResponse

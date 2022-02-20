@@ -10,3 +10,10 @@ def initiate_mongo_client() -> Collection:
     client = MongoClient(os.getenv("MONGOURI"))
     db = client[os.getenv("PLANNING_DB_NAME")]
     return db[os.getenv("PLANNING_COLLECTION")]
+
+
+def initiate_test_mongo_client() -> Collection:
+    load_dotenv()
+    client = MongoClient(os.getenv("MONGOURI"))
+    db = client[os.getenv("PLANNING_DB_NAME")]
+    return db[f'{os.getenv("PLANNING_COLLECTION")}_TEST']

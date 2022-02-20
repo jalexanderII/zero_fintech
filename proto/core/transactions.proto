@@ -3,34 +3,75 @@ syntax = "proto3";
 package core;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/core";
 
-import "google/protobuf/timestamp.proto";
-
-import "common/common.proto";
-
-// Transaction represents any credit line item in a credit card account
+// Transaction A representation of a transaction
 message Transaction {
-  string transaction_id = 1;
-  string user_id = 2;
-  // Account Id this transaction is associated with
-  string account_id = 3;
-  // Name of the charging entity
-  string name = 4;
-  // Total amount in dollars of the transaction
-  double amount = 5;
-  // Date the transaction was recognized by the account
-  google.protobuf.Timestamp date = 6;
-  // Number of points this transaction earned the user for a specific account
-  int32 rewards_earned = 7;
-  TransactionDetails transaction_details = 8;
+  string user_id = 1;
+  string transaction_type = 2;
+  // The ID of a posted transaction's associated pending transaction, where applicable.
+  string pending_transaction_id = 3;
+  // The ID of the category to which this transaction belongs.
+  // See [Categories](https://plaid.com/docs/#category-overview).
+  string category_id = 4;
+  // A hierarchical array of the categories to which this transaction belongs.
+  // See [Categories](https://plaid.com/docs/#category-overview).
+  repeated string    category = 5;
+  TransactionDetails transaction_details = 6;
+  // The merchant name or transaction description.
+  string name = 7;
+  // The string returned by the financial institution to describe the transaction.
+  string original_description = 8;
+  // DB account id
+  string account_id = 9;
+  // The settled value of the transaction, denominated in the account's currency, as stated in `iso_currency_code`.
+  // Positive values when money moves out of the account; negative values when money moves in.
+  // For example, debit card purchases are positive; credit card payments, direct deposits, and refunds are negative.
+  double amount = 10;
+  // The ISO-4217 currency code of the transaction.
+  string iso_currency_code = 11;
+  // For pending transactions, the date that the transaction occurred;
+  // for posted transactions, the date that the transaction posted.
+  // Both dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format ( `YYYY-MM-DD` ).
+  string date = 12;
+  // When `true`, identifies the transaction as pending or unsettled.
+  // Pending transaction details (name, type, amount, category ID) may change before they are settled.
+  bool pending = 13;
+  // DB specific id
+  string transaction_id = 14;
+  // The merchant name, as extracted by Plaid from the `name` field.
+  string merchant_name = 15;
+  // The channel used to make a payment. `online:` transactions that took place online.
+  // `in store:` transactions that were made at a physical location.
+  // `other:` transactions that relate to banks, e.g. fees or deposits.
+  string payment_channel = 16;
+  // The date that the transaction was authorized.
+  // Dates are returned in an [ISO 8601](https://wikipedia.org/wiki/ISO_8601) format ( `YYYY-MM-DD` ).
+  string authorized_date = 17;
+  // A high level category that communicates the broad category of the transaction.
+  string primary_category = 18;
+  // Provides additional granularity to the primary categorization.
+  string detailed_category = 19;
+  // The ID of the account in which this transaction occurred.
+  string plaid_account_id = 20;
+  // The case sensitive unique ID of the transaction.
+  string plaid_transaction_id = 21;
 }
 
+// PaymentMeta Transaction information specific to inter-bank transfers. If the transaction was not an inter-bank transfer, all fields will be `null`.  If the `transactions` object was returned by a Transactions endpoint such as `/transactions/get`, the `payment_meta` key will always appear, but no data elements are guaranteed. If the `transactions` object was returned by an Assets endpoint such as `/asset_report/get/` or `/asset_report/pdf/get`, this field will only appear in an Asset Report with Insights.
 message TransactionDetails {
-  // Full address of the charging entity
+  // The street address where the transaction occurred.
   string address = 1;
-  // Business name of the charging entity
-  string doing_business_as = 2;
-  // Date the transaction was processed by the charger
-  google.protobuf.Timestamp date_processed = 3;
+  // The city where the transaction occurred.
+  string city = 2;
+  // The region or state where the transaction occurred. In API versions 2018-05-22 and earlier, this field is called `state`.
+  string state = 3;
+  // The postal code where the transaction occurred. In API versions 2018-05-22 and earlier, this field is called `zip`.
+  string zipcode = 4;
+  // The ISO 3166-1 alpha-2 country code where the transaction occurred.
+  string country = 5;
+  // The merchant defined store number where the transaction occurred.
+  string store_number = 6;
+  // The transaction reference number supplied by the financial institution.
+  string reference_number = 7;
 }
 
 // CRUD Methods
@@ -42,22 +83,8 @@ message GetTransactionRequest {
   string id = 1;
 }
 
-message UpdateTransactionRequest {
-  string id = 1;
-  Transaction transaction = 2;
-}
-
-message DeleteTransactionRequest {
-  string id = 1;
-}
-
 message ListTransactionRequest {}
 
 message ListTransactionResponse {
   repeated Transaction transactions = 1;
-}
-
-message DeleteTransactionResponse {
-  common.DELETE_STATUS status = 1;
-  Transaction transaction = 2;
 }

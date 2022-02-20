@@ -39,16 +39,6 @@ class CoreStub(object):
                 request_serializer=core_dot_accounts__pb2.ListAccountRequest.SerializeToString,
                 response_deserializer=core_dot_accounts__pb2.ListAccountResponse.FromString,
                 )
-        self.UpdateAccount = channel.unary_unary(
-                '/core.Core/UpdateAccount',
-                request_serializer=core_dot_accounts__pb2.UpdateAccountRequest.SerializeToString,
-                response_deserializer=core_dot_accounts__pb2.Account.FromString,
-                )
-        self.DeleteAccount = channel.unary_unary(
-                '/core.Core/DeleteAccount',
-                request_serializer=core_dot_accounts__pb2.DeleteAccountRequest.SerializeToString,
-                response_deserializer=core_dot_accounts__pb2.DeleteAccountResponse.FromString,
-                )
         self.CreateTransaction = channel.unary_unary(
                 '/core.Core/CreateTransaction',
                 request_serializer=core_dot_transactions__pb2.CreateTransactionRequest.SerializeToString,
@@ -63,16 +53,6 @@ class CoreStub(object):
                 '/core.Core/ListTransactions',
                 request_serializer=core_dot_transactions__pb2.ListTransactionRequest.SerializeToString,
                 response_deserializer=core_dot_transactions__pb2.ListTransactionResponse.FromString,
-                )
-        self.UpdateTransaction = channel.unary_unary(
-                '/core.Core/UpdateTransaction',
-                request_serializer=core_dot_transactions__pb2.UpdateTransactionRequest.SerializeToString,
-                response_deserializer=core_dot_transactions__pb2.Transaction.FromString,
-                )
-        self.DeleteTransaction = channel.unary_unary(
-                '/core.Core/DeleteTransaction',
-                request_serializer=core_dot_transactions__pb2.DeleteTransactionRequest.SerializeToString,
-                response_deserializer=core_dot_transactions__pb2.DeleteTransactionResponse.FromString,
                 )
         self.CreatePaymentTask = channel.unary_unary(
                 '/core.Core/CreatePaymentTask',
@@ -157,18 +137,6 @@ class CoreServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def UpdateAccount(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeleteAccount(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def CreateTransaction(self, request, context):
         """Transaction
         """
@@ -183,18 +151,6 @@ class CoreServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListTransactions(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def UpdateTransaction(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeleteTransaction(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -285,16 +241,6 @@ def add_CoreServicer_to_server(servicer, server):
                     request_deserializer=core_dot_accounts__pb2.ListAccountRequest.FromString,
                     response_serializer=core_dot_accounts__pb2.ListAccountResponse.SerializeToString,
             ),
-            'UpdateAccount': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateAccount,
-                    request_deserializer=core_dot_accounts__pb2.UpdateAccountRequest.FromString,
-                    response_serializer=core_dot_accounts__pb2.Account.SerializeToString,
-            ),
-            'DeleteAccount': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteAccount,
-                    request_deserializer=core_dot_accounts__pb2.DeleteAccountRequest.FromString,
-                    response_serializer=core_dot_accounts__pb2.DeleteAccountResponse.SerializeToString,
-            ),
             'CreateTransaction': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateTransaction,
                     request_deserializer=core_dot_transactions__pb2.CreateTransactionRequest.FromString,
@@ -309,16 +255,6 @@ def add_CoreServicer_to_server(servicer, server):
                     servicer.ListTransactions,
                     request_deserializer=core_dot_transactions__pb2.ListTransactionRequest.FromString,
                     response_serializer=core_dot_transactions__pb2.ListTransactionResponse.SerializeToString,
-            ),
-            'UpdateTransaction': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateTransaction,
-                    request_deserializer=core_dot_transactions__pb2.UpdateTransactionRequest.FromString,
-                    response_serializer=core_dot_transactions__pb2.Transaction.SerializeToString,
-            ),
-            'DeleteTransaction': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteTransaction,
-                    request_deserializer=core_dot_transactions__pb2.DeleteTransactionRequest.FromString,
-                    response_serializer=core_dot_transactions__pb2.DeleteTransactionResponse.SerializeToString,
             ),
             'CreatePaymentTask': grpc.unary_unary_rpc_method_handler(
                     servicer.CreatePaymentTask,
@@ -449,40 +385,6 @@ class Core(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UpdateAccount(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/UpdateAccount',
-            core_dot_accounts__pb2.UpdateAccountRequest.SerializeToString,
-            core_dot_accounts__pb2.Account.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeleteAccount(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/DeleteAccount',
-            core_dot_accounts__pb2.DeleteAccountRequest.SerializeToString,
-            core_dot_accounts__pb2.DeleteAccountResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
     def CreateTransaction(request,
             target,
             options=(),
@@ -530,40 +432,6 @@ class Core(object):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListTransactions',
             core_dot_transactions__pb2.ListTransactionRequest.SerializeToString,
             core_dot_transactions__pb2.ListTransactionResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def UpdateTransaction(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/UpdateTransaction',
-            core_dot_transactions__pb2.UpdateTransactionRequest.SerializeToString,
-            core_dot_transactions__pb2.Transaction.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeleteTransaction(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/core.Core/DeleteTransaction',
-            core_dot_transactions__pb2.DeleteTransactionRequest.SerializeToString,
-            core_dot_transactions__pb2.DeleteTransactionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

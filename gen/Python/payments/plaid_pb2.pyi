@@ -3,37 +3,61 @@
 isort:skip_file
 """
 import builtins
+import core.accounts_pb2
+import core.transactions_pb2
 import core.users_pb2
 import google.protobuf.descriptor
+import google.protobuf.internal.containers
 import google.protobuf.message
 import typing
 import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor = ...
 
-class GetLiabilitiesRequest(google.protobuf.message.Message):
+class GetAccountDetailsRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     USER_FIELD_NUMBER: builtins.int
     ACCESS_TOKEN_FIELD_NUMBER: builtins.int
+    MONTHS_FIELD_NUMBER: builtins.int
     @property
     def user(self) -> core.users_pb2.User: ...
     access_token: typing.Text = ...
+    months: builtins.int = ...
     def __init__(self,
         *,
         user : typing.Optional[core.users_pb2.User] = ...,
         access_token : typing.Text = ...,
+        months : builtins.int = ...,
         ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["user",b"user"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["access_token",b"access_token","user",b"user"]) -> None: ...
-global___GetLiabilitiesRequest = GetLiabilitiesRequest
+    def ClearField(self, field_name: typing_extensions.Literal["access_token",b"access_token","months",b"months","user",b"user"]) -> None: ...
+global___GetAccountDetailsRequest = GetAccountDetailsRequest
 
-class GetLiabilitiesResponse(google.protobuf.message.Message):
+class GetAccountDetailsResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    LIABILITIES_GET_RESPONSE_FIELD_NUMBER: builtins.int
-    liabilities_get_response: builtins.bytes = ...
+    ACCOUNT_DETAILS_RESPONSE_FIELD_NUMBER: builtins.int
+    @property
+    def account_details_response(self) -> global___AccountDetailsResponse: ...
     def __init__(self,
         *,
-        liabilities_get_response : builtins.bytes = ...,
+        account_details_response : typing.Optional[global___AccountDetailsResponse] = ...,
         ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["liabilities_get_response",b"liabilities_get_response"]) -> None: ...
-global___GetLiabilitiesResponse = GetLiabilitiesResponse
+    def HasField(self, field_name: typing_extensions.Literal["account_details_response",b"account_details_response"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["account_details_response",b"account_details_response"]) -> None: ...
+global___GetAccountDetailsResponse = GetAccountDetailsResponse
+
+class AccountDetailsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
+    ACCOUNTS_FIELD_NUMBER: builtins.int
+    TRANSACTIONS_FIELD_NUMBER: builtins.int
+    @property
+    def accounts(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[core.accounts_pb2.Account]: ...
+    @property
+    def transactions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[core.transactions_pb2.Transaction]: ...
+    def __init__(self,
+        *,
+        accounts : typing.Optional[typing.Iterable[core.accounts_pb2.Account]] = ...,
+        transactions : typing.Optional[typing.Iterable[core.transactions_pb2.Transaction]] = ...,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["accounts",b"accounts","transactions",b"transactions"]) -> None: ...
+global___AccountDetailsResponse = AccountDetailsResponse

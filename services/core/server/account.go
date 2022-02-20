@@ -4,12 +4,10 @@ import (
 	"context"
 	"log"
 
-	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (s CoreServer) CreateAccount(ctx context.Context, in *core.CreateAccountRequest) (*core.Account, error) {
@@ -56,127 +54,71 @@ func (s CoreServer) ListAccounts(ctx context.Context, in *core.ListAccountReques
 	return &core.ListAccountResponse{Accounts: res}, nil
 }
 
-func (s CoreServer) UpdateAccount(ctx context.Context, in *core.UpdateAccountRequest) (*core.Account, error) {
-	account := in.GetAccount()
-	annualPercentageRate := database.AnnualPercentageRates{
-		LowEnd:  account.GetAnnualPercentageRate().LowEnd,
-		HighEnd: account.GetAnnualPercentageRate().HighEnd,
-	}
-	penaltyApr := database.PenaltyAPR{
-		PenaltyAPR:    account.GetPenaltyApr().PenaltyApr,
-		PenaltyReason: account.GetPenaltyApr().GetPenaltyReason(),
-	}
-	promotionalRate := database.PromotionalRate{
-		TemporaryAPR:   account.GetPromotionalRate().TemporaryApr,
-		ExpirationDate: account.GetPromotionalRate().ExpirationDate.AsTime(),
-	}
-
-	id, err := primitive.ObjectIDFromHex(in.GetId())
-	if err != nil {
-		return nil, err
-	}
-
-	filter := bson.D{{Key: "_id", Value: id}}
-	update := bson.D{
-		{Key: "$set",
-			Value: bson.D{
-				{Key: "annual_percentage_rate", Value: annualPercentageRate}, {Key: "penalty_apr", Value: penaltyApr},
-				{Key: "due_day", Value: account.GetDueDay()}, {Key: "minimum_interest_charge", Value: account.GetMinimumInterestCharge()},
-				{Key: "annual_account_fee", Value: account.GetAnnualAccountFee()}, {Key: "foreign_transaction_fee", Value: account.GetForeignTransactionFee()},
-				{Key: "promotional_rate", Value: promotionalRate}, {Key: "minimum_payment_due", Value: account.GetMinimumPaymentDue()},
-				{Key: "current_balance", Value: account.GetCurrentBalance()}, {Key: "pending_transactions", Value: account.GetPendingTransactions()},
-				{Key: "credit_limit", Value: account.GetCreditLimit()},
-			},
-		},
-	}
-	_, err = s.AccountDB.UpdateOne(ctx, filter, update)
-	if err != nil {
-		return nil, err
-	}
-	var aa database.Account
-	err = s.AccountDB.FindOne(ctx, filter).Decode(&aa)
-	if err != nil {
-		return nil, err
-	}
-	return AccountDBToPB(aa), nil
-}
-
-func (s CoreServer) DeleteAccount(ctx context.Context, in *core.DeleteAccountRequest) (*core.DeleteAccountResponse, error) {
-	id, err := primitive.ObjectIDFromHex(in.GetId())
-	if err != nil {
-		return nil, err
-	}
-	filter := bson.D{{Key: "_id", Value: id}}
-	_, err = s.AccountDB.DeleteOne(ctx, filter)
-	if err != nil {
-		return nil, err
-	}
-	var account database.Account
-	err = s.AccountDB.FindOne(ctx, filter).Decode(&account)
-	if err != nil {
-		return nil, err
-	}
-	return &core.DeleteAccountResponse{Status: common.DELETE_STATUS_DELETE_STATUS_SUCCESS, Account: AccountDBToPB(account)}, nil
-}
-
 // AccountPBToDB converts an Account proto object to its serialized DB object
 func AccountPBToDB(account *core.Account, id primitive.ObjectID) database.Account {
 	userId, _ := primitive.ObjectIDFromHex(account.GetUserId())
+	var aprs []*database.AnnualPercentageRates
+	for _, apr := range account.AnnualPercentageRate {
+		aprs = append(aprs, &database.AnnualPercentageRates{
+			AprPercentage:        apr.AprPercentage,
+			AprType:              apr.AprType,
+			BalanceSubjectToApr:  apr.BalanceSubjectToApr,
+			InterestChargeAmount: apr.InterestChargeAmount,
+		})
+	}
 
 	return database.Account{
-		ID:        id,
-		UserId:    userId,
-		Name:      account.Name,
-		CreatedAt: account.CreatedAt.AsTime(),
-		AnnualPercentageRate: database.AnnualPercentageRates{
-			LowEnd:  account.GetAnnualPercentageRate().LowEnd,
-			HighEnd: account.GetAnnualPercentageRate().HighEnd,
-		},
-		PenaltyAPR: database.PenaltyAPR{
-			PenaltyAPR:    account.GetPenaltyApr().PenaltyApr,
-			PenaltyReason: account.GetPenaltyApr().GetPenaltyReason(),
-		},
-		DueDay:                account.DueDay,
-		MinimumInterestCharge: account.MinimumInterestCharge,
-		AnnualAccountFee:      account.AnnualAccountFee,
-		ForeignTransactionFee: account.ForeignTransactionFee,
-		PromotionalRate: database.PromotionalRate{
-			TemporaryAPR:   account.GetPromotionalRate().TemporaryApr,
-			ExpirationDate: account.GetPromotionalRate().ExpirationDate.AsTime(),
-		},
-		MinimumPaymentDue:   account.MinimumPaymentDue,
-		CurrentBalance:      account.CurrentBalance,
-		PendingTransactions: account.PendingTransactions,
-		CreditLimit:         account.CreditLimit,
+		ID:                     id,
+		UserId:                 userId,
+		PlaidAccountId:         account.PlaidAccountId,
+		Name:                   account.Name,
+		OfficialName:           account.OfficialName,
+		Type:                   account.Type,
+		Subtype:                account.Subtype,
+		AvailableBalance:       account.AvailableBalance,
+		CurrentBalance:         account.CurrentBalance,
+		CreditLimit:            account.CreditLimit,
+		IsoCurrencyCode:        account.IsoCurrencyCode,
+		AnnualPercentageRate:   aprs,
+		IsOverdue:              account.IsOverdue,
+		LastPaymentAmount:      account.LastPaymentAmount,
+		LastStatementIssueDate: account.LastStatementIssueDate,
+		LastStatementBalance:   account.LastStatementBalance,
+		MinimumPaymentAmount:   account.MinimumPaymentAmount,
+		NextPaymentDueDate:     account.NextPaymentDueDate,
 	}
 }
 
 // AccountDBToPB converts an Account DB object to its proto object
 func AccountDBToPB(account database.Account) *core.Account {
+	aprs := make([]*core.AnnualPercentageRates, len(account.AnnualPercentageRate))
+	for _, apr := range account.AnnualPercentageRate {
+
+		aprs = append(aprs, &core.AnnualPercentageRates{
+			AprPercentage:        apr.AprPercentage,
+			AprType:              apr.AprType,
+			BalanceSubjectToApr:  apr.BalanceSubjectToApr,
+			InterestChargeAmount: apr.InterestChargeAmount,
+		})
+	}
 	return &core.Account{
-		AccountId: account.ID.Hex(),
-		UserId:    account.UserId.Hex(),
-		Name:      account.Name,
-		CreatedAt: timestamppb.New(account.CreatedAt),
-		AnnualPercentageRate: &core.AnnualPercentageRates{
-			LowEnd:  account.AnnualPercentageRate.LowEnd,
-			HighEnd: account.AnnualPercentageRate.HighEnd,
-		},
-		PenaltyApr: &core.PenaltyAPR{
-			PenaltyApr:    account.PenaltyAPR.PenaltyAPR,
-			PenaltyReason: account.PenaltyAPR.PenaltyReason,
-		},
-		DueDay:                account.DueDay,
-		MinimumInterestCharge: account.MinimumInterestCharge,
-		AnnualAccountFee:      account.AnnualAccountFee,
-		ForeignTransactionFee: account.ForeignTransactionFee,
-		PromotionalRate: &core.PromotionalRate{
-			TemporaryApr:   account.PromotionalRate.TemporaryAPR,
-			ExpirationDate: timestamppb.New(account.PromotionalRate.ExpirationDate),
-		},
-		MinimumPaymentDue:   account.MinimumPaymentDue,
-		CurrentBalance:      account.CurrentBalance,
-		PendingTransactions: account.PendingTransactions,
-		CreditLimit:         account.CreditLimit,
+		AccountId:              account.ID.Hex(),
+		PlaidAccountId:         account.PlaidAccountId,
+		UserId:                 account.UserId.Hex(),
+		Name:                   account.Name,
+		OfficialName:           account.OfficialName,
+		Type:                   account.Type,
+		Subtype:                account.Subtype,
+		AvailableBalance:       account.AvailableBalance,
+		CurrentBalance:         account.CurrentBalance,
+		CreditLimit:            account.CreditLimit,
+		IsoCurrencyCode:        account.IsoCurrencyCode,
+		AnnualPercentageRate:   aprs,
+		IsOverdue:              account.IsOverdue,
+		LastPaymentAmount:      account.LastPaymentAmount,
+		LastStatementIssueDate: account.LastStatementIssueDate,
+		LastStatementBalance:   account.LastStatementBalance,
+		MinimumPaymentAmount:   account.MinimumPaymentAmount,
+		NextPaymentDueDate:     account.NextPaymentDueDate,
 	}
 }

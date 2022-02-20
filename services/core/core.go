@@ -15,7 +15,6 @@ import (
 	"github.com/jalexanderII/zero_fintech/services/core/server"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

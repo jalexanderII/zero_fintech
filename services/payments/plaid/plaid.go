@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,8 @@ import (
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/plaid/plaid-go/plaid"
 )
+
+const BasicShortDate = "2006-01-02"
 
 var (
 	PLAID_CLIENT_ID                      = ""
@@ -81,7 +84,6 @@ func main() {
 	r.GET("/api/transactions", transactions)
 	r.POST("/api/transactions", transactions)
 	r.GET("/api/liabilities", liabilities)
-	r.POST("/api/liabilities/internal", liabilitiesInternal)
 	r.GET("/api/payment", payment)
 	r.GET("/api/create_public_token", createPublicToken)
 	r.POST("/api/create_link_token", createLinkToken)
@@ -89,6 +91,9 @@ func main() {
 	r.GET("/api/holdings", holdings)
 	r.GET("/api/assets", assets)
 	r.GET("/api/transfer", transfer)
+
+	r.POST("/api/transactions/internal", transactionsInternal)
+	r.POST("/api/liabilities/internal", liabilitiesInternal)
 
 	err := r.Run(":" + APP_PORT)
 	if err != nil {
@@ -319,6 +324,65 @@ func transactions(c *gin.Context) {
 	})
 }
 
+func transactionsInternal(c *gin.Context) {
+	ctx := context.Background()
+	type Input struct {
+		Token  string `json:"access_token"`
+		Months string `json:"months"`
+	}
+	var requestBody Input
+	var numMonths time.Duration
+	if err := c.BindJSON(&requestBody); err != nil {
+		renderError(c, err)
+		return
+	}
+
+	months, err := strconv.Atoi(requestBody.Months)
+	if err != nil {
+		renderError(c, err)
+		return
+	}
+
+	// pull transactions for the past X months
+	endDate := time.Now().Local().Format(BasicShortDate)
+	numMonths = time.Duration(-30 * months * 24)
+	startDate := time.Now().Local().Add(numMonths * time.Hour).Format(BasicShortDate)
+
+	transactionsResp, _, err := client.PlaidApi.TransactionsGet(ctx).TransactionsGetRequest(
+		*plaid.NewTransactionsGetRequest(
+			requestBody.Token,
+			startDate,
+			endDate,
+		),
+	).Execute()
+
+	if err != nil {
+		renderError(c, err)
+		return
+	}
+	var creditAccounts []plaid.AccountBase
+	var creditTransactions []plaid.Transaction
+	accountIds := make(map[string]string)
+
+	for _, account := range transactionsResp.GetAccounts() {
+		if account.Type == "credit" {
+			creditAccounts = append(creditAccounts, account)
+			accountIds[account.AccountId] = account.Name
+		}
+	}
+
+	for _, transaction := range transactionsResp.GetTransactions() {
+		if _, ok := accountIds[transaction.AccountId]; ok {
+			creditTransactions = append(creditTransactions, transaction)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"accounts":     creditAccounts,
+		"transactions": creditTransactions,
+	})
+}
+
 func liabilities(c *gin.Context) {
 	ctx := context.Background()
 
@@ -350,7 +414,7 @@ func liabilitiesInternal(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"liabilities": liabilitiesResp.GetLiabilities()})
+	c.JSON(http.StatusOK, gin.H{"liabilities": liabilitiesResp.GetLiabilities().Credit})
 }
 
 // This functionality is only relevant for the UK Payment Initiation product.

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
+	"github.com/jalexanderII/zero_fintech/services/core/data"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -111,7 +112,7 @@ func TestCoreServer_CreateManyPaymentTasks(t *testing.T) {
 	c := 0
 	var res []*common.PaymentTask
 	for ok := true; ok; ok = c < limit {
-		task, _ := GenFakePaymentTask()
+		task, _ := data.GenFakePaymentTask()
 		res = append(res, task)
 		c++
 	}
