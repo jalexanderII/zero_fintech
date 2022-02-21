@@ -313,12 +313,11 @@ def test__create_payment_actions_min_fees(
         actual = ppb._create_payment_actions_min_fees(
             p.payment_freq, p.df, p.start_date, p.amount_per_payment
         )
-        assert actual == p.expected
     else:
         actual = ppb._create_payment_actions_optim_credit_score(
             p.payment_freq, p.df, p.start_date, p.amount_per_payment
         )
-        assert actual == p.expected
+    assert actual == p.expected
 
 
 # TODO(Joschka)
