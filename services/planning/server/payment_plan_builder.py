@@ -50,6 +50,9 @@ CORE_CLIENT = CoreStub(
     grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
 )
 
+AMOUNT_THRESHOLD = 250.0
+DEFAULT_APR = 10.0
+
 
 @define
 class PaymentPlanBuilder:
@@ -79,7 +82,7 @@ class PaymentPlanBuilder:
                 amounts=amounts,
             )
             for meta_data in self._get_meta_data_options(
-                meta_data, sum(amounts) > 250.0
+                meta_data, sum(amounts) > AMOUNT_THRESHOLD
             )
         ]
 
@@ -163,12 +166,10 @@ class PaymentPlanBuilder:
         balance: List[float] = []
         credit_limit: List[float] = []
         apr: List[float] = []
-        accounts: List[Account] = [
-            self.core_client.GetAccount(GetAccountRequest(id=acc_id))
-            for acc_id in account_ids
-        ]
+        accounts: List[Account] = self._fetch_accounts(account_ids)
+
         for acc in accounts:
-            apr.append(avg_apr(acc.annual_percentage_rate))
+            apr.append(get_purchase_apr(acc.annual_percentage_rate))
             balance.append(acc.current_balance)
             credit_limit.append(acc.credit_limit)
 
@@ -222,6 +223,12 @@ class PaymentPlanBuilder:
             status=PAYMENT_STATUS_CURRENT,
             payment_action=payment_actions,
         )
+
+    def _fetch_accounts(self, account_ids: List[str]):
+        return [
+            self.core_client.GetAccount(GetAccountRequest(id=acc_id))
+            for acc_id in account_ids
+        ]
 
     @staticmethod
     def _create_payment_actions_min_fees(
@@ -324,8 +331,11 @@ class PaymentPlanBuilder:
         return payment_actions
 
 
-def avg_apr(apr: AnnualPercentageRates) -> float:
-    return (apr.high_end + apr.low_end) / 2
+def get_purchase_apr(aprs: List[AnnualPercentageRates]) -> float:
+    for apr in aprs:
+        if apr.apr_type == "purchase_apr":
+            return apr.apr_percentage
+    return DEFAULT_APR
 
 
 payment_plan_builder = PaymentPlanBuilder()

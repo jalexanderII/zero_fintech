@@ -12,7 +12,7 @@ def initiate_mongo_client() -> Collection:
     return db[os.getenv("PLANNING_COLLECTION")]
 
 
-def initiate_test_mongo_client() -> Collection:
+def initiate_mongo_test_client() -> Collection:
     load_dotenv()
     client = MongoClient(os.getenv("MONGOURI"))
     db = client[os.getenv("PLANNING_DB_NAME")]

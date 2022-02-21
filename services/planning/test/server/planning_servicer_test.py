@@ -18,7 +18,7 @@ from gen.Python.common.payment_plan_pb2 import (
 )
 from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
-from services.planning.database.db import initiate_mongo_client
+from services.planning.database.db import initiate_mongo_test_client
 from services.planning.database.models.common import PaymentAction as PaymentActionDB
 from services.planning.database.models.common import (
     PaymentActionStatus as PaymentActionStatusDB,
@@ -38,13 +38,13 @@ tt = Timestamp()
 
 @pytest.fixture
 def gen_server() -> PlanningService:
-    return PlanningService(planning_collection=initiate_mongo_client())
+    return PlanningService(planning_collection=initiate_mongo_test_client())
 
 
 def test_save_payment_plan(gen_server):
     pp = PaymentPlanPB(
         payment_plan_id=str(ObjectId()),
-        user_id="61df93c0ac601d1be8e6af28",
+        user_id="6212a0101fca9390a37a32d2",
         payment_task_id=["61dfa8296c734067e6726761", "a2ffa82f6c734067e6726761"],
         timeline=4.0,
         payment_freq=PAYMENT_FREQUENCY_WEEKLY,
@@ -55,7 +55,7 @@ def test_save_payment_plan(gen_server):
         status=PAYMENT_STATUS_CURRENT,
         payment_action=[
             PaymentActionPB(
-                account_id="61df9b621d2c2b15a6e53ec9",
+                account_id="6212a29794c88ffb3de9d764",
                 amount=150.0,
                 transaction_date=tt.GetCurrentTime(),
                 status=PAYMENT_ACTION_STATUS_PENDING,
@@ -67,7 +67,7 @@ def test_save_payment_plan(gen_server):
 
 
 def test_get_payment_plan(gen_server):
-    payment_plan_id = "61e8e60a186cad9b7e6db48f"
+    payment_plan_id = "6213fd01541ef06de2168ecc"
     paymentPlanGet = gen_server.GetPaymentPlan(
         GetPaymentPlanRequest(payment_plan_id=payment_plan_id),
     )
@@ -86,7 +86,11 @@ def test_update_payment_plan(gen_server):
     pp = PaymentPlanPB(
         payment_plan_id=payment_plan_id,
         user_id="61df93c0ac601d1be8e6af28",
-        payment_task_id=['61dfa8296c734067e6726761', 'a2ffa82f6c734067e6726761', 'a2ffa82f6c734067e6726761'],
+        payment_task_id=[
+            "61dfa8296c734067e6726761",
+            "a2ffa82f6c734067e6726761",
+            "a2ffa82f6c734067e6726761",
+        ],
         timeline=3.0,
         payment_freq=PAYMENT_FREQUENCY_WEEKLY,
         amount_per_payment=150.0,
@@ -96,12 +100,12 @@ def test_update_payment_plan(gen_server):
         status=PAYMENT_STATUS_CURRENT,
         payment_action=[
             PaymentActionPB(
-                account_id='61df9b621d2c2b15a6e53ec9',
+                account_id="61df9b621d2c2b15a6e53ec9",
                 amount=150.0,
                 transaction_date=tt.GetCurrentTime(),
-                status=PAYMENT_ACTION_STATUS_PENDING
+                status=PAYMENT_ACTION_STATUS_PENDING,
             ),
-        ]
+        ],
     )
     updated_payment_plan = gen_server.UpdatePaymentPlan(
         UpdatePaymentPlanRequest(payment_plan_id=payment_plan_id, payment_plan=pp)
