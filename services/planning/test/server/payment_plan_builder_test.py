@@ -1,29 +1,29 @@
 import datetime
-from typing import List
 from unittest.mock import MagicMock
 
-import attr
 import pandas as pd
 import pytest
 from google.protobuf.timestamp_pb2 import Timestamp
 from pytest_mock import MockerFixture
 
 from gen.Python.common.common_pb2 import (
-    PAYMENT_STATUS_CURRENT,
-    PLAN_TYPE_OPTIM_CREDIT_SCORE,
-)
-from gen.Python.common.common_pb2 import (
-    PaymentFrequency,
     PAYMENT_FREQUENCY_MONTHLY,
     PAYMENT_FREQUENCY_BIWEEKLY,
     PAYMENT_ACTION_STATUS_PENDING,
     PAYMENT_FREQUENCY_QUARTERLY,
 )
-from gen.Python.common.common_pb2 import PlanType, PLAN_TYPE_MIN_FEES
+from gen.Python.common.common_pb2 import (
+    PAYMENT_STATUS_CURRENT,
+    PLAN_TYPE_OPTIM_CREDIT_SCORE,
+)
+from gen.Python.common.common_pb2 import PLAN_TYPE_MIN_FEES
 from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
 from gen.Python.core.accounts_pb2 import Account, AnnualPercentageRates
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
-from services.planning.test.helpers.paramset import ParamSet
+from services.planning.test.helpers.paramset import (
+    MetaDataToPaymentPlanParams,
+    CreatePaymentActionsParams,
+)
 
 START_DATE = datetime.datetime(2022, 2, 21, 17, 26, 12)
 
@@ -105,28 +105,6 @@ MOCK_OPTIM_MONTHLY_ACTIONS = [
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
 ]
-
-
-@attr.s(auto_attribs=True, kw_only=True)
-class MetaDataToPaymentPlanParams(ParamSet):
-    user_id: str
-    plan_type: PlanType
-    timeline_months: float
-    payment_freq: PaymentFrequency
-    payment_task_ids: List[str]
-    account_ids: List[str]
-    amounts: List[float]
-    expected: PaymentPlan
-
-
-@attr.s(auto_attribs=True, kw_only=True)
-class CreatePaymentActionsParams(ParamSet):
-    payment_freq: PaymentFrequency
-    df: pd.DataFrame
-    start_date: datetime.datetime
-    amount_per_payment: float
-    expected: List[PaymentAction]
-    min_fee: bool
 
 
 @pytest.fixture
