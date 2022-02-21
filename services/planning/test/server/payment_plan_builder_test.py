@@ -109,12 +109,11 @@ MOCK_OPTIM_MONTHLY_ACTIONS = [
 
 @pytest.fixture
 def mock_payment_plan_builder() -> PaymentPlanBuilder:
-    ppb = PaymentPlanBuilder()
-    return ppb
+    return PaymentPlanBuilder()
 
 
 @pytest.fixture
-def patch__fetch_accounts(mocker: MockerFixture):
+def patch__fetch_accounts(mocker: MockerFixture) -> MagicMock:
     return mocker.patch.object(PaymentPlanBuilder, "_fetch_accounts")
 
 
