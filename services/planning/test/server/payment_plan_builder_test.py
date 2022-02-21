@@ -196,7 +196,7 @@ def test__create_from_meta_data(
 ):
     ppb = mock_payment_plan_builder
     patch__fetch_accounts.return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
-    actual = ppb._create_from_meta_data(
+    args = (
         p.user_id,
         p.plan_type,
         p.timeline_months,
@@ -205,6 +205,7 @@ def test__create_from_meta_data(
         p.account_ids,
         p.amounts,
     )
+    actual = ppb._create_from_meta_data(*args)
     assert actual == p.expected
 
 
