@@ -25,6 +25,7 @@ from services.planning.test.helpers.paramset import (
     CreatePaymentActionsParams,
 )
 
+# TODO( fix all of time delta's so they are not hardcoded
 START_DATE = datetime.datetime(2022, 2, 21, 17, 26, 12)
 
 MOCK_CHASE_ACC = Account(
