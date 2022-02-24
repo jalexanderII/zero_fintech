@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/sirupsen/logrus"
@@ -68,6 +69,29 @@ func (p PaymentsServer) GetAccountDetails(ctx context.Context, in *payments.GetA
 	}
 
 	return &payments.GetAccountDetailsResponse{AccountDetailsResponse: PlaidResponseToPB(obj1, obj2, in.GetUser())}, nil
+}
+
+type LinkResponse struct {
+	LinkToken string `json:"link_token"`
+}
+
+func (p PaymentsServer) Link(context.Context, *common.LinkRequest) (*common.LinkResponse, error) {
+	URL1 := "http://127.0.0.1:8000/api/create_link_token"
+	resp1, err := http.Post(URL1, "application/json", bytes.NewBuffer([]byte{}))
+	if err != nil {
+		log.Fatal(err)
+	}
+	b1, err := io.ReadAll(resp1.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var obj1 LinkResponse
+	if err := json.Unmarshal(b1, &obj1); err != nil {
+		panic(err)
+	}
+
+	return &common.LinkResponse{LinkToken: obj1.LinkToken}, nil
 }
 
 func PlaidResponseToPB(lr LiabilitiesResponse, tr TransactionsResponse, user *core.User) *payments.AccountDetailsResponse {

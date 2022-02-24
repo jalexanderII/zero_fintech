@@ -17,6 +17,7 @@ func SetupRoutes(app *fiber.App) {
 
 	// Create handlers for bff server
 	app.Get("/", func(c *fiber.Ctx) error { return c.SendString("Hello, World!") })
+
 	api := app.Group("/api")
 
 	// Monitoring api stats
@@ -26,6 +27,7 @@ func SetupRoutes(app *fiber.App) {
 	authEndpoints := api.Group("/auth")
 	authEndpoints.Post("/login", handlers.Login(authClient))
 	authEndpoints.Post("/signup", handlers.SignUp(authClient))
+	authEndpoints.Get("/link", handlers.Link(coreClient, ctx))
 
 	// User endpoints
 	userEndpoints := api.Group("/users")

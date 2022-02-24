@@ -6,12 +6,14 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/payments";
 import "core/users.proto";
 import "core/accounts.proto";
 import "core/transactions.proto";
+import "common/common.proto";
 
 // Plaid fetches the access token for a user and makes a call to Plaid API
 service Plaid {
   // GetAccountDetails fetches Plaid Liabilities and Transactions Endpoint and returns
   // a list of Accounts and Transactions
   rpc GetAccountDetails(GetAccountDetailsRequest) returns (GetAccountDetailsResponse);
+  rpc Link(common.LinkRequest) returns (common.LinkResponse);
 }
 
 message GetAccountDetailsRequest {

@@ -50,3 +50,9 @@ enum PaymentActionStatus {
   // payment defaulted
   PAYMENT_ACTION_STATUS_IN_DEFAULT = 3;
 }
+
+message LinkRequest {}
+
+message LinkResponse {
+  string LinkToken =1;
+}
