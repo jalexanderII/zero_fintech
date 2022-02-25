@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'Z4github.com/jalexanderII/zero_fintech/gen/Go/planning',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\"k\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\x12#\n\tmeta_data\x18\x02 \x01(\x0b\x32\x10.common.MetaData2\xa1\x03\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
+  serialized_pb=b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\"k\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\x12#\n\tmeta_data\x18\x02 \x01(\x0b\x32\x10.common.MetaData\")\n\x16GetUserOverviewRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"\x95\x01\n\x0eWaterfallMonth\x12J\n\x12\x61\x63\x63ount_to_amounts\x18\x01 \x03(\x0b\x32..planning.WaterfallMonth.AccountToAmountsEntry\x1a\x37\n\x15\x41\x63\x63ountToAmountsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x01:\x02\x38\x01\"P\n\x19WaterfallOverviewResponse\x12\x33\n\x11monthly_waterfall\x18\x01 \x03(\x0b\x32\x18.planning.WaterfallMonth\":\n\x1fGetAmountPaidPercentageResponse\x12\x17\n\x0fpercentage_paid\x18\x01 \x01(\x01\"\xee\x01\n#GetPercentageCoveredByPlansResponse\x12\x17\n\x0foverall_covered\x18\x01 \x01(\x01\x12n\n\x1a\x61\x63\x63ount_to_percent_covered\x18\x02 \x03(\x0b\x32J.planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry\x1a>\n\x1c\x41\x63\x63ountToPercentCoveredEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x01:\x02\x38\x01\x32\xd8\x05\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12]\n\x14GetWaterfallOverview\x12 .planning.GetUserOverviewRequest\x1a#.planning.WaterfallOverviewResponse\x12\x66\n\x17GetAmountPaidPercentage\x12 .planning.GetUserOverviewRequest\x1a).planning.GetAmountPaidPercentageResponse\x12n\n\x1bGetPercentageCoveredByPlans\x12 .planning.GetUserOverviewRequest\x1a-.planning.GetPercentageCoveredByPlansResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3'
   ,
   dependencies=[common_dot_payment__task__pb2.DESCRIPTOR,common_dot_payment__plan__pb2.DESCRIPTOR,])
 
@@ -66,9 +66,262 @@ _CREATEPAYMENTPLANREQUEST = _descriptor.Descriptor(
   serialized_end=198,
 )
 
+
+_GETUSEROVERVIEWREQUEST = _descriptor.Descriptor(
+  name='GetUserOverviewRequest',
+  full_name='planning.GetUserOverviewRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='user_id', full_name='planning.GetUserOverviewRequest.user_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=200,
+  serialized_end=241,
+)
+
+
+_WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY = _descriptor.Descriptor(
+  name='AccountToAmountsEntry',
+  full_name='planning.WaterfallMonth.AccountToAmountsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='planning.WaterfallMonth.AccountToAmountsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='planning.WaterfallMonth.AccountToAmountsEntry.value', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=338,
+  serialized_end=393,
+)
+
+_WATERFALLMONTH = _descriptor.Descriptor(
+  name='WaterfallMonth',
+  full_name='planning.WaterfallMonth',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='account_to_amounts', full_name='planning.WaterfallMonth.account_to_amounts', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[_WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=244,
+  serialized_end=393,
+)
+
+
+_WATERFALLOVERVIEWRESPONSE = _descriptor.Descriptor(
+  name='WaterfallOverviewResponse',
+  full_name='planning.WaterfallOverviewResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='monthly_waterfall', full_name='planning.WaterfallOverviewResponse.monthly_waterfall', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=395,
+  serialized_end=475,
+)
+
+
+_GETAMOUNTPAIDPERCENTAGERESPONSE = _descriptor.Descriptor(
+  name='GetAmountPaidPercentageResponse',
+  full_name='planning.GetAmountPaidPercentageResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='percentage_paid', full_name='planning.GetAmountPaidPercentageResponse.percentage_paid', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=477,
+  serialized_end=535,
+)
+
+
+_GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY = _descriptor.Descriptor(
+  name='AccountToPercentCoveredEntry',
+  full_name='planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry.value', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=b'8\001',
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=714,
+  serialized_end=776,
+)
+
+_GETPERCENTAGECOVEREDBYPLANSRESPONSE = _descriptor.Descriptor(
+  name='GetPercentageCoveredByPlansResponse',
+  full_name='planning.GetPercentageCoveredByPlansResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='overall_covered', full_name='planning.GetPercentageCoveredByPlansResponse.overall_covered', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='account_to_percent_covered', full_name='planning.GetPercentageCoveredByPlansResponse.account_to_percent_covered', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[_GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=538,
+  serialized_end=776,
+)
+
 _CREATEPAYMENTPLANREQUEST.fields_by_name['payment_tasks'].message_type = common_dot_payment__task__pb2._PAYMENTTASK
 _CREATEPAYMENTPLANREQUEST.fields_by_name['meta_data'].message_type = common_dot_payment__task__pb2._METADATA
+_WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY.containing_type = _WATERFALLMONTH
+_WATERFALLMONTH.fields_by_name['account_to_amounts'].message_type = _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY
+_WATERFALLOVERVIEWRESPONSE.fields_by_name['monthly_waterfall'].message_type = _WATERFALLMONTH
+_GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY.containing_type = _GETPERCENTAGECOVEREDBYPLANSRESPONSE
+_GETPERCENTAGECOVEREDBYPLANSRESPONSE.fields_by_name['account_to_percent_covered'].message_type = _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY
 DESCRIPTOR.message_types_by_name['CreatePaymentPlanRequest'] = _CREATEPAYMENTPLANREQUEST
+DESCRIPTOR.message_types_by_name['GetUserOverviewRequest'] = _GETUSEROVERVIEWREQUEST
+DESCRIPTOR.message_types_by_name['WaterfallMonth'] = _WATERFALLMONTH
+DESCRIPTOR.message_types_by_name['WaterfallOverviewResponse'] = _WATERFALLOVERVIEWRESPONSE
+DESCRIPTOR.message_types_by_name['GetAmountPaidPercentageResponse'] = _GETAMOUNTPAIDPERCENTAGERESPONSE
+DESCRIPTOR.message_types_by_name['GetPercentageCoveredByPlansResponse'] = _GETPERCENTAGECOVEREDBYPLANSRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 CreatePaymentPlanRequest = _reflection.GeneratedProtocolMessageType('CreatePaymentPlanRequest', (_message.Message,), {
@@ -78,8 +331,61 @@ CreatePaymentPlanRequest = _reflection.GeneratedProtocolMessageType('CreatePayme
   })
 _sym_db.RegisterMessage(CreatePaymentPlanRequest)
 
+GetUserOverviewRequest = _reflection.GeneratedProtocolMessageType('GetUserOverviewRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETUSEROVERVIEWREQUEST,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.GetUserOverviewRequest)
+  })
+_sym_db.RegisterMessage(GetUserOverviewRequest)
+
+WaterfallMonth = _reflection.GeneratedProtocolMessageType('WaterfallMonth', (_message.Message,), {
+
+  'AccountToAmountsEntry' : _reflection.GeneratedProtocolMessageType('AccountToAmountsEntry', (_message.Message,), {
+    'DESCRIPTOR' : _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY,
+    '__module__' : 'planning.planning_pb2'
+    # @@protoc_insertion_point(class_scope:planning.WaterfallMonth.AccountToAmountsEntry)
+    })
+  ,
+  'DESCRIPTOR' : _WATERFALLMONTH,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.WaterfallMonth)
+  })
+_sym_db.RegisterMessage(WaterfallMonth)
+_sym_db.RegisterMessage(WaterfallMonth.AccountToAmountsEntry)
+
+WaterfallOverviewResponse = _reflection.GeneratedProtocolMessageType('WaterfallOverviewResponse', (_message.Message,), {
+  'DESCRIPTOR' : _WATERFALLOVERVIEWRESPONSE,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.WaterfallOverviewResponse)
+  })
+_sym_db.RegisterMessage(WaterfallOverviewResponse)
+
+GetAmountPaidPercentageResponse = _reflection.GeneratedProtocolMessageType('GetAmountPaidPercentageResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETAMOUNTPAIDPERCENTAGERESPONSE,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.GetAmountPaidPercentageResponse)
+  })
+_sym_db.RegisterMessage(GetAmountPaidPercentageResponse)
+
+GetPercentageCoveredByPlansResponse = _reflection.GeneratedProtocolMessageType('GetPercentageCoveredByPlansResponse', (_message.Message,), {
+
+  'AccountToPercentCoveredEntry' : _reflection.GeneratedProtocolMessageType('AccountToPercentCoveredEntry', (_message.Message,), {
+    'DESCRIPTOR' : _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY,
+    '__module__' : 'planning.planning_pb2'
+    # @@protoc_insertion_point(class_scope:planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry)
+    })
+  ,
+  'DESCRIPTOR' : _GETPERCENTAGECOVEREDBYPLANSRESPONSE,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.GetPercentageCoveredByPlansResponse)
+  })
+_sym_db.RegisterMessage(GetPercentageCoveredByPlansResponse)
+_sym_db.RegisterMessage(GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry)
+
 
 DESCRIPTOR._options = None
+_WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY._options = None
+_GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._options = None
 
 _PLANNING = _descriptor.ServiceDescriptor(
   name='Planning',
@@ -88,8 +394,8 @@ _PLANNING = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=201,
-  serialized_end=618,
+  serialized_start=779,
+  serialized_end=1507,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreatePaymentPlan',
@@ -102,9 +408,39 @@ _PLANNING = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
+    name='GetWaterfallOverview',
+    full_name='planning.Planning.GetWaterfallOverview',
+    index=1,
+    containing_service=None,
+    input_type=_GETUSEROVERVIEWREQUEST,
+    output_type=_WATERFALLOVERVIEWRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetAmountPaidPercentage',
+    full_name='planning.Planning.GetAmountPaidPercentage',
+    index=2,
+    containing_service=None,
+    input_type=_GETUSEROVERVIEWREQUEST,
+    output_type=_GETAMOUNTPAIDPERCENTAGERESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetPercentageCoveredByPlans',
+    full_name='planning.Planning.GetPercentageCoveredByPlans',
+    index=3,
+    containing_service=None,
+    input_type=_GETUSEROVERVIEWREQUEST,
+    output_type=_GETPERCENTAGECOVEREDBYPLANSRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
     name='GetPaymentPlan',
     full_name='planning.Planning.GetPaymentPlan',
-    index=1,
+    index=4,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._GETPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._PAYMENTPLAN,
@@ -114,7 +450,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='ListPaymentPlans',
     full_name='planning.Planning.ListPaymentPlans',
-    index=2,
+    index=5,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._LISTPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._LISTPAYMENTPLANRESPONSE,
@@ -124,7 +460,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='UpdatePaymentPlan',
     full_name='planning.Planning.UpdatePaymentPlan',
-    index=3,
+    index=6,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._UPDATEPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._PAYMENTPLAN,
@@ -134,7 +470,7 @@ _PLANNING = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DeletePaymentPlan',
     full_name='planning.Planning.DeletePaymentPlan',
-    index=4,
+    index=7,
     containing_service=None,
     input_type=common_dot_payment__plan__pb2._DELETEPAYMENTPLANREQUEST,
     output_type=common_dot_payment__plan__pb2._DELETEPAYMENTPLANRESPONSE,
