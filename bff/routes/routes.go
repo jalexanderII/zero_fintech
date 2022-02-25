@@ -28,6 +28,7 @@ func SetupRoutes(app *fiber.App) {
 	authEndpoints.Post("/login", handlers.Login(authClient))
 	authEndpoints.Post("/signup", handlers.SignUp(authClient))
 	authEndpoints.Get("/link", handlers.Link(coreClient, ctx))
+	authEndpoints.Get("/exchange", handlers.GetAccessToken(coreClient, ctx))
 
 	// User endpoints
 	userEndpoints := api.Group("/users")

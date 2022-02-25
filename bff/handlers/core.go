@@ -209,6 +209,27 @@ func Link(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error 
 	}
 }
 
+type GetAccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+	ItemId      string `json:"item_id"`
+	RequestId   string `json:"request_id"`
+}
+
+func GetAccessToken(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		response, err := client.GetAccessToken(ctx, &common.GetAccessTokenRequest{PublicToken: c.Params("public_token")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		}
+		r := GetAccessTokenResponse{
+			AccessToken: response.GetAccessToken(),
+			ItemId:      response.GetItemId(),
+			RequestId:   response.GetRequestId(),
+		}
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"data": r})
+	}
+}
+
 // PaymentTaskDBToPB converts a PaymentTask DB object to its proto object
 func PaymentTaskDBToPB(paymentTask PaymentTask) *common.PaymentTask {
 	return &common.PaymentTask{

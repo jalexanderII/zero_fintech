@@ -94,6 +94,36 @@ func (p PaymentsServer) Link(context.Context, *common.LinkRequest) (*common.Link
 	return &common.LinkResponse{LinkToken: obj1.LinkToken}, nil
 }
 
+type GetAccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+	ItemId      string `json:"item_id"`
+	RequestId   string `json:"request_id"`
+}
+
+func (p PaymentsServer) GetAccessToken(ctx context.Context, in *common.GetAccessTokenRequest) (*common.GetAccessTokenResponse, error) {
+	values1 := map[string]string{"public_token": in.GetPublicToken()}
+	jsonData1, err := json.Marshal(values1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	URL1 := "http://127.0.0.1:8000/api/set_access_token"
+	resp1, err := http.Post(URL1, "application/json", bytes.NewBuffer(jsonData1))
+	if err != nil {
+		log.Fatal(err)
+	}
+	b1, err := io.ReadAll(resp1.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var obj1 GetAccessTokenResponse
+	if err := json.Unmarshal(b1, &obj1); err != nil {
+		panic(err)
+	}
+
+	return &common.GetAccessTokenResponse{AccessToken: obj1.AccessToken, ItemId: obj1.ItemId, RequestId: obj1.RequestId}, nil
+}
+
 func PlaidResponseToPB(lr LiabilitiesResponse, tr TransactionsResponse, user *core.User) *payments.AccountDetailsResponse {
 	accountLiabilities := make(map[string]CreditCardLiability)
 	for _, al := range lr.Liabilities {

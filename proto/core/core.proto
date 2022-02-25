@@ -15,6 +15,7 @@ service Core {
   // of PaymentTasks and expects to receive a list of PaymentPlans
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlanResponse);
   rpc Link(common.LinkRequest) returns (common.LinkResponse);
+  rpc GetAccessToken(common.GetAccessTokenRequest) returns (common.GetAccessTokenResponse);
   //  CRUD METHODS
   // Account
   rpc CreateAccount(CreateAccountRequest) returns (Account);

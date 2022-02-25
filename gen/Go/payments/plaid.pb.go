@@ -224,7 +224,7 @@ var file_payments_plaid_proto_rawDesc = []byte{
 	0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b,
 	0x32, 0x11, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74,
 	0x69, 0x6f, 0x6e, 0x52, 0x0c, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x73, 0x32, 0x98, 0x01, 0x0a, 0x05, 0x50, 0x6c, 0x61, 0x69, 0x64, 0x12, 0x5c, 0x0a, 0x11, 0x47,
+	0x73, 0x32, 0xe9, 0x01, 0x0a, 0x05, 0x50, 0x6c, 0x61, 0x69, 0x64, 0x12, 0x5c, 0x0a, 0x11, 0x47,
 	0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73,
 	0x12, 0x22, 0x2e, 0x70, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x2e, 0x47, 0x65, 0x74, 0x41,
 	0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x65, 0x71,
@@ -233,11 +233,16 @@ var file_payments_plaid_proto_rawDesc = []byte{
 	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x31, 0x0a, 0x04, 0x4c, 0x69, 0x6e,
 	0x6b, 0x12, 0x13, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x4c, 0x69, 0x6e, 0x6b, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e,
-	0x4c, 0x69, 0x6e, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x36, 0x5a, 0x34,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x61, 0x6c, 0x65, 0x78,
-	0x61, 0x6e, 0x64, 0x65, 0x72, 0x49, 0x49, 0x2f, 0x7a, 0x65, 0x72, 0x6f, 0x5f, 0x66, 0x69, 0x6e,
-	0x74, 0x65, 0x63, 0x68, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x47, 0x6f, 0x2f, 0x70, 0x61, 0x79, 0x6d,
-	0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x4c, 0x69, 0x6e, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4f, 0x0a, 0x0e,
+	0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x1d,
+	0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x65, 0x73,
+	0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e,
+	0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x65, 0x73, 0x73,
+	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x36, 0x5a,
+	0x34, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x61, 0x6c, 0x65,
+	0x78, 0x61, 0x6e, 0x64, 0x65, 0x72, 0x49, 0x49, 0x2f, 0x7a, 0x65, 0x72, 0x6f, 0x5f, 0x66, 0x69,
+	0x6e, 0x74, 0x65, 0x63, 0x68, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x47, 0x6f, 0x2f, 0x70, 0x61, 0x79,
+	0x6d, 0x65, 0x6e, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -254,14 +259,16 @@ func file_payments_plaid_proto_rawDescGZIP() []byte {
 
 var file_payments_plaid_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_payments_plaid_proto_goTypes = []interface{}{
-	(*GetAccountDetailsRequest)(nil),  // 0: payments.GetAccountDetailsRequest
-	(*GetAccountDetailsResponse)(nil), // 1: payments.GetAccountDetailsResponse
-	(*AccountDetailsResponse)(nil),    // 2: payments.AccountDetailsResponse
-	(*core.User)(nil),                 // 3: core.User
-	(*core.Account)(nil),              // 4: core.Account
-	(*core.Transaction)(nil),          // 5: core.Transaction
-	(*common.LinkRequest)(nil),        // 6: common.LinkRequest
-	(*common.LinkResponse)(nil),       // 7: common.LinkResponse
+	(*GetAccountDetailsRequest)(nil),      // 0: payments.GetAccountDetailsRequest
+	(*GetAccountDetailsResponse)(nil),     // 1: payments.GetAccountDetailsResponse
+	(*AccountDetailsResponse)(nil),        // 2: payments.AccountDetailsResponse
+	(*core.User)(nil),                     // 3: core.User
+	(*core.Account)(nil),                  // 4: core.Account
+	(*core.Transaction)(nil),              // 5: core.Transaction
+	(*common.LinkRequest)(nil),            // 6: common.LinkRequest
+	(*common.GetAccessTokenRequest)(nil),  // 7: common.GetAccessTokenRequest
+	(*common.LinkResponse)(nil),           // 8: common.LinkResponse
+	(*common.GetAccessTokenResponse)(nil), // 9: common.GetAccessTokenResponse
 }
 var file_payments_plaid_proto_depIdxs = []int32{
 	3, // 0: payments.GetAccountDetailsRequest.user:type_name -> core.User
@@ -270,10 +277,12 @@ var file_payments_plaid_proto_depIdxs = []int32{
 	5, // 3: payments.AccountDetailsResponse.transactions:type_name -> core.Transaction
 	0, // 4: payments.Plaid.GetAccountDetails:input_type -> payments.GetAccountDetailsRequest
 	6, // 5: payments.Plaid.Link:input_type -> common.LinkRequest
-	1, // 6: payments.Plaid.GetAccountDetails:output_type -> payments.GetAccountDetailsResponse
-	7, // 7: payments.Plaid.Link:output_type -> common.LinkResponse
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
+	7, // 6: payments.Plaid.GetAccessToken:input_type -> common.GetAccessTokenRequest
+	1, // 7: payments.Plaid.GetAccountDetails:output_type -> payments.GetAccountDetailsResponse
+	8, // 8: payments.Plaid.Link:output_type -> common.LinkResponse
+	9, // 9: payments.Plaid.GetAccessToken:output_type -> common.GetAccessTokenResponse
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
@@ -358,6 +367,7 @@ type PlaidClient interface {
 	// a list of Accounts and Transactions
 	GetAccountDetails(ctx context.Context, in *GetAccountDetailsRequest, opts ...grpc.CallOption) (*GetAccountDetailsResponse, error)
 	Link(ctx context.Context, in *common.LinkRequest, opts ...grpc.CallOption) (*common.LinkResponse, error)
+	GetAccessToken(ctx context.Context, in *common.GetAccessTokenRequest, opts ...grpc.CallOption) (*common.GetAccessTokenResponse, error)
 }
 
 type plaidClient struct {
@@ -386,12 +396,22 @@ func (c *plaidClient) Link(ctx context.Context, in *common.LinkRequest, opts ...
 	return out, nil
 }
 
+func (c *plaidClient) GetAccessToken(ctx context.Context, in *common.GetAccessTokenRequest, opts ...grpc.CallOption) (*common.GetAccessTokenResponse, error) {
+	out := new(common.GetAccessTokenResponse)
+	err := c.cc.Invoke(ctx, "/payments.Plaid/GetAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PlaidServer is the server API for Plaid service.
 type PlaidServer interface {
 	// GetAccountDetails fetches Plaid Liabilities and Transactions Endpoint and returns
 	// a list of Accounts and Transactions
 	GetAccountDetails(context.Context, *GetAccountDetailsRequest) (*GetAccountDetailsResponse, error)
 	Link(context.Context, *common.LinkRequest) (*common.LinkResponse, error)
+	GetAccessToken(context.Context, *common.GetAccessTokenRequest) (*common.GetAccessTokenResponse, error)
 }
 
 // UnimplementedPlaidServer can be embedded to have forward compatible implementations.
@@ -403,6 +423,9 @@ func (*UnimplementedPlaidServer) GetAccountDetails(context.Context, *GetAccountD
 }
 func (*UnimplementedPlaidServer) Link(context.Context, *common.LinkRequest) (*common.LinkResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Link not implemented")
+}
+func (*UnimplementedPlaidServer) GetAccessToken(context.Context, *common.GetAccessTokenRequest) (*common.GetAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccessToken not implemented")
 }
 
 func RegisterPlaidServer(s *grpc.Server, srv PlaidServer) {
@@ -445,6 +468,24 @@ func _Plaid_Link_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Plaid_GetAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(common.GetAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlaidServer).GetAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/payments.Plaid/GetAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlaidServer).GetAccessToken(ctx, req.(*common.GetAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Plaid_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "payments.Plaid",
 	HandlerType: (*PlaidServer)(nil),
@@ -456,6 +497,10 @@ var _Plaid_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Link",
 			Handler:    _Plaid_Link_Handler,
+		},
+		{
+			MethodName: "GetAccessToken",
+			Handler:    _Plaid_GetAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

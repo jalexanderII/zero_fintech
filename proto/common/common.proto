@@ -54,5 +54,15 @@ enum PaymentActionStatus {
 message LinkRequest {}
 
 message LinkResponse {
-  string LinkToken =1;
+  string LinkToken = 1;
+}
+
+message GetAccessTokenRequest {
+  string PublicToken = 1;
+}
+
+message GetAccessTokenResponse {
+  string AccessToken = 1;
+  string ItemId = 2;
+  string RequestId = 3;
 }

@@ -81,14 +81,18 @@ func (s CoreServer) GetAccountDetails(ctx context.Context, in *payments.GetAccou
 	return &payments.GetAccountDetailsResponse{AccountDetailsResponse: resp.GetAccountDetailsResponse()}, nil
 }
 
-type LinkResponse struct {
-	LinkToken string
-}
-
 func (s CoreServer) Link(ctx context.Context, in *common.LinkRequest) (*common.LinkResponse, error) {
 	resp, err := s.plaidClient.Link(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 	return &common.LinkResponse{LinkToken: resp.GetLinkToken()}, nil
+}
+
+func (s CoreServer) GetAccessToken(ctx context.Context, in *common.GetAccessTokenRequest) (*common.GetAccessTokenResponse, error) {
+	resp, err := s.plaidClient.GetAccessToken(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return &common.GetAccessTokenResponse{AccessToken: resp.GetAccessToken(), ItemId: resp.GetItemId(), RequestId: resp.GetRequestId()}, nil
 }
