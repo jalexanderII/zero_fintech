@@ -1,8 +1,11 @@
 import logging
+import os
 import sys
 from collections import defaultdict
+import datetime
 from typing import List
 
+import grpc
 from attr import define, field
 from bson.objectid import ObjectId
 from database.models.common import PaymentPlan as PaymentPlanDB
@@ -18,6 +21,7 @@ from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
 from gen.Python.core.accounts_pb2 import GetAccountRequest
+from gen.Python.core.core_pb2_grpc import CoreStub
 from gen.Python.core.users_pb2 import GetUserRequest
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
     WaterfallOverviewResponse, GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse
@@ -33,6 +37,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger("PlanningServicer")
 
+CORE_CLIENT = CoreStub(
+    grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
+)
 
 @define
 class PlanningService(PlanningServicer):
@@ -40,6 +47,7 @@ class PlanningService(PlanningServicer):
     _payment_plan_builder: PaymentPlanBuilder = field(
         init=False, default=payment_plan_builder
     )
+    core_client: CoreStub = CORE_CLIENT
 
     def CreatePaymentPlan(
             self, request: CreatePaymentPlanRequest, ctx=None
@@ -129,15 +137,24 @@ class PlanningService(PlanningServicer):
 
     def GetWaterfallOverview(self, request: GetUserOverviewRequest, ctx=None) -> WaterfallOverviewResponse:
         logger.info("GetWaterfallOverview called")
-        pass
+
+        payment_plans_cursor = self.planning_collection.find({'user_id': request.user_id, 'active': True})
+        # for this month and 11 month afterwards have a dictionary mapping account_id to amount to be paid
+        waterfall = [defaultdict(float) for _ in range(12)]
+        now = datetime.datetime.now()
+        for pp in payment_plans_cursor:
+            for pa in pp['payment_action']:
+                _waterfall_month = pa['transaction_date'].month - now.month    # if in same month, before or after
+                if 0 <= _waterfall_month <= 11:
+                    waterfall[_waterfall_month][pa['account_id']] += pa['amount']
+        return WaterfallOverviewResponse(monthly_waterfall=waterfall)
 
     def GetAmountPaidPercentage(self, request: GetUserOverviewRequest, ctx=None) -> GetAmountPaidPercentageResponse:
         logger.info("GetAmountPaidPercentage called")
 
-        user_id = request.user_id
         # retrieve all active PaymentPlans for user
         # iterate over all PaymentActions and depending on its status add it to paid amount or only total_amount
-        payment_plans_cursor = self.planning_collection.find({'user_id': user_id, 'active': True})
+        payment_plans_cursor = self.planning_collection.find({'user_id': request.user_id, 'active': True})
         amount_paid, total_amount = 0, 0
         for pp in payment_plans_cursor:
             for pa in pp['payment_action']:
