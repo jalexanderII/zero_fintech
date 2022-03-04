@@ -224,7 +224,7 @@ class PaymentPlanBuilder:
             payment_action=payment_actions,
         )
 
-    def _fetch_accounts(self, account_ids: List[str]):
+    def _fetch_accounts(self, account_ids: List[str]) -> List[Account]:
         return [
             self.core_client.GetAccount(GetAccountRequest(id=acc_id))
             for acc_id in account_ids

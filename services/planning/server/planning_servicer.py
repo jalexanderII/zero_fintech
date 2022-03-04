@@ -20,11 +20,11 @@ from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
-from gen.Python.core.accounts_pb2 import GetAccountRequest
+from gen.Python.core.accounts_pb2 import GetAccountRequest, Account
 from gen.Python.core.core_pb2_grpc import CoreStub
 from gen.Python.core.users_pb2 import GetUserRequest
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
-    WaterfallOverviewResponse, GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse
+    WaterfallOverviewResponse, GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse, WaterfallMonth
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
@@ -138,28 +138,31 @@ class PlanningService(PlanningServicer):
     def GetWaterfallOverview(self, request: GetUserOverviewRequest, ctx=None) -> WaterfallOverviewResponse:
         logger.info("GetWaterfallOverview called")
 
-        payment_plans_cursor = self.planning_collection.find({'user_id': request.user_id, 'active': True})
+        payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
         # for this month and 11 month afterwards have a dictionary mapping account_id to amount to be paid
         waterfall = [defaultdict(float) for _ in range(12)]
         now = datetime.datetime.now()
-        for pp in payment_plans_cursor:
-            for pa in pp['payment_action']:
-                _waterfall_month = pa['transaction_date'].month - now.month    # if in same month, before or after
+        for _pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(_pp)
+            for pa in pp.payment_action:
+                _waterfall_month = pa.transaction_date.month - now.month    # if in same month, before or after
                 if 0 <= _waterfall_month <= 11:
-                    waterfall[_waterfall_month][pa['account_id']] += pa['amount']
-        return WaterfallOverviewResponse(monthly_waterfall=waterfall)
+                    waterfall[_waterfall_month][pa.account_id] += pa.amount   # update account with amount
+        monthly_waterfall = [WaterfallMonth(account_to_amounts=_waterfall_month) for _waterfall_month in waterfall]
+        return WaterfallOverviewResponse(monthly_waterfall=monthly_waterfall)
 
     def GetAmountPaidPercentage(self, request: GetUserOverviewRequest, ctx=None) -> GetAmountPaidPercentageResponse:
         logger.info("GetAmountPaidPercentage called")
 
         # retrieve all active PaymentPlans for user
         # iterate over all PaymentActions and depending on its status add it to paid amount or only total_amount
-        payment_plans_cursor = self.planning_collection.find({'user_id': request.user_id, 'active': True})
+        payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
         amount_paid, total_amount = 0, 0
-        for pp in payment_plans_cursor:
-            for pa in pp['payment_action']:
-                _amount = pa['amount']
-                if pa['status'] == PaymentActionStatus.PAYMENT_ACTION_STATUS_COMPLETED:
+        for _pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(_pp)
+            for pa in pp.payment_action:
+                _amount = pa.amount
+                if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_COMPLETED:
                     amount_paid += _amount
                 total_amount += _amount
         prcnt_paid = amount_paid / total_amount if total_amount > 0 else 1
@@ -181,14 +184,15 @@ class PlanningService(PlanningServicer):
                 acc2balance[acc.account_id] = balance
         # retrieve all active PaymentPlans for user and all accounts
         # and see how much every account is covered
-        payment_plans_cursor = self.planning_collection.find({'user_id': user_id, 'active': True})
+        payment_plans_cursor = self.planning_collection.find({'userId': user_id, 'active': True})
         acc2coverage = defaultdict(float)
-        for pp in payment_plans_cursor:
-            for pa in pp['payment_action']:
-                acc2coverage[pa['account_id']] += pa['amount']
+        for _pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(_pp)
+            for pa in pp.payment_action:
+                acc2coverage[pa.account_id] += pa.amount
         # see coverage in percentage
         total_balance = sum(acc2balance.values())
-        total_coverage_prcnt = sum(acc2coverage.values) / total_balance if total_balance > 0 else 1
+        total_coverage_prcnt = sum(acc2coverage.values()) / total_balance if total_balance > 0 else 1
         acc2coverage_prcnt = {}
         for acc_id in acc2balance.keys():
             balance = acc2balance[acc_id]
@@ -197,7 +201,7 @@ class PlanningService(PlanningServicer):
         return GetPercentageCoveredByPlansResponse(
             overall_covered=total_coverage_prcnt, account_to_percent_covered=acc2coverage_prcnt)
 
-    def _fetch_accounts(self, user_id):
+    def _fetch_accounts(self, user_id) -> List[Account]:
         user = self.core_client.GetUser(GetUserRequest(id=user_id))
         account_ids: List[str] = list(user.account_id_to_token.keys())
 
