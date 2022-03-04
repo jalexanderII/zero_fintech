@@ -73,6 +73,46 @@ def patch__fetch_accounts(mocker: MockerFixture) -> MagicMock:
     return mocker.patch.object(PlanningService, "_fetch_accounts")
 
 
+@pytest.fixture
+def create_payment_plan_user_overview() -> PaymentPlanPB:
+    last_month, this_month, next_month = Timestamp(), Timestamp(), Timestamp()
+    last_month.FromDatetime(datetime.now()+timedelta(days=-31))
+    this_month.GetCurrentTime()
+    next_month.FromDatetime(datetime.now()+timedelta(days=31))
+    return PaymentPlanPB(
+        payment_plan_id=str(ObjectId()),
+        user_id=MOCK_USER_ID,
+        payment_task_id=["01", "02"],
+        timeline=3.0,
+        payment_freq=PAYMENT_FREQUENCY_WEEKLY,
+        amount_per_payment=150.0,
+        plan_type=PLAN_TYPE_MIN_FEES,
+        end_date=next_month,
+        active=True,
+        status=PAYMENT_STATUS_CURRENT,
+        payment_action=[
+            PaymentActionPB(
+                account_id=MOCK_CHASE_ACC.account_id,
+                amount=150.0,
+                transaction_date=last_month,
+                status=PAYMENT_ACTION_STATUS_COMPLETED,
+            ),
+            PaymentActionPB(
+                account_id=MOCK_CHASE_ACC.account_id,
+                amount=150.0,
+                transaction_date=this_month,
+                status=PAYMENT_ACTION_STATUS_PENDING,
+            ),
+            PaymentActionPB(
+                account_id=MOCK_AMEX_ACC.account_id,
+                amount=150.0,
+                transaction_date=next_month,
+                status=PAYMENT_ACTION_STATUS_PENDING
+            )
+        ],
+    )
+
+
 def test_save_payment_plan(mock_planning_server: PlanningService):
     pp = PaymentPlanPB(
         payment_plan_id=str(ObjectId()),
@@ -190,55 +230,11 @@ def test_delete_payment_plan(mock_planning_server: PlanningService):
     ), f"Failed status is {deleteResponse.status}"
 
 
-def test_helper(mock_planning_server: PlanningService):
-    # payment_plans = mock_planning_server.ListPaymentPlans(request=ListPaymentPlanRequest()).payment_plans
-    payment_plans = mock_planning_server.planning_collection.find({'userId': MOCK_USER_ID})
-    print()
-    for pp in payment_plans:
-        print(pp)
-    mock_planning_server.DeletePaymentPlan(DeletePaymentPlanRequest(payment_plan_id='62221ffb51db2e2062beb1b3'))
-    # mock_planning_server.DeletePaymentPlan(DeletePaymentPlanRequest(payment_plan_id='62221e5dc003a68110214306'))
-    # mock_planning_server.DeletePaymentPlan(DeletePaymentPlanRequest(payment_plan_id='62221e74d1d73b54f835dec1'))
-
-
-def test_get_amount_paid_percentage(patch__fetch_accounts: MagicMock, mock_planning_server: PlanningService):
-    # TODO: make this independent of other functionality
+def test_get_amount_paid_percentage(create_payment_plan_user_overview: PaymentPlanPB, patch__fetch_accounts: MagicMock,
+                                    mock_planning_server: PlanningService):
     patch__fetch_accounts.return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
 
-    last_month = Timestamp().FromDatetime(datetime.now()+timedelta(days=-31))
-    next_month = Timestamp().FromDatetime(datetime.now()+timedelta(days=31))
-    pp = PaymentPlanPB(
-        payment_plan_id=str(ObjectId()),
-        user_id=MOCK_USER_ID,
-        payment_task_id=["01", "02"],
-        timeline=3.0,
-        payment_freq=PAYMENT_FREQUENCY_WEEKLY,
-        amount_per_payment=150.0,
-        plan_type=PLAN_TYPE_MIN_FEES,
-        end_date=next_month,
-        active=True,
-        status=PAYMENT_STATUS_CURRENT,
-        payment_action=[
-            PaymentActionPB(
-                account_id=MOCK_CHASE_ACC.account_id,
-                amount=150.0,
-                transaction_date=last_month,
-                status=PAYMENT_ACTION_STATUS_COMPLETED,
-            ),
-            PaymentActionPB(
-                account_id=MOCK_CHASE_ACC.account_id,
-                amount=150.0,
-                transaction_date=tt.GetCurrentTime(),
-                status=PAYMENT_ACTION_STATUS_PENDING,
-            ),
-            PaymentActionPB(
-                account_id=MOCK_AMEX_ACC.account_id,
-                amount=150.0,
-                transaction_date=next_month,
-                status=PAYMENT_ACTION_STATUS_PENDING
-            )
-        ],
-    )
+    pp = create_payment_plan_user_overview
     payment_plan_id = str(mock_planning_server.SavePaymentPlan(pp))
 
     amount_paid_percentage_response = mock_planning_server.GetAmountPaidPercentage(
@@ -249,44 +245,11 @@ def test_get_amount_paid_percentage(patch__fetch_accounts: MagicMock, mock_plann
     mock_planning_server.DeletePaymentPlan(request=DeletePaymentPlanRequest(payment_plan_id=payment_plan_id))
 
 
-def test_get_percentage_covered_by_plans(patch__fetch_accounts: MagicMock, mock_planning_server: PlanningService):
-    # TODO: make this independent of other functionality
+def test_get_percentage_covered_by_plans(create_payment_plan_user_overview: PaymentPlanPB,
+                                         patch__fetch_accounts: MagicMock, mock_planning_server: PlanningService):
     patch__fetch_accounts.return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
 
-    last_month = Timestamp().FromDatetime(datetime.now()+timedelta(days=-31))
-    next_month = Timestamp().FromDatetime(datetime.now()+timedelta(days=31))
-    pp = PaymentPlanPB(
-        payment_plan_id=str(ObjectId()),
-        user_id=MOCK_USER_ID,
-        payment_task_id=["01", "02"],
-        timeline=3.0,
-        payment_freq=PAYMENT_FREQUENCY_WEEKLY,
-        amount_per_payment=150.0,
-        plan_type=PLAN_TYPE_MIN_FEES,
-        end_date=next_month,
-        active=True,
-        status=PAYMENT_STATUS_CURRENT,
-        payment_action=[
-            PaymentActionPB(
-                account_id=MOCK_CHASE_ACC.account_id,
-                amount=150.0,
-                transaction_date=last_month,
-                status=PAYMENT_ACTION_STATUS_COMPLETED,
-            ),
-            PaymentActionPB(
-                account_id=MOCK_CHASE_ACC.account_id,
-                amount=150.0,
-                transaction_date=tt.GetCurrentTime(),
-                status=PAYMENT_ACTION_STATUS_PENDING,
-            ),
-            PaymentActionPB(
-                account_id=MOCK_AMEX_ACC.account_id,
-                amount=150.0,
-                transaction_date=next_month,
-                status=PAYMENT_ACTION_STATUS_PENDING
-            )
-        ],
-    )
+    pp = create_payment_plan_user_overview
     payment_plan_id = str(mock_planning_server.SavePaymentPlan(pp))
 
     percentage_covered_response = mock_planning_server.GetPercentageCoveredByPlans(
@@ -298,46 +261,11 @@ def test_get_percentage_covered_by_plans(patch__fetch_accounts: MagicMock, mock_
     mock_planning_server.DeletePaymentPlan(request=DeletePaymentPlanRequest(payment_plan_id=payment_plan_id))
 
 
-def test_get_waterfall_overview(patch__fetch_accounts: MagicMock, mock_planning_server: PlanningService):
-    # TODO: make this independent of other functionality
+def test_get_waterfall_overview(create_payment_plan_user_overview: PaymentPlanPB, patch__fetch_accounts: MagicMock,
+                                mock_planning_server: PlanningService):
     patch__fetch_accounts.return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
 
-    last_month, this_month, next_month = Timestamp(), Timestamp(), Timestamp()
-    last_month.FromDatetime(datetime.now()+timedelta(days=-31))
-    this_month.GetCurrentTime()
-    next_month.FromDatetime(datetime.now()+timedelta(days=31))
-    pp = PaymentPlanPB(
-        payment_plan_id=str(ObjectId()),
-        user_id=MOCK_USER_ID,
-        payment_task_id=["01", "02"],
-        timeline=3.0,
-        payment_freq=PAYMENT_FREQUENCY_WEEKLY,
-        amount_per_payment=150.0,
-        plan_type=PLAN_TYPE_MIN_FEES,
-        end_date=next_month,
-        active=True,
-        status=PAYMENT_STATUS_CURRENT,
-        payment_action=[
-            PaymentActionPB(
-                account_id=MOCK_CHASE_ACC.account_id,
-                amount=150.0,
-                transaction_date=last_month,
-                status=PAYMENT_ACTION_STATUS_COMPLETED,
-            ),
-            PaymentActionPB(
-                account_id=MOCK_CHASE_ACC.account_id,
-                amount=150.0,
-                transaction_date=this_month,
-                status=PAYMENT_ACTION_STATUS_PENDING,
-            ),
-            PaymentActionPB(
-                account_id=MOCK_AMEX_ACC.account_id,
-                amount=150.0,
-                transaction_date=next_month,
-                status=PAYMENT_ACTION_STATUS_PENDING
-            )
-        ],
-    )
+    pp = create_payment_plan_user_overview
     payment_plan_id = str(mock_planning_server.SavePaymentPlan(pp))
 
     waterfall_overview_response = mock_planning_server.GetWaterfallOverview(
