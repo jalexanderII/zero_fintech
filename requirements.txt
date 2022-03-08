@@ -4,9 +4,10 @@ betterproto==1.2.5
 grpcio==1.44.0
 grpcio-tools==1.44.0
 grpclib==0.4.2
+motor==2.5.1
 pandas==1.4.1
 protobuf==3.19.4
-pymongo==4.0.1
+pymongo==3.12.3
 pytest==7.0.1
 pytest_mock==3.7.0
 pytest_cases==3.6.9

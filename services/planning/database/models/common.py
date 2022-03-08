@@ -100,15 +100,17 @@ class PaymentPlan(betterproto.Message):
     payment_plan_id: str = betterproto.string_field(1)
     user_id: str = betterproto.string_field(2)
     payment_task_id: List[str] = betterproto.string_field(3)
-    timeline: float = betterproto.double_field(4)
-    payment_freq: "PaymentFrequency" = betterproto.enum_field(5)
-    amount_per_payment: float = betterproto.double_field(6)
-    plan_type: "PlanType" = betterproto.enum_field(7)
+    amount: float = betterproto.double_field(4)
+    timeline: float = betterproto.double_field(5)
+    payment_freq: "PaymentFrequency" = betterproto.enum_field(6)
+    amount_per_payment: float = betterproto.double_field(7)
+    plan_type: "PlanType" = betterproto.enum_field(8)
     # Expected date the plan should be completed
-    end_date: datetime = betterproto.message_field(8)
+    end_date: datetime = betterproto.message_field(9)
     # This Payment plan has not completed and is still active
-    active: bool = betterproto.bool_field(9)
+    active: bool = betterproto.bool_field(10)
     # Current status of this plan
-    status: "PaymentStatus" = betterproto.enum_field(10)
+    status: "PaymentStatus" = betterproto.enum_field(11)
     # payment actions of the plan
-    payment_action: List["PaymentAction"] = betterproto.message_field(11)
+    payment_action: List["PaymentAction"] = betterproto.message_field(12)
+
