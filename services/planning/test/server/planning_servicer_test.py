@@ -31,36 +31,11 @@ from services.planning.database.models.common import PaymentPlan as PaymentPlanD
 from services.planning.database.models.common import PaymentStatus as PaymentStatusDB
 from services.planning.database.models.common import PlanType as PlanTypeDB
 from services.planning.server.planning_servicer import PlanningService
+from services.planning.test.helpers.shared_objects import MOCK_USER_ID, MOCK_CHASE_ACC, MOCK_AMEX_ACC
 
 load_dotenv()
 
 tt = Timestamp()
-
-MOCK_USER_ID = "test"
-
-MOCK_CHASE_ACC = Account(
-    account_id="1",
-    user_id=MOCK_USER_ID,
-    name="Chase",
-    available_balance=2500,
-    current_balance=500,
-    credit_limit=3000,
-    annual_percentage_rate=[
-        AnnualPercentageRates(apr_percentage=22, apr_type="purchase_apr")
-    ],
-)
-
-MOCK_AMEX_ACC = Account(
-    account_id="2",
-    user_id=MOCK_USER_ID,
-    name="Amex",
-    available_balance=4000,
-    current_balance=1000,
-    credit_limit=5000,
-    annual_percentage_rate=[
-        AnnualPercentageRates(apr_percentage=42, apr_type="purchase_apr")
-    ],
-)
 
 
 @pytest.fixture
@@ -117,19 +92,25 @@ def create_payment_plan_user_overview() -> PaymentPlanPB:
 def test_save_payment_plan(mock_planning_server: PlanningService):
     pp = PaymentPlanPB(
         payment_plan_id=str(ObjectId()),
-        user_id="6212a0101fca9390a37a32d2",
+        user_id=MOCK_USER_ID,
         payment_task_id=["61dfa8296c734067e6726761", "a2ffa82f6c734067e6726761"],
-        amount=150.0,
-        timeline=4.0,
+        amount=300.0,
+        timeline=1.0,
         payment_freq=PAYMENT_FREQUENCY_WEEKLY,
-        amount_per_payment=150.0,
+        amount_per_payment=300.0,
         plan_type=PLAN_TYPE_MIN_FEES,
         end_date=tt.GetCurrentTime(),
         active=True,
         status=PAYMENT_STATUS_CURRENT,
         payment_action=[
             PaymentActionPB(
-                account_id="6212a29794c88ffb3de9d764",
+                account_id=MOCK_CHASE_ACC.account_id,
+                amount=150.0,
+                transaction_date=tt.GetCurrentTime(),
+                status=PAYMENT_ACTION_STATUS_PENDING,
+            ),
+            PaymentActionPB(
+                account_id=MOCK_AMEX_ACC.account_id,
                 amount=150.0,
                 transaction_date=tt.GetCurrentTime(),
                 status=PAYMENT_ACTION_STATUS_PENDING,
@@ -141,7 +122,7 @@ def test_save_payment_plan(mock_planning_server: PlanningService):
 
 
 def test_get_payment_plan(mock_planning_server: PlanningService):
-    payment_plan_id = "6213fd01541ef06de2168ecc"
+    payment_plan_id = "622874c7e9f2ee76c713c40e"
     paymentPlanGet = mock_planning_server.GetPaymentPlan(
         GetPaymentPlanRequest(payment_plan_id=payment_plan_id),
     )

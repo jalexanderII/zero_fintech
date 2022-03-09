@@ -27,6 +27,7 @@ class ParamSet:
 class MetaDataToPaymentPlanParams(ParamSet):
     user_id: str
     plan_type: PlanType
+    amount: float
     timeline_months: float
     payment_freq: PaymentFrequency
     payment_task_ids: List[str]
