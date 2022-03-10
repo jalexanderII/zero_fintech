@@ -6,6 +6,7 @@ import pandas as pd
 
 from gen.Python.common.common_pb2 import PlanType, PaymentFrequency
 from gen.Python.common.payment_plan_pb2 import PaymentPlan, PaymentAction
+from gen.Python.common.payment_task_pb2 import MetaData
 
 
 @attr.s(auto_attribs=True, kw_only=True)
@@ -42,3 +43,10 @@ class CreatePaymentActionsParams(ParamSet):
     amount_per_payment: float
     expected: List[PaymentAction]
     min_fee: bool
+
+
+@attr.s(auto_attribs=True, kw_only=True)
+class GetMetaDataParams(ParamSet):
+    meta_data: MetaData
+    gt_threshold: bool
+    expected: List[MetaData]
