@@ -580,7 +580,7 @@ func linkTokenCreate(
 	if err != nil {
 		return "", err
 	}
-
+	fmt.Println(linkTokenCreateResp)
 	return linkTokenCreateResp.GetLinkToken(), nil
 }
 

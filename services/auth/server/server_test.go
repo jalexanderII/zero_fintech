@@ -20,7 +20,7 @@ var L = logrus.New()
 
 func GenServer() (*AuthServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)
-	DB, err := database.InitiateMongoClient()
+	DB, err := utils.InitiateMongoClient()
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}

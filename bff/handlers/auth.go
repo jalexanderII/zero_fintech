@@ -24,7 +24,19 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on login request", "data": err})
 		}
 
+		// create a cookie to authenticate user
+		_ = CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
+
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
+	}
+}
+
+func Logout(authClient *client.AuthClient) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		// create a cookie to authenticate user
+		DeleteCookie(c, authClient.Interceptor.AccessToken)
+
+		return c.JSON(fiber.Map{"status": "success", "message": "Success logout", "data": authClient.Username})
 	}
 }
 

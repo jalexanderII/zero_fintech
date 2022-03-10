@@ -8,9 +8,7 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/auth"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
-	"github.com/jalexanderII/zero_fintech/services/auth/database"
 	"github.com/jalexanderII/zero_fintech/services/auth/server"
-	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -38,7 +36,7 @@ func main() {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), TokenDuration)
 
 	// Initiate MongoDB Database
-	DB, err := database.InitiateMongoClient()
+	DB, err := utils.InitiateMongoClient()
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}
@@ -52,7 +50,7 @@ func main() {
 
 	// Bind grpcServer to AuthService Server defined by proto
 	auth.RegisterAuthServer(grpcServer, server.NewAuthServer(userCollection, jwtManager, l))
-	methods := config.ListGRPCResources(grpcServer)
+	methods := utils.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)
 
 	// register the reflection service which allows clients to determine the methods

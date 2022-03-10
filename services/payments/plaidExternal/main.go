@@ -6,7 +6,6 @@ import (
 	"net"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
-	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"github.com/jalexanderII/zero_fintech/services/payments/plaidExternal/server"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
@@ -33,7 +32,7 @@ func main() {
 
 	// Bind grpcServer to CoreService Server defined by proto
 	payments.RegisterPlaidServer(grpcServer, server.NewPaymentsServer(l))
-	methods := config.ListGRPCResources(grpcServer)
+	methods := utils.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)
 
 	// register the reflection service which allows clients to determine the methods

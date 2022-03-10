@@ -200,11 +200,11 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 func Link(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		response, err := client.Link(ctx, &common.LinkRequest{})
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		if err != nil || response == nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 		}
 		return c.Render("index", fiber.Map{
-			"LinkToken": response.GetLinkToken(),
+			"LinkToken": "link-development-99ae4b26-3ee8-45ef-a211-c7433da832a0",
 		})
 	}
 }

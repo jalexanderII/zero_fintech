@@ -9,9 +9,7 @@ import (
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/jalexanderII/zero_fintech/services/core/client"
-	"github.com/jalexanderII/zero_fintech/services/core/config"
 	"github.com/jalexanderII/zero_fintech/services/core/config/interceptor"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/services/core/server"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
@@ -43,7 +41,7 @@ func main() {
 	authInterceptor := interceptor.NewAuthInterceptor(jwtManager, interceptor.AccessibleRoles(), l)
 
 	// Initiate MongoDB Database
-	DB, err := database.InitiateMongoClient()
+	DB, err := utils.InitiateMongoClient()
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}
@@ -62,7 +60,7 @@ func main() {
 	core.RegisterCoreServer(grpcServer,
 		server.NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, planningClient, plaidClient, l),
 	)
-	methods := config.ListGRPCResources(grpcServer)
+	methods := utils.ListGRPCResources(grpcServer)
 	l.Info("Methods on this server", "methods", methods)
 
 	// register the reflection service which allows clients to determine the methods

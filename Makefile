@@ -1,4 +1,4 @@
-.PHONY: gen_protos clear_protos
+.PHONY: gen_protos_go clear_protos_go
 
 gen_protos_go:
 	protoc -I=./proto --go_opt=paths=source_relative --go_out=plugins=grpc:./gen/Go/ ./proto/common/*.proto
