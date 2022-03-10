@@ -1,13 +1,17 @@
 import logging
+import os
 import sys
+from collections import defaultdict
+import datetime
 from typing import List
 
+import grpc
 from attr import define, field
 from bson.objectid import ObjectId
 from database.models.common import PaymentPlan as PaymentPlanDB
 from pymongo.collection import Collection
 
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
+from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED, PaymentActionStatus
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import GetPaymentPlanRequest
@@ -16,7 +20,11 @@ from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
-from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest
+from gen.Python.core.accounts_pb2 import GetAccountRequest, Account
+from gen.Python.core.core_pb2_grpc import CoreStub
+from gen.Python.core.users_pb2 import GetUserRequest
+from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
+    WaterfallOverviewResponse, GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse, WaterfallMonth
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
@@ -29,6 +37,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger("PlanningServicer")
 
+CORE_CLIENT = CoreStub(
+    grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
+)
 
 @define
 class PlanningService(PlanningServicer):
@@ -36,9 +47,10 @@ class PlanningService(PlanningServicer):
     _payment_plan_builder: PaymentPlanBuilder = field(
         init=False, default=payment_plan_builder
     )
+    core_client: CoreStub = CORE_CLIENT
 
     def CreatePaymentPlan(
-        self, request: CreatePaymentPlanRequest, ctx=None
+            self, request: CreatePaymentPlanRequest, ctx=None
     ) -> PaymentPlanResponse:
         """Calls PaymentPlanBuilder to generate a list of Payments plans given a list of PaymentTasks"""
         logger.info("CreatePaymentPlan called")
@@ -68,7 +80,7 @@ class PlanningService(PlanningServicer):
         return payment_plan_DB_to_PB(payment_plan_db)
 
     def ListPaymentPlans(
-        self, request: ListPaymentPlanRequest, ctx=None
+            self, request: ListPaymentPlanRequest, ctx=None
     ) -> ListPaymentPlanResponse:
         logger.info("ListPaymentPlans called")
         payment_plans_pb: List[PaymentPlanPB] = []
@@ -81,7 +93,7 @@ class PlanningService(PlanningServicer):
         return ListPaymentPlanResponse(payment_plans=payment_plans_pb)
 
     def UpdatePaymentPlan(
-        self, request: UpdatePaymentPlanRequest, ctx=None
+            self, request: UpdatePaymentPlanRequest, ctx=None
     ) -> PaymentPlanPB:
         logger.info("UpdatePaymentPlan called")
         payment_plan = {
@@ -102,7 +114,7 @@ class PlanningService(PlanningServicer):
         return payment_plan_DB_to_PB(payment_plan_db)
 
     def DeletePaymentPlan(
-        self, request: DeletePaymentPlanRequest, ctx=None
+            self, request: DeletePaymentPlanRequest, ctx=None
     ) -> DeletePaymentPlanResponse:
         logger.info("DeletePaymentPlan called")
 
@@ -122,3 +134,78 @@ class PlanningService(PlanningServicer):
             else DELETE_STATUS_FAILED,
             payment_plan=payment_plan_DB_to_PB(payment_plan_db),
         )
+
+    def GetWaterfallOverview(self, request: GetUserOverviewRequest, ctx=None) -> WaterfallOverviewResponse:
+        logger.info("GetWaterfallOverview called")
+
+        payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
+        # for this month and 11 month afterwards have a dictionary mapping account_id to amount to be paid
+        waterfall = [defaultdict(float) for _ in range(12)]
+        now = datetime.datetime.now()
+        for _pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(_pp)
+            for pa in pp.payment_action:
+                _waterfall_month = pa.transaction_date.month - now.month    # if in same month, before or after
+                if 0 <= _waterfall_month <= 11:
+                    waterfall[_waterfall_month][pa.account_id] += pa.amount   # update account with amount
+        monthly_waterfall = [WaterfallMonth(account_to_amounts=_waterfall_month) for _waterfall_month in waterfall]
+        return WaterfallOverviewResponse(monthly_waterfall=monthly_waterfall)
+
+    def GetAmountPaidPercentage(self, request: GetUserOverviewRequest, ctx=None) -> GetAmountPaidPercentageResponse:
+        logger.info("GetAmountPaidPercentage called")
+
+        # retrieve all active PaymentPlans for user
+        # iterate over all PaymentActions and depending on its status add it to paid amount or only total_amount
+        payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
+        amount_paid, total_amount = 0, 0
+        for _pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(_pp)
+            for pa in pp.payment_action:
+                _amount = pa.amount
+                if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_COMPLETED:
+                    amount_paid += _amount
+                total_amount += _amount
+        prcnt_paid = amount_paid / total_amount if total_amount > 0 else 1
+        return GetAmountPaidPercentageResponse(percentage_paid=prcnt_paid)
+
+    def GetPercentageCoveredByPlans(
+            self, request: GetUserOverviewRequest, ctx=None
+    ) -> GetPercentageCoveredByPlansResponse:
+        logger.info("GetPercentageCoveredByPlans")
+
+        user_id = request.user_id
+        # retrieve all accounts
+        accounts = self._fetch_accounts(user_id=user_id)
+        # get total balance
+        acc2balance = {}
+        for acc in accounts:
+            balance = acc.current_balance
+            if balance > 0:
+                acc2balance[acc.account_id] = balance
+        # retrieve all active PaymentPlans for user and all accounts
+        # and see how much every account is covered
+        payment_plans_cursor = self.planning_collection.find({'userId': user_id, 'active': True})
+        acc2coverage = defaultdict(float)
+        for _pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(_pp)
+            for pa in pp.payment_action:
+                acc2coverage[pa.account_id] += pa.amount
+        # see coverage in percentage
+        total_balance = sum(acc2balance.values())
+        total_coverage_prcnt = sum(acc2coverage.values()) / total_balance if total_balance > 0 else 1
+        acc2coverage_prcnt = {}
+        for acc_id in acc2balance.keys():
+            balance = acc2balance[acc_id]
+            acc2coverage_prcnt[acc_id] = acc2coverage[acc_id] / balance if balance > 0 else 1
+
+        return GetPercentageCoveredByPlansResponse(
+            overall_covered=total_coverage_prcnt, account_to_percent_covered=acc2coverage_prcnt)
+
+    def _fetch_accounts(self, user_id) -> List[Account]:
+        user = self.core_client.GetUser(GetUserRequest(id=user_id))
+        account_ids: List[str] = list(user.account_id_to_token.keys())
+
+        return [
+            self.core_client.GetAccount(GetAccountRequest(id=acc_id))
+            for acc_id in account_ids
+        ]

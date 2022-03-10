@@ -2,9 +2,12 @@
 # sources: core/accounts.proto, core/transactions.proto, core/users.proto, core/core.proto
 # plugin: python-betterproto
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import betterproto
+import grpclib
+
+from . import common
 
 
 @dataclass

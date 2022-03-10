@@ -10,7 +10,7 @@ from gen.Python.common.common_pb2 import (
     PAYMENT_FREQUENCY_MONTHLY,
     PAYMENT_FREQUENCY_BIWEEKLY,
     PAYMENT_ACTION_STATUS_PENDING,
-    PAYMENT_FREQUENCY_QUARTERLY,
+    PAYMENT_FREQUENCY_QUARTERLY, PLAN_TYPE_UNKNOWN, PAYMENT_FREQUENCY_UNKNOWN,
 )
 from gen.Python.common.common_pb2 import (
     PAYMENT_STATUS_CURRENT,
@@ -18,11 +18,12 @@ from gen.Python.common.common_pb2 import (
 )
 from gen.Python.common.common_pb2 import PLAN_TYPE_MIN_FEES
 from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
+from gen.Python.common.payment_task_pb2 import MetaData
 from gen.Python.core.accounts_pb2 import Account, AnnualPercentageRates
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.test.helpers.paramset import (
     MetaDataToPaymentPlanParams,
-    CreatePaymentActionsParams,
+    CreatePaymentActionsParams, GetMetaDataParams,
 )
 
 # TODO( fix all of time delta's so they are not hardcoded
@@ -284,7 +285,7 @@ def test__create_from_meta_data(
         ),
     ],
 )
-def test__create_payment_actions_min_fees(
+def test__create_payment_actions_min_fees_optim_credit_score(
     p: CreatePaymentActionsParams, mock_payment_plan_builder: PaymentPlanBuilder
 ):
     ppb = mock_payment_plan_builder
@@ -299,6 +300,102 @@ def test__create_payment_actions_min_fees(
     assert actual == p.expected
 
 
-# TODO(Joschka)
-def test__get_meta_data_options():
-    pass
+@pytest.mark.parametrize(
+    "p",
+    [
+        GetMetaDataParams(
+            id="Test no MetaData specified less than threshold",
+            meta_data=MetaData(
+                preferred_plan_type=PLAN_TYPE_UNKNOWN,
+                preferred_timeline_in_months=0.0,
+                preferred_payment_freq=PAYMENT_FREQUENCY_UNKNOWN
+            ),
+            gt_threshold=False,
+            expected=[
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_MIN_FEES,
+                    preferred_timeline_in_months=1.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
+                ),
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    preferred_timeline_in_months=1.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
+                ),
+            ]
+        ),
+        GetMetaDataParams(
+            id="Test only min fees specified and greater than threshold",
+            meta_data=MetaData(
+                preferred_plan_type=PLAN_TYPE_MIN_FEES,
+                preferred_timeline_in_months=0.0,
+                preferred_payment_freq=PAYMENT_FREQUENCY_UNKNOWN
+            ),
+            gt_threshold=True,
+            expected=[
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_MIN_FEES,
+                    preferred_timeline_in_months=3.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
+                ),
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_MIN_FEES,
+                    preferred_timeline_in_months=6.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
+                ),
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_MIN_FEES,
+                    preferred_timeline_in_months=12.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
+                ),
+            ]
+        ),
+        GetMetaDataParams(
+            id="Test biweekly to optimize credit score and greater than threshold",
+            meta_data=MetaData(
+                preferred_plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                preferred_timeline_in_months=0.0,
+                preferred_payment_freq=PAYMENT_FREQUENCY_BIWEEKLY
+            ),
+            gt_threshold=True,
+            expected=[
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    preferred_timeline_in_months=1.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_BIWEEKLY,
+                ),
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    preferred_timeline_in_months=2.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_BIWEEKLY,
+                ),
+            ]
+        ),
+        GetMetaDataParams(
+            id="Test quarterly for 6 months and greater than threshold",
+            meta_data=MetaData(
+                preferred_plan_type=PLAN_TYPE_UNKNOWN,
+                preferred_timeline_in_months=6.0,
+                preferred_payment_freq=PAYMENT_FREQUENCY_QUARTERLY
+            ),
+            gt_threshold=True,
+            expected=[
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_MIN_FEES,
+                    preferred_timeline_in_months=6.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_QUARTERLY,
+                ),
+                MetaData(
+                    preferred_plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
+                    preferred_timeline_in_months=6.0,
+                    preferred_payment_freq=PAYMENT_FREQUENCY_QUARTERLY,
+                ),
+            ]
+        ),
+
+    ]
+)
+def test__get_meta_data_options(p: GetMetaDataParams, mock_payment_plan_builder: PaymentPlanBuilder):
+    ppb = mock_payment_plan_builder
+    actual = ppb._get_meta_data_options(p.meta_data, p.gt_threshold)
+    assert actual == p.expected
