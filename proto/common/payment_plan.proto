@@ -21,18 +21,19 @@ message PaymentPlan {
   string payment_plan_id = 1;
   string user_id = 2;
   repeated string payment_task_id = 3;
-  double timeline = 4;
-  common.PaymentFrequency payment_freq = 5;
-  double amount_per_payment = 6;
-  common.PlanType plan_type = 7;
+  double amount = 4;
+  double timeline = 5;
+  common.PaymentFrequency payment_freq = 6;
+  double amount_per_payment = 7;
+  common.PlanType plan_type = 8;
   // Expected date the plan should be completed
-  google.protobuf.Timestamp end_date = 8;
+  google.protobuf.Timestamp end_date = 9;
   // This Payment plan has not completed and is still active
-  bool active = 9;
+  bool active = 10;
   // Current status of this plan
-  common.PaymentStatus status = 10;
+  common.PaymentStatus status = 11;
   // payment actions of the plan
-  repeated PaymentAction payment_action = 11;
+  repeated PaymentAction payment_action = 12;
 }
 
 // Response for CreatePaymentPlan

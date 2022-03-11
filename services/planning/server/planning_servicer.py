@@ -8,10 +8,10 @@ from typing import List
 import grpc
 from attr import define, field
 from bson.objectid import ObjectId
-from database.models.common import PaymentPlan as PaymentPlanDB
 from pymongo.collection import Collection
 
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED, PaymentActionStatus
+from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED, PaymentActionStatus, \
+    PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import GetPaymentPlanRequest
@@ -26,6 +26,7 @@ from gen.Python.core.users_pb2 import GetUserRequest
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
     WaterfallOverviewResponse, GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse, WaterfallMonth
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
+from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
 from services.planning.server.utils import payment_plan_PB_to_DB, payment_plan_DB_to_PB
@@ -189,7 +190,8 @@ class PlanningService(PlanningServicer):
         for _pp in payment_plans_cursor:
             pp = PaymentPlanDB().from_dict(_pp)
             for pa in pp.payment_action:
-                acc2coverage[pa.account_id] += pa.amount
+                if pa.status == PAYMENT_ACTION_STATUS_PENDING:
+                    acc2coverage[pa.account_id] += pa.amount
         # see coverage in percentage
         total_balance = sum(acc2balance.values())
         total_coverage_prcnt = sum(acc2coverage.values()) / total_balance if total_balance > 0 else 1

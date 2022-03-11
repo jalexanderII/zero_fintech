@@ -6,9 +6,9 @@ from concurrent import futures
 import grpc
 from dotenv import load_dotenv
 
-from database.db import initiate_mongo_client
 from gen.Python.planning import planning_pb2_grpc as PlanningServicePB
-from server.planning_servicer import PlanningService
+from services.planning.database.db import initiate_mongo_client
+from services.planning.server.planning_servicer import PlanningService
 
 logging.basicConfig(
     level=logging.INFO,

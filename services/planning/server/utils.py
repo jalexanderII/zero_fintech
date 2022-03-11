@@ -8,8 +8,8 @@ from gen.Python.common.common_pb2 import PaymentFrequency as PaymentFrequencyPB
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB
 
-from database.models.common import PaymentAction as PaymentActionDB
-from database.models.common import PaymentPlan as PaymentPlanDB
+from services.planning.database.models.common import PaymentAction as PaymentActionDB
+from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
 
 
 def datetime_to_pb_timestamp(timestamp: datetime) -> Timestamp:
@@ -54,6 +54,7 @@ def payment_plan_DB_to_PB(paymentPlanDB: PaymentPlanDB) -> PaymentPlanPB:
         payment_plan_id=paymentPlanDB.payment_plan_id,
         user_id=paymentPlanDB.user_id,
         payment_task_id=paymentPlanDB.payment_task_id,
+        amount=paymentPlanDB.amount,
         timeline=paymentPlanDB.timeline,
         payment_freq=paymentPlanDB.payment_freq,
         amount_per_payment=paymentPlanDB.amount_per_payment,
@@ -74,6 +75,7 @@ def payment_plan_PB_to_DB(paymentPlanPB: PaymentPlanPB) -> PaymentPlanDB:
         payment_plan_id=paymentPlanPB.payment_plan_id,
         user_id=paymentPlanPB.user_id,
         payment_task_id=task_ids,
+        amount=paymentPlanPB.amount,
         timeline=paymentPlanPB.timeline,
         payment_freq=paymentPlanPB.payment_freq,
         amount_per_payment=paymentPlanPB.amount_per_payment,
