@@ -88,9 +88,8 @@ type TransactionDetails struct {
 
 // User is a DB Serialization of Proto User
 type User struct {
-	ID               primitive.ObjectID `bson:"_id"`
-	Username         string             `bson:"username"`
-	Email            string             `bson:"email"`
-	Password         string             `bson:"password"`
-	AccountIdToToken map[string]string  `bson:"account_id_to_token"`
+	ID       primitive.ObjectID `bson:"_id"`
+	Username string             `bson:"username"`
+	Email    string             `bson:"email"`
+	Password string             `bson:"password"`
 }

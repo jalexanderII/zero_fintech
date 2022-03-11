@@ -22,7 +22,8 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreClient := client.SetUpCoreClient(authClient, grpcOpts)
 	// Connect to the Collections inside the given DB
 	plaidCollection := *DB.Collection(utils.GetEnv("PLAID_COLLECTION"))
-	plaidClient := client.NewPlaidClient(l, plaidCollection)
+	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
+	plaidClient := client.NewPlaidClient(l, plaidCollection, userCollection)
 
 	// Create handlers for bff server
 	app.Get("/", func(c *fiber.Ctx) error { return c.SendString("Hello, World!") })
@@ -43,8 +44,6 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	plaidEndpoints.Post("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
 	plaidEndpoints.Patch("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
 	plaidEndpoints.Get("/link", handlers.CreateLinkToken(plaidClient, ctx))
-	plaidEndpoints.Patch("/link", handlers.UpdatePlaidToken(plaidClient, ctx))
-	plaidEndpoints.Get("/account_details", handlers.GetAccountDetails(plaidClient, ctx))
 
 	// User endpoints
 	userEndpoints := api.Group("/users")
