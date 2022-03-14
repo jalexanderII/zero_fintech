@@ -2,40 +2,47 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
 	"github.com/jalexanderII/zero_fintech/bff/models"
+	"github.com/jalexanderII/zero_fintech/bff/shared"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 )
 
 func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type Input struct {
+			Id       string `json:"id,omitempty"`
 			Username string `json:"username"`
 		}
 		var input Input
 		if err := c.BodyParser(&input); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+			return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 		}
 
-		linkToken, err := plaidClient.LinkTokenCreate(ctx, input.Username)
+		linkToken, err := plaidClient.LinkTokenCreate(ctx, input.Username, input.Id)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
 
-		CreateCookie(c, "link_token", linkToken)
+		shared.CreateCookie(c, "link_token", linkToken)
+		plaidClient.SetLinkToken(linkToken)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Successfully received link token from plaid", "link_token": linkToken})
 	}
 }
 
 // Link should be accessed after createLinkToken so that a link token can be set in cookies
-func Link(c *fiber.Ctx) error {
-	return c.Render("index", fiber.Map{
-		"LinkToken": c.Cookies("link_token", ""),
-	})
+func Link(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		fmt.Println(plaidClient.GetLinkToken())
+		return c.Render("index", fiber.Map{
+			"LinkToken": plaidClient.GetLinkToken(),
+		})
+	}
 }
 
 func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
@@ -52,7 +59,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 
 		token, err := plaidClient.ExchangePublicToken(ctx, input.PublicToken)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
 		}
 
 		if c.Method() == http.MethodPost {
@@ -67,7 +74,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 
 		err = GetandSaveAccountDetails(plaidClient, ctx, token)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get and save account details", "data": err})
 		}
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Access token created successfully", "token": token})

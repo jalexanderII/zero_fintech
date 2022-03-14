@@ -26,6 +26,7 @@
 <script type="text/javascript">
     (function($) {
         const Token = "{{.LinkToken}}";
+        console.log('link token is:', Token);
         const handler = Plaid.create({
             token: Token,
             onSuccess: function (public_token, metadata) {

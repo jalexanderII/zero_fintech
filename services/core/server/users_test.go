@@ -20,11 +20,10 @@ func Test_authServer_CreateFakeUsers(t *testing.T) {
 	for ok := true; ok; ok = c < limit {
 		fake, _ := data.GenFakeUser()
 		newUser := database.User{
-			ID:               primitive.NewObjectID(),
-			Email:            fake.Email,
-			Username:         fake.Username,
-			Password:         fake.Password,
-			AccountIdToToken: fake.AccountIdToToken,
+			ID:       primitive.NewObjectID(),
+			Email:    fake.Email,
+			Username: fake.Username,
+			Password: fake.Password,
 		}
 
 		_, err := server.UserDB.InsertOne(ctx, newUser)

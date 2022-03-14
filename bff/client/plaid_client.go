@@ -23,15 +23,15 @@ var environments = map[string]plaid.Environment{
 }
 
 var environmentSecret = map[string]string{
-	"sandbox":     utils.GetEnv("PLAID_SECRET_SANDBOX"),
-	"development": utils.GetEnv("PLAID_SECRET_DEV"),
+	"sandbox":     "PLAID_SECRET_SANDBOX",
+	"development": "PLAID_SECRET_DEV",
 }
 
 type PlaidClient struct {
 	// Name of the service
 	Name string
 	// Client is the object that contains all database functionalities
-	Client       *plaid.APIClient
+	Client       *plaid.PlaidApiService
 	RedirectURL  string
 	Products     []plaid.Products
 	CountryCodes []plaid.CountryCode
@@ -41,38 +41,45 @@ type PlaidClient struct {
 	PlaidDB mongo.Collection
 	// Grpc client
 	CoreClient core.CoreClient
+	// to pass tokens through methods
+	LinkToken   string
+	PublicToken string
 }
 
 func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.CoreClient) *PlaidClient {
 	// set constants from env
-	PlaidEnv := utils.GetEnv("PLAID_ENV")
-	PlaidSecret := utils.GetEnv(environmentSecret[PlaidEnv])
+	plaidEnv := utils.GetEnv("PLAID_ENV")
+	plaidSecret := utils.GetEnv(environmentSecret[plaidEnv])
+	plaidClient := utils.GetEnv("PLAID_CLIENT_ID")
 
 	// create Plaid client
 	configuration := plaid.NewConfiguration()
-	configuration.AddDefaultHeader("PLAID-CLIENT-ID", utils.GetEnv("PLAID_CLIENT_ID"))
-	configuration.AddDefaultHeader("PLAID-SECRET", PlaidSecret)
-	configuration.UseEnvironment(environments[PlaidEnv])
+	configuration.AddDefaultHeader("PLAID-CLIENT-ID", plaidClient)
+	configuration.AddDefaultHeader("PLAID-SECRET", plaidSecret)
+	configuration.UseEnvironment(environments[plaidEnv])
 
 	countryCodes := convertCountryCodes(strings.Split(utils.GetEnv("PLAID_COUNTRY_CODES"), ","))
 	products := convertProducts(strings.Split(utils.GetEnv("PLAID_PRODUCTS"), ","))
-
+	client := plaid.NewAPIClient(configuration)
 	return &PlaidClient{
 		Name:         "ZeroFintech",
-		Client:       plaid.NewAPIClient(configuration),
+		Client:       client.PlaidApi,
 		RedirectURL:  utils.GetEnv("PLAID_REDIRECT_URI"),
 		Products:     products,
 		CountryCodes: countryCodes,
 		l:            l,
 		PlaidDB:      pdb,
 		CoreClient:   coreClient,
+		LinkToken:    "",
+		PublicToken:  "",
 	}
 }
 
 // LinkTokenCreate creates a link token using the specified parameters
-func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string) (string, error) {
-	DbUser, err := p.GetUser(ctx, username, "")
+func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username, id string) (string, error) {
+	DbUser, err := p.GetUser(ctx, username, id)
 	if err != nil {
+		p.l.Error("[DB Error] error fetching user")
 		return "", err
 	}
 
@@ -83,9 +90,11 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string) (str
 	request := plaid.NewLinkTokenCreateRequest(p.Name, "en", p.CountryCodes, user)
 	request.SetProducts(p.Products)
 	request.SetRedirectUri(p.RedirectURL)
+	p.l.Infof("Link token request %+v", request)
 
-	linkTokenCreateResp, _, err := p.Client.PlaidApi.LinkTokenCreate(ctx).LinkTokenCreateRequest(*request).Execute()
+	linkTokenCreateResp, _, err := p.Client.LinkTokenCreate(ctx).LinkTokenCreateRequest(*request).Execute()
 	if err != nil {
+		p.l.Errorf("[Plaid Error] error creating link token %+v", renderError(err)["error"])
 		return "", err
 	}
 
@@ -99,30 +108,32 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string) (str
 // are json responses and logs that will adequately reflect all issues
 func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken string) (*models.Token, error) {
 	// exchange the public_token for an access_token
-	exchangePublicTokenResp, _, err := p.Client.PlaidApi.ItemPublicTokenExchange(ctx).ItemPublicTokenExchangeRequest(
+	exchangePublicTokenResp, _, err := p.Client.ItemPublicTokenExchange(ctx).ItemPublicTokenExchangeRequest(
 		*plaid.NewItemPublicTokenExchangeRequest(publicToken),
 	).Execute()
 	if err != nil {
+		p.l.Errorf("[Plaid Error] error getting exchangePublicTokenResp %+v", renderError(err)["error"])
 		return nil, err
 	}
 
 	accessToken := exchangePublicTokenResp.GetAccessToken()
 	itemID := exchangePublicTokenResp.GetItemId()
-	institutionRequest := plaid.NewInstitutionsGetByIdRequest(itemID, p.CountryCodes)
-	institution, _, err := p.Client.PlaidApi.InstitutionsGetById(ctx).InstitutionsGetByIdRequest(*institutionRequest).Execute()
-	if err != nil {
-		return nil, err
-	}
+	// institutionRequest := plaid.NewInstitutionsGetByIdRequest(itemID, p.CountryCodes)
+	// institution, _, err := p.Client.InstitutionsGetById(ctx).InstitutionsGetByIdRequest(*institutionRequest).Execute()
+	// if err != nil {
+	// 	p.l.Errorf("[Plaid Error] error getting InstitutionsGetById %+v", renderError(err)["error"])
+	// 	return nil, err
+	// }
 
 	p.l.Info("public token: " + publicToken)
 	p.l.Info("access token: " + accessToken)
 	p.l.Info("item ID: " + itemID)
-	return &models.Token{Value: accessToken, ItemId: itemID, Institution: institution.Institution.GetName()}, nil
+	return &models.Token{Value: accessToken, ItemId: itemID, Institution: ""}, nil
 }
 
 func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*payments.AccountDetailsResponse, error) {
 	liabilitiesReq := plaid.NewLiabilitiesGetRequest(token.Value)
-	liabilitiesResp, _, err := p.Client.PlaidApi.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
+	liabilitiesResp, _, err := p.Client.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +144,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 	numMonths := time.Duration(-30 * 12 * 24)
 	startDate := time.Now().Local().Add(numMonths * time.Hour).Format(iso8601TimeFormat)
 
-	transactionsResp, _, err := p.Client.PlaidApi.TransactionsGet(ctx).TransactionsGetRequest(
+	transactionsResp, _, err := p.Client.TransactionsGet(ctx).TransactionsGetRequest(
 		*plaid.NewTransactionsGetRequest(token.Value, startDate, endDate),
 	).Execute()
 	if err != nil {
@@ -330,6 +341,22 @@ func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*mo
 	}, nil
 }
 
+func (p *PlaidClient) SetLinkToken(token string) {
+	p.LinkToken = token
+}
+
+func (p *PlaidClient) SetPublicToken(token string) {
+	p.PublicToken = token
+}
+
+func (p *PlaidClient) GetLinkToken() string {
+	return p.LinkToken
+}
+
+func (p *PlaidClient) GetPublicToken() string {
+	return p.PublicToken
+}
+
 func convertCountryCodes(countryCodeStrs []string) []plaid.CountryCode {
 	var countryCodes []plaid.CountryCode
 
@@ -348,4 +375,14 @@ func convertProducts(productStrs []string) []plaid.Products {
 	}
 
 	return products
+}
+
+func renderError(originalErr error) map[string]interface{} {
+	resp := make(map[string]interface{})
+	if plaidError, err := plaid.ToPlaidError(originalErr); err == nil {
+		resp["error"] = plaidError
+		return resp
+	}
+	resp["error"] = originalErr.Error()
+	return resp
 }

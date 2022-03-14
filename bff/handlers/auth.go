@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
+	"github.com/jalexanderII/zero_fintech/bff/shared"
 )
 
 func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
@@ -25,7 +26,7 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		}
 
 		// create a cookie to authenticate user
-		CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
+		shared.CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
 	}
@@ -34,7 +35,7 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 func Logout(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// create a cookie to authenticate user
-		DeleteCookie(c, authClient.Username)
+		shared.DeleteCookie(c, authClient.Username)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success logout", "data": authClient.Username})
 	}
@@ -62,7 +63,7 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		}
 
 		// create a cookie to authenticate user
-		CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
+		shared.CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": token})
 	}

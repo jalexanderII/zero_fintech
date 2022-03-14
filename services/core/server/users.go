@@ -15,21 +15,23 @@ func (s CoreServer) GetUser(ctx context.Context, in *core.GetUserRequest) (*core
 	var user database.User
 	var filter []bson.M
 
-	if in.GetId() != "" {
+	if in.GetId() == "" {
+		filter = []bson.M{{"username": in.GetUsername()}}
+		s.l.Info("Filter is", filter)
+	} else {
 		id, err := primitive.ObjectIDFromHex(in.GetId())
 		if err != nil {
 			return nil, err
 		}
-
 		filter = []bson.M{{"_id": id}, {"username": in.GetUsername()}}
-	} else {
-		filter = []bson.M{{"username": in.GetUsername()}}
+		s.l.Info("Filter is", filter)
 	}
 
-	err := s.UserDB.FindOne(ctx, filter).Decode(&user)
+	err := s.UserDB.FindOne(ctx, bson.M{"$or": filter}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
+	s.l.Info("User is", user)
 	return UserDBToPB(&user), nil
 }
 
