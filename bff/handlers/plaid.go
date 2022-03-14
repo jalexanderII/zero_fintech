@@ -57,11 +57,17 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
 
-		token, err := plaidClient.ExchangePublicToken(ctx, input.PublicToken)
+		user, err := plaidClient.GetUser(ctx, input.Username, "")
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
 		}
 
+		token, err := plaidClient.ExchangePublicToken(ctx, input.PublicToken)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
+		}
+		token.User = user
+		fmt.Println("token", token)
 		if c.Method() == http.MethodPost {
 			if err = plaidClient.SaveToken(ctx, token); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to create access token", "data": err})
@@ -72,7 +78,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 			}
 		}
 
-		err = GetandSaveAccountDetails(plaidClient, ctx, token)
+		err = GetandSaveAccountDetails(plaidClient, ctx, token, c)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get and save account details", "data": err})
 		}
@@ -81,11 +87,12 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 	}
 }
 
-func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Context, token *models.Token) error {
+func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Context, token *models.Token, c *fiber.Ctx) error {
 	accountDetails, err := plaidClient.GetAccountDetails(ctx, token)
 	if err != nil {
-		return err
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get account details", "data": err})
 	}
+	fmt.Println("accountDetails", accountDetails)
 
 	accounts := accountDetails.GetAccounts()
 	transactions := accountDetails.GetTransactions()
@@ -94,7 +101,7 @@ func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Conte
 		req := &core.CreateAccountRequest{Account: account}
 		_, err = plaidClient.CoreClient.CreateAccount(ctx, req)
 		if err != nil {
-			return err
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to save account account", "data": err})
 		}
 	}
 
@@ -102,7 +109,7 @@ func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Conte
 		req := &core.CreateTransactionRequest{Transaction: transaction}
 		_, err = plaidClient.CoreClient.CreateTransaction(ctx, req)
 		if err != nil {
-			return err
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to save account transaction", "data": err})
 		}
 	}
 

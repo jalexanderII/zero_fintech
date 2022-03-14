@@ -8,7 +8,7 @@ import (
 // Token for use of plaid public token retrieval
 type Token struct {
 	ID          primitive.ObjectID `bson:"_id"`
-	User        User               `bson:"user"`
+	User        *User              `bson:"user"`
 	Value       string             `bson:"value"`
 	ItemId      string             `bson:"item_id"`
 	Institution string             `bson:"institution"`
