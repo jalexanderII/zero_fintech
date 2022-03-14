@@ -22,8 +22,7 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreClient := client.SetUpCoreClient(authClient, grpcOpts)
 	// Connect to the Collections inside the given DB
 	plaidCollection := *DB.Collection(utils.GetEnv("PLAID_COLLECTION"))
-	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION"))
-	plaidClient := client.NewPlaidClient(l, plaidCollection, userCollection)
+	plaidClient := client.NewPlaidClient(l, plaidCollection, coreClient)
 
 	// Create handlers for bff server
 	app.Get("/", func(c *fiber.Ctx) error { return c.SendString("Hello, World!") })
@@ -37,13 +36,13 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	authEndpoints := api.Group("/auth")
 	authEndpoints.Post("/login", handlers.Login(authClient))
 	authEndpoints.Post("/signup", handlers.SignUp(authClient))
-	authEndpoints.Get("/link", handlers.Link(coreClient, ctx))
-	authEndpoints.Get("/exchange", handlers.GetAccessToken(coreClient, ctx))
+	authEndpoints.Get("/logout", handlers.Logout(authClient))
 	// Plaid endpoints within Auth
 	plaidEndpoints := authEndpoints.Group("/plaid")
 	plaidEndpoints.Post("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
 	plaidEndpoints.Patch("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
-	plaidEndpoints.Get("/link", handlers.CreateLinkToken(plaidClient, ctx))
+	plaidEndpoints.Get("/create_link", handlers.CreateLinkToken(plaidClient, ctx))
+	plaidEndpoints.Get("/link", handlers.Link)
 
 	// User endpoints
 	userEndpoints := api.Group("/users")

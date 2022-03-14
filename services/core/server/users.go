@@ -13,13 +13,20 @@ import (
 
 func (s CoreServer) GetUser(ctx context.Context, in *core.GetUserRequest) (*core.User, error) {
 	var user database.User
-	id, err := primitive.ObjectIDFromHex(in.GetId())
-	if err != nil {
-		return nil, err
+	var filter []bson.M
+
+	if in.GetId() != "" {
+		id, err := primitive.ObjectIDFromHex(in.GetId())
+		if err != nil {
+			return nil, err
+		}
+
+		filter = []bson.M{{"_id": id}, {"username": in.GetUsername()}}
+	} else {
+		filter = []bson.M{{"username": in.GetUsername()}}
 	}
 
-	filter := bson.D{{Key: "_id", Value: id}}
-	err = s.UserDB.FindOne(ctx, filter).Decode(&user)
+	err := s.UserDB.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		return nil, err
 	}

@@ -197,39 +197,6 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 	}
 }
 
-func Link(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		response, err := client.Link(ctx, &common.LinkRequest{})
-		if err != nil || response == nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-		return c.Render("index", fiber.Map{
-			"LinkToken": "link-development-99ae4b26-3ee8-45ef-a211-c7433da832a0",
-		})
-	}
-}
-
-type GetAccessTokenResponse struct {
-	AccessToken string `json:"access_token"`
-	ItemId      string `json:"item_id"`
-	RequestId   string `json:"request_id"`
-}
-
-func GetAccessToken(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		response, err := client.GetAccessToken(ctx, &common.GetAccessTokenRequest{PublicToken: c.Params("public_token")})
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
-		}
-		r := GetAccessTokenResponse{
-			AccessToken: response.GetAccessToken(),
-			ItemId:      response.GetItemId(),
-			RequestId:   response.GetRequestId(),
-		}
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"data": r})
-	}
-}
-
 // PaymentTaskDBToPB converts a PaymentTask DB object to its proto object
 func PaymentTaskDBToPB(paymentTask PaymentTask) *common.PaymentTask {
 	return &common.PaymentTask{

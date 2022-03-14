@@ -39,10 +39,11 @@ type PlaidClient struct {
 	l *logrus.Logger
 	// Database collection
 	PlaidDB mongo.Collection
-	UserDB  mongo.Collection
+	// Grpc client
+	CoreClient core.CoreClient
 }
 
-func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, udb mongo.Collection) *PlaidClient {
+func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.CoreClient) *PlaidClient {
 	// set constants from env
 	PlaidEnv := utils.GetEnv("PLAID_ENV")
 	PlaidSecret := utils.GetEnv(environmentSecret[PlaidEnv])
@@ -64,7 +65,7 @@ func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, udb mongo.Collection
 		CountryCodes: countryCodes,
 		l:            l,
 		PlaidDB:      pdb,
-		UserDB:       udb,
+		CoreClient:   coreClient,
 	}
 }
 
@@ -309,25 +310,24 @@ func (p *PlaidClient) GetToken(ctx context.Context, accessToken, tokenId string)
 }
 
 func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*models.User, error) {
-	var user models.User
-	var filter []bson.M
-
-	if userId != "" {
-		id, err := primitive.ObjectIDFromHex(userId)
-		if err != nil {
-			return nil, err
-		}
-		filter = []bson.M{{"_id": id}, {"username": username}}
-	} else {
-		filter = []bson.M{{"username": username}}
+	userRequest := &core.GetUserRequest{
+		Id:       userId,
+		Username: username,
 	}
-
-	err := p.UserDB.FindOne(ctx, bson.M{"$or": filter}).Decode(&user)
+	user, err := p.CoreClient.GetUser(ctx, userRequest)
+	if err != nil {
+		return nil, err
+	}
+	id, err := primitive.ObjectIDFromHex(user.GetId())
 	if err != nil {
 		return nil, err
 	}
 
-	return &user, nil
+	return &models.User{
+		ID:       id,
+		Username: user.GetUsername(),
+		Email:    user.GetEmail(),
+	}, nil
 }
 
 func convertCountryCodes(countryCodeStrs []string) []plaid.CountryCode {

@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
 	"github.com/jalexanderII/zero_fintech/bff/models"
+	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 )
 
 func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
@@ -24,8 +25,17 @@ func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
 
+		CreateCookie(c, "link_token", linkToken)
+
 		return c.JSON(fiber.Map{"status": "success", "message": "Successfully received link token from plaid", "link_token": linkToken})
 	}
+}
+
+// Link should be accessed after createLinkToken so that a link token can be set in cookies
+func Link(c *fiber.Ctx) error {
+	return c.Render("index", fiber.Map{
+		"LinkToken": c.Cookies("link_token", ""),
+	})
 }
 
 func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
@@ -65,10 +75,29 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 }
 
 func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Context, token *models.Token) error {
-	_, err := plaidClient.GetAccountDetails(ctx, token)
+	accountDetails, err := plaidClient.GetAccountDetails(ctx, token)
 	if err != nil {
 		return err
 	}
-	// TODO (call core client to save account and transaction details
+
+	accounts := accountDetails.GetAccounts()
+	transactions := accountDetails.GetTransactions()
+
+	for _, account := range accounts {
+		req := &core.CreateAccountRequest{Account: account}
+		_, err = plaidClient.CoreClient.CreateAccount(ctx, req)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, transaction := range transactions {
+		req := &core.CreateTransactionRequest{Transaction: transaction}
+		_, err = plaidClient.CoreClient.CreateTransaction(ctx, req)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

@@ -25,7 +25,7 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		}
 
 		// create a cookie to authenticate user
-		_ = CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
+		CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
 	}
@@ -34,7 +34,7 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 func Logout(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// create a cookie to authenticate user
-		DeleteCookie(c, authClient.Interceptor.AccessToken)
+		DeleteCookie(c, authClient.Username)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success logout", "data": authClient.Username})
 	}
@@ -60,6 +60,9 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on sign up request", "data": err})
 		}
+
+		// create a cookie to authenticate user
+		CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": token})
 	}

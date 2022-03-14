@@ -15,6 +15,7 @@ message User {
 
 message GetUserRequest {
   string id = 1;
+  string username = 2;
 }
 
 message UpdateUserRequest {
