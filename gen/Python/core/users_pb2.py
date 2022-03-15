@@ -15,12 +15,11 @@ _sym_db = _symbol_database.Default()
 from common import common_pb2 as common_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a\x13\x63ommon/common.proto\"\xbd\x01\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\x12=\n\x13\x61\x63\x63ount_id_to_token\x18\x05 \x03(\x0b\x32 .core.User.AccountIdToTokenEntry\x1a\x37\n\x15\x41\x63\x63ountIdToTokenEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x1c\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a\x13\x63ommon/common.proto\"E\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\".\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"9\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
 _USER = DESCRIPTOR.message_types_by_name['User']
-_USER_ACCOUNTIDTOTOKENENTRY = _USER.nested_types_by_name['AccountIdToTokenEntry']
 _GETUSERREQUEST = DESCRIPTOR.message_types_by_name['GetUserRequest']
 _UPDATEUSERREQUEST = DESCRIPTOR.message_types_by_name['UpdateUserRequest']
 _DELETEUSERREQUEST = DESCRIPTOR.message_types_by_name['DeleteUserRequest']
@@ -28,19 +27,11 @@ _LISTUSERREQUEST = DESCRIPTOR.message_types_by_name['ListUserRequest']
 _LISTUSERRESPONSE = DESCRIPTOR.message_types_by_name['ListUserResponse']
 _DELETEUSERRESPONSE = DESCRIPTOR.message_types_by_name['DeleteUserResponse']
 User = _reflection.GeneratedProtocolMessageType('User', (_message.Message,), {
-
-  'AccountIdToTokenEntry' : _reflection.GeneratedProtocolMessageType('AccountIdToTokenEntry', (_message.Message,), {
-    'DESCRIPTOR' : _USER_ACCOUNTIDTOTOKENENTRY,
-    '__module__' : 'core.users_pb2'
-    # @@protoc_insertion_point(class_scope:core.User.AccountIdToTokenEntry)
-    })
-  ,
   'DESCRIPTOR' : _USER,
   '__module__' : 'core.users_pb2'
   # @@protoc_insertion_point(class_scope:core.User)
   })
 _sym_db.RegisterMessage(User)
-_sym_db.RegisterMessage(User.AccountIdToTokenEntry)
 
 GetUserRequest = _reflection.GeneratedProtocolMessageType('GetUserRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETUSERREQUEST,
@@ -88,22 +79,18 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core'
-  _USER_ACCOUNTIDTOTOKENENTRY._options = None
-  _USER_ACCOUNTIDTOTOKENENTRY._serialized_options = b'8\001'
-  _USER._serialized_start=48
-  _USER._serialized_end=237
-  _USER_ACCOUNTIDTOTOKENENTRY._serialized_start=182
-  _USER_ACCOUNTIDTOTOKENENTRY._serialized_end=237
-  _GETUSERREQUEST._serialized_start=239
-  _GETUSERREQUEST._serialized_end=267
-  _UPDATEUSERREQUEST._serialized_start=269
-  _UPDATEUSERREQUEST._serialized_end=326
-  _DELETEUSERREQUEST._serialized_start=328
-  _DELETEUSERREQUEST._serialized_end=359
-  _LISTUSERREQUEST._serialized_start=361
-  _LISTUSERREQUEST._serialized_end=378
-  _LISTUSERRESPONSE._serialized_start=380
-  _LISTUSERRESPONSE._serialized_end=425
-  _DELETEUSERRESPONSE._serialized_start=427
-  _DELETEUSERRESPONSE._serialized_end=512
+  _USER._serialized_start=47
+  _USER._serialized_end=116
+  _GETUSERREQUEST._serialized_start=118
+  _GETUSERREQUEST._serialized_end=164
+  _UPDATEUSERREQUEST._serialized_start=166
+  _UPDATEUSERREQUEST._serialized_end=223
+  _DELETEUSERREQUEST._serialized_start=225
+  _DELETEUSERREQUEST._serialized_end=256
+  _LISTUSERREQUEST._serialized_start=258
+  _LISTUSERREQUEST._serialized_end=275
+  _LISTUSERRESPONSE._serialized_start=277
+  _LISTUSERRESPONSE._serialized_end=322
+  _DELETEUSERRESPONSE._serialized_start=324
+  _DELETEUSERRESPONSE._serialized_end=409
 # @@protoc_insertion_point(module_scope)

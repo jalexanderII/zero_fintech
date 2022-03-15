@@ -2,7 +2,7 @@
 # sources: core/accounts.proto, core/transactions.proto, core/users.proto, core/core.proto
 # plugin: python-betterproto
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import betterproto
 import grpclib
@@ -181,9 +181,6 @@ class User(betterproto.Message):
     username: str = betterproto.string_field(2)
     email: str = betterproto.string_field(3)
     password: str = betterproto.string_field(4)
-    account_id_to_token: Dict[str, str] = betterproto.map_field(
-        5, betterproto.TYPE_STRING, betterproto.TYPE_STRING
-    )
 
 
 @dataclass
