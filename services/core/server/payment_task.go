@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"log"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
@@ -16,7 +15,7 @@ func (s CoreServer) CreatePaymentTask(ctx context.Context, in *common.CreatePaym
 
 	_, err := s.PaymentTaskDB.InsertOne(ctx, newPaymentTask)
 	if err != nil {
-		log.Printf("Error inserting new PaymentTask: %v\n", err)
+		s.l.Info("Error inserting new PaymentTask", err)
 		return nil, err
 	}
 	return paymentTask, nil

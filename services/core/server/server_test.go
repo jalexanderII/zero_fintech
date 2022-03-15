@@ -8,10 +8,8 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
-	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
-	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"github.com/jalexanderII/zero_fintech/utils"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/sirupsen/logrus"
@@ -32,20 +30,9 @@ func MockPlanningClient() planning.PlanningClient {
 	return planning.NewPlanningClient(planningConn)
 }
 
-func MockPaymentsClient() payments.PlaidClient {
-	var opts []grpc.DialOption
-	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-
-	plaidConn, err := grpc.Dial("localhost:9095", opts...)
-	if err != nil {
-		log.Fatalf("fail to dial: %v", err)
-	}
-	return payments.NewPlaidClient(plaidConn)
-}
-
 func GenServer() (*CoreServer, context.Context) {
 	jwtManager := middleware.NewJWTManager(utils.GetEnv("JWTSecret"), 15*time.Minute)
-	DB, err := database.InitiateMongoClient()
+	DB, err := utils.InitiateMongoClient()
 	if err != nil {
 		log.Fatal("MongoDB error: ", err)
 	}
@@ -54,7 +41,7 @@ func GenServer() (*CoreServer, context.Context) {
 	transactionCollection := *DB.Collection(utils.GetEnv("TRANSACTION_COLLECTION") + "_TEST")
 	userCollection := *DB.Collection(utils.GetEnv("USER_COLLECTION") + "_TEST")
 
-	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, MockPlanningClient(), MockPaymentsClient(), L)
+	server := NewCoreServer(coreCollection, accountCollection, transactionCollection, userCollection, jwtManager, MockPlanningClient(), L)
 	return server, context.TODO()
 }
 

@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// SetUpCoreClient creates a new CoreClient and with the AuthClient Interceptor for token authorization
 func SetUpCoreClient(authClient *AuthClient, opts []grpc.DialOption) core.CoreClient {
 	opts = append(opts, grpc.WithUnaryInterceptor(authClient.Interceptor.Unary()))
 	coreConn, err := grpc.Dial("localhost:9090", opts...)
