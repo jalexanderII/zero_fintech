@@ -3,6 +3,7 @@
 # source: core/transactions.proto
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
@@ -13,395 +14,16 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor.FileDescriptor(
-  name='core/transactions.proto',
-  package='core',
-  syntax='proto3',
-  serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
-  create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x17\x63ore/transactions.proto\x12\x04\x63ore\"\x8e\x04\n\x0bTransaction\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x18\n\x10transaction_type\x18\x02 \x01(\t\x12\x1e\n\x16pending_transaction_id\x18\x03 \x01(\t\x12\x13\n\x0b\x63\x61tegory_id\x18\x04 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x05 \x03(\t\x12\x35\n\x13transaction_details\x18\x06 \x01(\x0b\x32\x18.core.TransactionDetails\x12\x0c\n\x04name\x18\x07 \x01(\t\x12\x1c\n\x14original_description\x18\x08 \x01(\t\x12\x12\n\naccount_id\x18\t \x01(\t\x12\x0e\n\x06\x61mount\x18\n \x01(\x01\x12\x19\n\x11iso_currency_code\x18\x0b \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x0c \x01(\t\x12\x0f\n\x07pending\x18\r \x01(\x08\x12\x16\n\x0etransaction_id\x18\x0e \x01(\t\x12\x15\n\rmerchant_name\x18\x0f \x01(\t\x12\x17\n\x0fpayment_channel\x18\x10 \x01(\t\x12\x17\n\x0f\x61uthorized_date\x18\x11 \x01(\t\x12\x18\n\x10primary_category\x18\x12 \x01(\t\x12\x19\n\x11\x64\x65tailed_category\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\x12\x1c\n\x14plaid_transaction_id\x18\x15 \x01(\t\"\x94\x01\n\x12TransactionDetails\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x0c\n\x04\x63ity\x18\x02 \x01(\t\x12\r\n\x05state\x18\x03 \x01(\t\x12\x0f\n\x07zipcode\x18\x04 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x05 \x01(\t\x12\x14\n\x0cstore_number\x18\x06 \x01(\t\x12\x18\n\x10reference_number\x18\x07 \x01(\t\"B\n\x18\x43reateTransactionRequest\x12&\n\x0btransaction\x18\x01 \x01(\x0b\x32\x11.core.Transaction\"#\n\x15GetTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListTransactionRequest\"B\n\x17ListTransactionResponse\x12\'\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x11.core.TransactionB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
-)
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ore/transactions.proto\x12\x04\x63ore\"\x8e\x04\n\x0bTransaction\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x18\n\x10transaction_type\x18\x02 \x01(\t\x12\x1e\n\x16pending_transaction_id\x18\x03 \x01(\t\x12\x13\n\x0b\x63\x61tegory_id\x18\x04 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x05 \x03(\t\x12\x35\n\x13transaction_details\x18\x06 \x01(\x0b\x32\x18.core.TransactionDetails\x12\x0c\n\x04name\x18\x07 \x01(\t\x12\x1c\n\x14original_description\x18\x08 \x01(\t\x12\x12\n\naccount_id\x18\t \x01(\t\x12\x0e\n\x06\x61mount\x18\n \x01(\x01\x12\x19\n\x11iso_currency_code\x18\x0b \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x0c \x01(\t\x12\x0f\n\x07pending\x18\r \x01(\x08\x12\x16\n\x0etransaction_id\x18\x0e \x01(\t\x12\x15\n\rmerchant_name\x18\x0f \x01(\t\x12\x17\n\x0fpayment_channel\x18\x10 \x01(\t\x12\x17\n\x0f\x61uthorized_date\x18\x11 \x01(\t\x12\x18\n\x10primary_category\x18\x12 \x01(\t\x12\x19\n\x11\x64\x65tailed_category\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\x12\x1c\n\x14plaid_transaction_id\x18\x15 \x01(\t\"\x94\x01\n\x12TransactionDetails\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x0c\n\x04\x63ity\x18\x02 \x01(\t\x12\r\n\x05state\x18\x03 \x01(\t\x12\x0f\n\x07zipcode\x18\x04 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x05 \x01(\t\x12\x14\n\x0cstore_number\x18\x06 \x01(\t\x12\x18\n\x10reference_number\x18\x07 \x01(\t\"B\n\x18\x43reateTransactionRequest\x12&\n\x0btransaction\x18\x01 \x01(\x0b\x32\x11.core.Transaction\"#\n\x15GetTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListTransactionRequest\"B\n\x17ListTransactionResponse\x12\'\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x11.core.TransactionB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
-
-_TRANSACTION = _descriptor.Descriptor(
-  name='Transaction',
-  full_name='core.Transaction',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='user_id', full_name='core.Transaction.user_id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='transaction_type', full_name='core.Transaction.transaction_type', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='pending_transaction_id', full_name='core.Transaction.pending_transaction_id', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='category_id', full_name='core.Transaction.category_id', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='category', full_name='core.Transaction.category', index=4,
-      number=5, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='transaction_details', full_name='core.Transaction.transaction_details', index=5,
-      number=6, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='name', full_name='core.Transaction.name', index=6,
-      number=7, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='original_description', full_name='core.Transaction.original_description', index=7,
-      number=8, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='account_id', full_name='core.Transaction.account_id', index=8,
-      number=9, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='amount', full_name='core.Transaction.amount', index=9,
-      number=10, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='iso_currency_code', full_name='core.Transaction.iso_currency_code', index=10,
-      number=11, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='date', full_name='core.Transaction.date', index=11,
-      number=12, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='pending', full_name='core.Transaction.pending', index=12,
-      number=13, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='transaction_id', full_name='core.Transaction.transaction_id', index=13,
-      number=14, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='merchant_name', full_name='core.Transaction.merchant_name', index=14,
-      number=15, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='payment_channel', full_name='core.Transaction.payment_channel', index=15,
-      number=16, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='authorized_date', full_name='core.Transaction.authorized_date', index=16,
-      number=17, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='primary_category', full_name='core.Transaction.primary_category', index=17,
-      number=18, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='detailed_category', full_name='core.Transaction.detailed_category', index=18,
-      number=19, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='plaid_account_id', full_name='core.Transaction.plaid_account_id', index=19,
-      number=20, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='plaid_transaction_id', full_name='core.Transaction.plaid_transaction_id', index=20,
-      number=21, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=34,
-  serialized_end=560,
-)
-
-
-_TRANSACTIONDETAILS = _descriptor.Descriptor(
-  name='TransactionDetails',
-  full_name='core.TransactionDetails',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='address', full_name='core.TransactionDetails.address', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='city', full_name='core.TransactionDetails.city', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='state', full_name='core.TransactionDetails.state', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='zipcode', full_name='core.TransactionDetails.zipcode', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='country', full_name='core.TransactionDetails.country', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='store_number', full_name='core.TransactionDetails.store_number', index=5,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='reference_number', full_name='core.TransactionDetails.reference_number', index=6,
-      number=7, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=563,
-  serialized_end=711,
-)
-
-
-_CREATETRANSACTIONREQUEST = _descriptor.Descriptor(
-  name='CreateTransactionRequest',
-  full_name='core.CreateTransactionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='transaction', full_name='core.CreateTransactionRequest.transaction', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=713,
-  serialized_end=779,
-)
-
-
-_GETTRANSACTIONREQUEST = _descriptor.Descriptor(
-  name='GetTransactionRequest',
-  full_name='core.GetTransactionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='id', full_name='core.GetTransactionRequest.id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=781,
-  serialized_end=816,
-)
-
-
-_LISTTRANSACTIONREQUEST = _descriptor.Descriptor(
-  name='ListTransactionRequest',
-  full_name='core.ListTransactionRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=818,
-  serialized_end=842,
-)
-
-
-_LISTTRANSACTIONRESPONSE = _descriptor.Descriptor(
-  name='ListTransactionResponse',
-  full_name='core.ListTransactionResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='transactions', full_name='core.ListTransactionResponse.transactions', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=844,
-  serialized_end=910,
-)
-
-_TRANSACTION.fields_by_name['transaction_details'].message_type = _TRANSACTIONDETAILS
-_CREATETRANSACTIONREQUEST.fields_by_name['transaction'].message_type = _TRANSACTION
-_LISTTRANSACTIONRESPONSE.fields_by_name['transactions'].message_type = _TRANSACTION
-DESCRIPTOR.message_types_by_name['Transaction'] = _TRANSACTION
-DESCRIPTOR.message_types_by_name['TransactionDetails'] = _TRANSACTIONDETAILS
-DESCRIPTOR.message_types_by_name['CreateTransactionRequest'] = _CREATETRANSACTIONREQUEST
-DESCRIPTOR.message_types_by_name['GetTransactionRequest'] = _GETTRANSACTIONREQUEST
-DESCRIPTOR.message_types_by_name['ListTransactionRequest'] = _LISTTRANSACTIONREQUEST
-DESCRIPTOR.message_types_by_name['ListTransactionResponse'] = _LISTTRANSACTIONRESPONSE
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
+_TRANSACTION = DESCRIPTOR.message_types_by_name['Transaction']
+_TRANSACTIONDETAILS = DESCRIPTOR.message_types_by_name['TransactionDetails']
+_CREATETRANSACTIONREQUEST = DESCRIPTOR.message_types_by_name['CreateTransactionRequest']
+_GETTRANSACTIONREQUEST = DESCRIPTOR.message_types_by_name['GetTransactionRequest']
+_LISTTRANSACTIONREQUEST = DESCRIPTOR.message_types_by_name['ListTransactionRequest']
+_LISTTRANSACTIONRESPONSE = DESCRIPTOR.message_types_by_name['ListTransactionResponse']
 Transaction = _reflection.GeneratedProtocolMessageType('Transaction', (_message.Message,), {
   'DESCRIPTOR' : _TRANSACTION,
   '__module__' : 'core.transactions_pb2'
@@ -444,6 +66,20 @@ ListTransactionResponse = _reflection.GeneratedProtocolMessageType('ListTransact
   })
 _sym_db.RegisterMessage(ListTransactionResponse)
 
+if _descriptor._USE_C_DESCRIPTORS == False:
 
-DESCRIPTOR._options = None
+  DESCRIPTOR._options = None
+  DESCRIPTOR._serialized_options = b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core'
+  _TRANSACTION._serialized_start=34
+  _TRANSACTION._serialized_end=560
+  _TRANSACTIONDETAILS._serialized_start=563
+  _TRANSACTIONDETAILS._serialized_end=711
+  _CREATETRANSACTIONREQUEST._serialized_start=713
+  _CREATETRANSACTIONREQUEST._serialized_end=779
+  _GETTRANSACTIONREQUEST._serialized_start=781
+  _GETTRANSACTIONREQUEST._serialized_end=816
+  _LISTTRANSACTIONREQUEST._serialized_start=818
+  _LISTTRANSACTIONREQUEST._serialized_end=842
+  _LISTTRANSACTIONRESPONSE._serialized_start=844
+  _LISTTRANSACTIONRESPONSE._serialized_end=910
 # @@protoc_insertion_point(module_scope)

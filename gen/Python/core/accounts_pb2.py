@@ -3,6 +3,7 @@
 # source: core/accounts.proto
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
@@ -13,353 +14,16 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor.FileDescriptor(
-  name='core/accounts.proto',
-  package='core',
-  syntax='proto3',
-  serialized_options=b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core',
-  create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\"\xe1\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rofficial_name\x18\x04 \x01(\t\x12\x0c\n\x04type\x18\x05 \x01(\t\x12\x0f\n\x07subtype\x18\x06 \x01(\t\x12\x19\n\x11\x61vailable_balance\x18\x07 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x08 \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\t \x01(\x01\x12\x19\n\x11iso_currency_code\x18\n \x01(\t\x12;\n\x16\x61nnual_percentage_rate\x18\x0c \x03(\x0b\x32\x1b.core.AnnualPercentageRates\x12\x12\n\nis_overdue\x18\r \x01(\x08\x12\x1b\n\x13last_payment_amount\x18\x0e \x01(\x01\x12!\n\x19last_statement_issue_date\x18\x10 \x01(\t\x12\x1e\n\x16last_statement_balance\x18\x11 \x01(\x01\x12\x1e\n\x16minimum_payment_amount\x18\x12 \x01(\x01\x12\x1d\n\x15next_payment_due_date\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\"\x81\x01\n\x15\x41nnualPercentageRates\x12\x16\n\x0e\x61pr_percentage\x18\x01 \x01(\x01\x12\x10\n\x08\x61pr_type\x18\x02 \x01(\t\x12\x1e\n\x16\x62\x61lance_subject_to_apr\x18\x03 \x01(\x01\x12\x1e\n\x16interest_charge_amount\x18\x04 \x01(\x01\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x12ListAccountRequest\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3'
-)
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\"\xe1\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rofficial_name\x18\x04 \x01(\t\x12\x0c\n\x04type\x18\x05 \x01(\t\x12\x0f\n\x07subtype\x18\x06 \x01(\t\x12\x19\n\x11\x61vailable_balance\x18\x07 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x08 \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\t \x01(\x01\x12\x19\n\x11iso_currency_code\x18\n \x01(\t\x12;\n\x16\x61nnual_percentage_rate\x18\x0c \x03(\x0b\x32\x1b.core.AnnualPercentageRates\x12\x12\n\nis_overdue\x18\r \x01(\x08\x12\x1b\n\x13last_payment_amount\x18\x0e \x01(\x01\x12!\n\x19last_statement_issue_date\x18\x10 \x01(\t\x12\x1e\n\x16last_statement_balance\x18\x11 \x01(\x01\x12\x1e\n\x16minimum_payment_amount\x18\x12 \x01(\x01\x12\x1d\n\x15next_payment_due_date\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\"\x81\x01\n\x15\x41nnualPercentageRates\x12\x16\n\x0e\x61pr_percentage\x18\x01 \x01(\x01\x12\x10\n\x08\x61pr_type\x18\x02 \x01(\t\x12\x1e\n\x16\x62\x61lance_subject_to_apr\x18\x03 \x01(\x01\x12\x1e\n\x16interest_charge_amount\x18\x04 \x01(\x01\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x12ListAccountRequest\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
-
-_ACCOUNT = _descriptor.Descriptor(
-  name='Account',
-  full_name='core.Account',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='account_id', full_name='core.Account.account_id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='user_id', full_name='core.Account.user_id', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='name', full_name='core.Account.name', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='official_name', full_name='core.Account.official_name', index=3,
-      number=4, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='type', full_name='core.Account.type', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='subtype', full_name='core.Account.subtype', index=5,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='available_balance', full_name='core.Account.available_balance', index=6,
-      number=7, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='current_balance', full_name='core.Account.current_balance', index=7,
-      number=8, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='credit_limit', full_name='core.Account.credit_limit', index=8,
-      number=9, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='iso_currency_code', full_name='core.Account.iso_currency_code', index=9,
-      number=10, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='annual_percentage_rate', full_name='core.Account.annual_percentage_rate', index=10,
-      number=12, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='is_overdue', full_name='core.Account.is_overdue', index=11,
-      number=13, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='last_payment_amount', full_name='core.Account.last_payment_amount', index=12,
-      number=14, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='last_statement_issue_date', full_name='core.Account.last_statement_issue_date', index=13,
-      number=16, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='last_statement_balance', full_name='core.Account.last_statement_balance', index=14,
-      number=17, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='minimum_payment_amount', full_name='core.Account.minimum_payment_amount', index=15,
-      number=18, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='next_payment_due_date', full_name='core.Account.next_payment_due_date', index=16,
-      number=19, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='plaid_account_id', full_name='core.Account.plaid_account_id', index=17,
-      number=20, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=30,
-  serialized_end=511,
-)
-
-
-_ANNUALPERCENTAGERATES = _descriptor.Descriptor(
-  name='AnnualPercentageRates',
-  full_name='core.AnnualPercentageRates',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='apr_percentage', full_name='core.AnnualPercentageRates.apr_percentage', index=0,
-      number=1, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='apr_type', full_name='core.AnnualPercentageRates.apr_type', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='balance_subject_to_apr', full_name='core.AnnualPercentageRates.balance_subject_to_apr', index=2,
-      number=3, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-    _descriptor.FieldDescriptor(
-      name='interest_charge_amount', full_name='core.AnnualPercentageRates.interest_charge_amount', index=3,
-      number=4, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=514,
-  serialized_end=643,
-)
-
-
-_CREATEACCOUNTREQUEST = _descriptor.Descriptor(
-  name='CreateAccountRequest',
-  full_name='core.CreateAccountRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='account', full_name='core.CreateAccountRequest.account', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=645,
-  serialized_end=699,
-)
-
-
-_GETACCOUNTREQUEST = _descriptor.Descriptor(
-  name='GetAccountRequest',
-  full_name='core.GetAccountRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='id', full_name='core.GetAccountRequest.id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=701,
-  serialized_end=732,
-)
-
-
-_LISTACCOUNTREQUEST = _descriptor.Descriptor(
-  name='ListAccountRequest',
-  full_name='core.ListAccountRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=734,
-  serialized_end=754,
-)
-
-
-_LISTACCOUNTRESPONSE = _descriptor.Descriptor(
-  name='ListAccountResponse',
-  full_name='core.ListAccountResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='accounts', full_name='core.ListAccountResponse.accounts', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=756,
-  serialized_end=810,
-)
-
-_ACCOUNT.fields_by_name['annual_percentage_rate'].message_type = _ANNUALPERCENTAGERATES
-_CREATEACCOUNTREQUEST.fields_by_name['account'].message_type = _ACCOUNT
-_LISTACCOUNTRESPONSE.fields_by_name['accounts'].message_type = _ACCOUNT
-DESCRIPTOR.message_types_by_name['Account'] = _ACCOUNT
-DESCRIPTOR.message_types_by_name['AnnualPercentageRates'] = _ANNUALPERCENTAGERATES
-DESCRIPTOR.message_types_by_name['CreateAccountRequest'] = _CREATEACCOUNTREQUEST
-DESCRIPTOR.message_types_by_name['GetAccountRequest'] = _GETACCOUNTREQUEST
-DESCRIPTOR.message_types_by_name['ListAccountRequest'] = _LISTACCOUNTREQUEST
-DESCRIPTOR.message_types_by_name['ListAccountResponse'] = _LISTACCOUNTRESPONSE
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
+_ACCOUNT = DESCRIPTOR.message_types_by_name['Account']
+_ANNUALPERCENTAGERATES = DESCRIPTOR.message_types_by_name['AnnualPercentageRates']
+_CREATEACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['CreateAccountRequest']
+_GETACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['GetAccountRequest']
+_LISTACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['ListAccountRequest']
+_LISTACCOUNTRESPONSE = DESCRIPTOR.message_types_by_name['ListAccountResponse']
 Account = _reflection.GeneratedProtocolMessageType('Account', (_message.Message,), {
   'DESCRIPTOR' : _ACCOUNT,
   '__module__' : 'core.accounts_pb2'
@@ -402,6 +66,20 @@ ListAccountResponse = _reflection.GeneratedProtocolMessageType('ListAccountRespo
   })
 _sym_db.RegisterMessage(ListAccountResponse)
 
+if _descriptor._USE_C_DESCRIPTORS == False:
 
-DESCRIPTOR._options = None
+  DESCRIPTOR._options = None
+  DESCRIPTOR._serialized_options = b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core'
+  _ACCOUNT._serialized_start=30
+  _ACCOUNT._serialized_end=511
+  _ANNUALPERCENTAGERATES._serialized_start=514
+  _ANNUALPERCENTAGERATES._serialized_end=643
+  _CREATEACCOUNTREQUEST._serialized_start=645
+  _CREATEACCOUNTREQUEST._serialized_end=699
+  _GETACCOUNTREQUEST._serialized_start=701
+  _GETACCOUNTREQUEST._serialized_end=732
+  _LISTACCOUNTREQUEST._serialized_start=734
+  _LISTACCOUNTREQUEST._serialized_end=754
+  _LISTACCOUNTRESPONSE._serialized_start=756
+  _LISTACCOUNTRESPONSE._serialized_end=810
 # @@protoc_insertion_point(module_scope)

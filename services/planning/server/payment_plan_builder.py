@@ -214,6 +214,7 @@ class PaymentPlanBuilder:
         return PaymentPlan(
             user_id=user_id,
             payment_task_id=payment_task_ids,
+            amount=sum(amounts),
             timeline=timeline_months,
             payment_freq=payment_freq,
             amount_per_payment=amount_per_payment,

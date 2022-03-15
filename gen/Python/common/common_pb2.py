@@ -4,6 +4,7 @@
 """Generated protocol buffer code."""
 from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
@@ -14,204 +15,17 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor.FileDescriptor(
-  name='common/common.proto',
-  package='common',
-  syntax='proto3',
-  serialized_options=b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common',
-  create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13\x63ommon/common.proto\x12\x06\x63ommon*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04*\xa2\x01\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x1a\n\x16PAYMENT_STATUS_CURRENT\x10\x01\x12\x1c\n\x18PAYMENT_STATUS_COMPLETED\x10\x02\x12\x1c\n\x18PAYMENT_STATUS_CANCELLED\x10\x03\x12\x1d\n\x19PAYMENT_STATUS_IN_DEFAULT\x10\x04*\xa6\x01\n\x13PaymentActionStatus\x12!\n\x1dPAYMENT_ACTION_STATUS_UNKNOWN\x10\x00\x12!\n\x1dPAYMENT_ACTION_STATUS_PENDING\x10\x01\x12#\n\x1fPAYMENT_ACTION_STATUS_COMPLETED\x10\x02\x12$\n PAYMENT_ACTION_STATUS_IN_DEFAULT\x10\x03\x42\x34Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3'
-)
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ommon/common.proto\x12\x06\x63ommon*\x99\x01\n\rDELETE_STATUS\x12\x19\n\x15\x44\x45LETE_STATUS_UNKNOWN\x10\x00\x12\x19\n\x15\x44\x45LETE_STATUS_PENDING\x10\x01\x12\x1d\n\x19\x44\x45LETE_STATUS_IN_PROGRESS\x10\x02\x12\x19\n\x15\x44\x45LETE_STATUS_SUCCESS\x10\x03\x12\x18\n\x14\x44\x45LETE_STATUS_FAILED\x10\x04*[\n\x08PlanType\x12\x15\n\x11PLAN_TYPE_UNKNOWN\x10\x00\x12 \n\x1cPLAN_TYPE_OPTIM_CREDIT_SCORE\x10\x01\x12\x16\n\x12PLAN_TYPE_MIN_FEES\x10\x02*\xaf\x01\n\x10PaymentFrequency\x12\x1d\n\x19PAYMENT_FREQUENCY_UNKNOWN\x10\x00\x12\x1c\n\x18PAYMENT_FREQUENCY_WEEKLY\x10\x01\x12\x1e\n\x1aPAYMENT_FREQUENCY_BIWEEKLY\x10\x02\x12\x1d\n\x19PAYMENT_FREQUENCY_MONTHLY\x10\x03\x12\x1f\n\x1bPAYMENT_FREQUENCY_QUARTERLY\x10\x04*\xa2\x01\n\rPaymentStatus\x12\x1a\n\x16PAYMENT_STATUS_UNKNOWN\x10\x00\x12\x1a\n\x16PAYMENT_STATUS_CURRENT\x10\x01\x12\x1c\n\x18PAYMENT_STATUS_COMPLETED\x10\x02\x12\x1c\n\x18PAYMENT_STATUS_CANCELLED\x10\x03\x12\x1d\n\x19PAYMENT_STATUS_IN_DEFAULT\x10\x04*\xa6\x01\n\x13PaymentActionStatus\x12!\n\x1dPAYMENT_ACTION_STATUS_UNKNOWN\x10\x00\x12!\n\x1dPAYMENT_ACTION_STATUS_PENDING\x10\x01\x12#\n\x1fPAYMENT_ACTION_STATUS_COMPLETED\x10\x02\x12$\n PAYMENT_ACTION_STATUS_IN_DEFAULT\x10\x03\x42\x34Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3')
 
-_DELETE_STATUS = _descriptor.EnumDescriptor(
-  name='DELETE_STATUS',
-  full_name='common.DELETE_STATUS',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='DELETE_STATUS_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='DELETE_STATUS_PENDING', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='DELETE_STATUS_IN_PROGRESS', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='DELETE_STATUS_SUCCESS', index=3, number=3,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='DELETE_STATUS_FAILED', index=4, number=4,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=32,
-  serialized_end=185,
-)
-_sym_db.RegisterEnumDescriptor(_DELETE_STATUS)
-
+_DELETE_STATUS = DESCRIPTOR.enum_types_by_name['DELETE_STATUS']
 DELETE_STATUS = enum_type_wrapper.EnumTypeWrapper(_DELETE_STATUS)
-_PLANTYPE = _descriptor.EnumDescriptor(
-  name='PlanType',
-  full_name='common.PlanType',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PLAN_TYPE_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PLAN_TYPE_OPTIM_CREDIT_SCORE', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PLAN_TYPE_MIN_FEES', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=187,
-  serialized_end=278,
-)
-_sym_db.RegisterEnumDescriptor(_PLANTYPE)
-
+_PLANTYPE = DESCRIPTOR.enum_types_by_name['PlanType']
 PlanType = enum_type_wrapper.EnumTypeWrapper(_PLANTYPE)
-_PAYMENTFREQUENCY = _descriptor.EnumDescriptor(
-  name='PaymentFrequency',
-  full_name='common.PaymentFrequency',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_FREQUENCY_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_FREQUENCY_WEEKLY', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_FREQUENCY_BIWEEKLY', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_FREQUENCY_MONTHLY', index=3, number=3,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_FREQUENCY_QUARTERLY', index=4, number=4,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=281,
-  serialized_end=456,
-)
-_sym_db.RegisterEnumDescriptor(_PAYMENTFREQUENCY)
-
+_PAYMENTFREQUENCY = DESCRIPTOR.enum_types_by_name['PaymentFrequency']
 PaymentFrequency = enum_type_wrapper.EnumTypeWrapper(_PAYMENTFREQUENCY)
-_PAYMENTSTATUS = _descriptor.EnumDescriptor(
-  name='PaymentStatus',
-  full_name='common.PaymentStatus',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_STATUS_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_STATUS_CURRENT', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_STATUS_COMPLETED', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_STATUS_CANCELLED', index=3, number=3,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_STATUS_IN_DEFAULT', index=4, number=4,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=459,
-  serialized_end=621,
-)
-_sym_db.RegisterEnumDescriptor(_PAYMENTSTATUS)
-
+_PAYMENTSTATUS = DESCRIPTOR.enum_types_by_name['PaymentStatus']
 PaymentStatus = enum_type_wrapper.EnumTypeWrapper(_PAYMENTSTATUS)
-_PAYMENTACTIONSTATUS = _descriptor.EnumDescriptor(
-  name='PaymentActionStatus',
-  full_name='common.PaymentActionStatus',
-  filename=None,
-  file=DESCRIPTOR,
-  create_key=_descriptor._internal_create_key,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_ACTION_STATUS_UNKNOWN', index=0, number=0,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_ACTION_STATUS_PENDING', index=1, number=1,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_ACTION_STATUS_COMPLETED', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='PAYMENT_ACTION_STATUS_IN_DEFAULT', index=3, number=3,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=624,
-  serialized_end=790,
-)
-_sym_db.RegisterEnumDescriptor(_PAYMENTACTIONSTATUS)
-
+_PAYMENTACTIONSTATUS = DESCRIPTOR.enum_types_by_name['PaymentActionStatus']
 PaymentActionStatus = enum_type_wrapper.EnumTypeWrapper(_PAYMENTACTIONSTATUS)
 DELETE_STATUS_UNKNOWN = 0
 DELETE_STATUS_PENDING = 1
@@ -237,13 +51,18 @@ PAYMENT_ACTION_STATUS_COMPLETED = 2
 PAYMENT_ACTION_STATUS_IN_DEFAULT = 3
 
 
-DESCRIPTOR.enum_types_by_name['DELETE_STATUS'] = _DELETE_STATUS
-DESCRIPTOR.enum_types_by_name['PlanType'] = _PLANTYPE
-DESCRIPTOR.enum_types_by_name['PaymentFrequency'] = _PAYMENTFREQUENCY
-DESCRIPTOR.enum_types_by_name['PaymentStatus'] = _PAYMENTSTATUS
-DESCRIPTOR.enum_types_by_name['PaymentActionStatus'] = _PAYMENTACTIONSTATUS
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
+if _descriptor._USE_C_DESCRIPTORS == False:
 
-
-DESCRIPTOR._options = None
+  DESCRIPTOR._options = None
+  DESCRIPTOR._serialized_options = b'Z2github.com/jalexanderII/zero_fintech/gen/Go/common'
+  _DELETE_STATUS._serialized_start=32
+  _DELETE_STATUS._serialized_end=185
+  _PLANTYPE._serialized_start=187
+  _PLANTYPE._serialized_end=278
+  _PAYMENTFREQUENCY._serialized_start=281
+  _PAYMENTFREQUENCY._serialized_end=456
+  _PAYMENTSTATUS._serialized_start=459
+  _PAYMENTSTATUS._serialized_end=621
+  _PAYMENTACTIONSTATUS._serialized_start=624
+  _PAYMENTACTIONSTATUS._serialized_end=790
 # @@protoc_insertion_point(module_scope)
