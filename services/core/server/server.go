@@ -5,7 +5,6 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
-	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/sirupsen/logrus"
@@ -25,18 +24,16 @@ type CoreServer struct {
 	jwtm *middleware.JWTManager
 	// clients
 	planningClient planning.PlanningClient
-	plaidClient    payments.PlaidClient
 	// custom logger
 	l *logrus.Logger
 }
 
 func NewCoreServer(pdb mongo.Collection, adb mongo.Collection, tdb mongo.Collection,
-	udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient,
-	plaid payments.PlaidClient, l *logrus.Logger,
+	udb mongo.Collection, jwtm *middleware.JWTManager, pc planning.PlanningClient, l *logrus.Logger,
 ) *CoreServer {
 	return &CoreServer{
 		PaymentTaskDB: pdb, AccountDB: adb, TransactionDB: tdb,
-		UserDB: udb, jwtm: jwtm, planningClient: pc, plaidClient: plaid, l: l,
+		UserDB: udb, jwtm: jwtm, planningClient: pc, l: l,
 	}
 }
 
@@ -71,28 +68,4 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 		return nil, err
 	}
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
-}
-
-func (s CoreServer) GetAccountDetails(ctx context.Context, in *payments.GetAccountDetailsRequest) (*payments.GetAccountDetailsResponse, error) {
-	resp, err := s.plaidClient.GetAccountDetails(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return &payments.GetAccountDetailsResponse{AccountDetailsResponse: resp.GetAccountDetailsResponse()}, nil
-}
-
-func (s CoreServer) Link(ctx context.Context, in *common.LinkRequest) (*common.LinkResponse, error) {
-	resp, err := s.plaidClient.Link(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return &common.LinkResponse{LinkToken: resp.GetLinkToken()}, nil
-}
-
-func (s CoreServer) GetAccessToken(ctx context.Context, in *common.GetAccessTokenRequest) (*common.GetAccessTokenResponse, error) {
-	resp, err := s.plaidClient.GetAccessToken(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return &common.GetAccessTokenResponse{AccessToken: resp.GetAccessToken(), ItemId: resp.GetItemId(), RequestId: resp.GetRequestId()}, nil
 }

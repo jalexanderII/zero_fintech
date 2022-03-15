@@ -14,8 +14,6 @@ service Core {
   // GetPaymentPlan makes request to the Planning service by passing it a list
   // of PaymentTasks and expects to receive a list of PaymentPlans
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlanResponse);
-  rpc Link(common.LinkRequest) returns (common.LinkResponse);
-  rpc GetAccessToken(common.GetAccessTokenRequest) returns (common.GetAccessTokenResponse);
   //  CRUD METHODS
   // Account
   rpc CreateAccount(CreateAccountRequest) returns (Account);
@@ -49,4 +47,13 @@ message AccountInfo {
   repeated string transaction_ids = 1;
   string account_id = 2;
   double amount = 3;
+}
+
+message GetAccountDetailsResponse {
+  AccountDetailsResponse account_details_response = 1;
+}
+
+message AccountDetailsResponse {
+  repeated Account accounts =1;
+  repeated Transaction transactions =2;
 }

@@ -50,19 +50,3 @@ enum PaymentActionStatus {
   // payment defaulted
   PAYMENT_ACTION_STATUS_IN_DEFAULT = 3;
 }
-
-message LinkRequest {}
-
-message LinkResponse {
-  string LinkToken = 1;
-}
-
-message GetAccessTokenRequest {
-  string PublicToken = 1;
-}
-
-message GetAccessTokenResponse {
-  string AccessToken = 1;
-  string ItemId = 2;
-  string RequestId = 3;
-}
