@@ -8,7 +8,6 @@ import (
 
 	"github.com/jalexanderII/zero_fintech/bff/models"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
-	"github.com/jalexanderII/zero_fintech/gen/Go/payments"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/plaid/plaid-go/plaid"
 	"github.com/sirupsen/logrus"
@@ -132,7 +131,7 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 	return &models.Token{Value: accessToken, ItemId: itemID, Institution: ""}, nil
 }
 
-func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*payments.AccountDetailsResponse, error) {
+func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*core.AccountDetailsResponse, error) {
 	liabilitiesReq := plaid.NewLiabilitiesGetRequest(token.Value)
 	liabilitiesResp, _, err := p.Client.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
 	if err != nil {
@@ -182,7 +181,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 	return response, nil
 }
 
-func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models.TransactionsResponse, user *models.User) (*payments.AccountDetailsResponse, error) {
+func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models.TransactionsResponse, user *models.User) (*core.AccountDetailsResponse, error) {
 	UserId := user.ID.Hex()
 	p.l.Info("have UserId ", UserId)
 
@@ -393,7 +392,7 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 
 		p.l.Info("have transactions")
 	}
-	return &payments.AccountDetailsResponse{
+	return &core.AccountDetailsResponse{
 		Accounts:     accounts,
 		Transactions: transactions,
 	}, nil

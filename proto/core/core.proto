@@ -8,7 +8,6 @@ import "common/payment_plan.proto";
 import "core/accounts.proto";
 import "core/transactions.proto";
 import "core/users.proto";
-import "common/common.proto";
 
 service Core {
   // GetPaymentPlan makes request to the Planning service by passing it a list
