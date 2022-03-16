@@ -39,6 +39,11 @@ class CoreStub(object):
                 request_serializer=core_dot_accounts__pb2.ListAccountRequest.SerializeToString,
                 response_deserializer=core_dot_accounts__pb2.ListAccountResponse.FromString,
                 )
+        self.ListUserAccounts = channel.unary_unary(
+                '/core.Core/ListUserAccounts',
+                request_serializer=core_dot_accounts__pb2.ListUserAccountsRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.ListAccountResponse.FromString,
+                )
         self.CreateTransaction = channel.unary_unary(
                 '/core.Core/CreateTransaction',
                 request_serializer=core_dot_transactions__pb2.CreateTransactionRequest.SerializeToString,
@@ -52,6 +57,11 @@ class CoreStub(object):
         self.ListTransactions = channel.unary_unary(
                 '/core.Core/ListTransactions',
                 request_serializer=core_dot_transactions__pb2.ListTransactionRequest.SerializeToString,
+                response_deserializer=core_dot_transactions__pb2.ListTransactionResponse.FromString,
+                )
+        self.ListUserTransactions = channel.unary_unary(
+                '/core.Core/ListUserTransactions',
+                request_serializer=core_dot_transactions__pb2.ListUserTransactionsRequest.SerializeToString,
                 response_deserializer=core_dot_transactions__pb2.ListTransactionResponse.FromString,
                 )
         self.CreatePaymentTask = channel.unary_unary(
@@ -137,6 +147,12 @@ class CoreServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListUserAccounts(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def CreateTransaction(self, request, context):
         """Transaction
         """
@@ -151,6 +167,12 @@ class CoreServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListTransactions(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListUserTransactions(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -241,6 +263,11 @@ def add_CoreServicer_to_server(servicer, server):
                     request_deserializer=core_dot_accounts__pb2.ListAccountRequest.FromString,
                     response_serializer=core_dot_accounts__pb2.ListAccountResponse.SerializeToString,
             ),
+            'ListUserAccounts': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUserAccounts,
+                    request_deserializer=core_dot_accounts__pb2.ListUserAccountsRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.ListAccountResponse.SerializeToString,
+            ),
             'CreateTransaction': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateTransaction,
                     request_deserializer=core_dot_transactions__pb2.CreateTransactionRequest.FromString,
@@ -254,6 +281,11 @@ def add_CoreServicer_to_server(servicer, server):
             'ListTransactions': grpc.unary_unary_rpc_method_handler(
                     servicer.ListTransactions,
                     request_deserializer=core_dot_transactions__pb2.ListTransactionRequest.FromString,
+                    response_serializer=core_dot_transactions__pb2.ListTransactionResponse.SerializeToString,
+            ),
+            'ListUserTransactions': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUserTransactions,
+                    request_deserializer=core_dot_transactions__pb2.ListUserTransactionsRequest.FromString,
                     response_serializer=core_dot_transactions__pb2.ListTransactionResponse.SerializeToString,
             ),
             'CreatePaymentTask': grpc.unary_unary_rpc_method_handler(
@@ -385,6 +417,23 @@ class Core(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def ListUserAccounts(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/ListUserAccounts',
+            core_dot_accounts__pb2.ListUserAccountsRequest.SerializeToString,
+            core_dot_accounts__pb2.ListAccountResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def CreateTransaction(request,
             target,
             options=(),
@@ -431,6 +480,23 @@ class Core(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/ListTransactions',
             core_dot_transactions__pb2.ListTransactionRequest.SerializeToString,
+            core_dot_transactions__pb2.ListTransactionResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListUserTransactions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/ListUserTransactions',
+            core_dot_transactions__pb2.ListUserTransactionsRequest.SerializeToString,
             core_dot_transactions__pb2.ListTransactionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

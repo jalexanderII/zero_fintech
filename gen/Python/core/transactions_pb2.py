@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ore/transactions.proto\x12\x04\x63ore\"\x8e\x04\n\x0bTransaction\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x18\n\x10transaction_type\x18\x02 \x01(\t\x12\x1e\n\x16pending_transaction_id\x18\x03 \x01(\t\x12\x13\n\x0b\x63\x61tegory_id\x18\x04 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x05 \x03(\t\x12\x35\n\x13transaction_details\x18\x06 \x01(\x0b\x32\x18.core.TransactionDetails\x12\x0c\n\x04name\x18\x07 \x01(\t\x12\x1c\n\x14original_description\x18\x08 \x01(\t\x12\x12\n\naccount_id\x18\t \x01(\t\x12\x0e\n\x06\x61mount\x18\n \x01(\x01\x12\x19\n\x11iso_currency_code\x18\x0b \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x0c \x01(\t\x12\x0f\n\x07pending\x18\r \x01(\x08\x12\x16\n\x0etransaction_id\x18\x0e \x01(\t\x12\x15\n\rmerchant_name\x18\x0f \x01(\t\x12\x17\n\x0fpayment_channel\x18\x10 \x01(\t\x12\x17\n\x0f\x61uthorized_date\x18\x11 \x01(\t\x12\x18\n\x10primary_category\x18\x12 \x01(\t\x12\x19\n\x11\x64\x65tailed_category\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\x12\x1c\n\x14plaid_transaction_id\x18\x15 \x01(\t\"\x94\x01\n\x12TransactionDetails\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x0c\n\x04\x63ity\x18\x02 \x01(\t\x12\r\n\x05state\x18\x03 \x01(\t\x12\x0f\n\x07zipcode\x18\x04 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x05 \x01(\t\x12\x14\n\x0cstore_number\x18\x06 \x01(\t\x12\x18\n\x10reference_number\x18\x07 \x01(\t\"B\n\x18\x43reateTransactionRequest\x12&\n\x0btransaction\x18\x01 \x01(\x0b\x32\x11.core.Transaction\"#\n\x15GetTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListTransactionRequest\"B\n\x17ListTransactionResponse\x12\'\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x11.core.TransactionB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17\x63ore/transactions.proto\x12\x04\x63ore\"\x8e\x04\n\x0bTransaction\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x18\n\x10transaction_type\x18\x02 \x01(\t\x12\x1e\n\x16pending_transaction_id\x18\x03 \x01(\t\x12\x13\n\x0b\x63\x61tegory_id\x18\x04 \x01(\t\x12\x10\n\x08\x63\x61tegory\x18\x05 \x03(\t\x12\x35\n\x13transaction_details\x18\x06 \x01(\x0b\x32\x18.core.TransactionDetails\x12\x0c\n\x04name\x18\x07 \x01(\t\x12\x1c\n\x14original_description\x18\x08 \x01(\t\x12\x12\n\naccount_id\x18\t \x01(\t\x12\x0e\n\x06\x61mount\x18\n \x01(\x01\x12\x19\n\x11iso_currency_code\x18\x0b \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x0c \x01(\t\x12\x0f\n\x07pending\x18\r \x01(\x08\x12\x16\n\x0etransaction_id\x18\x0e \x01(\t\x12\x15\n\rmerchant_name\x18\x0f \x01(\t\x12\x17\n\x0fpayment_channel\x18\x10 \x01(\t\x12\x17\n\x0f\x61uthorized_date\x18\x11 \x01(\t\x12\x18\n\x10primary_category\x18\x12 \x01(\t\x12\x19\n\x11\x64\x65tailed_category\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\x12\x1c\n\x14plaid_transaction_id\x18\x15 \x01(\t\"\x94\x01\n\x12TransactionDetails\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x0c\n\x04\x63ity\x18\x02 \x01(\t\x12\r\n\x05state\x18\x03 \x01(\t\x12\x0f\n\x07zipcode\x18\x04 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x05 \x01(\t\x12\x14\n\x0cstore_number\x18\x06 \x01(\t\x12\x18\n\x10reference_number\x18\x07 \x01(\t\"B\n\x18\x43reateTransactionRequest\x12&\n\x0btransaction\x18\x01 \x01(\x0b\x32\x11.core.Transaction\"#\n\x15GetTransactionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x18\n\x16ListTransactionRequest\".\n\x1bListUserTransactionsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"B\n\x17ListTransactionResponse\x12\'\n\x0ctransactions\x18\x01 \x03(\x0b\x32\x11.core.TransactionB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
@@ -23,6 +23,7 @@ _TRANSACTIONDETAILS = DESCRIPTOR.message_types_by_name['TransactionDetails']
 _CREATETRANSACTIONREQUEST = DESCRIPTOR.message_types_by_name['CreateTransactionRequest']
 _GETTRANSACTIONREQUEST = DESCRIPTOR.message_types_by_name['GetTransactionRequest']
 _LISTTRANSACTIONREQUEST = DESCRIPTOR.message_types_by_name['ListTransactionRequest']
+_LISTUSERTRANSACTIONSREQUEST = DESCRIPTOR.message_types_by_name['ListUserTransactionsRequest']
 _LISTTRANSACTIONRESPONSE = DESCRIPTOR.message_types_by_name['ListTransactionResponse']
 Transaction = _reflection.GeneratedProtocolMessageType('Transaction', (_message.Message,), {
   'DESCRIPTOR' : _TRANSACTION,
@@ -59,6 +60,13 @@ ListTransactionRequest = _reflection.GeneratedProtocolMessageType('ListTransacti
   })
 _sym_db.RegisterMessage(ListTransactionRequest)
 
+ListUserTransactionsRequest = _reflection.GeneratedProtocolMessageType('ListUserTransactionsRequest', (_message.Message,), {
+  'DESCRIPTOR' : _LISTUSERTRANSACTIONSREQUEST,
+  '__module__' : 'core.transactions_pb2'
+  # @@protoc_insertion_point(class_scope:core.ListUserTransactionsRequest)
+  })
+_sym_db.RegisterMessage(ListUserTransactionsRequest)
+
 ListTransactionResponse = _reflection.GeneratedProtocolMessageType('ListTransactionResponse', (_message.Message,), {
   'DESCRIPTOR' : _LISTTRANSACTIONRESPONSE,
   '__module__' : 'core.transactions_pb2'
@@ -80,6 +88,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _GETTRANSACTIONREQUEST._serialized_end=816
   _LISTTRANSACTIONREQUEST._serialized_start=818
   _LISTTRANSACTIONREQUEST._serialized_end=842
-  _LISTTRANSACTIONRESPONSE._serialized_start=844
-  _LISTTRANSACTIONRESPONSE._serialized_end=910
+  _LISTUSERTRANSACTIONSREQUEST._serialized_start=844
+  _LISTUSERTRANSACTIONSREQUEST._serialized_end=890
+  _LISTTRANSACTIONRESPONSE._serialized_start=892
+  _LISTTRANSACTIONRESPONSE._serialized_end=958
 # @@protoc_insertion_point(module_scope)
