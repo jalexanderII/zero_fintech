@@ -14,11 +14,15 @@ func (s CoreServer) CreateAccount(ctx context.Context, in *core.CreateAccountReq
 	account := in.GetAccount()
 	newAccount := AccountPBToDB(account, primitive.NewObjectID())
 
-	_, err := s.AccountDB.InsertOne(ctx, newAccount)
+	dbAccount, err := s.AccountDB.InsertOne(ctx, newAccount)
 	if err != nil {
 		log.Printf("Error inserting new account: %v\n", err)
 		return nil, err
 	}
+	if oid, ok := dbAccount.InsertedID.(primitive.ObjectID); ok {
+		account.AccountId = oid.Hex()
+	}
+
 	return account, nil
 }
 
