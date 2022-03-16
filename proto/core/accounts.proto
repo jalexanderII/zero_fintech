@@ -71,6 +71,10 @@ message GetAccountRequest {
 
 message ListAccountRequest {}
 
+message ListUserAccountsRequest {
+  string user_id = 1;
+}
+
 message ListAccountResponse {
   repeated Account accounts = 1;
 }

@@ -9,6 +9,7 @@ import grpc
 from attr import define, field
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
+from pymongo.results import InsertOneResult
 
 from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED, PaymentActionStatus, \
     PAYMENT_ACTION_STATUS_PENDING
@@ -42,6 +43,7 @@ CORE_CLIENT = CoreStub(
     grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
 )
 
+
 @define
 class PlanningService(PlanningServicer):
     planning_collection: Collection
@@ -60,15 +62,18 @@ class PlanningService(PlanningServicer):
         payment_plans_pb: List[PaymentPlanPB] = self._payment_plan_builder.create(
             payment_tasks, meta_data
         )
-        resp = PaymentPlanResponse(payment_plans=payment_plans_pb)
+        for payment_plan in payment_plans_pb:
+            new_id = self.SavePaymentPlan(payment_plan)
+            logger.info("New plan created with id: ", new_id)
 
-        map(lambda plan: self.SavePaymentPlan(plan), payment_plans_pb)
-        return resp
+        return PaymentPlanResponse(payment_plans=payment_plans_pb)
 
     def SavePaymentPlan(self, payment_plan_pb: PaymentPlanPB) -> str:
         """Adds a given PaymentPlan to the database"""
+        logger.info("SavePaymentPlan called")
         payment_plan_db = payment_plan_PB_to_DB(payment_plan_pb).to_dict()
-        return self.planning_collection.insert_one(payment_plan_db).inserted_id
+        resp: InsertOneResult = self.planning_collection.insert_one(payment_plan_db)
+        return resp.inserted_id
 
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, ctx=None) -> PaymentPlanPB:
         logger.info("GetPaymentPlan called")
@@ -146,9 +151,9 @@ class PlanningService(PlanningServicer):
         for _pp in payment_plans_cursor:
             pp = PaymentPlanDB().from_dict(_pp)
             for pa in pp.payment_action:
-                _waterfall_month = pa.transaction_date.month - now.month    # if in same month, before or after
+                _waterfall_month = pa.transaction_date.month - now.month  # if in same month, before or after
                 if 0 <= _waterfall_month <= 11:
-                    waterfall[_waterfall_month][pa.account_id] += pa.amount   # update account with amount
+                    waterfall[_waterfall_month][pa.account_id] += pa.amount  # update account with amount
         monthly_waterfall = [WaterfallMonth(account_to_amounts=_waterfall_month) for _waterfall_month in waterfall]
         return WaterfallOverviewResponse(monthly_waterfall=monthly_waterfall)
 

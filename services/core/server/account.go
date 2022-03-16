@@ -14,11 +14,15 @@ func (s CoreServer) CreateAccount(ctx context.Context, in *core.CreateAccountReq
 	account := in.GetAccount()
 	newAccount := AccountPBToDB(account, primitive.NewObjectID())
 
-	_, err := s.AccountDB.InsertOne(ctx, newAccount)
+	dbAccount, err := s.AccountDB.InsertOne(ctx, newAccount)
 	if err != nil {
 		log.Printf("Error inserting new account: %v\n", err)
 		return nil, err
 	}
+	if oid, ok := dbAccount.InsertedID.(primitive.ObjectID); ok {
+		account.AccountId = oid.Hex()
+	}
+
 	return account, nil
 }
 
@@ -44,9 +48,35 @@ func (s CoreServer) ListAccounts(ctx context.Context, in *core.ListAccountReques
 		return nil, err
 	}
 	if err = cursor.All(ctx, &results); err != nil {
-		s.l.Error("[AccountDB] Error getting all users", "error", err)
+		s.l.Error("[AccountDB] Error getting all accounts", "error", err)
 		return nil, err
 	}
+	res := make([]*core.Account, len(results))
+	for idx, account := range results {
+		res[idx] = AccountDBToPB(account)
+	}
+	return &core.ListAccountResponse{Accounts: res}, nil
+}
+
+func (s CoreServer) ListUserAccounts(ctx context.Context, in *core.ListUserAccountsRequest) (*core.ListAccountResponse, error) {
+	var results []database.Account
+	id, err := primitive.ObjectIDFromHex(in.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	s.l.Info("id:", id.Hex())
+
+	filter := bson.D{{Key: "user_id", Value: id}}
+	cursor, err := s.AccountDB.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	s.l.Info("Cursor:", cursor)
+	if err = cursor.All(ctx, &results); err != nil {
+		s.l.Error("[AccountDB] Error getting all accounts for user", "error", err)
+		return nil, err
+	}
+	s.l.Info("Cursor results:", results)
 	res := make([]*core.Account, len(results))
 	for idx, account := range results {
 		res[idx] = AccountDBToPB(account)

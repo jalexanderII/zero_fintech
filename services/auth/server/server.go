@@ -56,7 +56,7 @@ func (s AuthServer) Login(ctx context.Context, in *auth.LoginRequest) (*auth.Aut
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
-	return &auth.AuthResponse{Token: token}, nil
+	return &auth.AuthResponse{UserId: user.ID.Hex(), Token: token}, nil
 }
 
 func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.AuthResponse, error) {
@@ -86,7 +86,8 @@ func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.A
 
 	// hashed passwords are saved in the DB
 	pw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	newUser := database.AuthUser{ID: primitive.NewObjectID(), Email: email, Username: username, Password: string(pw)}
+	newId := primitive.NewObjectID()
+	newUser := database.AuthUser{ID: newId, Email: email, Username: username, Password: string(pw)}
 
 	_, err = s.UserDB.InsertOne(ctx, newUser)
 	if err != nil {
@@ -99,7 +100,7 @@ func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.A
 		return nil, status.Errorf(codes.Internal, "cannot generate access token")
 	}
 
-	return &auth.AuthResponse{Token: token}, nil
+	return &auth.AuthResponse{UserId: newId.Hex(), Token: token}, nil
 }
 
 // EmailUsed checks if the email is already present in the DB

@@ -15,7 +15,8 @@ message LoginRequest {
 }
 
 message AuthResponse {
-  string Token = 1;
+  string User_id = 1;
+  string Token = 2;
 }
 
 message SignupRequest {

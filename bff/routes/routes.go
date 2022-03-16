@@ -36,11 +36,10 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	authEndpoints := api.Group("/auth")
 	authEndpoints.Post("/login", handlers.Login(authClient))
 	authEndpoints.Post("/signup", handlers.SignUp(authClient))
-	authEndpoints.Get("/logout", handlers.Logout(authClient))
+	authEndpoints.Post("/logout", handlers.Logout(authClient))
 	// Plaid endpoints within Auth
 	plaidEndpoints := authEndpoints.Group("/plaid")
 	plaidEndpoints.Post("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
-	plaidEndpoints.Patch("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
 	plaidEndpoints.Post("/create_link", handlers.CreateLinkToken(plaidClient, ctx))
 	plaidEndpoints.Get("/link", handlers.Link(plaidClient, ctx))
 
@@ -59,4 +58,6 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreEndpoints.Get("/paymenttask/:id", handlers.GetPaymentTask(coreClient, ctx))
 	coreEndpoints.Patch("/paymenttask/:id", handlers.UpdatePaymentTask(coreClient, ctx))
 	coreEndpoints.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
+	coreEndpoints.Get("/accounts/:username", handlers.GetUserAccounts(coreClient, ctx))
+	coreEndpoints.Get("/transactions/:username", handlers.GetUserTransactions(coreClient, ctx))
 }

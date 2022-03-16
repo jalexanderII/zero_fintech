@@ -3,13 +3,13 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
 	"github.com/jalexanderII/zero_fintech/bff/models"
 	"github.com/jalexanderII/zero_fintech/bff/shared"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
@@ -67,8 +67,8 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
 		}
 		token.User = user
-		fmt.Println("token", token)
-		if c.Method() == http.MethodPost {
+		_, err = plaidClient.GetUserToken(ctx, user)
+		if err == mongo.ErrNoDocuments {
 			if err = plaidClient.SaveToken(ctx, token); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to create access token", "data": err})
 			}
@@ -95,17 +95,20 @@ func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Conte
 	fmt.Println("accountDetails", accountDetails)
 
 	accounts := accountDetails.GetAccounts()
+	plaidAccToDBAccId := make(map[string]string)
 	transactions := accountDetails.GetTransactions()
 
 	for _, account := range accounts {
 		req := &core.CreateAccountRequest{Account: account}
-		_, err = plaidClient.CoreClient.CreateAccount(ctx, req)
+		dbAccount, err := plaidClient.CoreClient.CreateAccount(ctx, req)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to save account account", "data": err})
 		}
+		plaidAccToDBAccId[dbAccount.PlaidAccountId] = dbAccount.AccountId
 	}
 
 	for _, transaction := range transactions {
+		transaction.AccountId = plaidAccToDBAccId[transaction.PlaidAccountId]
 		req := &core.CreateTransactionRequest{Transaction: transaction}
 		_, err = plaidClient.CoreClient.CreateTransaction(ctx, req)
 		if err != nil {

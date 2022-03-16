@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/utils"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 )
@@ -194,6 +196,32 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": response.GetStatus(), "data": CreateResponsePaymentTask(response.GetPaymentTask())})
+	}
+}
+
+func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		username := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: utils.CopyString(c.Cookies(username))})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's accounts", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": accounts})
+	}
+}
+
+func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		username := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: utils.CopyString(c.Cookies(username))})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's transactions", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": transactions})
 	}
 }
 

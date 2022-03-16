@@ -28,7 +28,7 @@ func NewAuthClient(conn *grpc.ClientConn, username, email, password string) *Aut
 }
 
 // Login user and returns the access token
-func (a *AuthClient) Login() (string, error) {
+func (a *AuthClient) Login() (*auth.AuthResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -39,15 +39,15 @@ func (a *AuthClient) Login() (string, error) {
 
 	res, err := a.authClient.Login(ctx, req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	a.Interceptor.SetToken(res.GetToken())
 
-	return res.GetToken(), nil
+	return res, nil
 }
 
 // SignUp creates a new user and returns a new access-token
-func (a *AuthClient) SignUp() (string, error) {
+func (a *AuthClient) SignUp() (*auth.AuthResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -59,11 +59,11 @@ func (a *AuthClient) SignUp() (string, error) {
 
 	res, err := a.authClient.SignUp(ctx, req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	a.Interceptor.SetToken(res.GetToken())
 
-	return res.GetToken(), nil
+	return res, nil
 }
 
 func SetUpAuthClient() (*AuthClient, []grpc.DialOption) {

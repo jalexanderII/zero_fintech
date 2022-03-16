@@ -467,6 +467,17 @@ func (p *PlaidClient) GetToken(ctx context.Context, accessToken, tokenId string)
 	return &token, nil
 }
 
+func (p *PlaidClient) GetUserToken(ctx context.Context, user *models.User) (*models.Token, error) {
+	var token models.Token
+	filter := []bson.M{{"user.username": user.Username}, {"user.email": user.Email}, {"user._id": user.ID}}
+	err := p.PlaidDB.FindOne(ctx, bson.M{"$or": filter}).Decode(&token)
+	if err != nil {
+		return nil, err
+	}
+
+	return &token, nil
+}
+
 func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*models.User, error) {
 	userRequest := &core.GetUserRequest{
 		Id:       userId,
