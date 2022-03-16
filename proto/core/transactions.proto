@@ -85,6 +85,10 @@ message GetTransactionRequest {
 
 message ListTransactionRequest {}
 
+message ListUserTransactionsRequest {
+  string user_id = 1;
+}
+
 message ListTransactionResponse {
   repeated Transaction transactions = 1;
 }

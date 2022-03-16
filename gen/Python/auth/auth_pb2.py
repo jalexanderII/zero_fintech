@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x61uth/auth.proto\x12\x04\x61uth\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\"\x1d\n\x0c\x41uthResponse\x12\r\n\x05Token\x18\x01 \x01(\t\"B\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t2j\n\x04\x41uth\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x31\n\x06SignUp\x12\x13.auth.SignupRequest\x1a\x12.auth.AuthResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/authb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x61uth/auth.proto\x12\x04\x61uth\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\".\n\x0c\x41uthResponse\x12\x0f\n\x07User_id\x18\x01 \x01(\t\x12\r\n\x05Token\x18\x02 \x01(\t\"B\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t2j\n\x04\x41uth\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x31\n\x06SignUp\x12\x13.auth.SignupRequest\x1a\x12.auth.AuthResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/authb\x06proto3')
 
 
 
@@ -50,9 +50,9 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LOGINREQUEST._serialized_start=25
   _LOGINREQUEST._serialized_end=75
   _AUTHRESPONSE._serialized_start=77
-  _AUTHRESPONSE._serialized_end=106
-  _SIGNUPREQUEST._serialized_start=108
-  _SIGNUPREQUEST._serialized_end=174
-  _AUTH._serialized_start=176
-  _AUTH._serialized_end=282
+  _AUTHRESPONSE._serialized_end=123
+  _SIGNUPREQUEST._serialized_start=125
+  _SIGNUPREQUEST._serialized_end=191
+  _AUTH._serialized_start=193
+  _AUTH._serialized_end=299
 # @@protoc_insertion_point(module_scope)

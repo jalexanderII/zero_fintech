@@ -45,7 +45,29 @@ func (s CoreServer) ListTransactions(ctx context.Context, in *core.ListTransacti
 		return nil, err
 	}
 	if err = cursor.All(ctx, &results); err != nil {
-		s.l.Error("[TransactionDB] Error getting all users", "error", err)
+		s.l.Error("[TransactionDB] Error getting all transactions", "error", err)
+		return nil, err
+	}
+	res := make([]*core.Transaction, len(results))
+	for idx, transaction := range results {
+		res[idx] = TransactionDBToPB(transaction)
+	}
+	return &core.ListTransactionResponse{Transactions: res}, nil
+}
+
+func (s CoreServer) ListUserTransactions(ctx context.Context, in *core.ListUserTransactionsRequest) (*core.ListTransactionResponse, error) {
+	var results []database.Transaction
+	id, err := primitive.ObjectIDFromHex(in.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	filter := bson.D{{Key: "user_id", Value: id}}
+	cursor, err := s.TransactionDB.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	if err = cursor.All(ctx, &results); err != nil {
+		s.l.Error("[TransactionDB] Error getting all transactions for users", "error", err)
 		return nil, err
 	}
 	res := make([]*core.Transaction, len(results))

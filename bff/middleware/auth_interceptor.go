@@ -46,7 +46,7 @@ func (interceptor *AuthInterceptor) attachToken(ctx context.Context) context.Con
 
 func (interceptor *AuthInterceptor) SetToken(accessToken string) {
 	interceptor.AccessToken = accessToken
-	log.Println("token set")
+	log.Println("token set", interceptor.AccessToken)
 }
 
 func AccessibleRoles() map[string]bool {

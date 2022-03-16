@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
 	"github.com/jalexanderII/zero_fintech/bff/shared"
@@ -20,24 +22,36 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		authClient.Username = input.Username
 		authClient.Password = input.Password
 
-		token, err := authClient.Login()
+		resp, err := authClient.Login()
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on login request", "data": err})
 		}
 
 		// create a cookie to authenticate user
-		shared.CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
+		shared.CreateCookie(c, "AuthToken", resp.GetToken())
+		shared.CreateCookie(c, authClient.Username, resp.GetUserId())
 
-		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": token})
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(authClient.Username))
+
+		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": resp})
 	}
 }
 
 func Logout(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		type LogoutData struct {
+			Username string `json:"username"`
+		}
+		var input LogoutData
+		if err := c.BodyParser(&input); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
+		}
+
 		// create a cookie to authenticate user
+		shared.DeleteCookie(c, "AuthToken")
 		shared.DeleteCookie(c, authClient.Username)
 
-		return c.JSON(fiber.Map{"status": "success", "message": "Success logout", "data": authClient.Username})
+		return c.JSON(fiber.Map{"status": "success", "message": "Success logout", "data": input.Username})
 	}
 }
 
@@ -57,14 +71,15 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		authClient.Email = input.Email
 		authClient.Password = input.Password
 
-		token, err := authClient.SignUp()
+		resp, err := authClient.SignUp()
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error on sign up request", "data": err})
 		}
 
 		// create a cookie to authenticate user
-		shared.CreateCookie(c, authClient.Username, authClient.Interceptor.AccessToken)
+		shared.CreateCookie(c, "AuthToken", resp.GetToken())
+		shared.CreateCookie(c, authClient.Username, resp.GetUserId())
 
-		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": token})
+		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": resp})
 	}
 }

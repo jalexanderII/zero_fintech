@@ -18,10 +18,12 @@ service Core {
   rpc CreateAccount(CreateAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
   rpc ListAccounts(ListAccountRequest) returns (ListAccountResponse);
+  rpc ListUserAccounts(ListUserAccountsRequest) returns (ListAccountResponse);
   // Transaction
   rpc CreateTransaction(CreateTransactionRequest) returns (Transaction);
   rpc GetTransaction(GetTransactionRequest) returns (Transaction);
   rpc ListTransactions(ListTransactionRequest) returns (ListTransactionResponse);
+  rpc ListUserTransactions(ListUserTransactionsRequest) returns (ListTransactionResponse);
   //Payment Task
   rpc CreatePaymentTask(common.CreatePaymentTaskRequest) returns (common.PaymentTask);
   rpc CreateManyPaymentTask(common.CreateManyPaymentTaskRequest) returns (common.CreateManyPaymentTaskResponse);
