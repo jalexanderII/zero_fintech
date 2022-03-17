@@ -41,6 +41,7 @@ func NewAuthServer(udb mongo.Collection, jwtm *middleware.JWTManager, l *logrus.
 }
 
 func (s AuthServer) Login(ctx context.Context, in *auth.LoginRequest) (*auth.AuthResponse, error) {
+	s.l.Info("Login called")
 	username, password := in.GetUsername(), in.GetPassword()
 	var user database.AuthUser
 	err := s.UserDB.FindOne(ctx, bson.M{"$or": []bson.M{{"username": username}, {"email": username}}}).Decode(&user)
@@ -60,6 +61,7 @@ func (s AuthServer) Login(ctx context.Context, in *auth.LoginRequest) (*auth.Aut
 }
 
 func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.AuthResponse, error) {
+	s.l.Info("SignUp called")
 	username, email, password := in.GetUsername(), in.GetEmail(), in.GetPassword()
 	// Email regex validation
 	match, _ := regexp.MatchString(EmailRegex, email)
