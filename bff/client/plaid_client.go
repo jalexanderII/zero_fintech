@@ -42,8 +42,8 @@ type PlaidClient struct {
 	// Grpc client
 	CoreClient core.CoreClient
 	// to pass tokens through methods
-	LinkToken   string
-	PublicToken string
+	LinkToken   *models.Token
+	PublicToken *models.Token
 }
 
 func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.CoreClient) *PlaidClient {
@@ -70,36 +70,50 @@ func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.Core
 		l:            l,
 		PlaidDB:      pdb,
 		CoreClient:   coreClient,
-		LinkToken:    "",
-		PublicToken:  "",
+		LinkToken:    nil,
+		PublicToken:  nil,
 	}
 }
 
 // LinkTokenCreate creates a link token using the specified parameters
-func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username, id string) (string, error) {
-	DbUser, err := p.GetUser(ctx, username, id)
+func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string) (*models.CreateLinkTokenResponse, error) {
+	DbUser, err := p.GetUser(ctx, username, "")
 	if err != nil {
 		p.l.Error("[DB Error] error fetching user")
-		return "", err
+		return nil, err
 	}
+	id := DbUser.ID.Hex()
 
 	user := plaid.LinkTokenCreateRequestUser{
-		ClientUserId: DbUser.ID.Hex(),
+		ClientUserId: id,
+	}
+	request := plaid.NewLinkTokenCreateRequest(p.Name, "en", p.CountryCodes, user)
+	request.SetRedirectUri(p.RedirectURL)
+
+	userid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		p.l.Errorf("[Error] error setting Hex from Id %+v", err)
+		return nil, err
+	}
+	token, err := p.GetUserToken(ctx, &models.User{ID: userid, Username: username})
+	if err == nil {
+		// An Item's access_token does not change when using Link in update mode,
+		// so there is no need to repeat the exchange token process.
+		request.SetAccessToken(token.Value)
+	} else {
+		// Update mode: must not provide any products
+		request.SetProducts(p.Products)
 	}
 
-	request := plaid.NewLinkTokenCreateRequest(p.Name, "en", p.CountryCodes, user)
-	request.SetProducts(p.Products)
-	request.SetRedirectUri(p.RedirectURL)
 	p.l.Infof("Link token request %+v", request)
-
 	linkTokenCreateResp, _, err := p.Client.LinkTokenCreate(ctx).LinkTokenCreateRequest(*request).Execute()
 	if err != nil {
 		p.l.Errorf("[Plaid Error] error creating link token %+v", renderError(err)["error"])
-		return "", err
+		return nil, err
 	}
 
-	p.l.Info("new link token created for user", linkTokenCreateResp)
-	return linkTokenCreateResp.GetLinkToken(), nil
+	p.l.Info("link token created: ", linkTokenCreateResp)
+	return &models.CreateLinkTokenResponse{Token: linkTokenCreateResp.GetLinkToken(), UserId: id}, nil
 }
 
 // ExchangePublicToken this function takes care of creating the permanent access token
@@ -118,17 +132,11 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 
 	accessToken := exchangePublicTokenResp.GetAccessToken()
 	itemID := exchangePublicTokenResp.GetItemId()
-	// institutionRequest := plaid.NewInstitutionsGetByIdRequest(itemID, p.CountryCodes)
-	// institution, _, err := p.Client.InstitutionsGetById(ctx).InstitutionsGetByIdRequest(*institutionRequest).Execute()
-	// if err != nil {
-	// 	p.l.Errorf("[Plaid Error] error getting InstitutionsGetById %+v", renderError(err)["error"])
-	// 	return nil, err
-	// }
 
 	p.l.Info("public token: " + publicToken)
 	p.l.Info("access token: " + accessToken)
 	p.l.Info("item ID: " + itemID)
-	return &models.Token{Value: accessToken, ItemId: itemID, Institution: ""}, nil
+	return &models.Token{Value: accessToken, ItemId: itemID}, nil
 }
 
 func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*core.AccountDetailsResponse, error) {
@@ -139,7 +147,6 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		return nil, err
 	}
 	liabilitiesResponse := models.LiabilitiesResponse{Liabilities: liabilitiesResp.GetLiabilities().Credit}
-	p.l.Info("have liabilitiesResponse")
 
 	const iso8601TimeFormat = "2006-01-02"
 	endDate := time.Now().Local().Format(iso8601TimeFormat)
@@ -153,7 +160,6 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		p.l.Error("Error getting Transactions", "error", err)
 		return nil, err
 	}
-	p.l.Info("have transactionsResp")
 
 	var creditAccounts []plaid.AccountBase
 	var creditTransactions []plaid.Transaction
@@ -171,7 +177,6 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		}
 	}
 	transactionsResponse := models.TransactionsResponse{Accounts: creditAccounts, Transactions: creditTransactions}
-	p.l.Info("have transactionsResponse")
 
 	response, err := p.PlaidResponseToPB(liabilitiesResponse, transactionsResponse, token.User)
 	if err != nil {
@@ -183,7 +188,6 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 
 func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models.TransactionsResponse, user *models.User) (*core.AccountDetailsResponse, error) {
 	UserId := user.ID.Hex()
-	p.l.Info("have UserId ", UserId)
 
 	accountLiabilities := make(map[string]plaid.CreditCardLiability)
 	for _, al := range lr.Liabilities {
@@ -195,11 +199,9 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 			return nil, errors.New("error isolating accountLiabilities")
 		}
 	}
-	p.l.Info("have accountLiabilities")
 
 	accounts := make([]*core.Account, len(tr.Accounts))
 	for idx, account := range tr.Accounts {
-		// var acc plaid.CreditCardLiability
 		if acc, ok := accountLiabilities[account.AccountId]; ok {
 			var isOverdue = false
 			var nextPaymentDueDate = ""
@@ -248,7 +250,6 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 					InterestChargeAmount: interestChargeAmount,
 				}
 			}
-			p.l.Info("have aprs")
 
 			if account.OfficialName.IsSet() {
 				officialName = *account.OfficialName.Get()
@@ -288,7 +289,6 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 				NextPaymentDueDate:     nextPaymentDueDate,
 				PlaidAccountId:         account.AccountId,
 			}
-			p.l.Info("have accounts")
 		}
 	}
 	var transactions []*core.Transaction
@@ -390,7 +390,6 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 			PlaidTransactionId:  transaction.TransactionId,
 		})
 
-		p.l.Info("have transactions")
 	}
 	return &core.AccountDetailsResponse{
 		Accounts:     accounts,
@@ -410,15 +409,10 @@ func (p *PlaidClient) SaveToken(ctx context.Context, token *models.Token) error 
 	return nil
 }
 
-func (p *PlaidClient) UpdateToken(ctx context.Context, TokenId, value, itemId string) error {
-	DbToken, err := p.GetToken(ctx, "", TokenId)
-	if err != nil {
-		return err
-	}
-
-	filter := bson.D{{Key: "_id", Value: DbToken.ID}}
+func (p *PlaidClient) UpdateToken(ctx context.Context, TokenId primitive.ObjectID, value, itemId string) error {
+	filter := bson.D{{Key: "_id", Value: TokenId}}
 	update := bson.D{{Key: "$set", Value: bson.D{{Key: "value", Value: value}, {Key: "item_id", Value: itemId}}}}
-	_, err = p.PlaidDB.UpdateOne(ctx, filter, update)
+	_, err := p.PlaidDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
@@ -469,12 +463,11 @@ func (p *PlaidClient) GetToken(ctx context.Context, accessToken, tokenId string)
 
 func (p *PlaidClient) GetUserToken(ctx context.Context, user *models.User) (*models.Token, error) {
 	var token models.Token
-	filter := []bson.M{{"user.username": user.Username}, {"user.email": user.Email}, {"user._id": user.ID}}
+	filter := []bson.M{{"user._id": user.ID}, {"user.username": user.Username}, {"user.email": user.Email}}
 	err := p.PlaidDB.FindOne(ctx, bson.M{"$or": filter}).Decode(&token)
 	if err != nil {
 		return nil, err
 	}
-
 	return &token, nil
 }
 
@@ -499,19 +492,19 @@ func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*mo
 	}, nil
 }
 
-func (p *PlaidClient) SetLinkToken(token string) {
+func (p *PlaidClient) SetLinkToken(token *models.Token) {
 	p.LinkToken = token
 }
 
-func (p *PlaidClient) SetPublicToken(token string) {
+func (p *PlaidClient) SetPublicToken(token *models.Token) {
 	p.PublicToken = token
 }
 
-func (p *PlaidClient) GetLinkToken() string {
+func (p *PlaidClient) GetLinkToken() *models.Token {
 	return p.LinkToken
 }
 
-func (p *PlaidClient) GetPublicToken() string {
+func (p *PlaidClient) GetPublicToken() *models.Token {
 	return p.PublicToken
 }
 

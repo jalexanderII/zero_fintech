@@ -29,9 +29,8 @@ func Login(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 
 		// create a cookie to authenticate user
 		shared.CreateCookie(c, "AuthToken", resp.GetToken())
-		shared.CreateCookie(c, authClient.Username, resp.GetUserId())
-
-		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(authClient.Username))
+		shared.CreateCookie(c, input.Username, resp.GetUserId())
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(input.Username))
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success login", "data": resp})
 	}
@@ -49,7 +48,8 @@ func Logout(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 
 		// create a cookie to authenticate user
 		shared.DeleteCookie(c, "AuthToken")
-		shared.DeleteCookie(c, authClient.Username)
+		shared.DeleteCookie(c, input.Username)
+		shared.DeleteCookie(c, fmt.Sprintf("%v_link_token", input.Username))
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success logout", "data": input.Username})
 	}
@@ -79,6 +79,7 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		// create a cookie to authenticate user
 		shared.CreateCookie(c, "AuthToken", resp.GetToken())
 		shared.CreateCookie(c, authClient.Username, resp.GetUserId())
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(input.Username))
 
 		return c.JSON(fiber.Map{"status": "success", "message": "Success SignUp", "data": resp})
 	}
