@@ -7,6 +7,7 @@ from typing import List
 
 import grpc
 from attr import define, field
+from bson.json_util import dumps, RELAXED_JSON_OPTIONS
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 from pymongo.results import InsertOneResult
@@ -73,7 +74,7 @@ class PlanningService(PlanningServicer):
         logger.info("SavePaymentPlan called")
         payment_plan_db = payment_plan_PB_to_DB(payment_plan_pb).to_dict()
         resp: InsertOneResult = self.planning_collection.insert_one(payment_plan_db)
-        return resp.inserted_id
+        return str(resp.inserted_id)
 
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, ctx=None) -> PaymentPlanPB:
         logger.info("GetPaymentPlan called")
