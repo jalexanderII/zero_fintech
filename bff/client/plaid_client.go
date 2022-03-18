@@ -7,10 +7,14 @@ import (
 	"time"
 
 	"github.com/jalexanderII/zero_fintech/bff/models"
+	"github.com/jalexanderII/zero_fintech/bff/shared"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/plaid/plaid-go/plaid"
 	"github.com/sirupsen/logrus"
+	"github.com/stripe/stripe-go/v72"
+	"github.com/stripe/stripe-go/v72/account"
+	"github.com/stripe/stripe-go/v72/charge"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,6 +31,11 @@ var environmentSecret = map[string]string{
 	"development": "PLAID_SECRET_DEV",
 }
 
+var stripeEnvironmentSecret = map[string]string{
+	"sandbox":     "STRIPE_SECRET_TEST",
+	"development": "STRIPE_SECRET_DEV",
+}
+
 type PlaidClient struct {
 	// Name of the service
 	Name string
@@ -38,7 +47,8 @@ type PlaidClient struct {
 	// custom logger
 	l *logrus.Logger
 	// Database collection
-	PlaidDB mongo.Collection
+	PlaidDB  mongo.Collection
+	StripeDB mongo.Collection
 	// Grpc client
 	CoreClient core.CoreClient
 	// to pass tokens through methods
@@ -46,7 +56,7 @@ type PlaidClient struct {
 	PublicToken *models.Token
 }
 
-func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.CoreClient) *PlaidClient {
+func NewPlaidClient(l *logrus.Logger, pdb, sdb mongo.Collection, coreClient core.CoreClient) *PlaidClient {
 	// set constants from env
 	plaidEnv := utils.GetEnv("PLAID_ENV")
 	plaidSecret := utils.GetEnv(environmentSecret[plaidEnv])
@@ -69,6 +79,7 @@ func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.Core
 		CountryCodes: countryCodes,
 		l:            l,
 		PlaidDB:      pdb,
+		StripeDB:     sdb,
 		CoreClient:   coreClient,
 		LinkToken:    nil,
 		PublicToken:  nil,
@@ -120,23 +131,78 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string) (*mo
 // that will be stored in the database for cross-platform connection to users' bank.
 // If for whatever reason there is a problem with the client or public token, there
 // are json responses and logs that will adequately reflect all issues
-func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken string) (*models.Token, error) {
+func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken string) (*models.Token, *models.StripeToken, error) {
 	// exchange the public_token for an access_token
 	exchangePublicTokenResp, _, err := p.Client.ItemPublicTokenExchange(ctx).ItemPublicTokenExchangeRequest(
 		*plaid.NewItemPublicTokenExchangeRequest(publicToken),
 	).Execute()
 	if err != nil {
 		p.l.Errorf("[Plaid Error] error getting exchangePublicTokenResp %+v", renderError(err)["error"])
-		return nil, err
+		return nil, nil, err
 	}
-
 	accessToken := exchangePublicTokenResp.GetAccessToken()
 	itemID := exchangePublicTokenResp.GetItemId()
+
+	// get the account id for checking account
+	var accountID string
+	var stripeToken *models.StripeToken
+	stripeCheckingAccounts := make(map[models.PlaidAccountId]*models.StripeCustomerAccount)
+	stripeCreditAccounts := make(map[models.PlaidAccountId]*models.StripeCustomerAccount)
+	plaidAccountTypetoStripeAccount := map[plaid.AccountType]map[models.PlaidAccountId]*models.StripeCustomerAccount{
+		plaid.ACCOUNTTYPE_DEPOSITORY: stripeCheckingAccounts,
+		plaid.ACCOUNTTYPE_CREDIT:     stripeCreditAccounts,
+	}
+	accountsResp, _, err := p.Client.AccountsGet(ctx).AccountsGetRequest(plaid.AccountsGetRequest{AccessToken: accessToken}).Execute()
+	if err != nil {
+		p.l.Errorf("[Plaid Error] error getting Accounts %+v", renderError(err)["error"])
+		return nil, nil, err
+	}
+	for _, account := range accountsResp.GetAccounts() {
+		stripeCustomerAccount := &models.StripeCustomerAccount{}
+		accountID = account.GetAccountId()
+		stripeCustomerAccount.AccountId = accountID
+		if _, ok := account.GetOfficialNameOk(); ok {
+			stripeCustomerAccount.AccountName = account.GetOfficialName()
+		} else {
+			stripeCustomerAccount.AccountName = account.Name
+		}
+		stripeCustomerAccount.AccountStatus = account.GetVerificationStatus()
+		// create a stripe token for the specific account
+		request := plaid.NewProcessorStripeBankAccountTokenCreateRequest(accessToken, accountID)
+		stripeTokenResp, _, err := p.Client.ProcessorStripeBankAccountTokenCreate(ctx).ProcessorStripeBankAccountTokenCreateRequest(*request).Execute()
+		if err != nil {
+			p.l.Errorf("[Plaid Error] error creating Stripe account token %+v", shared.GetStripeErrorCode(err))
+			return nil, nil, err
+		}
+		stripeCustomerAccount.StripeToken = stripeTokenResp.StripeBankAccountToken
+		p.l.Info("stripe account added: " + stripeTokenResp.StripeBankAccountToken)
+		if stripeAccount, ok := plaidAccountTypetoStripeAccount[account.Type]; ok {
+			stripeAccount[models.PlaidAccountId{Value: accountID}] = stripeCustomerAccount
+		}
+	}
+	stripe.Key = utils.GetEnv(stripeEnvironmentSecret[utils.GetEnv("PLAID_ENV")])
+	params := &stripe.AccountParams{
+		Capabilities: &stripe.AccountCapabilitiesParams{
+			CardPayments: &stripe.AccountCapabilitiesCardPaymentsParams{
+				Requested: stripe.Bool(true),
+			},
+			Transfers: &stripe.AccountCapabilitiesTransfersParams{
+				Requested: stripe.Bool(true),
+			},
+		},
+		Country: stripe.String("US"),
+		Email:   stripe.String(stripeToken.User.Email),
+		Type:    stripe.String("express"),
+	}
+	stripeAccount, err := account.New(params)
+	stripeToken.CustomerId = stripeAccount.ID
+	stripeToken.CreditAccounts = stripeCreditAccounts
+	stripeToken.CheckingAccounts = stripeCheckingAccounts
 
 	p.l.Info("public token: " + publicToken)
 	p.l.Info("access token: " + accessToken)
 	p.l.Info("item ID: " + itemID)
-	return &models.Token{Value: accessToken, ItemId: itemID}, nil
+	return &models.Token{Value: accessToken, ItemId: itemID}, stripeToken, nil
 }
 
 func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*core.AccountDetailsResponse, error) {
@@ -165,7 +231,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 	var creditTransactions []plaid.Transaction
 	accountIds := make(map[string]string)
 	for _, account := range transactionsResp.GetAccounts() {
-		if account.Type == "credit" {
+		if account.Type == plaid.ACCOUNTTYPE_CREDIT {
 			creditAccounts = append(creditAccounts, account)
 			accountIds[account.AccountId] = account.Name
 		}
@@ -203,189 +269,64 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 	accounts := make([]*core.Account, len(tr.Accounts))
 	for idx, account := range tr.Accounts {
 		if acc, ok := accountLiabilities[account.AccountId]; ok {
-			var isOverdue = false
-			var nextPaymentDueDate = ""
-			var officialName = ""
-			var subtype = ""
-			var availableBalance = 0.0
-			var currentBalance = 0.0
-			var creditLimit = 0.0
-			var isoCurrencyCode = ""
-
-			if acc.IsOverdue.IsSet() {
-				i := acc.IsOverdue.Get()
-				if i != nil {
-					isOverdue = *i
-				}
-			}
-			if acc.NextPaymentDueDate.IsSet() {
-				i := acc.NextPaymentDueDate.Get()
-				if i != nil {
-					nextPaymentDueDate = *i
-				}
-			}
-
 			aprs := make([]*core.AnnualPercentageRates, len(acc.Aprs))
 			for x, apr := range acc.Aprs {
-				var balanceSubjectToApr = 0.0
-				var interestChargeAmount = 0.0
-				if apr.BalanceSubjectToApr.IsSet() {
-					i := apr.BalanceSubjectToApr.Get()
-					if i != nil {
-						balanceSubjectToApr = float64(*i)
-					}
-
-				}
-				if apr.InterestChargeAmount.IsSet() {
-					i := apr.InterestChargeAmount.Get()
-					if i != nil {
-						interestChargeAmount = float64(*i)
-					}
-				}
-
 				aprs[x] = &core.AnnualPercentageRates{
 					AprPercentage:        float64(apr.AprPercentage),
 					AprType:              apr.AprType,
-					BalanceSubjectToApr:  balanceSubjectToApr,
-					InterestChargeAmount: interestChargeAmount,
+					BalanceSubjectToApr:  float64(apr.GetBalanceSubjectToApr()),
+					InterestChargeAmount: float64(apr.GetInterestChargeAmount()),
 				}
 			}
-
-			if account.OfficialName.IsSet() {
-				officialName = *account.OfficialName.Get()
-			}
-			if account.Subtype.IsSet() {
-				subtype = string(*account.Subtype.Get())
-			}
-			if account.Balances.Available.IsSet() {
-				availableBalance = float64(*account.Balances.Available.Get())
-			}
-			if account.Balances.Current.IsSet() {
-				currentBalance = float64(*account.Balances.Current.Get())
-			}
-			if account.Balances.Limit.IsSet() {
-				creditLimit = float64(*account.Balances.Limit.Get())
-			}
-			if account.Balances.IsoCurrencyCode.IsSet() {
-				isoCurrencyCode = *account.Balances.IsoCurrencyCode.Get()
-			}
-
 			accounts[idx] = &core.Account{
 				UserId:                 UserId,
 				Name:                   account.Name,
-				OfficialName:           officialName,
+				OfficialName:           account.GetOfficialName(),
 				Type:                   string(account.Type),
-				Subtype:                subtype,
-				AvailableBalance:       availableBalance,
-				CurrentBalance:         currentBalance,
-				CreditLimit:            creditLimit,
-				IsoCurrencyCode:        isoCurrencyCode,
+				Subtype:                string(account.GetSubtype()),
+				AvailableBalance:       float64(account.Balances.GetAvailable()),
+				CurrentBalance:         float64(account.Balances.GetCurrent()),
+				CreditLimit:            float64(account.Balances.GetLimit()),
+				IsoCurrencyCode:        account.Balances.GetIsoCurrencyCode(),
 				AnnualPercentageRate:   aprs,
-				IsOverdue:              isOverdue,
+				IsOverdue:              acc.GetIsOverdue(),
 				LastPaymentAmount:      float64(acc.LastPaymentAmount),
 				LastStatementIssueDate: acc.LastStatementIssueDate,
 				LastStatementBalance:   float64(acc.LastStatementBalance),
 				MinimumPaymentAmount:   float64(acc.MinimumPaymentAmount),
-				NextPaymentDueDate:     nextPaymentDueDate,
+				NextPaymentDueDate:     acc.GetNextPaymentDueDate(),
 				PlaidAccountId:         account.AccountId,
 			}
 		}
 	}
 	var transactions []*core.Transaction
 	for _, transaction := range tr.Transactions {
-		var pendingTransactionId = ""
-		var categoryId = ""
-		var address = ""
-		var city = ""
-		var state = ""
-		var zipcode = ""
-		var country = ""
-		var storeNumber = ""
-		var referenceNumber = ""
-		var originalDescription = ""
-		var isoCurrencyCode = ""
-		var merchantName = ""
-		var authorizedDate = ""
-		var primaryCategory = ""
-		var detailedCategory = ""
-
-		if transaction.PendingTransactionId.IsSet() {
-			i := transaction.PendingTransactionId.Get()
-			if i != nil {
-				pendingTransactionId = *i
-			}
-
-		}
-		if transaction.CategoryId.IsSet() {
-			i := transaction.CategoryId.Get()
-			if i != nil {
-				categoryId = *i
-			}
-		}
-		if transaction.Location.Address.IsSet() && transaction.Location.Address.Get() != nil {
-			address = *transaction.Location.Address.Get()
-		}
-		if transaction.Location.City.IsSet() && transaction.Location.City.Get() != nil {
-			city = *transaction.Location.City.Get()
-		}
-		if transaction.Location.Region.IsSet() && transaction.Location.Region.Get() != nil {
-			state = *transaction.Location.Region.Get()
-		}
-		if transaction.Location.PostalCode.IsSet() && transaction.Location.PostalCode.Get() != nil {
-			zipcode = *transaction.Location.PostalCode.Get()
-		}
-		if transaction.Location.Country.IsSet() && transaction.Location.Country.Get() != nil {
-			country = *transaction.Location.Country.Get()
-		}
-		if transaction.Location.StoreNumber.IsSet() && transaction.Location.StoreNumber.Get() != nil {
-			storeNumber = *transaction.Location.StoreNumber.Get()
-		}
-		if transaction.PaymentMeta.ReferenceNumber.IsSet() && transaction.PaymentMeta.ReferenceNumber.Get() != nil {
-			referenceNumber = *transaction.PaymentMeta.ReferenceNumber.Get()
-		}
-		if transaction.OriginalDescription.IsSet() && transaction.OriginalDescription.Get() != nil {
-			originalDescription = *transaction.OriginalDescription.Get()
-		}
-		if transaction.IsoCurrencyCode.IsSet() && transaction.IsoCurrencyCode.Get() != nil {
-			isoCurrencyCode = *transaction.IsoCurrencyCode.Get()
-		}
-		if transaction.MerchantName.IsSet() && transaction.MerchantName.Get() != nil {
-			merchantName = *transaction.MerchantName.Get()
-		}
-		if transaction.AuthorizedDate.IsSet() && transaction.AuthorizedDate.Get() != nil {
-			authorizedDate = *transaction.AuthorizedDate.Get()
-		}
-		if transaction.PersonalFinanceCategory.IsSet() && transaction.PersonalFinanceCategory.Get() != nil {
-			primaryCategory = transaction.PersonalFinanceCategory.Get().Primary
-			detailedCategory = transaction.PersonalFinanceCategory.Get().Detailed
-		}
-
 		transactions = append(transactions, &core.Transaction{
 			UserId:               UserId,
-			TransactionType:      *transaction.TransactionType,
-			PendingTransactionId: pendingTransactionId,
-			CategoryId:           categoryId,
+			TransactionType:      transaction.GetTransactionType(),
+			PendingTransactionId: transaction.GetPendingTransactionId(),
+			CategoryId:           transaction.GetCategoryId(),
 			Category:             transaction.Category,
 			TransactionDetails: &core.TransactionDetails{
-				Address:         address,
-				City:            city,
-				State:           state,
-				Zipcode:         zipcode,
-				Country:         country,
-				StoreNumber:     storeNumber,
-				ReferenceNumber: referenceNumber,
+				Address:         transaction.Location.GetAddress(),
+				City:            transaction.Location.GetCity(),
+				State:           transaction.Location.GetRegion(),
+				Zipcode:         transaction.Location.GetPostalCode(),
+				Country:         transaction.Location.GetCountry(),
+				StoreNumber:     transaction.Location.GetStoreNumber(),
+				ReferenceNumber: transaction.PaymentMeta.GetReferenceNumber(),
 			},
 			Name:                transaction.Name,
-			OriginalDescription: originalDescription,
+			OriginalDescription: transaction.GetOriginalDescription(),
 			Amount:              float64(transaction.Amount),
-			IsoCurrencyCode:     isoCurrencyCode,
+			IsoCurrencyCode:     transaction.GetIsoCurrencyCode(),
 			Date:                transaction.Date,
 			Pending:             transaction.Pending,
-			MerchantName:        merchantName,
+			MerchantName:        transaction.GetMerchantName(),
 			PaymentChannel:      transaction.PaymentChannel,
-			AuthorizedDate:      authorizedDate,
-			PrimaryCategory:     primaryCategory,
-			DetailedCategory:    detailedCategory,
+			AuthorizedDate:      transaction.GetAuthorizedDate(),
+			PrimaryCategory:     transaction.GetPersonalFinanceCategory().Primary,
+			DetailedCategory:    transaction.GetPersonalFinanceCategory().Detailed,
 			PlaidAccountId:      transaction.AccountId,
 			PlaidTransactionId:  transaction.TransactionId,
 		})
@@ -413,6 +354,29 @@ func (p *PlaidClient) UpdateToken(ctx context.Context, TokenId primitive.ObjectI
 	filter := bson.D{{Key: "_id", Value: TokenId}}
 	update := bson.D{{Key: "$set", Value: bson.D{{Key: "value", Value: value}, {Key: "item_id", Value: itemId}}}}
 	_, err := p.PlaidDB.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *PlaidClient) SaveStripeToken(ctx context.Context, stripeToken *models.StripeToken) error {
+	stripeToken.ID = primitive.NewObjectID()
+	_, err := p.StripeDB.InsertOne(ctx, stripeToken)
+	if err != nil {
+		p.l.Info("Error inserting new Stripe Token", err)
+		return err
+	}
+	return nil
+}
+
+func (p *PlaidClient) UpdateStripeToken(ctx context.Context, StripeTokenId primitive.ObjectID, stripeToken *models.StripeToken) error {
+	filter := bson.D{{Key: "_id", Value: StripeTokenId}}
+	update := bson.D{{Key: "$set", Value: bson.D{
+		{Key: "checking_accounts", Value: stripeToken.CheckingAccounts},
+		{Key: "credit_accounts", Value: stripeToken.CreditAccounts}},
+	}}
+	_, err := p.StripeDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
@@ -471,6 +435,16 @@ func (p *PlaidClient) GetUserToken(ctx context.Context, user *models.User) (*mod
 	return &token, nil
 }
 
+func (p *PlaidClient) GetUserStripeToken(ctx context.Context, user *models.User) (*models.StripeToken, error) {
+	var stripeToken models.StripeToken
+	filter := []bson.M{{"user._id": user.ID}, {"user.username": user.Username}, {"user.email": user.Email}}
+	err := p.StripeDB.FindOne(ctx, bson.M{"$or": filter}).Decode(&stripeToken)
+	if err != nil {
+		return nil, err
+	}
+	return &stripeToken, nil
+}
+
 func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*models.User, error) {
 	userRequest := &core.GetUserRequest{
 		Id:       userId,
@@ -492,6 +466,30 @@ func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*mo
 	}, nil
 }
 
+func (p *PlaidClient) MakeStripeACHCharge(chargeParams *models.StripeChargeParams, SourcePlaidAccountId, DestPlaidAccountId models.PlaidAccountId) (*models.StripeChargeResponse, error) {
+	stripe.Key = utils.GetEnv(stripeEnvironmentSecret[utils.GetEnv("PLAID_ENV")])
+	params := &stripe.ChargeParams{
+		Amount:   stripe.Int64(chargeParams.Amount),
+		Currency: stripe.String(chargeParams.Currency),
+		Customer: stripe.String(chargeParams.StripeToken.CustomerId),
+		Source: &stripe.SourceParams{
+			Token: stripe.String(chargeParams.StripeToken.CheckingAccounts[SourcePlaidAccountId].StripeToken),
+		},
+		Description: stripe.String(chargeParams.Description),
+		Destination: &stripe.DestinationParams{
+			Account: stripe.String(chargeParams.StripeToken.CreditAccounts[DestPlaidAccountId].StripeToken),
+			Amount:  stripe.Int64(chargeParams.Amount),
+		},
+		ReceiptEmail: stripe.String(chargeParams.StripeToken.User.Email),
+	}
+	result, err := charge.New(params)
+	if err != nil {
+		p.l.Errorf("[Plaid Error] error creating Stripe account token %+v", shared.GetStripeErrorCode(err))
+		return nil, err
+	}
+	return toStripeChargeResp(result), err
+}
+
 func (p *PlaidClient) SetLinkToken(token *models.Token) {
 	p.LinkToken = token
 }
@@ -506,6 +504,28 @@ func (p *PlaidClient) GetLinkToken() *models.Token {
 
 func (p *PlaidClient) GetPublicToken() *models.Token {
 	return p.PublicToken
+}
+
+func toStripeChargeResp(result *stripe.Charge) *models.StripeChargeResponse {
+	return &models.StripeChargeResponse{
+		APIResource:       result.APIResource,
+		Amount:            result.Amount,
+		AuthorizationCode: result.AuthorizationCode,
+		Created:           result.Created,
+		Customer:          result.Customer,
+		Dispute:           result.Dispute,
+		Disputed:          result.Disputed,
+		FailureCode:       result.FailureCode,
+		FailureMessage:    result.FailureMessage,
+		FraudDetails:      result.FraudDetails,
+		ID:                result.ID,
+		Outcome:           result.Outcome,
+		Paid:              result.Paid,
+		Refunded:          result.Refunded,
+		Refunds:           result.Refunds,
+		Review:            result.Review,
+		Status:            result.Status,
+	}
 }
 
 func convertCountryCodes(countryCodeStrs []string) []plaid.CountryCode {

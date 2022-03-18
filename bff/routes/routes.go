@@ -22,7 +22,8 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreClient := client.SetUpCoreClient(authClient, grpcOpts)
 	// Connect to the Collections inside the given DB
 	plaidCollection := *DB.Collection(utils.GetEnv("PLAID_COLLECTION"))
-	plaidClient := client.NewPlaidClient(l, plaidCollection, coreClient)
+	stripeCollection := *DB.Collection(utils.GetEnv("STRIPE_COLLECTION"))
+	plaidClient := client.NewPlaidClient(l, plaidCollection, stripeCollection, coreClient)
 
 	// Create handlers for bff server
 	app.Get("/", func(c *fiber.Ctx) error { return c.SendString("Hello, World!") })

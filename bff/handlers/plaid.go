@@ -71,12 +71,13 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
 		}
 
-		token, err := plaidClient.ExchangePublicToken(ctx, input.PublicToken)
+		token, stripeToken, err := plaidClient.ExchangePublicToken(ctx, input.PublicToken)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
 		}
 
 		token.User = user
+		stripeToken.User = user
 		token.Institution = input.MetaData.Institution.Name
 		token.InstitutionID = input.MetaData.Institution.InstitutionId
 		dbToken, err := plaidClient.GetUserToken(ctx, user)
@@ -87,6 +88,16 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		} else {
 			if err = plaidClient.UpdateToken(ctx, dbToken.ID, token.Value, token.ItemId); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to update access token", "data": err})
+			}
+		}
+		dbStripeToken, err := plaidClient.GetUserStripeToken(ctx, user)
+		if err == mongo.ErrNoDocuments {
+			if err = plaidClient.SaveStripeToken(ctx, stripeToken); err != nil {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to create stripe token", "data": err})
+			}
+		} else {
+			if err = plaidClient.UpdateStripeToken(ctx, dbStripeToken.ID, stripeToken); err != nil {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to update stripe token", "data": err})
 			}
 		}
 
