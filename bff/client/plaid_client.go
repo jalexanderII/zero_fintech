@@ -143,7 +143,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 	liabilitiesReq := plaid.NewLiabilitiesGetRequest(token.Value)
 	liabilitiesResp, _, err := p.Client.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
 	if err != nil {
-		p.l.Error("Error getting Liabilities", "error", err)
+		p.l.Errorf("[Plaid Error] getting Liabilities %+v", renderError(err)["error"])
 		return nil, err
 	}
 	liabilitiesResponse := models.LiabilitiesResponse{Liabilities: liabilitiesResp.GetLiabilities().Credit}
@@ -157,7 +157,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		*plaid.NewTransactionsGetRequest(token.Value, startDate, endDate),
 	).Execute()
 	if err != nil {
-		p.l.Error("Error getting Transactions", "error", err)
+		p.l.Errorf("[Plaid Error] getting Transactions %+v", renderError(err)["error"])
 		return nil, err
 	}
 
