@@ -65,7 +65,7 @@ class PlanningService(PlanningServicer):
         )
         for payment_plan in payment_plans_pb:
             new_id = self.SavePaymentPlan(payment_plan)
-            logger.info("New plan created with id: ", new_id)
+            logger.info(f"New plan created with id {new_id}")
 
         return PaymentPlanResponse(payment_plans=payment_plans_pb)
 
