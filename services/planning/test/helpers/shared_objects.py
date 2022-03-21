@@ -7,7 +7,7 @@ MOCK_CHASE_ACC = Account(
     user_id=MOCK_USER_ID,
     name="Chase",
     available_balance=2500,
-    current_balance=500,
+    current_balance=800,
     credit_limit=3000,
     annual_percentage_rate=[
         AnnualPercentageRates(apr_percentage=22, apr_type="purchase_apr")

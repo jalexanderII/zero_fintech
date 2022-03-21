@@ -27,6 +27,8 @@ service Planning {
 message CreatePaymentPlanRequest {
     repeated common.PaymentTask payment_tasks = 1;
     common.MetaData meta_data = 2;
+    // indicates whether to save PaymentPlan in database
+    bool save_plan = 3;
 }
 
 message GetUserOverviewRequest {

@@ -107,8 +107,8 @@ def mock_payment_plan_builder() -> PaymentPlanBuilder:
 
 
 @pytest.fixture
-def patch__fetch_accounts(mocker: MockerFixture) -> MagicMock:
-    return mocker.patch.object(PaymentPlanBuilder, "_fetch_accounts")
+def patch__fetch_accounts(mocker: MockerFixture) -> None:
+    mocker.patch.object(PaymentPlanBuilder, "_fetch_accounts").return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
 
 
 @pytest.mark.parametrize(
@@ -166,11 +166,10 @@ def patch__fetch_accounts(mocker: MockerFixture) -> MagicMock:
 )
 def test__create_from_meta_data(
     p: MetaDataToPaymentPlanParams,
-    patch__fetch_accounts: MagicMock,
+    patch__fetch_accounts: None,
     mock_payment_plan_builder: PaymentPlanBuilder,
 ):
     ppb = mock_payment_plan_builder
-    patch__fetch_accounts.return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
     args = (
         p.user_id,
         p.plan_type,
