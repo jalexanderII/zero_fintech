@@ -1,32 +1,31 @@
+import datetime
 import logging
 import os
 import sys
 from collections import defaultdict
-import datetime
 from typing import List
 
 import grpc
 from attr import define, field
-from bson.json_util import dumps, RELAXED_JSON_OPTIONS
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 from pymongo.results import InsertOneResult
 
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED, PaymentActionStatus, \
-    PAYMENT_ACTION_STATUS_PENDING
+from gen.Python.common.common_pb2 import PaymentActionStatus, PAYMENT_ACTION_STATUS_PENDING
+from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import GetPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
-from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
-from gen.Python.core.accounts_pb2 import GetAccountRequest, Account
+from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
+from gen.Python.core.accounts_pb2 import Account, ListUserAccountsRequest, ListAccountResponse
 from gen.Python.core.core_pb2_grpc import CoreStub
-from gen.Python.core.users_pb2 import GetUserRequest
-from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
-    WaterfallOverviewResponse, GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse, WaterfallMonth
+from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest
+from gen.Python.planning.planning_pb2 import GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse
+from gen.Python.planning.planning_pb2 import WaterfallOverviewResponse, WaterfallMonth
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
@@ -40,10 +39,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("PlanningServicer")
 
-CORE_CLIENT = CoreStub(
-    grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
-)
-
 
 @define
 class PlanningService(PlanningServicer):
@@ -51,7 +46,7 @@ class PlanningService(PlanningServicer):
     _payment_plan_builder: PaymentPlanBuilder = field(
         init=False, default=payment_plan_builder
     )
-    core_client: CoreStub = CORE_CLIENT
+    core_client: CoreStub = CoreStub(grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}'))
 
     def CreatePaymentPlan(
             self, request: CreatePaymentPlanRequest, ctx=None
@@ -211,10 +206,5 @@ class PlanningService(PlanningServicer):
             overall_covered=total_coverage_prcnt, account_to_percent_covered=acc2coverage_prcnt)
 
     def _fetch_accounts(self, user_id) -> List[Account]:
-        user = self.core_client.GetUser(GetUserRequest(id=user_id))
-        account_ids: List[str] = list(user.account_id_to_token.keys())
-
-        return [
-            self.core_client.GetAccount(GetAccountRequest(id=acc_id))
-            for acc_id in account_ids
-        ]
+        account_resp: ListAccountResponse = self.core_client.ListUserAccounts(ListUserAccountsRequest(user_id=user_id))
+        return account_resp.accounts
