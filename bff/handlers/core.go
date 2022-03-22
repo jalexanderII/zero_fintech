@@ -229,6 +229,19 @@ func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fi
 	}
 }
 
+func GetUserPaymentPlans(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		username := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		plans, err := client.ListUserPaymentPlans(ctx, &common.ListUserPaymentPlansRequest{UserId: utils.CopyString(c.Cookies(username))})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's transactions", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": plans})
+	}
+}
+
 func GetWaterfallOverview(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		username := c.Params("username")

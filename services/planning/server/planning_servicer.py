@@ -13,7 +13,7 @@ from pymongo.results import InsertOneResult
 
 from gen.Python.common.common_pb2 import PaymentActionStatus, PAYMENT_ACTION_STATUS_PENDING
 from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
-from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanRequest
+from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanRequest, ListUserPaymentPlansRequest
 from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import GetPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanRequest
@@ -88,6 +88,19 @@ class PlanningService(PlanningServicer):
         logger.info("ListPaymentPlans called")
         payment_plans_pb: List[PaymentPlanPB] = []
         payment_plans = self.planning_collection.find()
+        for payment_plan in payment_plans:
+            payment_plan_db = PaymentPlanDB().from_dict(payment_plan)
+            payment_plan_db.payment_plan_id = str(payment_plan["_id"])
+            payment_plans_pb.append(payment_plan_DB_to_PB(payment_plan_db))
+
+        return ListPaymentPlanResponse(payment_plans=payment_plans_pb)
+
+    def ListUserPaymentPlans(
+            self, request: ListUserPaymentPlansRequest, ctx=None
+    ) -> ListPaymentPlanResponse:
+        logger.info("ListUserPaymentPlans called")
+        payment_plans_pb: List[PaymentPlanPB] = []
+        payment_plans = self.planning_collection.find({"userId": request.user_id})
         for payment_plan in payment_plans:
             payment_plan_db = PaymentPlanDB().from_dict(payment_plan)
             payment_plan_db.payment_plan_id = str(payment_plan["_id"])

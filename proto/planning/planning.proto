@@ -20,6 +20,7 @@ service Planning {
   //  CRUD METHODS
   rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
   rpc ListPaymentPlans(common.ListPaymentPlanRequest) returns (common.ListPaymentPlanResponse);
+  rpc ListUserPaymentPlans(common.ListUserPaymentPlansRequest) returns (common.ListPaymentPlanResponse);
   rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlan);
   rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
 }

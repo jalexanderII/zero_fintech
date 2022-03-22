@@ -1,5 +1,4 @@
 import datetime
-from unittest.mock import MagicMock
 
 import pandas as pd
 import pytest
@@ -26,6 +25,7 @@ from services.planning.test.helpers.paramset import (
     CreatePaymentActionsParams, GetMetaDataParams,
 )
 from services.planning.test.helpers.shared_objects import MOCK_CHASE_ACC, MOCK_AMEX_ACC
+
 
 def shift_now_by_payment_frequency_multiple_times(
     payment_freq: PaymentFrequency, how_often: int

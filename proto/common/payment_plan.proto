@@ -48,6 +48,10 @@ message GetPaymentPlanRequest {
 
 message ListPaymentPlanRequest {}
 
+message ListUserPaymentPlansRequest {
+  string user_id = 1;
+}
+
 message ListPaymentPlanResponse {
   repeated PaymentPlan payment_plans = 1;
 }

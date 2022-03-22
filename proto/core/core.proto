@@ -21,6 +21,7 @@ service Core {
   rpc GetAmountPaidPercentage(planning.GetUserOverviewRequest) returns (planning.GetAmountPaidPercentageResponse);
   // Get the percentage of current balance which is covered by active plans for a given user ID
   rpc GetPercentageCoveredByPlans(planning.GetUserOverviewRequest) returns (planning.GetPercentageCoveredByPlansResponse);
+  rpc ListUserPaymentPlans(common.ListUserPaymentPlansRequest) returns (common.ListPaymentPlanResponse);
   //  CRUD METHODS
   // Account
   rpc CreateAccount(CreateAccountRequest) returns (Account);

@@ -81,3 +81,7 @@ func (s CoreServer) GetAmountPaidPercentage(ctx context.Context, in *planning.Ge
 func (s CoreServer) GetPercentageCoveredByPlans(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.GetPercentageCoveredByPlansResponse, error) {
 	return s.planningClient.GetPercentageCoveredByPlans(ctx, in)
 }
+
+func (s CoreServer) ListUserPaymentPlans(ctx context.Context, in *common.ListUserPaymentPlansRequest) (*common.ListPaymentPlanResponse, error) {
+	return s.planningClient.ListUserPaymentPlans(ctx, in)
+}

@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock
 
 import pytest
 from bson.objectid import ObjectId
@@ -8,8 +7,8 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 from pytest_mock import MockerFixture
 
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, PAYMENT_ACTION_STATUS_PENDING, PLAN_TYPE_MIN_FEES, \
-    PAYMENT_ACTION_STATUS_COMPLETED, PAYMENT_FREQUENCY_WEEKLY, PAYMENT_STATUS_CURRENT
+from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, PAYMENT_ACTION_STATUS_PENDING, PLAN_TYPE_MIN_FEES
+from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PAYMENT_STATUS_CURRENT
 from gen.Python.common.payment_plan_pb2 import (
     DeletePaymentPlanRequest,
     GetPaymentPlanRequest,
