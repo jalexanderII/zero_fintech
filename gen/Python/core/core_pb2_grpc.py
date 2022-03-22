@@ -8,6 +8,7 @@ from core import accounts_pb2 as core_dot_accounts__pb2
 from core import core_pb2 as core_dot_core__pb2
 from core import transactions_pb2 as core_dot_transactions__pb2
 from core import users_pb2 as core_dot_users__pb2
+from planning import planning_pb2 as planning_dot_planning__pb2
 
 
 class CoreStub(object):
@@ -23,6 +24,26 @@ class CoreStub(object):
                 '/core.Core/GetPaymentPlan',
                 request_serializer=core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
                 response_deserializer=common_dot_payment__plan__pb2.PaymentPlanResponse.FromString,
+                )
+        self.GetWaterfallOverview = channel.unary_unary(
+                '/core.Core/GetWaterfallOverview',
+                request_serializer=planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
+                response_deserializer=planning_dot_planning__pb2.WaterfallOverviewResponse.FromString,
+                )
+        self.GetAmountPaidPercentage = channel.unary_unary(
+                '/core.Core/GetAmountPaidPercentage',
+                request_serializer=planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
+                response_deserializer=planning_dot_planning__pb2.GetAmountPaidPercentageResponse.FromString,
+                )
+        self.GetPercentageCoveredByPlans = channel.unary_unary(
+                '/core.Core/GetPercentageCoveredByPlans',
+                request_serializer=planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
+                response_deserializer=planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.FromString,
+                )
+        self.ListUserPaymentPlans = channel.unary_unary(
+                '/core.Core/ListUserPaymentPlans',
+                request_serializer=common_dot_payment__plan__pb2.ListUserPaymentPlansRequest.SerializeToString,
+                response_deserializer=common_dot_payment__plan__pb2.ListPaymentPlanResponse.FromString,
                 )
         self.CreateAccount = channel.unary_unary(
                 '/core.Core/CreateAccount',
@@ -123,6 +144,34 @@ class CoreServicer(object):
         """GetPaymentPlan makes request to the Planning service by passing it a list
         of PaymentTasks and expects to receive a list of PaymentPlans
         """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetWaterfallOverview(self, request, context):
+        """GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
+        coming 12 month
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAmountPaidPercentage(self, request, context):
+        """Get the percentage of amount which has been paid of all active PaymentPlans for a given user ID
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPercentageCoveredByPlans(self, request, context):
+        """Get the percentage of current balance which is covered by active plans for a given user ID
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListUserPaymentPlans(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -248,6 +297,26 @@ def add_CoreServicer_to_server(servicer, server):
                     request_deserializer=core_dot_core__pb2.GetPaymentPlanRequest.FromString,
                     response_serializer=common_dot_payment__plan__pb2.PaymentPlanResponse.SerializeToString,
             ),
+            'GetWaterfallOverview': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetWaterfallOverview,
+                    request_deserializer=planning_dot_planning__pb2.GetUserOverviewRequest.FromString,
+                    response_serializer=planning_dot_planning__pb2.WaterfallOverviewResponse.SerializeToString,
+            ),
+            'GetAmountPaidPercentage': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAmountPaidPercentage,
+                    request_deserializer=planning_dot_planning__pb2.GetUserOverviewRequest.FromString,
+                    response_serializer=planning_dot_planning__pb2.GetAmountPaidPercentageResponse.SerializeToString,
+            ),
+            'GetPercentageCoveredByPlans': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPercentageCoveredByPlans,
+                    request_deserializer=planning_dot_planning__pb2.GetUserOverviewRequest.FromString,
+                    response_serializer=planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.SerializeToString,
+            ),
+            'ListUserPaymentPlans': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUserPaymentPlans,
+                    request_deserializer=common_dot_payment__plan__pb2.ListUserPaymentPlansRequest.FromString,
+                    response_serializer=common_dot_payment__plan__pb2.ListPaymentPlanResponse.SerializeToString,
+            ),
             'CreateAccount': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateAccount,
                     request_deserializer=core_dot_accounts__pb2.CreateAccountRequest.FromString,
@@ -362,6 +431,74 @@ class Core(object):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetPaymentPlan',
             core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
             common_dot_payment__plan__pb2.PaymentPlanResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetWaterfallOverview(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/GetWaterfallOverview',
+            planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
+            planning_dot_planning__pb2.WaterfallOverviewResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAmountPaidPercentage(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/GetAmountPaidPercentage',
+            planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
+            planning_dot_planning__pb2.GetAmountPaidPercentageResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetPercentageCoveredByPlans(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/GetPercentageCoveredByPlans',
+            planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
+            planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListUserPaymentPlans(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/ListUserPaymentPlans',
+            common_dot_payment__plan__pb2.ListUserPaymentPlansRequest.SerializeToString,
+            common_dot_payment__plan__pb2.ListPaymentPlanResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

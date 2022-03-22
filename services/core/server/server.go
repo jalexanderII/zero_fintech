@@ -63,9 +63,25 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	}
 
 	// send payment tasks to planning to get payment plans
-	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: paymentTasks, MetaData: in.GetMetaData()})
+	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: paymentTasks, MetaData: in.GetMetaData(), SavePlan: in.GetSavePlan()})
 	if err != nil {
 		return nil, err
 	}
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
+}
+
+func (s CoreServer) GetWaterfallOverview(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.WaterfallOverviewResponse, error) {
+	return s.planningClient.GetWaterfallOverview(ctx, in)
+}
+
+func (s CoreServer) GetAmountPaidPercentage(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.GetAmountPaidPercentageResponse, error) {
+	return s.planningClient.GetAmountPaidPercentage(ctx, in)
+}
+
+func (s CoreServer) GetPercentageCoveredByPlans(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.GetPercentageCoveredByPlansResponse, error) {
+	return s.planningClient.GetPercentageCoveredByPlans(ctx, in)
+}
+
+func (s CoreServer) ListUserPaymentPlans(ctx context.Context, in *common.ListUserPaymentPlansRequest) (*common.ListPaymentPlanResponse, error) {
+	return s.planningClient.ListUserPaymentPlans(ctx, in)
 }

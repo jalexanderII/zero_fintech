@@ -7,45 +7,48 @@ import "common/payment_task.proto";
 import "common/payment_plan.proto";
 
 service Planning {
-    // CreatePaymentPlan accepts a request from Core service with PaymentTasks to create a PaymentPlan for
-    rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (common.PaymentPlanResponse);
-    // GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
-    // coming 12 month
-    rpc GetWaterfallOverview(GetUserOverviewRequest) returns (WaterfallOverviewResponse);
-    // Get the percentage of amount which has been paid of all active PaymentPlans for a given user ID
-    rpc GetAmountPaidPercentage(GetUserOverviewRequest) returns (GetAmountPaidPercentageResponse);
-    // Get the percentage of current balance which is covered by active plans for a given user ID
-    rpc GetPercentageCoveredByPlans(GetUserOverviewRequest) returns (GetPercentageCoveredByPlansResponse);
+  // CreatePaymentPlan accepts a request from Core service with PaymentTasks to create a PaymentPlan for
+  rpc CreatePaymentPlan(CreatePaymentPlanRequest) returns (common.PaymentPlanResponse);
+  // GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
+  // coming 12 month
+  rpc GetWaterfallOverview(GetUserOverviewRequest) returns (WaterfallOverviewResponse);
+  // Get the percentage of amount which has been paid of all active PaymentPlans for a given user ID
+  rpc GetAmountPaidPercentage(GetUserOverviewRequest) returns (GetAmountPaidPercentageResponse);
+  // Get the percentage of current balance which is covered by active plans for a given user ID
+  rpc GetPercentageCoveredByPlans(GetUserOverviewRequest) returns (GetPercentageCoveredByPlansResponse);
 
-    //  CRUD METHODS
-    rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
-    rpc ListPaymentPlans(common.ListPaymentPlanRequest) returns (common.ListPaymentPlanResponse);
-    rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlan);
-    rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
+  //  CRUD METHODS
+  rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
+  rpc ListPaymentPlans(common.ListPaymentPlanRequest) returns (common.ListPaymentPlanResponse);
+  rpc ListUserPaymentPlans(common.ListUserPaymentPlansRequest) returns (common.ListPaymentPlanResponse);
+  rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlan);
+  rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
 }
 
 message CreatePaymentPlanRequest {
-    repeated common.PaymentTask payment_tasks = 1;
-    common.MetaData meta_data = 2;
+  repeated common.PaymentTask payment_tasks = 1;
+  common.MetaData meta_data = 2;
+  // indicates whether to save PaymentPlan in database
+  bool save_plan = 3;
 }
 
 message GetUserOverviewRequest {
-    string user_id = 1;
+  string user_id = 1;
 }
 
 message WaterfallMonth {
-        map<string, double> account_to_amounts = 1;
+  map<string, double> account_to_amounts = 1;
 }
 
 message WaterfallOverviewResponse {
-    repeated WaterfallMonth monthly_waterfall = 1;
+  repeated WaterfallMonth monthly_waterfall = 1;
 }
 
 message GetAmountPaidPercentageResponse {
-    double percentage_paid = 1;
+  double percentage_paid = 1;
 }
 
 message GetPercentageCoveredByPlansResponse {
-    double overall_covered = 1;
-    map<string, double> account_to_percent_covered = 2;
+  double overall_covered = 1;
+  map<string, double> account_to_percent_covered = 2;
 }
