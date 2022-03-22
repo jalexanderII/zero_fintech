@@ -63,7 +63,7 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	}
 
 	// send payment tasks to planning to get payment plans
-	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: paymentTasks, MetaData: in.GetMetaData()})
+	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: paymentTasks, MetaData: in.GetMetaData(), SavePlan: in.GetSavePlan()})
 	if err != nil {
 		return nil, err
 	}

@@ -37,6 +37,7 @@ type PaymentPlan struct {
 	PaymentTaskId    []string         `json:"payment_task_id,omitempty"`
 	Timeline         float64          `json:"timeline,omitempty"`
 	PaymentFreq      int32            `json:"payment_freq,omitempty"`
+	Amount           float64          `json:"amount,omitempty"`
 	AmountPerPayment float64          `json:"amount_per_payment,omitempty"`
 	PlanType         int32            `json:"plan_type,omitempty"`
 	EndDate          time.Time        `json:"end_date,omitempty"`
@@ -55,6 +56,7 @@ type GetPaymentPlanRequest struct {
 	AccountInfo []AccountInfo `json:"account_info,omitempty"`
 	UserId      string        `json:"user_id,omitempty"`
 	MetaData    MetaData      `json:"meta_data,omitempty"`
+	SavePlan    bool          `json:"save_plan"`
 }
 
 // CreateResponsePaymentPlan Takes in a model and returns a serializer
@@ -74,6 +76,7 @@ func CreateResponsePaymentPlan(paymentTaskModel *common.PaymentPlan) PaymentPlan
 		PaymentTaskId:    paymentTaskModel.PaymentTaskId,
 		Timeline:         paymentTaskModel.Timeline,
 		PaymentFreq:      int32(paymentTaskModel.PaymentFreq),
+		Amount:           paymentTaskModel.Amount,
 		AmountPerPayment: paymentTaskModel.AmountPerPayment,
 		PlanType:         int32(paymentTaskModel.PlanType),
 		EndDate:          paymentTaskModel.EndDate.AsTime(),
@@ -107,7 +110,7 @@ func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.C
 			PreferredTimelineInMonths: input.MetaData.PreferredTimelineInMonths,
 			PreferredPaymentFreq:      common.PaymentFrequency(input.MetaData.PreferredPaymentFreq),
 		}
-		paymentPlanResponse, err := client.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: accountInfoList, UserId: input.UserId, MetaData: metaData})
+		paymentPlanResponse, err := client.GetPaymentPlan(ctx, &core.GetPaymentPlanRequest{AccountInfo: accountInfoList, UserId: input.UserId, MetaData: metaData, SavePlan: input.SavePlan})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
 		}

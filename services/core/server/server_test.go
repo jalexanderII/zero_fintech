@@ -71,6 +71,7 @@ func TestCoreServer_GetPaymentPlan(t *testing.T) {
 			AccountInfo: userSelections,
 			UserId:      uId,
 			MetaData:    metaData,
+			SavePlan:    false,
 		})
 	if err != nil {
 		t.Errorf("1: Error creating new paymentTask: %v", err)

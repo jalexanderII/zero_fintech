@@ -19,7 +19,7 @@ from core import transactions_pb2 as core_dot_transactions__pb2
 from core import users_pb2 as core_dot_users__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x63ore/core.proto\x12\x04\x63ore\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\x1a\x13\x63ore/accounts.proto\x1a\x17\x63ore/transactions.proto\x1a\x10\x63ore/users.proto\"v\n\x15GetPaymentPlanRequest\x12\'\n\x0c\x61\x63\x63ount_info\x18\x01 \x03(\x0b\x32\x11.core.AccountInfo\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12#\n\tmeta_data\x18\x03 \x01(\x0b\x32\x10.common.MetaData\"J\n\x0b\x41\x63\x63ountInfo\x12\x17\n\x0ftransaction_ids\x18\x01 \x03(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x01\"[\n\x19GetAccountDetailsResponse\x12>\n\x18\x61\x63\x63ount_details_response\x18\x01 \x01(\x0b\x32\x1c.core.AccountDetailsResponse\"b\n\x16\x41\x63\x63ountDetailsResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.Account\x12\'\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x11.core.Transaction2\xdc\n\n\x04\x43ore\x12J\n\x0eGetPaymentPlan\x12\x1b.core.GetPaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12:\n\rCreateAccount\x12\x1a.core.CreateAccountRequest\x1a\r.core.Account\x12\x34\n\nGetAccount\x12\x17.core.GetAccountRequest\x1a\r.core.Account\x12\x43\n\x0cListAccounts\x12\x18.core.ListAccountRequest\x1a\x19.core.ListAccountResponse\x12L\n\x10ListUserAccounts\x12\x1d.core.ListUserAccountsRequest\x1a\x19.core.ListAccountResponse\x12\x46\n\x11\x43reateTransaction\x12\x1e.core.CreateTransactionRequest\x1a\x11.core.Transaction\x12@\n\x0eGetTransaction\x12\x1b.core.GetTransactionRequest\x1a\x11.core.Transaction\x12O\n\x10ListTransactions\x12\x1c.core.ListTransactionRequest\x1a\x1d.core.ListTransactionResponse\x12X\n\x14ListUserTransactions\x12!.core.ListUserTransactionsRequest\x1a\x1d.core.ListTransactionResponse\x12J\n\x11\x43reatePaymentTask\x12 .common.CreatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12\x64\n\x15\x43reateManyPaymentTask\x12$.common.CreateManyPaymentTaskRequest\x1a%.common.CreateManyPaymentTaskResponse\x12\x44\n\x0eGetPaymentTask\x12\x1d.common.GetPaymentTaskRequest\x1a\x13.common.PaymentTask\x12S\n\x10ListPaymentTasks\x12\x1e.common.ListPaymentTaskRequest\x1a\x1f.common.ListPaymentTaskResponse\x12J\n\x11UpdatePaymentTask\x12 .common.UpdatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12X\n\x11\x44\x65letePaymentTask\x12 .common.DeletePaymentTaskRequest\x1a!.common.DeletePaymentTaskResponse\x12+\n\x07GetUser\x12\x14.core.GetUserRequest\x1a\n.core.User\x12:\n\tListUsers\x12\x15.core.ListUserRequest\x1a\x16.core.ListUserResponse\x12\x31\n\nUpdateUser\x12\x17.core.UpdateUserRequest\x1a\n.core.User\x12?\n\nDeleteUser\x12\x17.core.DeleteUserRequest\x1a\x18.core.DeleteUserResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x63ore/core.proto\x12\x04\x63ore\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\x1a\x13\x63ore/accounts.proto\x1a\x17\x63ore/transactions.proto\x1a\x10\x63ore/users.proto\"\x89\x01\n\x15GetPaymentPlanRequest\x12\'\n\x0c\x61\x63\x63ount_info\x18\x01 \x03(\x0b\x32\x11.core.AccountInfo\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12#\n\tmeta_data\x18\x03 \x01(\x0b\x32\x10.common.MetaData\x12\x11\n\tsave_plan\x18\x04 \x01(\x08\"J\n\x0b\x41\x63\x63ountInfo\x12\x17\n\x0ftransaction_ids\x18\x01 \x03(\t\x12\x12\n\naccount_id\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x01\"[\n\x19GetAccountDetailsResponse\x12>\n\x18\x61\x63\x63ount_details_response\x18\x01 \x01(\x0b\x32\x1c.core.AccountDetailsResponse\"b\n\x16\x41\x63\x63ountDetailsResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.Account\x12\'\n\x0ctransactions\x18\x02 \x03(\x0b\x32\x11.core.Transaction2\xdc\n\n\x04\x43ore\x12J\n\x0eGetPaymentPlan\x12\x1b.core.GetPaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12:\n\rCreateAccount\x12\x1a.core.CreateAccountRequest\x1a\r.core.Account\x12\x34\n\nGetAccount\x12\x17.core.GetAccountRequest\x1a\r.core.Account\x12\x43\n\x0cListAccounts\x12\x18.core.ListAccountRequest\x1a\x19.core.ListAccountResponse\x12L\n\x10ListUserAccounts\x12\x1d.core.ListUserAccountsRequest\x1a\x19.core.ListAccountResponse\x12\x46\n\x11\x43reateTransaction\x12\x1e.core.CreateTransactionRequest\x1a\x11.core.Transaction\x12@\n\x0eGetTransaction\x12\x1b.core.GetTransactionRequest\x1a\x11.core.Transaction\x12O\n\x10ListTransactions\x12\x1c.core.ListTransactionRequest\x1a\x1d.core.ListTransactionResponse\x12X\n\x14ListUserTransactions\x12!.core.ListUserTransactionsRequest\x1a\x1d.core.ListTransactionResponse\x12J\n\x11\x43reatePaymentTask\x12 .common.CreatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12\x64\n\x15\x43reateManyPaymentTask\x12$.common.CreateManyPaymentTaskRequest\x1a%.common.CreateManyPaymentTaskResponse\x12\x44\n\x0eGetPaymentTask\x12\x1d.common.GetPaymentTaskRequest\x1a\x13.common.PaymentTask\x12S\n\x10ListPaymentTasks\x12\x1e.common.ListPaymentTaskRequest\x1a\x1f.common.ListPaymentTaskResponse\x12J\n\x11UpdatePaymentTask\x12 .common.UpdatePaymentTaskRequest\x1a\x13.common.PaymentTask\x12X\n\x11\x44\x65letePaymentTask\x12 .common.DeletePaymentTaskRequest\x1a!.common.DeletePaymentTaskResponse\x12+\n\x07GetUser\x12\x14.core.GetUserRequest\x1a\n.core.User\x12:\n\tListUsers\x12\x15.core.ListUserRequest\x1a\x16.core.ListUserResponse\x12\x31\n\nUpdateUser\x12\x17.core.UpdateUserRequest\x1a\n.core.User\x12?\n\nDeleteUser\x12\x17.core.DeleteUserRequest\x1a\x18.core.DeleteUserResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
@@ -60,14 +60,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core'
-  _GETPAYMENTPLANREQUEST._serialized_start=143
-  _GETPAYMENTPLANREQUEST._serialized_end=261
-  _ACCOUNTINFO._serialized_start=263
-  _ACCOUNTINFO._serialized_end=337
-  _GETACCOUNTDETAILSRESPONSE._serialized_start=339
-  _GETACCOUNTDETAILSRESPONSE._serialized_end=430
-  _ACCOUNTDETAILSRESPONSE._serialized_start=432
-  _ACCOUNTDETAILSRESPONSE._serialized_end=530
-  _CORE._serialized_start=533
-  _CORE._serialized_end=1905
+  _GETPAYMENTPLANREQUEST._serialized_start=144
+  _GETPAYMENTPLANREQUEST._serialized_end=281
+  _ACCOUNTINFO._serialized_start=283
+  _ACCOUNTINFO._serialized_end=357
+  _GETACCOUNTDETAILSRESPONSE._serialized_start=359
+  _GETACCOUNTDETAILSRESPONSE._serialized_end=450
+  _ACCOUNTDETAILSRESPONSE._serialized_start=452
+  _ACCOUNTDETAILSRESPONSE._serialized_end=550
+  _CORE._serialized_start=553
+  _CORE._serialized_end=1925
 # @@protoc_insertion_point(module_scope)
