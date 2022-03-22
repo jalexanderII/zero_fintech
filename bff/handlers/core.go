@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2/utils"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 )
 
 // MetaData is a DB Serialization of Proto MetaData
@@ -225,6 +226,51 @@ func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fi
 		}
 
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": transactions})
+	}
+}
+
+func GetWaterfallOverview(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		username := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		UserId := utils.CopyString(c.Cookies(username))
+
+		overview, err := client.GetWaterfallOverview(ctx, &planning.GetUserOverviewRequest{UserId: UserId})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's waterfall", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": overview})
+	}
+}
+
+func GetAmountPaidPercentage(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		username := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		UserId := utils.CopyString(c.Cookies(username))
+
+		percentage, err := client.GetAmountPaidPercentage(ctx, &planning.GetUserOverviewRequest{UserId: UserId})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's amounts paid", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": percentage})
+	}
+}
+
+func GetPercentageCoveredByPlans(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		username := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		UserId := utils.CopyString(c.Cookies(username))
+
+		plans, err := client.GetPercentageCoveredByPlans(ctx, &planning.GetUserOverviewRequest{UserId: UserId})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's percent plan covered", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": plans})
 	}
 }
 

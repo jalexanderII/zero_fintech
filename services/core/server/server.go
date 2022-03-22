@@ -69,3 +69,15 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	}
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }
+
+func (s CoreServer) GetWaterfallOverview(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.WaterfallOverviewResponse, error) {
+	return s.planningClient.GetWaterfallOverview(ctx, in)
+}
+
+func (s CoreServer) GetAmountPaidPercentage(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.GetAmountPaidPercentageResponse, error) {
+	return s.planningClient.GetAmountPaidPercentage(ctx, in)
+}
+
+func (s CoreServer) GetPercentageCoveredByPlans(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.GetPercentageCoveredByPlansResponse, error) {
+	return s.planningClient.GetPercentageCoveredByPlans(ctx, in)
+}

@@ -8,11 +8,19 @@ import "common/payment_plan.proto";
 import "core/accounts.proto";
 import "core/transactions.proto";
 import "core/users.proto";
+import "planning/planning.proto";
 
 service Core {
   // GetPaymentPlan makes request to the Planning service by passing it a list
   // of PaymentTasks and expects to receive a list of PaymentPlans
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlanResponse);
+  // GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
+  // coming 12 month
+  rpc GetWaterfallOverview(planning.GetUserOverviewRequest) returns (planning.WaterfallOverviewResponse);
+  // Get the percentage of amount which has been paid of all active PaymentPlans for a given user ID
+  rpc GetAmountPaidPercentage(planning.GetUserOverviewRequest) returns (planning.GetAmountPaidPercentageResponse);
+  // Get the percentage of current balance which is covered by active plans for a given user ID
+  rpc GetPercentageCoveredByPlans(planning.GetUserOverviewRequest) returns (planning.GetPercentageCoveredByPlansResponse);
   //  CRUD METHODS
   // Account
   rpc CreateAccount(CreateAccountRequest) returns (Account);

@@ -61,4 +61,9 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreEndpoints.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
 	coreEndpoints.Get("/accounts/:username", handlers.GetUserAccounts(coreClient, ctx))
 	coreEndpoints.Get("/transactions/:username", handlers.GetUserTransactions(coreClient, ctx))
+
+	coreDashboardEndpoints := coreEndpoints.Group("/dashboard")
+	coreDashboardEndpoints.Get("/waterfall/:username", handlers.GetWaterfallOverview(coreClient, ctx))
+	coreDashboardEndpoints.Get("/amount_paid/:username", handlers.GetAmountPaidPercentage(coreClient, ctx))
+	coreDashboardEndpoints.Get("/covered/:username", handlers.GetPercentageCoveredByPlans(coreClient, ctx))
 }
