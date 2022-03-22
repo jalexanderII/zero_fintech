@@ -42,6 +42,8 @@ message GetPaymentPlanRequest {
   repeated AccountInfo account_info = 1;
   string user_id = 2;
   common.MetaData meta_data = 3;
+  // indicates whether to save PaymentPlan in database
+  bool save_plan = 4;
 }
 
 message AccountInfo {

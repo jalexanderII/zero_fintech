@@ -147,7 +147,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		return nil, err
 	}
 	liabilitiesResponse := models.LiabilitiesResponse{Liabilities: liabilitiesResp.GetLiabilities().Credit}
-	time.Sleep(5 * time.Second)
+	time.Sleep(2 * time.Second)
 
 	const iso8601TimeFormat = "2006-01-02"
 	endDate := time.Now().Local().Format(iso8601TimeFormat)
@@ -161,7 +161,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		p.l.Errorf("[Plaid Error] getting Transactions %+v", renderError(err)["error"])
 		return nil, err
 	}
-	time.Sleep(5 * time.Second)
+	time.Sleep(2 * time.Second)
 
 	var creditAccounts []plaid.AccountBase
 	var creditTransactions []plaid.Transaction

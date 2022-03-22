@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
@@ -80,21 +81,21 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		token.Institution = input.MetaData.Institution.Name
 		token.InstitutionID = input.MetaData.Institution.InstitutionId
 		dbToken, err := plaidClient.GetUserToken(ctx, user)
-		if err == mongo.ErrNoDocuments {
+		if err == mongo.ErrNoDocuments || c.Method() == http.MethodPost {
 			if err = plaidClient.SaveToken(ctx, token); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to create access token", "data": err})
+			}
+
+			err = GetandSaveAccountDetails(plaidClient, ctx, token, c)
+			if err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get and save account details", "data": err})
 			}
 		} else {
 			if err = plaidClient.UpdateToken(ctx, dbToken.ID, token.Value, token.ItemId); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to update access token", "data": err})
 			}
+			// TODO Add method that fetches latest not duplicate account and transaction details
 		}
-
-		err = GetandSaveAccountDetails(plaidClient, ctx, token, c)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get and save account details", "data": err})
-		}
-
 		return c.JSON(fiber.Map{"status": "success", "message": "Access token created successfully", "token": input})
 	}
 }
