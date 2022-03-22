@@ -190,9 +190,10 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 				Requested: stripe.Bool(true),
 			},
 		},
-		Country: stripe.String("US"),
-		Email:   stripe.String(stripeToken.User.Email),
-		Type:    stripe.String("express"),
+		BusinessType: stripe.String(string(stripe.AccountBusinessTypeIndividual)),
+		Country:      stripe.String("US"),
+		Email:        stripe.String(stripeToken.User.Email),
+		Type:         stripe.String(string(stripe.AccountTypeExpress)),
 	}
 	stripeAccount, err := account.New(params)
 	stripeToken.CustomerId = stripeAccount.ID
