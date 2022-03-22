@@ -12,7 +12,7 @@ class StatisticalOverviewContinuousDataResponseSchema(BaseModel):
 
 
 class StatisticalOverviewCategoricalDataResponseSchema(BaseModel):
-    category_to_count: Dict[Any, Union[int, float]]
+    category_to_count: Dict[Any, Union[float, int]]
 
 
 class PercentCoveredByPlansResponseSchema(StatisticalOverviewContinuousDataResponseSchema):

@@ -63,9 +63,10 @@ class PlanningService(PlanningServicer):
         payment_plans_pb: List[PaymentPlanPB] = self._payment_plan_builder.create(
             payment_tasks, meta_data
         )
-        for payment_plan in payment_plans_pb:
-            new_id = self.SavePaymentPlan(payment_plan)
-            logger.info(f"New plan created with id {new_id}")
+        if request.save_plan:
+            for payment_plan in payment_plans_pb:
+                new_id = self.SavePaymentPlan(payment_plan)
+                logger.info(f"New plan created with id {new_id}")
 
         return PaymentPlanResponse(payment_plans=payment_plans_pb)
 
