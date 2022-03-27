@@ -167,7 +167,7 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 	var creditTransactions []plaid.Transaction
 	accountIds := make(map[string]string)
 	for _, account := range transactionsResp.GetAccounts() {
-		if account.Type == "credit" {
+		if account.Type == plaid.ACCOUNTTYPE_CREDIT {
 			creditAccounts = append(creditAccounts, account)
 			accountIds[account.AccountId] = account.Name
 		}
@@ -205,189 +205,65 @@ func (p *PlaidClient) PlaidResponseToPB(lr models.LiabilitiesResponse, tr models
 	accounts := make([]*core.Account, len(tr.Accounts))
 	for idx, account := range tr.Accounts {
 		if acc, ok := accountLiabilities[account.AccountId]; ok {
-			var isOverdue = false
-			var nextPaymentDueDate = ""
-			var officialName = ""
-			var subtype = ""
-			var availableBalance = 0.0
-			var currentBalance = 0.0
-			var creditLimit = 0.0
-			var isoCurrencyCode = ""
-
-			if acc.IsOverdue.IsSet() {
-				i := acc.IsOverdue.Get()
-				if i != nil {
-					isOverdue = *i
-				}
-			}
-			if acc.NextPaymentDueDate.IsSet() {
-				i := acc.NextPaymentDueDate.Get()
-				if i != nil {
-					nextPaymentDueDate = *i
-				}
-			}
-
 			aprs := make([]*core.AnnualPercentageRates, len(acc.Aprs))
 			for x, apr := range acc.Aprs {
-				var balanceSubjectToApr = 0.0
-				var interestChargeAmount = 0.0
-				if apr.BalanceSubjectToApr.IsSet() {
-					i := apr.BalanceSubjectToApr.Get()
-					if i != nil {
-						balanceSubjectToApr = float64(*i)
-					}
-
-				}
-				if apr.InterestChargeAmount.IsSet() {
-					i := apr.InterestChargeAmount.Get()
-					if i != nil {
-						interestChargeAmount = float64(*i)
-					}
-				}
-
 				aprs[x] = &core.AnnualPercentageRates{
 					AprPercentage:        float64(apr.AprPercentage),
 					AprType:              apr.AprType,
-					BalanceSubjectToApr:  balanceSubjectToApr,
-					InterestChargeAmount: interestChargeAmount,
+					BalanceSubjectToApr:  float64(apr.GetBalanceSubjectToApr()),
+					InterestChargeAmount: float64(apr.GetInterestChargeAmount()),
 				}
-			}
-
-			if account.OfficialName.IsSet() {
-				officialName = *account.OfficialName.Get()
-			}
-			if account.Subtype.IsSet() {
-				subtype = string(*account.Subtype.Get())
-			}
-			if account.Balances.Available.IsSet() {
-				availableBalance = float64(*account.Balances.Available.Get())
-			}
-			if account.Balances.Current.IsSet() {
-				currentBalance = float64(*account.Balances.Current.Get())
-			}
-			if account.Balances.Limit.IsSet() {
-				creditLimit = float64(*account.Balances.Limit.Get())
-			}
-			if account.Balances.IsoCurrencyCode.IsSet() {
-				isoCurrencyCode = *account.Balances.IsoCurrencyCode.Get()
 			}
 
 			accounts[idx] = &core.Account{
 				UserId:                 UserId,
 				Name:                   account.Name,
-				OfficialName:           officialName,
+				OfficialName:           account.GetOfficialName(),
 				Type:                   string(account.Type),
-				Subtype:                subtype,
-				AvailableBalance:       availableBalance,
-				CurrentBalance:         currentBalance,
-				CreditLimit:            creditLimit,
-				IsoCurrencyCode:        isoCurrencyCode,
+				Subtype:                string(account.GetSubtype()),
+				AvailableBalance:       float64(account.Balances.GetAvailable()),
+				CurrentBalance:         float64(account.Balances.GetCurrent()),
+				CreditLimit:            float64(account.Balances.GetLimit()),
+				IsoCurrencyCode:        account.Balances.GetIsoCurrencyCode(),
 				AnnualPercentageRate:   aprs,
-				IsOverdue:              isOverdue,
+				IsOverdue:              acc.GetIsOverdue(),
 				LastPaymentAmount:      float64(acc.LastPaymentAmount),
 				LastStatementIssueDate: acc.LastStatementIssueDate,
 				LastStatementBalance:   float64(acc.LastStatementBalance),
 				MinimumPaymentAmount:   float64(acc.MinimumPaymentAmount),
-				NextPaymentDueDate:     nextPaymentDueDate,
+				NextPaymentDueDate:     acc.GetNextPaymentDueDate(),
 				PlaidAccountId:         account.AccountId,
 			}
 		}
 	}
 	var transactions []*core.Transaction
 	for _, transaction := range tr.Transactions {
-		var pendingTransactionId = ""
-		var categoryId = ""
-		var address = ""
-		var city = ""
-		var state = ""
-		var zipcode = ""
-		var country = ""
-		var storeNumber = ""
-		var referenceNumber = ""
-		var originalDescription = ""
-		var isoCurrencyCode = ""
-		var merchantName = ""
-		var authorizedDate = ""
-		var primaryCategory = ""
-		var detailedCategory = ""
-
-		if transaction.PendingTransactionId.IsSet() {
-			i := transaction.PendingTransactionId.Get()
-			if i != nil {
-				pendingTransactionId = *i
-			}
-
-		}
-		if transaction.CategoryId.IsSet() {
-			i := transaction.CategoryId.Get()
-			if i != nil {
-				categoryId = *i
-			}
-		}
-		if transaction.Location.Address.IsSet() && transaction.Location.Address.Get() != nil {
-			address = *transaction.Location.Address.Get()
-		}
-		if transaction.Location.City.IsSet() && transaction.Location.City.Get() != nil {
-			city = *transaction.Location.City.Get()
-		}
-		if transaction.Location.Region.IsSet() && transaction.Location.Region.Get() != nil {
-			state = *transaction.Location.Region.Get()
-		}
-		if transaction.Location.PostalCode.IsSet() && transaction.Location.PostalCode.Get() != nil {
-			zipcode = *transaction.Location.PostalCode.Get()
-		}
-		if transaction.Location.Country.IsSet() && transaction.Location.Country.Get() != nil {
-			country = *transaction.Location.Country.Get()
-		}
-		if transaction.Location.StoreNumber.IsSet() && transaction.Location.StoreNumber.Get() != nil {
-			storeNumber = *transaction.Location.StoreNumber.Get()
-		}
-		if transaction.PaymentMeta.ReferenceNumber.IsSet() && transaction.PaymentMeta.ReferenceNumber.Get() != nil {
-			referenceNumber = *transaction.PaymentMeta.ReferenceNumber.Get()
-		}
-		if transaction.OriginalDescription.IsSet() && transaction.OriginalDescription.Get() != nil {
-			originalDescription = *transaction.OriginalDescription.Get()
-		}
-		if transaction.IsoCurrencyCode.IsSet() && transaction.IsoCurrencyCode.Get() != nil {
-			isoCurrencyCode = *transaction.IsoCurrencyCode.Get()
-		}
-		if transaction.MerchantName.IsSet() && transaction.MerchantName.Get() != nil {
-			merchantName = *transaction.MerchantName.Get()
-		}
-		if transaction.AuthorizedDate.IsSet() && transaction.AuthorizedDate.Get() != nil {
-			authorizedDate = *transaction.AuthorizedDate.Get()
-		}
-		if transaction.PersonalFinanceCategory.IsSet() && transaction.PersonalFinanceCategory.Get() != nil {
-			primaryCategory = transaction.PersonalFinanceCategory.Get().Primary
-			detailedCategory = transaction.PersonalFinanceCategory.Get().Detailed
-		}
-
 		transactions = append(transactions, &core.Transaction{
 			UserId:               UserId,
-			TransactionType:      *transaction.TransactionType,
-			PendingTransactionId: pendingTransactionId,
-			CategoryId:           categoryId,
+			TransactionType:      transaction.GetTransactionType(),
+			PendingTransactionId: transaction.GetPendingTransactionId(),
+			CategoryId:           transaction.GetCategoryId(),
 			Category:             transaction.Category,
 			TransactionDetails: &core.TransactionDetails{
-				Address:         address,
-				City:            city,
-				State:           state,
-				Zipcode:         zipcode,
-				Country:         country,
-				StoreNumber:     storeNumber,
-				ReferenceNumber: referenceNumber,
+				Address:         transaction.Location.GetAddress(),
+				City:            transaction.Location.GetCity(),
+				State:           transaction.Location.GetRegion(),
+				Zipcode:         transaction.Location.GetPostalCode(),
+				Country:         transaction.Location.GetCountry(),
+				StoreNumber:     transaction.Location.GetStoreNumber(),
+				ReferenceNumber: transaction.PaymentMeta.GetReferenceNumber(),
 			},
 			Name:                transaction.Name,
-			OriginalDescription: originalDescription,
+			OriginalDescription: transaction.GetOriginalDescription(),
 			Amount:              float64(transaction.Amount),
-			IsoCurrencyCode:     isoCurrencyCode,
+			IsoCurrencyCode:     transaction.GetIsoCurrencyCode(),
 			Date:                transaction.Date,
 			Pending:             transaction.Pending,
-			MerchantName:        merchantName,
+			MerchantName:        transaction.GetMerchantName(),
 			PaymentChannel:      transaction.PaymentChannel,
-			AuthorizedDate:      authorizedDate,
-			PrimaryCategory:     primaryCategory,
-			DetailedCategory:    detailedCategory,
+			AuthorizedDate:      transaction.GetAuthorizedDate(),
+			PrimaryCategory:     transaction.GetPersonalFinanceCategory().Primary,
+			DetailedCategory:    transaction.GetPersonalFinanceCategory().Detailed,
 			PlaidAccountId:      transaction.AccountId,
 			PlaidTransactionId:  transaction.TransactionId,
 		})
