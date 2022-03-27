@@ -13,7 +13,6 @@ import (
 	"github.com/plaid/plaid-go/plaid"
 	"github.com/sirupsen/logrus"
 	"github.com/stripe/stripe-go/v72"
-	"github.com/stripe/stripe-go/v72/account"
 	"github.com/stripe/stripe-go/v72/charge"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -180,25 +179,6 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 			stripeAccount[models.PlaidAccountId{Value: accountID}] = stripeCustomerAccount
 		}
 	}
-	stripe.Key = utils.GetEnv(stripeEnvironmentSecret[utils.GetEnv("PLAID_ENV")])
-	params := &stripe.AccountParams{
-		Capabilities: &stripe.AccountCapabilitiesParams{
-			CardPayments: &stripe.AccountCapabilitiesCardPaymentsParams{
-				Requested: stripe.Bool(true),
-			},
-			Transfers: &stripe.AccountCapabilitiesTransfersParams{
-				Requested: stripe.Bool(true),
-			},
-		},
-		BusinessType: stripe.String(string(stripe.AccountBusinessTypeIndividual)),
-		Country:      stripe.String("US"),
-		Email:        stripe.String(stripeToken.User.Email),
-		Type:         stripe.String(string(stripe.AccountTypeExpress)),
-	}
-	stripeAccount, err := account.New(params)
-	stripeToken.CustomerId = stripeAccount.ID
-	stripeToken.CreditAccounts = stripeCreditAccounts
-	stripeToken.CheckingAccounts = stripeCheckingAccounts
 
 	p.l.Info("public token: " + publicToken)
 	p.l.Info("access token: " + accessToken)

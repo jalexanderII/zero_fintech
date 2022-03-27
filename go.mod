@@ -10,7 +10,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/plaid/plaid-go v1.10.0
 	github.com/sirupsen/logrus v1.4.2
-	github.com/stripe/stripe-go/v72 v72.93.0
+	github.com/stripe/stripe-go/v72 v72.96.0
 	go.mongodb.org/mongo-driver v1.7.0
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
 	google.golang.org/grpc v1.43.0
