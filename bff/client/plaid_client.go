@@ -186,6 +186,62 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 	return &models.Token{Value: accessToken, ItemId: itemID}, stripeToken, nil
 }
 
+func (p *PlaidClient) ExchangePublicTokenForStripe(ctx context.Context, publicToken string) (*models.Token, *models.StripeToken, error) {
+	// exchange the public_token for an access_token
+	exchangePublicTokenResp, _, err := p.Client.ItemPublicTokenExchange(ctx).ItemPublicTokenExchangeRequest(
+		*plaid.NewItemPublicTokenExchangeRequest(publicToken),
+	).Execute()
+	if err != nil {
+		p.l.Errorf("[Plaid Error] error getting exchangePublicTokenResp %+v", renderError(err)["error"])
+		return nil, nil, err
+	}
+	accessToken := exchangePublicTokenResp.GetAccessToken()
+	itemID := exchangePublicTokenResp.GetItemId()
+
+	// get the account id for checking account
+	var accountID string
+	var stripeToken *models.StripeToken
+	stripeCheckingAccounts := make(map[models.PlaidAccountId]*models.StripeCustomerAccount)
+	stripeCreditAccounts := make(map[models.PlaidAccountId]*models.StripeCustomerAccount)
+	plaidAccountTypetoStripeAccount := map[plaid.AccountType]map[models.PlaidAccountId]*models.StripeCustomerAccount{
+		plaid.ACCOUNTTYPE_DEPOSITORY: stripeCheckingAccounts,
+		plaid.ACCOUNTTYPE_CREDIT:     stripeCreditAccounts,
+	}
+	accountsResp, _, err := p.Client.AccountsGet(ctx).AccountsGetRequest(plaid.AccountsGetRequest{AccessToken: accessToken}).Execute()
+	if err != nil {
+		p.l.Errorf("[Plaid Error] error getting Accounts %+v", renderError(err)["error"])
+		return nil, nil, err
+	}
+	for _, account := range accountsResp.GetAccounts() {
+		stripeCustomerAccount := &models.StripeCustomerAccount{}
+		accountID = account.GetAccountId()
+		stripeCustomerAccount.AccountId = accountID
+		if _, ok := account.GetOfficialNameOk(); ok {
+			stripeCustomerAccount.AccountName = account.GetOfficialName()
+		} else {
+			stripeCustomerAccount.AccountName = account.Name
+		}
+		stripeCustomerAccount.AccountStatus = account.GetVerificationStatus()
+		// create a stripe token for the specific account
+		request := plaid.NewProcessorStripeBankAccountTokenCreateRequest(accessToken, accountID)
+		stripeTokenResp, _, err := p.Client.ProcessorStripeBankAccountTokenCreate(ctx).ProcessorStripeBankAccountTokenCreateRequest(*request).Execute()
+		if err != nil {
+			p.l.Errorf("[Plaid Error] error creating Stripe account token %+v", shared.GetStripeErrorCode(err))
+			return nil, nil, err
+		}
+		stripeCustomerAccount.StripeToken = stripeTokenResp.StripeBankAccountToken
+		p.l.Info("stripe account added: " + stripeTokenResp.StripeBankAccountToken)
+		if stripeAccount, ok := plaidAccountTypetoStripeAccount[account.Type]; ok {
+			stripeAccount[models.PlaidAccountId{Value: accountID}] = stripeCustomerAccount
+		}
+	}
+
+	p.l.Info("public token: " + publicToken)
+	p.l.Info("access token: " + accessToken)
+	p.l.Info("item ID: " + itemID)
+	return &models.Token{Value: accessToken, ItemId: itemID}, stripeToken, nil
+}
+
 func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*core.AccountDetailsResponse, error) {
 	liabilitiesReq := plaid.NewLiabilitiesGetRequest(token.Value)
 	liabilitiesResp, _, err := p.Client.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
