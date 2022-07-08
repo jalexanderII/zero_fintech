@@ -25,14 +25,15 @@ func Link(c *fiber.Ctx) error {
 func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type Input struct {
-			Username string `json:"username"`
+			Username string         `json:"username"`
+			Purpose  models.Purpose `json:"purpose"`
 		}
 		var input Input
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 		}
 
-		linkTokenResp, err := plaidClient.LinkTokenCreate(ctx, input.Username)
+		linkTokenResp, err := plaidClient.LinkTokenCreate(ctx, input.Username, input.Purpose)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to create link token", "data": err})
 		}
