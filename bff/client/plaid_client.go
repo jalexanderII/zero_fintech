@@ -94,6 +94,9 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purp
 	}
 	request := plaid.NewLinkTokenCreateRequest(p.Name, "en", p.CountryCodes, user)
 	request.SetRedirectUri(p.RedirectURL)
+	if purpose == models.PURPOSE_DEBIT {
+		p.Products = convertProducts([]string{"transactions"})
+	}
 	request.SetProducts(p.Products)
 	request.SetAccountFilters(purpose_to_account_filter[purpose])
 
@@ -138,39 +141,54 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		p.l.Errorf("[Plaid Error] getting Liabilities %+v", renderError(err)["error"])
 		return nil, err
 	}
-	liabilitiesResponse := models.LiabilitiesResponse{Liabilities: liabilitiesResp.GetLiabilities().Credit}
-	time.Sleep(2 * time.Second)
+	var liabilitiesResponse models.LiabilitiesResponse
+	var transactionsResponse models.TransactionsResponse
 
-	const iso8601TimeFormat = "2006-01-02"
-	endDate := time.Now().Local().Format(iso8601TimeFormat)
-	numMonths := time.Duration(-30 * 12 * 24)
-	startDate := time.Now().Local().Add(numMonths * time.Hour).Format(iso8601TimeFormat)
-
-	transactionsResp, _, err := p.Client.TransactionsGet(ctx).TransactionsGetRequest(
-		*plaid.NewTransactionsGetRequest(token.Value, startDate, endDate),
-	).Execute()
-	if err != nil {
-		p.l.Errorf("[Plaid Error] getting Transactions %+v", renderError(err)["error"])
-		return nil, err
-	}
-	time.Sleep(2 * time.Second)
-
-	var creditAccounts []plaid.AccountBase
-	var creditTransactions []plaid.Transaction
-	accountIds := make(map[string]string)
-	for _, account := range transactionsResp.GetAccounts() {
-		if account.Type == plaid.ACCOUNTTYPE_CREDIT {
-			creditAccounts = append(creditAccounts, account)
-			accountIds[account.AccountId] = account.Name
+	if token.Purpose == models.PURPOSE_DEBIT {
+		var debitAccounts []plaid.AccountBase
+		accountIds := make(map[string]string)
+		for _, account := range liabilitiesResp.GetAccounts() {
+			if account.Type == plaid.ACCOUNTTYPE_DEPOSITORY {
+				debitAccounts = append(debitAccounts, account)
+				accountIds[account.AccountId] = account.Name
+			}
 		}
-	}
+		transactionsResponse = models.TransactionsResponse{Accounts: debitAccounts}
+	} else {
+		liabilitiesResponse = models.LiabilitiesResponse{Liabilities: liabilitiesResp.GetLiabilities().Credit}
+		time.Sleep(2 * time.Second)
 
-	for _, transaction := range transactionsResp.GetTransactions() {
-		if _, ok := accountIds[transaction.AccountId]; ok {
-			creditTransactions = append(creditTransactions, transaction)
+		const iso8601TimeFormat = "2006-01-02"
+		endDate := time.Now().Local().Format(iso8601TimeFormat)
+		numMonths := time.Duration(-30 * 12 * 24)
+		startDate := time.Now().Local().Add(numMonths * time.Hour).Format(iso8601TimeFormat)
+
+		transactionsResp, _, err := p.Client.TransactionsGet(ctx).TransactionsGetRequest(
+			*plaid.NewTransactionsGetRequest(token.Value, startDate, endDate),
+		).Execute()
+		if err != nil {
+			p.l.Errorf("[Plaid Error] getting Transactions %+v", renderError(err)["error"])
+			return nil, err
 		}
+		time.Sleep(2 * time.Second)
+
+		var creditAccounts []plaid.AccountBase
+		var creditTransactions []plaid.Transaction
+		accountIds := make(map[string]string)
+		for _, account := range transactionsResp.GetAccounts() {
+			if account.Type == plaid.ACCOUNTTYPE_CREDIT {
+				creditAccounts = append(creditAccounts, account)
+				accountIds[account.AccountId] = account.Name
+			}
+		}
+
+		for _, transaction := range transactionsResp.GetTransactions() {
+			if _, ok := accountIds[transaction.AccountId]; ok {
+				creditTransactions = append(creditTransactions, transaction)
+			}
+		}
+		transactionsResponse = models.TransactionsResponse{Accounts: creditAccounts, Transactions: creditTransactions}
 	}
-	transactionsResponse := models.TransactionsResponse{Accounts: creditAccounts, Transactions: creditTransactions}
 
 	response, err := p.PlaidResponseToPB(liabilitiesResponse, transactionsResponse, token.User)
 	if err != nil {

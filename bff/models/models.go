@@ -21,6 +21,7 @@ type Token struct {
 	ItemId        string             `bson:"item_id"`
 	Institution   string             `bson:"institution"`
 	InstitutionID string             `bson:"institution_id"`
+	Purpose       Purpose            `bson:"purpose"`
 }
 
 type CreateLinkTokenResponse struct {

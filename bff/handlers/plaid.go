@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"fmt"
-	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
@@ -11,7 +10,6 @@ import (
 	"github.com/jalexanderII/zero_fintech/bff/shared"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Link will call CreateLinkToken to get a link token, and then call ExchangePublicToken to get an access token
@@ -62,6 +60,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 			PublicToken string               `json:"public_token"`
 			TokenId     string               `json:"tokenId,omitempty"`
 			MetaData    models.PlaidMetaData `json:"meta_data,omitempty"`
+			Purpose     models.Purpose       `json:"purpose"`
 		}
 		var input Input
 		if err := c.BodyParser(&input); err != nil {
@@ -71,7 +70,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 
 		user, err := plaidClient.GetUser(ctx, input.Username, "")
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to exchange for token", "data": err})
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get user for token", "data": err})
 		}
 
 		token, err := plaidClient.ExchangePublicToken(ctx, input.PublicToken)
@@ -82,22 +81,22 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		token.User = user
 		token.Institution = input.MetaData.Institution.Name
 		token.InstitutionID = input.MetaData.Institution.InstitutionId
-		dbToken, err := plaidClient.GetUserToken(ctx, user)
-		if err == mongo.ErrNoDocuments || c.Method() == http.MethodPost {
-			if err = plaidClient.SaveToken(ctx, token); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to create access token", "data": err})
-			}
-
-			err = GetandSaveAccountDetails(plaidClient, ctx, token, c)
-			if err != nil {
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get and save account details", "data": err})
-			}
-		} else {
-			if err = plaidClient.UpdateToken(ctx, dbToken.ID, token.Value, token.ItemId); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to update access token", "data": err})
-			}
-			// TODO Add method that fetches latest not duplicate account and transaction details
+		token.Purpose = input.Purpose
+		// dbToken, err := plaidClient.GetUserToken(ctx, user)
+		// if err == mongo.ErrNoDocuments || c.Method() == http.MethodPost {
+		if err = plaidClient.SaveToken(ctx, token); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to create access token", "data": err})
 		}
+
+		err = GetandSaveAccountDetails(plaidClient, ctx, token, c)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get and save account details", "data": err})
+		}
+		// } else {
+		// 	if err = plaidClient.UpdateToken(ctx, dbToken.ID, token.Value, token.ItemId); err != nil {
+		// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to update access token", "data": err})
+		// 	}
+		// }
 		return c.JSON(fiber.Map{"status": "success", "message": "Access token created successfully", "token": input})
 	}
 }
@@ -121,14 +120,15 @@ func GetandSaveAccountDetails(plaidClient *client.PlaidClient, ctx context.Conte
 		plaidAccToDBAccId[dbAccount.PlaidAccountId] = dbAccount.AccountId
 	}
 
-	for _, transaction := range transactions {
-		transaction.AccountId = plaidAccToDBAccId[transaction.PlaidAccountId]
-		req := &core.CreateTransactionRequest{Transaction: transaction}
-		_, err = plaidClient.CoreClient.CreateTransaction(ctx, req)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to save account transaction", "data": err})
+	if token.Purpose == models.PURPOSE_CREDIT {
+		for _, transaction := range transactions {
+			transaction.AccountId = plaidAccToDBAccId[transaction.PlaidAccountId]
+			req := &core.CreateTransactionRequest{Transaction: transaction}
+			_, err = plaidClient.CoreClient.CreateTransaction(ctx, req)
+			if err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to save account transaction", "data": err})
+			}
 		}
 	}
-
 	return nil
 }
