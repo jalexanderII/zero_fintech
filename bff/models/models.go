@@ -5,6 +5,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type Purpose string
+
+//goland:noinspection ALL
+const (
+	PURPOSE_CREDIT Purpose = "credit"
+	PURPOSE_DEBIT  Purpose = "debit"
+)
+
 // Token for use of plaid public token retrieval
 type Token struct {
 	ID            primitive.ObjectID `bson:"_id"`
@@ -13,6 +21,7 @@ type Token struct {
 	ItemId        string             `bson:"item_id"`
 	Institution   string             `bson:"institution"`
 	InstitutionID string             `bson:"institution_id"`
+	Purpose       Purpose            `bson:"purpose"`
 }
 
 type CreateLinkTokenResponse struct {
