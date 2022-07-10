@@ -135,20 +135,20 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 }
 
 func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token) (*core.AccountDetailsResponse, error) {
-	liabilitiesReq := plaid.NewLiabilitiesGetRequest(token.Value)
-	liabilitiesResp, _, err := p.Client.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
-	if err != nil {
-		p.l.Errorf("[Plaid Error] getting Liabilities %+v", renderError(err)["error"])
-		return nil, err
-	}
 	var liabilitiesResponse models.LiabilitiesResponse
 	var transactionsResponse models.TransactionsResponse
 
 	if token.Purpose == models.PURPOSE_DEBIT {
+		accountsReq := plaid.NewAccountsGetRequest(token.Value)
+		accountsResp, _, err := p.Client.AccountsGet(ctx).AccountsGetRequest(*accountsReq).Execute()
+		if err != nil {
+			p.l.Errorf("[Plaid Error] getting Liabilities %+v", renderError(err)["error"])
+			return nil, err
+		}
 
 		var debitAccounts []plaid.AccountBase
 		accountIds := make(map[string]string)
-		for _, account := range liabilitiesResp.GetAccounts() {
+		for _, account := range accountsResp.GetAccounts() {
 			if account.Type == plaid.ACCOUNTTYPE_DEPOSITORY {
 				debitAccounts = append(debitAccounts, account)
 				accountIds[account.AccountId] = account.Name
@@ -157,6 +157,12 @@ func (p *PlaidClient) GetAccountDetails(ctx context.Context, token *models.Token
 		transactionsResponse = models.TransactionsResponse{Accounts: debitAccounts}
 
 	} else {
+		liabilitiesReq := plaid.NewLiabilitiesGetRequest(token.Value)
+		liabilitiesResp, _, err := p.Client.LiabilitiesGet(ctx).LiabilitiesGetRequest(*liabilitiesReq).Execute()
+		if err != nil {
+			p.l.Errorf("[Plaid Error] getting Liabilities %+v", renderError(err)["error"])
+			return nil, err
+		}
 
 		liabilitiesResponse = models.LiabilitiesResponse{Liabilities: liabilitiesResp.GetLiabilities().Credit}
 		time.Sleep(2 * time.Second)
