@@ -19,6 +19,7 @@ import (
 func Link(c *fiber.Ctx) error {
 	return c.Render("index", fiber.Map{
 		"Username": c.Params("username"),
+		"Purpose":  c.Params("purpose"),
 	})
 }
 

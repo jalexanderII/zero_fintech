@@ -108,42 +108,6 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purp
 	return &models.CreateLinkTokenResponse{Token: linkTokenCreateResp.GetLinkToken(), UserId: id}, nil
 }
 
-// func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purpose models.Purpose) (*models.CreateLinkTokenResponse, error) {
-// 	DbUser, err := p.GetUser(ctx, username, "")
-// 	if err != nil {
-// 		p.l.Error("[DB Error] error fetching user")
-// 		return nil, err
-// 	}
-// 	id := DbUser.ID.Hex()
-//
-// 	user := plaid.LinkTokenCreateRequestUser{
-// 		ClientUserId: id,
-// 	}
-// 	request := plaid.NewLinkTokenCreateRequest(p.Name, "en", p.CountryCodes, user)
-// 	request.SetRedirectUri(p.RedirectURL)
-//
-// 	token, err := p.GetUserToken(ctx, &models.User{ID: DbUser.ID, Username: username})
-// 	if err == nil {
-// 		// An Item's access_token does not change when using Link in update mode,
-// 		// so there is no need to repeat the exchange token process.
-// 		request.SetAccessToken(token.Value)
-// 	} else {
-// 		// Update mode: must not provide any products
-// 		request.SetProducts(p.Products)
-// 	}
-// 	request.SetAccountFilters(purpose_to_account_filter[purpose])
-//
-// 	p.l.Infof("Link token request %+v", request)
-// 	linkTokenCreateResp, _, err := p.Client.LinkTokenCreate(ctx).LinkTokenCreateRequest(*request).Execute()
-// 	if err != nil {
-// 		p.l.Errorf("[Plaid Error] error creating link token %+v", renderError(err)["error"])
-// 		return nil, err
-// 	}
-//
-// 	p.l.Info("link token created: ", linkTokenCreateResp)
-// 	return &models.CreateLinkTokenResponse{Token: linkTokenCreateResp.GetLinkToken(), UserId: id}, nil
-// }
-
 // ExchangePublicToken this function takes care of creating the permanent access token
 // that will be stored in the database for cross-platform connection to users' bank.
 // If for whatever reason there is a problem with the client or public token, there
