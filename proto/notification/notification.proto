@@ -4,23 +4,15 @@ package notification;
 option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/notification";
 
 service Notification {
-  rpc Notify(NotificationRequest) returns (NotificationResponse);
+  rpc SendSMS(SendSMSRequest) returns (SendSMSResponse);
 }
 
-message NotificationRequest {
-  string message = 1;
-  NotificationDestination destination = 2;
-  string user_id = 3;
+message SendSMSRequest {
+  string phone_number = 1;
+  string message = 2;
 }
 
-message NotificationResponse {
+message SendSMSResponse {
   bool successful = 1;
   string error_message = 2;
-}
-
-enum NotificationDestination {
-  NOTIFICATION_DESTINATION_UNKNOWN = 0;
-  NOTIFICATION_DESTINATION_SMS = 1;
-//  NOTIFICATION_DESTINATION_APP = 2;
-//  NOTIFICATION_DESTINATION_EMAIL = 3;
 }

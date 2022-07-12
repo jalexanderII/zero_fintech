@@ -14,17 +14,17 @@ class NotificationStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Notify = channel.unary_unary(
-                '/notification.Notification/Notify',
-                request_serializer=notification_dot_notification__pb2.NotificationRequest.SerializeToString,
-                response_deserializer=notification_dot_notification__pb2.NotificationResponse.FromString,
+        self.SendSMS = channel.unary_unary(
+                '/notification.Notification/SendSMS',
+                request_serializer=notification_dot_notification__pb2.SendSMSRequest.SerializeToString,
+                response_deserializer=notification_dot_notification__pb2.SendSMSResponse.FromString,
                 )
 
 
 class NotificationServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Notify(self, request, context):
+    def SendSMS(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,10 +33,10 @@ class NotificationServicer(object):
 
 def add_NotificationServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Notify': grpc.unary_unary_rpc_method_handler(
-                    servicer.Notify,
-                    request_deserializer=notification_dot_notification__pb2.NotificationRequest.FromString,
-                    response_serializer=notification_dot_notification__pb2.NotificationResponse.SerializeToString,
+            'SendSMS': grpc.unary_unary_rpc_method_handler(
+                    servicer.SendSMS,
+                    request_deserializer=notification_dot_notification__pb2.SendSMSRequest.FromString,
+                    response_serializer=notification_dot_notification__pb2.SendSMSResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -49,7 +49,7 @@ class Notification(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Notify(request,
+    def SendSMS(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class Notification(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/notification.Notification/Notify',
-            notification_dot_notification__pb2.NotificationRequest.SerializeToString,
-            notification_dot_notification__pb2.NotificationResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/notification.Notification/SendSMS',
+            notification_dot_notification__pb2.SendSMSRequest.SerializeToString,
+            notification_dot_notification__pb2.SendSMSResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
