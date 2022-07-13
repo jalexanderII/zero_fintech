@@ -12,6 +12,16 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func Info(plaidClient *client.PlaidClient) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"item_id":      "",
+			"access_token": "",
+			"products":     plaidClient.Products,
+		})
+	}
+}
+
 // Link will call CreateLinkToken to get a link token, and then call ExchangePublicToken to get an access token
 // will be saved to db along with account and transaction details upon success
 func Link(c *fiber.Ctx) error {
@@ -24,8 +34,8 @@ func Link(c *fiber.Ctx) error {
 func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type Input struct {
-			Username string         `json:"username"`
-			Purpose  models.Purpose `json:"purpose"`
+			Username string `json:"username"`
+			Purpose  string `json:"purpose"`
 		}
 		var input Input
 		if err := c.BodyParser(&input); err != nil {
@@ -49,7 +59,7 @@ func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(
 			Value: linkTokenResp.Token,
 		})
 
-		return c.JSON(fiber.Map{"status": "success", "message": "Successfully received link token from plaid", "link_token": linkTokenResp.Token})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": fmt.Sprintf("Successfully received link token from plaid with %+v purpose", input.Purpose), "link_token": linkTokenResp.Token})
 	}
 }
 
@@ -58,7 +68,6 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		type Input struct {
 			Username    string               `json:"username"`
 			PublicToken string               `json:"public_token"`
-			TokenId     string               `json:"tokenId,omitempty"`
 			MetaData    models.PlaidMetaData `json:"meta_data,omitempty"`
 			Purpose     models.Purpose       `json:"purpose"`
 		}
@@ -97,7 +106,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failure to update access token", "data": err})
 		// 	}
 		// }
-		return c.JSON(fiber.Map{"status": "success", "message": "Access token created successfully", "token": input})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "Access token created successfully", "access_token": token.Value, "item_id": token.ItemId, "token": input})
 	}
 }
 

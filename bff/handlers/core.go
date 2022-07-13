@@ -205,9 +205,10 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		username := c.Params("username")
-		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: utils.CopyString(c.Cookies(username))})
+		userId := c.Params("username")
+		fmt.Printf("Current Cookies UserId: %v\n", userId)
+		// fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
+		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: userId})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's accounts", "data": err})
 		}

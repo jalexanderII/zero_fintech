@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/plaid/plaid-go/plaid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -9,9 +11,21 @@ type Purpose string
 
 //goland:noinspection ALL
 const (
-	PURPOSE_CREDIT Purpose = "credit"
-	PURPOSE_DEBIT  Purpose = "debit"
+	PURPOSE_CREDIT  Purpose = "credit"
+	PURPOSE_DEBIT   Purpose = "debit"
+	PURPOSE_UNKNOWN Purpose = "unknown"
 )
+
+func PurposeFromString(purpose string) (Purpose, error) {
+	switch purpose {
+	case "credit":
+		return PURPOSE_CREDIT, nil
+	case "debit":
+		return PURPOSE_DEBIT, nil
+	default:
+		return PURPOSE_UNKNOWN, fmt.Errorf("not a valid type")
+	}
+}
 
 // Token for use of plaid public token retrieval
 type Token struct {
