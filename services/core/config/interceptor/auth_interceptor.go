@@ -73,8 +73,9 @@ func AccessibleRoles() map[string]bool {
 	const authServicePath = "/auth.Auth/"
 	return map[string]bool{
 		// Auth paths not Protected since they are needed to generate the tokens
-		authServicePath + "Login":     true,
-		authServicePath + "SignUp":    true,
-		"/core.Core/ListUserAccounts": true,
+		authServicePath + "Login":         true,
+		authServicePath + "SignUp":        true,
+		"/core.Core/ListUserAccounts":     true,
+		"/core.Core/ListUserTransactions": true,
 	}
 }
