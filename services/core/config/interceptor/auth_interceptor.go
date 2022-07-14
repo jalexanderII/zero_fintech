@@ -33,10 +33,10 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 	) (interface{}, error) {
 		interceptor.l.Info("--> Core unary interceptor: ", info.FullMethod)
 
-		// err := interceptor.authorize(ctx, info.FullMethod)
-		// if err != nil {
-		// 	return nil, err
-		// }
+		err := interceptor.authorize(ctx, info.FullMethod)
+		if err != nil {
+			return nil, err
+		}
 
 		return handler(ctx, req)
 	}
@@ -73,9 +73,7 @@ func AccessibleRoles() map[string]bool {
 	const authServicePath = "/auth.Auth/"
 	return map[string]bool{
 		// Auth paths not Protected since they are needed to generate the tokens
-		authServicePath + "Login":         true,
-		authServicePath + "SignUp":        true,
-		"/core.Core/ListUserAccounts":     true,
-		"/core.Core/ListUserTransactions": true,
+		authServicePath + "Login":  true,
+		authServicePath + "SignUp": true,
 	}
 }

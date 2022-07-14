@@ -2,11 +2,9 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
@@ -205,10 +203,7 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		userId := c.Params("username")
-		fmt.Printf("Current Cookies UserId for GetUserAccounts: %v\n", userId)
-		// fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: userId})
+		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's accounts", "data": err})
 		}
@@ -219,11 +214,7 @@ func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.
 
 func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		userId := c.Params("username")
-		fmt.Printf("Current Cookies UserId for GetUserTransactions: %v\n", userId)
-		// fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		// transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: utils.CopyString(c.Cookies(username))})
-		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: userId})
+		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's transactions", "data": err})
 		}
@@ -234,9 +225,7 @@ func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fi
 
 func GetUserPaymentPlans(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		username := c.Params("username")
-		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		plans, err := client.ListUserPaymentPlans(ctx, &common.ListUserPaymentPlansRequest{UserId: utils.CopyString(c.Cookies(username))})
+		plans, err := client.ListUserPaymentPlans(ctx, &common.ListUserPaymentPlansRequest{UserId: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's transactions", "data": err})
 		}
@@ -247,11 +236,7 @@ func GetUserPaymentPlans(client core.CoreClient, ctx context.Context) func(c *fi
 
 func GetWaterfallOverview(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		username := c.Params("username")
-		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		UserId := utils.CopyString(c.Cookies(username))
-
-		overview, err := client.GetWaterfallOverview(ctx, &planning.GetUserOverviewRequest{UserId: UserId})
+		overview, err := client.GetWaterfallOverview(ctx, &planning.GetUserOverviewRequest{UserId: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's waterfall", "data": err})
 		}
@@ -262,11 +247,7 @@ func GetWaterfallOverview(client core.CoreClient, ctx context.Context) func(c *f
 
 func GetAmountPaidPercentage(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		username := c.Params("username")
-		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		UserId := utils.CopyString(c.Cookies(username))
-
-		percentage, err := client.GetAmountPaidPercentage(ctx, &planning.GetUserOverviewRequest{UserId: UserId})
+		percentage, err := client.GetAmountPaidPercentage(ctx, &planning.GetUserOverviewRequest{UserId: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's amounts paid", "data": err})
 		}
@@ -277,11 +258,7 @@ func GetAmountPaidPercentage(client core.CoreClient, ctx context.Context) func(c
 
 func GetPercentageCoveredByPlans(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		username := c.Params("username")
-		fmt.Printf("Current Cookies UserId: %v\n", c.Cookies(username))
-		UserId := utils.CopyString(c.Cookies(username))
-
-		plans, err := client.GetPercentageCoveredByPlans(ctx, &planning.GetUserOverviewRequest{UserId: UserId})
+		plans, err := client.GetPercentageCoveredByPlans(ctx, &planning.GetUserOverviewRequest{UserId: c.Params("id")})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's percent plan covered", "data": err})
 		}
