@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package notification;
+option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/notification";
+
+service Notification {
+  rpc SendSMS(SendSMSRequest) returns (SendSMSResponse);
+}
+
+message SendSMSRequest {
+  string phone_number = 1;
+  string message = 2;
+}
+
+message SendSMSResponse {
+  bool successful = 1;
+  string error_message = 2;
+}

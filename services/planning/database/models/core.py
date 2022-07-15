@@ -85,6 +85,33 @@ class AnnualPercentageRates(betterproto.Message):
 
 
 @dataclass
+class CreateAccountRequest(betterproto.Message):
+    """CRUD Methods"""
+
+    account: "Account" = betterproto.message_field(1)
+
+
+@dataclass
+class GetAccountRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListAccountRequest(betterproto.Message):
+    pass
+
+
+@dataclass
+class ListUserAccountsRequest(betterproto.Message):
+    user_id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListAccountResponse(betterproto.Message):
+    accounts: List["Account"] = betterproto.message_field(1)
+
+
+@dataclass
 class Transaction(betterproto.Message):
     """Transaction A representation of a transaction"""
 
@@ -177,11 +204,81 @@ class TransactionDetails(betterproto.Message):
 
 
 @dataclass
+class CreateTransactionRequest(betterproto.Message):
+    """CRUD Methods"""
+
+    transaction: "Transaction" = betterproto.message_field(1)
+
+
+@dataclass
+class GetTransactionRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListTransactionRequest(betterproto.Message):
+    pass
+
+
+@dataclass
+class ListUserTransactionsRequest(betterproto.Message):
+    user_id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListTransactionResponse(betterproto.Message):
+    transactions: List["Transaction"] = betterproto.message_field(1)
+
+
+@dataclass
 class User(betterproto.Message):
     id: str = betterproto.string_field(1)
     username: str = betterproto.string_field(2)
     email: str = betterproto.string_field(3)
     password: str = betterproto.string_field(4)
+    phone_number: str = betterproto.string_field(5)
+
+
+@dataclass
+class GetUserRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+    username: str = betterproto.string_field(2)
+
+
+@dataclass
+class UpdateUserRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+    user: "User" = betterproto.message_field(2)
+
+
+@dataclass
+class DeleteUserRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListUserRequest(betterproto.Message):
+    pass
+
+
+@dataclass
+class ListUserResponse(betterproto.Message):
+    users: List["User"] = betterproto.message_field(1)
+
+
+@dataclass
+class DeleteUserResponse(betterproto.Message):
+    status: common.DELETE_STATUS = betterproto.enum_field(1)
+    user: "User" = betterproto.message_field(2)
+
+
+@dataclass
+class GetPaymentPlanRequest(betterproto.Message):
+    account_info: List["AccountInfo"] = betterproto.message_field(1)
+    user_id: str = betterproto.string_field(2)
+    meta_data: common.MetaData = betterproto.message_field(3)
+    # indicates whether to save PaymentPlan in database
+    save_plan: bool = betterproto.bool_field(4)
 
 
 @dataclass
@@ -189,3 +286,286 @@ class AccountInfo(betterproto.Message):
     transaction_ids: List[str] = betterproto.string_field(1)
     account_id: str = betterproto.string_field(2)
     amount: float = betterproto.double_field(3)
+
+
+@dataclass
+class GetAccountDetailsResponse(betterproto.Message):
+    account_details_response: "AccountDetailsResponse" = betterproto.message_field(1)
+
+
+@dataclass
+class AccountDetailsResponse(betterproto.Message):
+    accounts: List["Account"] = betterproto.message_field(1)
+    transactions: List["Transaction"] = betterproto.message_field(2)
+
+
+class CoreStub(betterproto.ServiceStub):
+    async def get_payment_plan(
+        self,
+        *,
+        account_info: List["AccountInfo"] = [],
+        user_id: str = "",
+        meta_data: Optional[common.MetaData] = None,
+        save_plan: bool = False,
+    ) -> common.PaymentPlanResponse:
+        """
+        GetPaymentPlan makes request to the Planning service by passing it a
+        list of PaymentTasks and expects to receive a list of PaymentPlans
+        """
+
+        request = GetPaymentPlanRequest()
+        if account_info is not None:
+            request.account_info = account_info
+        request.user_id = user_id
+        if meta_data is not None:
+            request.meta_data = meta_data
+        request.save_plan = save_plan
+
+        return await self._unary_unary(
+            "/core.Core/GetPaymentPlan",
+            request,
+            common.PaymentPlanResponse,
+        )
+
+    async def get_waterfall_overview(self) -> planning.WaterfallOverviewResponse:
+        """
+        GetWaterfallOverview accepts a request from Core service with a user ID
+        to create a waterfall overview for the coming 12 month
+        """
+
+        request = planning.GetUserOverviewRequest()
+
+        return await self._unary_unary(
+            "/core.Core/GetWaterfallOverview",
+            request,
+            planning.WaterfallOverviewResponse,
+        )
+
+    async def get_amount_paid_percentage(
+        self,
+    ) -> planning.GetAmountPaidPercentageResponse:
+        """
+        Get the percentage of amount which has been paid of all active
+        PaymentPlans for a given user ID
+        """
+
+        request = planning.GetUserOverviewRequest()
+
+        return await self._unary_unary(
+            "/core.Core/GetAmountPaidPercentage",
+            request,
+            planning.GetAmountPaidPercentageResponse,
+        )
+
+    async def get_percentage_covered_by_plans(
+        self,
+    ) -> planning.GetPercentageCoveredByPlansResponse:
+        """
+        Get the percentage of current balance which is covered by active plans
+        for a given user ID
+        """
+
+        request = planning.GetUserOverviewRequest()
+
+        return await self._unary_unary(
+            "/core.Core/GetPercentageCoveredByPlans",
+            request,
+            planning.GetPercentageCoveredByPlansResponse,
+        )
+
+    async def list_user_payment_plans(self) -> common.ListPaymentPlanResponse:
+        request = common.ListUserPaymentPlansRequest()
+
+        return await self._unary_unary(
+            "/core.Core/ListUserPaymentPlans",
+            request,
+            common.ListPaymentPlanResponse,
+        )
+
+    async def create_account(self, *, account: Optional["Account"] = None) -> Account:
+        """CRUD METHODS Account"""
+
+        request = CreateAccountRequest()
+        if account is not None:
+            request.account = account
+
+        return await self._unary_unary(
+            "/core.Core/CreateAccount",
+            request,
+            Account,
+        )
+
+    async def get_account(self, *, id: str = "") -> Account:
+        request = GetAccountRequest()
+        request.id = id
+
+        return await self._unary_unary(
+            "/core.Core/GetAccount",
+            request,
+            Account,
+        )
+
+    async def list_accounts(self) -> ListAccountResponse:
+        request = ListAccountRequest()
+
+        return await self._unary_unary(
+            "/core.Core/ListAccounts",
+            request,
+            ListAccountResponse,
+        )
+
+    async def list_user_accounts(self, *, user_id: str = "") -> ListAccountResponse:
+        request = ListUserAccountsRequest()
+        request.user_id = user_id
+
+        return await self._unary_unary(
+            "/core.Core/ListUserAccounts",
+            request,
+            ListAccountResponse,
+        )
+
+    async def create_transaction(
+        self, *, transaction: Optional["Transaction"] = None
+    ) -> Transaction:
+        """Transaction"""
+
+        request = CreateTransactionRequest()
+        if transaction is not None:
+            request.transaction = transaction
+
+        return await self._unary_unary(
+            "/core.Core/CreateTransaction",
+            request,
+            Transaction,
+        )
+
+    async def get_transaction(self, *, id: str = "") -> Transaction:
+        request = GetTransactionRequest()
+        request.id = id
+
+        return await self._unary_unary(
+            "/core.Core/GetTransaction",
+            request,
+            Transaction,
+        )
+
+    async def list_transactions(self) -> ListTransactionResponse:
+        request = ListTransactionRequest()
+
+        return await self._unary_unary(
+            "/core.Core/ListTransactions",
+            request,
+            ListTransactionResponse,
+        )
+
+    async def list_user_transactions(
+        self, *, user_id: str = ""
+    ) -> ListTransactionResponse:
+        request = ListUserTransactionsRequest()
+        request.user_id = user_id
+
+        return await self._unary_unary(
+            "/core.Core/ListUserTransactions",
+            request,
+            ListTransactionResponse,
+        )
+
+    async def create_payment_task(self) -> common.PaymentTask:
+        """Payment Task"""
+
+        request = common.CreatePaymentTaskRequest()
+
+        return await self._unary_unary(
+            "/core.Core/CreatePaymentTask",
+            request,
+            common.PaymentTask,
+        )
+
+    async def create_many_payment_task(self) -> common.CreateManyPaymentTaskResponse:
+        request = common.CreateManyPaymentTaskRequest()
+
+        return await self._unary_unary(
+            "/core.Core/CreateManyPaymentTask",
+            request,
+            common.CreateManyPaymentTaskResponse,
+        )
+
+    async def get_payment_task(self) -> common.PaymentTask:
+        request = common.GetPaymentTaskRequest()
+
+        return await self._unary_unary(
+            "/core.Core/GetPaymentTask",
+            request,
+            common.PaymentTask,
+        )
+
+    async def list_payment_tasks(self) -> common.ListPaymentTaskResponse:
+        request = common.ListPaymentTaskRequest()
+
+        return await self._unary_unary(
+            "/core.Core/ListPaymentTasks",
+            request,
+            common.ListPaymentTaskResponse,
+        )
+
+    async def update_payment_task(self) -> common.PaymentTask:
+        request = common.UpdatePaymentTaskRequest()
+
+        return await self._unary_unary(
+            "/core.Core/UpdatePaymentTask",
+            request,
+            common.PaymentTask,
+        )
+
+    async def delete_payment_task(self) -> common.DeletePaymentTaskResponse:
+        request = common.DeletePaymentTaskRequest()
+
+        return await self._unary_unary(
+            "/core.Core/DeletePaymentTask",
+            request,
+            common.DeletePaymentTaskResponse,
+        )
+
+    async def get_user(self, *, id: str = "", username: str = "") -> User:
+        """Users"""
+
+        request = GetUserRequest()
+        request.id = id
+        request.username = username
+
+        return await self._unary_unary(
+            "/core.Core/GetUser",
+            request,
+            User,
+        )
+
+    async def list_users(self) -> ListUserResponse:
+        request = ListUserRequest()
+
+        return await self._unary_unary(
+            "/core.Core/ListUsers",
+            request,
+            ListUserResponse,
+        )
+
+    async def update_user(self, *, id: str = "", user: Optional["User"] = None) -> User:
+        request = UpdateUserRequest()
+        request.id = id
+        if user is not None:
+            request.user = user
+
+        return await self._unary_unary(
+            "/core.Core/UpdateUser",
+            request,
+            User,
+        )
+
+    async def delete_user(self, *, id: str = "") -> DeleteUserResponse:
+        request = DeleteUserRequest()
+        request.id = id
+
+        return await self._unary_unary(
+            "/core.Core/DeleteUser",
+            request,
+            DeleteUserResponse,
+        )
