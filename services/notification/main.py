@@ -15,7 +15,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)],
 )
-logger = logging.getLogger("Server")
+logger = logging.getLogger("NotificationService")
 
 
 def serve():
@@ -23,11 +23,8 @@ def serve():
     load_dotenv()
 
     logger.info("Initiate Twilio client and servicer")
-    account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-    auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-    sending_number = os.getenv('TWILIO_PHONE_NUMBER')
-    client = Client(account_sid, auth_token)
-    servicer = NotificationService(client=client, sending_number=sending_number)
+    client = Client(os.getenv('TWILIO_ACCOUNT_SID'), os.getenv('TWILIO_AUTH_TOKEN'))
+    servicer = NotificationService(client=client, sending_number=os.getenv('TWILIO_PHONE_NUMBER'))
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     NotificationServicePB.add_NotificationServicer_to_server(servicer, server)
 

@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 from common import common_pb2 as common_dot_common__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a\x13\x63ommon/common.proto\"E\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\".\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"9\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10\x63ore/users.proto\x12\x04\x63ore\x1a\x13\x63ommon/common.proto\"[\n\x04User\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x10\n\x08password\x18\x04 \x01(\t\x12\x14\n\x0cphone_number\x18\x05 \x01(\t\".\n\x0eGetUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08username\x18\x02 \x01(\t\"9\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.User\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x11\n\x0fListUserRequest\"-\n\x10ListUserResponse\x12\x19\n\x05users\x18\x01 \x03(\x0b\x32\n.core.User\"U\n\x12\x44\x65leteUserResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12\x18\n\x04user\x18\x02 \x01(\x0b\x32\n.core.UserB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
@@ -80,17 +80,17 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z0github.com/jalexanderII/zero_fintech/gen/Go/core'
   _USER._serialized_start=47
-  _USER._serialized_end=116
-  _GETUSERREQUEST._serialized_start=118
-  _GETUSERREQUEST._serialized_end=164
-  _UPDATEUSERREQUEST._serialized_start=166
-  _UPDATEUSERREQUEST._serialized_end=223
-  _DELETEUSERREQUEST._serialized_start=225
-  _DELETEUSERREQUEST._serialized_end=256
-  _LISTUSERREQUEST._serialized_start=258
-  _LISTUSERREQUEST._serialized_end=275
-  _LISTUSERRESPONSE._serialized_start=277
-  _LISTUSERRESPONSE._serialized_end=322
-  _DELETEUSERRESPONSE._serialized_start=324
-  _DELETEUSERRESPONSE._serialized_end=409
+  _USER._serialized_end=138
+  _GETUSERREQUEST._serialized_start=140
+  _GETUSERREQUEST._serialized_end=186
+  _UPDATEUSERREQUEST._serialized_start=188
+  _UPDATEUSERREQUEST._serialized_end=245
+  _DELETEUSERREQUEST._serialized_start=247
+  _DELETEUSERREQUEST._serialized_end=278
+  _LISTUSERREQUEST._serialized_start=280
+  _LISTUSERREQUEST._serialized_end=297
+  _LISTUSERRESPONSE._serialized_start=299
+  _LISTUSERRESPONSE._serialized_end=344
+  _DELETEUSERRESPONSE._serialized_start=346
+  _DELETEUSERRESPONSE._serialized_end=431
 # @@protoc_insertion_point(module_scope)

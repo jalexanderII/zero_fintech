@@ -23,4 +23,5 @@ message SignupRequest {
   string Username = 1;
   string Email = 2;
   string Password = 3;
+  string phone_number = 4;
 }
