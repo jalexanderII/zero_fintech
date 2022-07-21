@@ -34,9 +34,10 @@ func Test_authServer_SignUp(t *testing.T) {
 	server, ctx := GenServer()
 
 	u := &auth.SignupRequest{
-		Username: "joel_admin",
-		Email:    "fudoshin2596@gmail.com",
-		Password: "joel_admin",
+		Username:    "joel_admin",
+		Email:       "fudoshin2596@gmail.com",
+		Password:    "joel_admin",
+		PhoneNumber: "15005550006",
 	}
 
 	_, err := server.SignUp(ctx, u)
@@ -44,17 +45,17 @@ func Test_authServer_SignUp(t *testing.T) {
 		t.Errorf("1: Error creating new user: %v", err)
 	}
 
-	_, err = server.SignUp(ctx, &auth.SignupRequest{Username: "example", Email: "bad-email", Password: "example"})
+	_, err = server.SignUp(ctx, &auth.SignupRequest{Username: "example", Email: "bad-email", Password: "example", PhoneNumber: "15005550006"})
 	if err.Error() != "email validation failed" {
 		t.Error("2: No or wrong error returned for email validation")
 	}
 
-	_, err = server.SignUp(ctx, &auth.SignupRequest{Username: u.Username, Email: "e@gmail.com", Password: "e"})
+	_, err = server.SignUp(ctx, &auth.SignupRequest{Username: u.Username, Email: "e@gmail.com", Password: "e", PhoneNumber: "15005550006"})
 	if err.Error() != "username already taken" {
 		t.Error("3: No or wrong error returned for username already taken")
 	}
 
-	_, err = server.SignUp(ctx, &auth.SignupRequest{Username: "e", Email: u.Email, Password: "e"})
+	_, err = server.SignUp(ctx, &auth.SignupRequest{Username: "e", Email: u.Email, Password: "e", PhoneNumber: "15005550006"})
 	if err.Error() != "email already used" {
 		t.Error("4: No or wrong error returned for email already taken")
 	}

@@ -19,12 +19,13 @@ type AuthClient struct {
 	Username    string
 	Email       string
 	Password    string
+	PhoneNumber string
 }
 
 // NewAuthClient returns a new auth client
-func NewAuthClient(conn *grpc.ClientConn, username, email, password string) *AuthClient {
+func NewAuthClient(conn *grpc.ClientConn, username, email, password, phonenumber string) *AuthClient {
 	a := auth.NewAuthClient(conn)
-	return &AuthClient{a, middleware.NewAuthInterceptor(middleware.AccessibleRoles()), username, email, password}
+	return &AuthClient{a, middleware.NewAuthInterceptor(middleware.AccessibleRoles()), username, email, password, phonenumber}
 }
 
 // Login user and returns the access token
@@ -52,9 +53,10 @@ func (a *AuthClient) SignUp() (*auth.AuthResponse, error) {
 	defer cancel()
 
 	req := &auth.SignupRequest{
-		Username: a.Username,
-		Email:    a.Email,
-		Password: a.Password,
+		Username:    a.Username,
+		Email:       a.Email,
+		Password:    a.Password,
+		PhoneNumber: a.PhoneNumber,
 	}
 
 	res, err := a.authClient.SignUp(ctx, req)
@@ -75,5 +77,5 @@ func SetUpAuthClient() (*AuthClient, []grpc.DialOption) {
 	if err != nil {
 		log.Fatalf("fail to dial: %v", err)
 	}
-	return NewAuthClient(authConn, "", "", ""), opts
+	return NewAuthClient(authConn, "", "", "", ""), opts
 }

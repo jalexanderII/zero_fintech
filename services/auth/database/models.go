@@ -6,8 +6,9 @@ import (
 
 // AuthUser is a DB Serialization of Proto User
 type AuthUser struct {
-	ID       primitive.ObjectID `bson:"_id"`
-	Username string             `bson:"username"`
-	Email    string             `bson:"email"`
-	Password string             `bson:"password"`
+	ID          primitive.ObjectID `bson:"_id"`
+	Username    string             `bson:"username"`
+	Email       string             `bson:"email"`
+	Password    string             `bson:"password"`
+	PhoneNumber string             `bson:"phone_number"`
 }

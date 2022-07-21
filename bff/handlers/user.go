@@ -9,14 +9,15 @@ import (
 
 // User To be used as a serializer
 type User struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email" validate:"required,email"`
+	ID          string `json:"id"`
+	Username    string `json:"username"`
+	Email       string `json:"email" validate:"required,email"`
+	PhoneNumber string `json:"phone_number"`
 }
 
 // CreateResponseUser Takes in a model and returns a serializer
 func CreateResponseUser(userModel *core.User) User {
-	return User{ID: userModel.Id, Username: userModel.Username, Email: userModel.Email}
+	return User{ID: userModel.Id, Username: userModel.Username, Email: userModel.Email, PhoneNumber: userModel.PhoneNumber}
 }
 
 func ListUsers(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
@@ -49,8 +50,9 @@ func GetUser(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) err
 func UpdateUser(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type UpdateUserResponse struct {
-			Username string `json:"username"`
-			Email    string `json:"email"`
+			Username    string `json:"username"`
+			Email       string `json:"email"`
+			PhoneNumber string `json:"phone_number"`
 		}
 
 		var updateUserResponse UpdateUserResponse
@@ -59,8 +61,9 @@ func UpdateUser(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) 
 		}
 
 		updateUser, err := client.UpdateUser(ctx, &core.UpdateUserRequest{Id: c.Params("id"), User: &core.User{
-			Username: updateUserResponse.Username,
-			Email:    updateUserResponse.Email,
+			Username:    updateUserResponse.Username,
+			Email:       updateUserResponse.Email,
+			PhoneNumber: updateUserResponse.PhoneNumber,
 		}})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())

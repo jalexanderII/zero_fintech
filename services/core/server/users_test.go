@@ -20,10 +20,11 @@ func Test_authServer_CreateFakeUsers(t *testing.T) {
 	for ok := true; ok; ok = c < limit {
 		fake, _ := data.GenFakeUser()
 		newUser := database.User{
-			ID:       primitive.NewObjectID(),
-			Email:    fake.Email,
-			Username: fake.Username,
-			Password: fake.Password,
+			ID:          primitive.NewObjectID(),
+			Email:       fake.Email,
+			Username:    fake.Username,
+			Password:    fake.Password,
+			PhoneNumber: fake.PhoneNumber,
 		}
 
 		_, err := server.UserDB.InsertOne(ctx, newUser)
@@ -63,16 +64,20 @@ func TestAuthServer_UpdateUser(t *testing.T) {
 	server, ctx := GenServer()
 
 	u := &core.User{
-		Username: "exampleUpdated",
-		Email:    "exampleUpdated@gmail.com",
-		Password: "exampleUpdated",
+		Username:    "exampleUpdated",
+		Email:       "exampleUpdated@gmail.com",
+		Password:    "exampleUpdated",
+		PhoneNumber: "15005550006",
 	}
 
-	user, err := server.UpdateUser(ctx, &core.UpdateUserRequest{Id: "61df94304f6d9090c7be7b55", User: u})
+	user, err := server.UpdateUser(ctx, &core.UpdateUserRequest{Id: "6212a0101fca9390a37a32d2", User: u})
 	if err != nil {
 		t.Errorf("1: An error was returned: %v", err)
 	}
 	if user.Email != u.Email {
+		t.Errorf("2: Failed to fetch correct user: %+v", user)
+	}
+	if user.PhoneNumber != database.FormatPhoneNumber(u.GetPhoneNumber()) {
 		t.Errorf("2: Failed to fetch correct user: %+v", user)
 	}
 }

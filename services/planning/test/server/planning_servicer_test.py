@@ -7,8 +7,15 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 from pytest_mock import MockerFixture
 
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, PAYMENT_ACTION_STATUS_PENDING, PLAN_TYPE_MIN_FEES
-from gen.Python.common.common_pb2 import PAYMENT_FREQUENCY_WEEKLY, PAYMENT_STATUS_CURRENT
+from gen.Python.common.common_pb2 import (
+    DELETE_STATUS_SUCCESS,
+    PAYMENT_ACTION_STATUS_PENDING,
+    PLAN_TYPE_MIN_FEES,
+)
+from gen.Python.common.common_pb2 import (
+    PAYMENT_FREQUENCY_WEEKLY,
+    PAYMENT_STATUS_CURRENT,
+)
 from gen.Python.common.payment_plan_pb2 import (
     DeletePaymentPlanRequest,
     GetPaymentPlanRequest,
@@ -30,7 +37,11 @@ from services.planning.database.models.common import PaymentPlan as PaymentPlanD
 from services.planning.database.models.common import PaymentStatus as PaymentStatusDB
 from services.planning.database.models.common import PlanType as PlanTypeDB
 from services.planning.server.planning_servicer import PlanningService
-from services.planning.test.helpers.shared_objects import MOCK_USER_ID, MOCK_CHASE_ACC, MOCK_AMEX_ACC
+from services.planning.test.helpers.shared_objects import (
+    MOCK_USER_ID,
+    MOCK_CHASE_ACC,
+    MOCK_AMEX_ACC,
+)
 
 load_dotenv()
 
@@ -44,50 +55,144 @@ def mock_planning_server() -> PlanningService:
 
 @pytest.fixture
 def patch__fetch_accounts(mocker: MockerFixture) -> None:
-    mocker.patch.object(PlanningService, "_fetch_accounts").return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
+    mocker.patch.object(PlanningService, "_fetch_accounts").return_value = [
+        MOCK_CHASE_ACC,
+        MOCK_AMEX_ACC,
+    ]
 
 
 @pytest.fixture
 def patch_planning_collection_find(mocker: MockerFixture) -> None:
-    last_month, this_month, next_month = datetime.now()+timedelta(days=-31), datetime.now(),\
-                                         datetime.now()+timedelta(days=31)
-    mocker.patch.object(Collection, 'find').return_value = [
-        {'_id': ObjectId('622874c7e9f2ee76c713c40e'), 'paymentPlanId': '622874c7e9f2ee76c713c40d', 'userId': 'test',
-         'paymentTaskId': ['61dfa8296c734067e6726761', 'a2ffa82f6c734067e6726761'], 'amount': 300.0, 'timeline': 1.0,
-         'paymentFreq': 'PAYMENT_FREQUENCY_WEEKLY', 'amountPerPayment': 300.0, 'planType': 'PLAN_TYPE_MIN_FEES',
-         'endDate': str(this_month), 'active': True, 'status': 'PAYMENT_STATUS_CURRENT', 'paymentAction': [
-            {'accountId': '1', 'amount': 150.0, 'transactionDate': str(this_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'},
-            {'accountId': '2', 'amount': 150.0, 'transactionDate': str(this_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'}]},
-        {'_id': ObjectId('622876a215c75f609b0d65ee'), 'paymentPlanId': '622876a215c75f609b0d65ed', 'userId': 'test',
-         'paymentTaskId': ['01', '02'], 'amount': 450.0, 'timeline': 3.0, 'paymentFreq': 'PAYMENT_FREQUENCY_WEEKLY',
-         'amountPerPayment': 150.0, 'planType': 'PLAN_TYPE_MIN_FEES', 'endDate': str(next_month),
-         'active': True, 'status': 'PAYMENT_STATUS_CURRENT', 'paymentAction': [
-            {'accountId': '1', 'amount': 150.0, 'transactionDate': str(last_month),
-             'status': 'PAYMENT_ACTION_STATUS_COMPLETED'},
-            {'accountId': '1', 'amount': 150.0, 'transactionDate': str(this_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'},
-            {'accountId': '2', 'amount': 150.0, 'transactionDate': str(next_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'}]},
-        {'_id': ObjectId('6228a94425de4b0368862441'), 'paymentPlanId': '6228a94425de4b0368862440', 'userId': 'test',
-         'paymentTaskId': ['61dfa8296c734067e6726761', 'a2ffa82f6c734067e6726761'], 'amount': 300.0, 'timeline': 1.0,
-         'paymentFreq': 'PAYMENT_FREQUENCY_WEEKLY', 'amountPerPayment': 300.0, 'planType': 'PLAN_TYPE_MIN_FEES',
-         'endDate': str(this_month), 'active': True, 'status': 'PAYMENT_STATUS_CURRENT', 'paymentAction': [
-            {'accountId': '1', 'amount': 150.0, 'transactionDate': str(this_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'},
-            {'accountId': '2', 'amount': 150.0, 'transactionDate': str(this_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'}]},
-        {'_id': ObjectId('623882d0da531f4cb175600b'), 'paymentPlanId': '623882d0da531f4cb1756009', 'userId': 'test',
-         'paymentTaskId': ['01', '02'], 'amount': 450.0, 'timeline': 3.0, 'paymentFreq': 'PAYMENT_FREQUENCY_WEEKLY',
-         'amountPerPayment': 150.0, 'planType': 'PLAN_TYPE_MIN_FEES', 'endDate': str(next_month),
-         'active': True, 'status': 'PAYMENT_STATUS_CURRENT', 'paymentAction': [
-            {'accountId': '1', 'amount': 150.0, 'transactionDate': str(last_month),
-             'status': 'PAYMENT_ACTION_STATUS_COMPLETED'},
-            {'accountId': '1', 'amount': 150.0, 'transactionDate': str(this_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'},
-            {'accountId': '2', 'amount': 150.0, 'transactionDate': str(next_month),
-             'status': 'PAYMENT_ACTION_STATUS_PENDING'}]}
+    last_month, this_month, next_month = (
+        datetime.now() + timedelta(days=-31),
+        datetime.now(),
+        datetime.now() + timedelta(days=31),
+    )
+    mocker.patch.object(Collection, "find").return_value = [
+        {
+            "_id": ObjectId("622874c7e9f2ee76c713c40e"),
+            "paymentPlanId": "622874c7e9f2ee76c713c40d",
+            "userId": "test",
+            "paymentTaskId": ["61dfa8296c734067e6726761", "a2ffa82f6c734067e6726761"],
+            "amount": 300.0,
+            "timeline": 1.0,
+            "paymentFreq": "PAYMENT_FREQUENCY_WEEKLY",
+            "amountPerPayment": 300.0,
+            "planType": "PLAN_TYPE_MIN_FEES",
+            "endDate": str(this_month),
+            "active": True,
+            "status": "PAYMENT_STATUS_CURRENT",
+            "paymentAction": [
+                {
+                    "accountId": "1",
+                    "amount": 150.0,
+                    "transactionDate": str(this_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+                {
+                    "accountId": "2",
+                    "amount": 150.0,
+                    "transactionDate": str(this_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+            ],
+        },
+        {
+            "_id": ObjectId("622876a215c75f609b0d65ee"),
+            "paymentPlanId": "622876a215c75f609b0d65ed",
+            "userId": "test",
+            "paymentTaskId": ["01", "02"],
+            "amount": 450.0,
+            "timeline": 3.0,
+            "paymentFreq": "PAYMENT_FREQUENCY_WEEKLY",
+            "amountPerPayment": 150.0,
+            "planType": "PLAN_TYPE_MIN_FEES",
+            "endDate": str(next_month),
+            "active": True,
+            "status": "PAYMENT_STATUS_CURRENT",
+            "paymentAction": [
+                {
+                    "accountId": "1",
+                    "amount": 150.0,
+                    "transactionDate": str(last_month),
+                    "status": "PAYMENT_ACTION_STATUS_COMPLETED",
+                },
+                {
+                    "accountId": "1",
+                    "amount": 150.0,
+                    "transactionDate": str(this_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+                {
+                    "accountId": "2",
+                    "amount": 150.0,
+                    "transactionDate": str(next_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+            ],
+        },
+        {
+            "_id": ObjectId("6228a94425de4b0368862441"),
+            "paymentPlanId": "6228a94425de4b0368862440",
+            "userId": "test",
+            "paymentTaskId": ["61dfa8296c734067e6726761", "a2ffa82f6c734067e6726761"],
+            "amount": 300.0,
+            "timeline": 1.0,
+            "paymentFreq": "PAYMENT_FREQUENCY_WEEKLY",
+            "amountPerPayment": 300.0,
+            "planType": "PLAN_TYPE_MIN_FEES",
+            "endDate": str(this_month),
+            "active": True,
+            "status": "PAYMENT_STATUS_CURRENT",
+            "paymentAction": [
+                {
+                    "accountId": "1",
+                    "amount": 150.0,
+                    "transactionDate": str(this_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+                {
+                    "accountId": "2",
+                    "amount": 150.0,
+                    "transactionDate": str(this_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+            ],
+        },
+        {
+            "_id": ObjectId("623882d0da531f4cb175600b"),
+            "paymentPlanId": "623882d0da531f4cb1756009",
+            "userId": "test",
+            "paymentTaskId": ["01", "02"],
+            "amount": 450.0,
+            "timeline": 3.0,
+            "paymentFreq": "PAYMENT_FREQUENCY_WEEKLY",
+            "amountPerPayment": 150.0,
+            "planType": "PLAN_TYPE_MIN_FEES",
+            "endDate": str(next_month),
+            "active": True,
+            "status": "PAYMENT_STATUS_CURRENT",
+            "paymentAction": [
+                {
+                    "accountId": "1",
+                    "amount": 150.0,
+                    "transactionDate": str(last_month),
+                    "status": "PAYMENT_ACTION_STATUS_COMPLETED",
+                },
+                {
+                    "accountId": "1",
+                    "amount": 150.0,
+                    "transactionDate": str(this_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+                {
+                    "accountId": "2",
+                    "amount": 150.0,
+                    "transactionDate": str(next_month),
+                    "status": "PAYMENT_ACTION_STATUS_PENDING",
+                },
+            ],
+        },
     ]
 
 
@@ -134,7 +239,9 @@ def test_get_payment_plan(mock_planning_server: PlanningService):
 
 
 def test_list_payment_plans(mock_planning_server: PlanningService):
-    payment_plans = mock_planning_server.ListPaymentPlans(ListPaymentPlanRequest()).payment_plans
+    payment_plans = mock_planning_server.ListPaymentPlans(
+        ListPaymentPlanRequest()
+    ).payment_plans
     assert len(payment_plans) > 0, f"Server did not return any PaymentPlan"
 
 
@@ -201,11 +308,15 @@ def test_delete_payment_plan(mock_planning_server: PlanningService):
             )
         ],
     )
-    originalPaymentPlansLen = mock_planning_server.planning_collection.count_documents({})
+    originalPaymentPlansLen = mock_planning_server.planning_collection.count_documents(
+        {}
+    )
     new_payment_plan = mock_planning_server.planning_collection.insert_one(pp.to_dict())
     new_id = new_payment_plan.inserted_id
     assert new_id is not None, f"Failed to create a new payment plan"
-    updatedPaymentPlansLen = mock_planning_server.planning_collection.count_documents({})
+    updatedPaymentPlansLen = mock_planning_server.planning_collection.count_documents(
+        {}
+    )
     assert (
         updatedPaymentPlansLen == originalPaymentPlansLen + 1
     ), f"Failed add a new payment plan"
@@ -217,8 +328,11 @@ def test_delete_payment_plan(mock_planning_server: PlanningService):
     ), f"Failed status is {deleteResponse.status}"
 
 
-def test_get_amount_paid_percentage(patch__fetch_accounts: None, patch_planning_collection_find: None,
-                                    mock_planning_server: PlanningService):
+def test_get_amount_paid_percentage(
+    patch__fetch_accounts: None,
+    patch_planning_collection_find: None,
+    mock_planning_server: PlanningService,
+):
     amount_paid_percentage_response = mock_planning_server.GetAmountPaidPercentage(
         request=GetUserOverviewRequest(user_id=MOCK_USER_ID)
     )
@@ -226,19 +340,25 @@ def test_get_amount_paid_percentage(patch__fetch_accounts: None, patch_planning_
     assert amount_paid_percentage_response.percentage_paid == 0.2
 
 
-def test_get_percentage_covered_by_plans(patch__fetch_accounts: None, patch_planning_collection_find: None,
-                                         mock_planning_server: PlanningService):
+def test_get_percentage_covered_by_plans(
+    patch__fetch_accounts: None,
+    patch_planning_collection_find: None,
+    mock_planning_server: PlanningService,
+):
     percentage_covered_response = mock_planning_server.GetPercentageCoveredByPlans(
         request=GetUserOverviewRequest(user_id=MOCK_USER_ID)
     )
 
-    assert percentage_covered_response.overall_covered == 2/3
+    assert percentage_covered_response.overall_covered == 2 / 3
     assert percentage_covered_response.account_to_percent_covered["1"] == 0.75
     assert percentage_covered_response.account_to_percent_covered["2"] == 0.6
 
 
-def test_get_waterfall_overview(patch__fetch_accounts: None, patch_planning_collection_find: None,
-                                mock_planning_server: PlanningService):
+def test_get_waterfall_overview(
+    patch__fetch_accounts: None,
+    patch_planning_collection_find: None,
+    mock_planning_server: PlanningService,
+):
     waterfall_overview_response = mock_planning_server.GetWaterfallOverview(
         request=GetUserOverviewRequest(user_id=MOCK_USER_ID)
     ).monthly_waterfall
@@ -246,7 +366,7 @@ def test_get_waterfall_overview(patch__fetch_accounts: None, patch_planning_coll
     assert waterfall_overview_response[0].account_to_amounts["1"] == 600
     assert waterfall_overview_response[0].account_to_amounts["2"] == 300
     # adding 31 days isn't precisely a month such that either next or the month thereafter will a PaymentAction
-    assert waterfall_overview_response[1].account_to_amounts["2"] == 300 or \
-           waterfall_overview_response[2].account_to_amounts["2"] == 300
-
-
+    assert (
+        waterfall_overview_response[1].account_to_amounts["2"] == 300
+        or waterfall_overview_response[2].account_to_amounts["2"] == 300
+    )

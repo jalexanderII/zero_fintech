@@ -9,7 +9,10 @@ from gen.Python.common.common_pb2 import (
     PAYMENT_FREQUENCY_MONTHLY,
     PAYMENT_FREQUENCY_BIWEEKLY,
     PAYMENT_ACTION_STATUS_PENDING,
-    PAYMENT_FREQUENCY_QUARTERLY, PLAN_TYPE_UNKNOWN, PAYMENT_FREQUENCY_UNKNOWN, PaymentFrequency,
+    PAYMENT_FREQUENCY_QUARTERLY,
+    PLAN_TYPE_UNKNOWN,
+    PAYMENT_FREQUENCY_UNKNOWN,
+    PaymentFrequency,
 )
 from gen.Python.common.common_pb2 import (
     PAYMENT_STATUS_CURRENT,
@@ -19,10 +22,14 @@ from gen.Python.common.common_pb2 import PLAN_TYPE_MIN_FEES
 from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
 from gen.Python.common.payment_task_pb2 import MetaData
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
-from services.planning.server.utils import shift_date_by_payment_frequency, datetime_to_pb_timestamp
+from services.planning.server.utils import (
+    shift_date_by_payment_frequency,
+    datetime_to_pb_timestamp,
+)
 from services.planning.test.helpers.paramset import (
     MetaDataToPaymentPlanParams,
-    CreatePaymentActionsParams, GetMetaDataParams,
+    CreatePaymentActionsParams,
+    GetMetaDataParams,
 )
 from services.planning.test.helpers.shared_objects import MOCK_CHASE_ACC, MOCK_AMEX_ACC
 
@@ -38,9 +45,15 @@ def shift_now_by_payment_frequency_multiple_times(
 
 
 # used for creation from meta data
-DATE_IN_1_MONTH_PB = shift_now_by_payment_frequency_multiple_times(PAYMENT_FREQUENCY_MONTHLY, 1)
-DATE_IN_2_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(PAYMENT_FREQUENCY_MONTHLY, 2)
-DATE_IN_3_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(PAYMENT_FREQUENCY_MONTHLY, 3)
+DATE_IN_1_MONTH_PB = shift_now_by_payment_frequency_multiple_times(
+    PAYMENT_FREQUENCY_MONTHLY, 1
+)
+DATE_IN_2_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(
+    PAYMENT_FREQUENCY_MONTHLY, 2
+)
+DATE_IN_3_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(
+    PAYMENT_FREQUENCY_MONTHLY, 3
+)
 # used only for creation of payment actions
 START_DATE_CREATION_PAYMENT_ACTIONS = datetime.datetime(2022, 2, 21, 17, 26, 12)
 START_DATE_CREATION_PAYMENT_ACTIONS_NOW = datetime.datetime.now()
@@ -108,7 +121,10 @@ def mock_payment_plan_builder() -> PaymentPlanBuilder:
 
 @pytest.fixture
 def patch__fetch_accounts(mocker: MockerFixture) -> None:
-    mocker.patch.object(PaymentPlanBuilder, "_fetch_accounts").return_value = [MOCK_CHASE_ACC, MOCK_AMEX_ACC]
+    mocker.patch.object(PaymentPlanBuilder, "_fetch_accounts").return_value = [
+        MOCK_CHASE_ACC,
+        MOCK_AMEX_ACC,
+    ]
 
 
 @pytest.mark.parametrize(
@@ -303,7 +319,7 @@ def test__create_payment_actions_min_fees_optim_credit_score(
             meta_data=MetaData(
                 preferred_plan_type=PLAN_TYPE_UNKNOWN,
                 preferred_timeline_in_months=0.0,
-                preferred_payment_freq=PAYMENT_FREQUENCY_UNKNOWN
+                preferred_payment_freq=PAYMENT_FREQUENCY_UNKNOWN,
             ),
             gt_threshold=False,
             expected=[
@@ -317,14 +333,14 @@ def test__create_payment_actions_min_fees_optim_credit_score(
                     preferred_timeline_in_months=1.0,
                     preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
                 ),
-            ]
+            ],
         ),
         GetMetaDataParams(
             id="Test only min fees specified and greater than threshold",
             meta_data=MetaData(
                 preferred_plan_type=PLAN_TYPE_MIN_FEES,
                 preferred_timeline_in_months=0.0,
-                preferred_payment_freq=PAYMENT_FREQUENCY_UNKNOWN
+                preferred_payment_freq=PAYMENT_FREQUENCY_UNKNOWN,
             ),
             gt_threshold=True,
             expected=[
@@ -343,14 +359,14 @@ def test__create_payment_actions_min_fees_optim_credit_score(
                     preferred_timeline_in_months=12.0,
                     preferred_payment_freq=PAYMENT_FREQUENCY_MONTHLY,
                 ),
-            ]
+            ],
         ),
         GetMetaDataParams(
             id="Test biweekly to optimize credit score and greater than threshold",
             meta_data=MetaData(
                 preferred_plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
                 preferred_timeline_in_months=0.0,
-                preferred_payment_freq=PAYMENT_FREQUENCY_BIWEEKLY
+                preferred_payment_freq=PAYMENT_FREQUENCY_BIWEEKLY,
             ),
             gt_threshold=True,
             expected=[
@@ -364,14 +380,14 @@ def test__create_payment_actions_min_fees_optim_credit_score(
                     preferred_timeline_in_months=2.0,
                     preferred_payment_freq=PAYMENT_FREQUENCY_BIWEEKLY,
                 ),
-            ]
+            ],
         ),
         GetMetaDataParams(
             id="Test quarterly for 6 months and greater than threshold",
             meta_data=MetaData(
                 preferred_plan_type=PLAN_TYPE_UNKNOWN,
                 preferred_timeline_in_months=6.0,
-                preferred_payment_freq=PAYMENT_FREQUENCY_QUARTERLY
+                preferred_payment_freq=PAYMENT_FREQUENCY_QUARTERLY,
             ),
             gt_threshold=True,
             expected=[
@@ -385,12 +401,13 @@ def test__create_payment_actions_min_fees_optim_credit_score(
                     preferred_timeline_in_months=6.0,
                     preferred_payment_freq=PAYMENT_FREQUENCY_QUARTERLY,
                 ),
-            ]
+            ],
         ),
-
-    ]
+    ],
 )
-def test__get_meta_data_options(p: GetMetaDataParams, mock_payment_plan_builder: PaymentPlanBuilder):
+def test__get_meta_data_options(
+    p: GetMetaDataParams, mock_payment_plan_builder: PaymentPlanBuilder
+):
     ppb = mock_payment_plan_builder
     actual = ppb._get_meta_data_options(p.meta_data, p.gt_threshold)
     assert actual == p.expected

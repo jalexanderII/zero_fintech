@@ -45,9 +45,10 @@ type CreateLinkTokenResponse struct {
 
 // User is a DB Serialization of Proto User
 type User struct {
-	ID       primitive.ObjectID `bson:"_id"`
-	Username string             `bson:"username"`
-	Email    string             `bson:"email"`
+	ID          primitive.ObjectID `bson:"_id"`
+	Username    string             `bson:"username"`
+	Email       string             `bson:"email"`
+	PhoneNumber string             `bson:"phone_number"`
 }
 
 type LiabilitiesResponse struct {
