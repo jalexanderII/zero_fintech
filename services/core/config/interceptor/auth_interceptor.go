@@ -33,10 +33,10 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 	) (interface{}, error) {
 		interceptor.l.Info("--> Core unary interceptor: ", info.FullMethod)
 
-		// err := interceptor.authorize(ctx, info.FullMethod)
-		// if err != nil {
-		// 	return nil, err
-		// }
+		err := interceptor.authorize(ctx, info.FullMethod)
+		if err != nil {
+			return nil, err
+		}
 
 		return handler(ctx, req)
 	}

@@ -53,13 +53,17 @@ func (s CoreServer) ListUsers(ctx context.Context, in *core.ListUserRequest) (*c
 }
 
 func (s CoreServer) UpdateUser(ctx context.Context, in *core.UpdateUserRequest) (*core.User, error) {
-	username, email := in.GetUser().GetUsername(), in.GetUser().GetEmail()
+	username, email, phone_number := in.GetUser().GetUsername(), in.GetUser().GetEmail(), in.GetUser().GetPhoneNumber()
 	id, err := primitive.ObjectIDFromHex(in.GetId())
 	if err != nil {
 		return nil, err
 	}
 	filter := bson.D{{Key: "_id", Value: id}}
-	update := bson.D{{Key: "$set", Value: bson.D{{Key: "username", Value: username}, {Key: "email", Value: email}}}}
+	update := bson.D{{Key: "$set", Value: bson.D{
+		{Key: "username", Value: username},
+		{Key: "email", Value: email},
+		{Key: "phone_number", Value: database.FormatPhoneNumber(phone_number)},
+	}}}
 	_, err = s.UserDB.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
@@ -93,9 +97,10 @@ func (s CoreServer) DeleteUser(ctx context.Context, in *core.DeleteUserRequest) 
 // UserDBToPB converts a User DB object to its proto object
 func UserDBToPB(user *database.User) *core.User {
 	return &core.User{
-		Id:       user.ID.Hex(),
-		Username: user.Username,
-		Email:    user.Email,
-		Password: user.Password,
+		Id:          user.ID.Hex(),
+		Username:    user.Username,
+		Email:       user.Email,
+		Password:    user.Password,
+		PhoneNumber: user.PhoneNumber,
 	}
 }

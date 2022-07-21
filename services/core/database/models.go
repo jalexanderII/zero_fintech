@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -88,8 +90,17 @@ type TransactionDetails struct {
 
 // User is a DB Serialization of Proto User
 type User struct {
-	ID       primitive.ObjectID `bson:"_id"`
-	Username string             `bson:"username"`
-	Email    string             `bson:"email"`
-	Password string             `bson:"password"`
+	ID          primitive.ObjectID `bson:"_id"`
+	Username    string             `bson:"username"`
+	Email       string             `bson:"email"`
+	Password    string             `bson:"password"`
+	PhoneNumber string             `bson:"phone_number"`
+}
+
+func FormatPhoneNumber(pn string) string {
+	// if the first char isn't a plus, add it
+	if pn[0:1] != "+" {
+		return fmt.Sprintf("+%s", pn)
+	}
+	return pn
 }

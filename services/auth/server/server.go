@@ -62,7 +62,7 @@ func (s AuthServer) Login(ctx context.Context, in *auth.LoginRequest) (*auth.Aut
 
 func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.AuthResponse, error) {
 	s.l.Info("SignUp called")
-	username, email, password := in.GetUsername(), in.GetEmail(), in.GetPassword()
+	username, email, password, phone_number := in.GetUsername(), in.GetEmail(), in.GetPassword(), in.GetPhoneNumber()
 	// Email regex validation
 	match, _ := regexp.MatchString(EmailRegex, email)
 	if !match {
@@ -89,7 +89,14 @@ func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.A
 	// hashed passwords are saved in the DB
 	pw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	newId := primitive.NewObjectID()
-	newUser := database.AuthUser{ID: newId, Email: email, Username: username, Password: string(pw)}
+
+	newUser := database.AuthUser{
+		ID:          newId,
+		Email:       email,
+		Username:    username,
+		Password:    string(pw),
+		PhoneNumber: database.FormatPhoneNumber(phone_number),
+	}
 
 	_, err = s.UserDB.InsertOne(ctx, newUser)
 	if err != nil {

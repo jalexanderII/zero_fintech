@@ -81,7 +81,12 @@ func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.Core
 }
 
 // LinkTokenCreate creates a link token using the specified parameters
-func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purpose models.Purpose) (*models.CreateLinkTokenResponse, error) {
+func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purpose string) (*models.CreateLinkTokenResponse, error) {
+	purp, err := models.PurposeFromString(purpose)
+	if err != nil {
+		return nil, err
+	}
+
 	DbUser, err := p.GetUser(ctx, username, "")
 	if err != nil {
 		p.l.Error("[DB Error] error fetching user")
@@ -94,11 +99,14 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purp
 	}
 	request := plaid.NewLinkTokenCreateRequest(p.Name, "en", p.CountryCodes, user)
 	request.SetRedirectUri(p.RedirectURL)
-	if purpose == models.PURPOSE_DEBIT {
+
+	p.l.Infof("The link purpose is %+v", purp)
+	if purp == models.PURPOSE_DEBIT {
 		p.Products = convertProducts([]string{"transactions"})
 	}
+
 	request.SetProducts(p.Products)
-	request.SetAccountFilters(purpose_to_account_filter[purpose])
+	request.SetAccountFilters(purpose_to_account_filter[purp])
 
 	p.l.Infof("Link token request %+v", request)
 	linkTokenCreateResp, _, err := p.Client.LinkTokenCreate(ctx).LinkTokenCreateRequest(*request).Execute()
@@ -127,6 +135,13 @@ func (p *PlaidClient) ExchangePublicToken(ctx context.Context, publicToken strin
 
 	accessToken := exchangePublicTokenResp.GetAccessToken()
 	itemID := exchangePublicTokenResp.GetItemId()
+	if itemExists(p.Products, plaid.PRODUCTS_TRANSFER) {
+		_, err = p.authorizeAndCreateTransfer(ctx, accessToken)
+		if err != nil {
+			p.l.Errorf("[Plaid Error] error authorizeAndCreateTransfer %+v", renderError(err)["error"])
+			return nil, err
+		}
+	}
 
 	p.l.Info("public token: " + publicToken)
 	p.l.Info("access token: " + accessToken)
@@ -451,4 +466,64 @@ func renderError(originalErr error) map[string]interface{} {
 	}
 	resp["error"] = originalErr.Error()
 	return resp
+}
+
+// This is a helper function to authorize and create a Transfer after successful
+// exchange of a public_token for an access_token. The transfer_id is then used
+// to obtain the data about that particular Transfer.
+func (p *PlaidClient) authorizeAndCreateTransfer(ctx context.Context, accessToken string) (string, error) {
+	// We call /accounts/get to obtain first account_id - in production,
+	// account_id's should be persisted in a data store and retrieved
+	// from there.
+	accountsGetResp, _, _ := p.Client.AccountsGet(ctx).AccountsGetRequest(
+		*plaid.NewAccountsGetRequest(accessToken),
+	).Execute()
+
+	accountID := accountsGetResp.GetAccounts()[0].AccountId
+
+	transferAuthorizationCreateUser := plaid.NewTransferUserInRequest("FirstName LastName")
+	transferAuthorizationCreateRequest := plaid.NewTransferAuthorizationCreateRequest(
+		accessToken,
+		accountID,
+		"credit",
+		"ach",
+		"1.34",
+		"ppd",
+		*transferAuthorizationCreateUser,
+	)
+	transferAuthorizationCreateResp, _, err := p.Client.TransferAuthorizationCreate(ctx).TransferAuthorizationCreateRequest(*transferAuthorizationCreateRequest).Execute()
+	if err != nil {
+		return "", err
+	}
+	authorizationID := transferAuthorizationCreateResp.GetAuthorization().Id
+
+	transferCreateRequest := plaid.NewTransferCreateRequest(
+		"key",
+		accessToken,
+		accountID,
+		authorizationID,
+		"credit",
+		"ach",
+		"1.34",
+		"Payment",
+		"ppd",
+		*transferAuthorizationCreateUser,
+	)
+	transferCreateResp, _, err := p.Client.TransferCreate(ctx).TransferCreateRequest(*transferCreateRequest).Execute()
+	if err != nil {
+		return "", err
+	}
+
+	return transferCreateResp.GetTransfer().Id, nil
+}
+
+// Helper function to determine if Transfer is in Plaid product array
+func itemExists(array []plaid.Products, product plaid.Products) bool {
+	for _, item := range array {
+		if item == product {
+			return true
+		}
+	}
+
+	return false
 }

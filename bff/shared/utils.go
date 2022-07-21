@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -42,4 +43,12 @@ func GetPlaidErrorCode(err error) string {
 
 	// return the substring with the window of indexes
 	return errorMessage[start:end]
+}
+
+func FormatPhoneNumber(pn string) string {
+	// if the first char isn't a plus, add it
+	if pn[0:1] != "+" {
+		return fmt.Sprintf("+%s", pn)
+	}
+	return pn
 }

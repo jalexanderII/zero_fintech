@@ -59,9 +59,10 @@ func Logout(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type SignUpData struct {
-			Username string `json:"username"`
-			Email    string `json:"email"`
-			Password string `json:"password"`
+			Username    string `json:"username"`
+			Email       string `json:"email"`
+			Password    string `json:"password"`
+			PhoneNumber string `json:"phone_number"`
 		}
 		var input SignUpData
 		if err := c.BodyParser(&input); err != nil {
@@ -70,6 +71,7 @@ func SignUp(authClient *client.AuthClient) func(c *fiber.Ctx) error {
 		authClient.Username = input.Username
 		authClient.Email = input.Email
 		authClient.Password = input.Password
+		authClient.PhoneNumber = input.PhoneNumber
 
 		resp, err := authClient.SignUp()
 		if err != nil {
