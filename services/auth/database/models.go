@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -11,4 +13,12 @@ type AuthUser struct {
 	Email       string             `bson:"email"`
 	Password    string             `bson:"password"`
 	PhoneNumber string             `bson:"phone_number"`
+}
+
+func FormatPhoneNumber(pn string) string {
+	// if the first char isn't a plus, add it
+	if pn[0:1] != "+" {
+		return fmt.Sprintf("+%s", pn)
+	}
+	return pn
 }
