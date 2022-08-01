@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
@@ -82,11 +83,12 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 
 	// create map of UserID -> AccID -> Liability
 	userAccLiabilities := make(map[string]map[string]float64)
+	now := time.Now()
 	for _, paymentPlan := range listPaymentPlans.GetPaymentPlans() {
 		if paymentPlan.GetActive() {
 			for _, paymentAction := range paymentPlan.GetPaymentAction() {
-				// TODO: write method to check if the payment action is tomorrow
-				if isToday(paymentAction.GetTransactionDate(), today) {
+				diff := paymentAction.GetTransactionDate().AsTime().Sub(now).Hours() / 24
+				if (diff >= 0) && (diff <= 1) {
 					_, created := userAccLiabilities[paymentPlan.GetUserId()]
 					if !created {
 						userAccLiabilities[paymentPlan.GetUserId()] = make(map[string]float64)
