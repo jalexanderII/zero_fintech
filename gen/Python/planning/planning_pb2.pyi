@@ -3,14 +3,44 @@
 isort:skip_file
 """
 import builtins
+import common.payment_plan_pb2
 import common.payment_task_pb2
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
+import google.protobuf.timestamp_pb2
 import typing
 import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor = ...
+
+class GetUpcomingPaymentActionsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
+    USER_ID_FIELD_NUMBER: builtins.int
+    DATE_FIELD_NUMBER: builtins.int
+    user_id: typing.Text = ...
+    @property
+    def date(self) -> google.protobuf.timestamp_pb2.Timestamp: ...
+    def __init__(self,
+        *,
+        user_id : typing.Text = ...,
+        date : typing.Optional[google.protobuf.timestamp_pb2.Timestamp] = ...,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["date",b"date"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["date",b"date","user_id",b"user_id"]) -> None: ...
+global___GetUpcomingPaymentActionsRequest = GetUpcomingPaymentActionsRequest
+
+class GetUpcomingPaymentActionsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
+    PAYMENT_ACTIONS_FIELD_NUMBER: builtins.int
+    @property
+    def payment_actions(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[common.payment_plan_pb2.PaymentAction]: ...
+    def __init__(self,
+        *,
+        payment_actions : typing.Optional[typing.Iterable[common.payment_plan_pb2.PaymentAction]] = ...,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["payment_actions",b"payment_actions"]) -> None: ...
+global___GetUpcomingPaymentActionsResponse = GetUpcomingPaymentActionsResponse
 
 class CreatePaymentPlanRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...

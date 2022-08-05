@@ -5,6 +5,7 @@ option go_package = "github.com/jalexanderII/zero_fintech/gen/Go/planning";
 
 import "common/payment_task.proto";
 import "common/payment_plan.proto";
+import "google/protobuf/timestamp.proto";
 
 service Planning {
   // CreatePaymentPlan accepts a request from Core service with PaymentTasks to create a PaymentPlan for
@@ -16,6 +17,8 @@ service Planning {
   rpc GetAmountPaidPercentage(GetUserOverviewRequest) returns (GetAmountPaidPercentageResponse);
   // Get the percentage of current balance which is covered by active plans for a given user ID
   rpc GetPercentageCoveredByPlans(GetUserOverviewRequest) returns (GetPercentageCoveredByPlansResponse);
+  // Get pending payment actions which are at given date or the day thereafter; if no date is given, today is used
+  rpc GetUpcomingPaymentActions(GetUpcomingPaymentActionsRequest) returns (GetUpcomingPaymentActionsResponse);
 
   //  CRUD METHODS
   rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
@@ -23,6 +26,15 @@ service Planning {
   rpc ListUserPaymentPlans(common.ListUserPaymentPlansRequest) returns (common.ListPaymentPlanResponse);
   rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlan);
   rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
+}
+
+message GetUpcomingPaymentActionsRequest {
+  string user_id = 1;
+  google.protobuf.Timestamp date = 2;
+}
+
+message GetUpcomingPaymentActionsResponse {
+  repeated common.PaymentAction payment_actions = 1;
 }
 
 message CreatePaymentPlanRequest {

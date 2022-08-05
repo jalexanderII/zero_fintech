@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import List
 
 import pytest
 from bson.objectid import ObjectId
@@ -20,11 +21,11 @@ from gen.Python.common.payment_plan_pb2 import (
     DeletePaymentPlanRequest,
     GetPaymentPlanRequest,
     ListPaymentPlanRequest,
-    UpdatePaymentPlanRequest,
+    UpdatePaymentPlanRequest, PaymentAction,
 )
 from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB
 from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
-from gen.Python.planning.planning_pb2 import GetUserOverviewRequest
+from gen.Python.planning.planning_pb2 import GetUserOverviewRequest, GetUpcomingPaymentActionsRequest
 from services.planning.database.db import initiate_mongo_test_client
 from services.planning.database.models.common import PaymentAction as PaymentActionDB
 from services.planning.database.models.common import (
@@ -326,6 +327,36 @@ def test_delete_payment_plan(mock_planning_server: PlanningService):
     assert (
         deleteResponse.status == DELETE_STATUS_SUCCESS
     ), f"Failed status is {deleteResponse.status}"
+
+
+def test_get_upcomping_payment_actions_future_miss_by_one_day(
+    patch_planning_collection_find: None,
+    mock_planning_server: PlanningService,
+):
+    tt.FromDatetime(datetime.now() + timedelta(days=29))
+    response = mock_planning_server.GetUpcomingPaymentActions(
+        request=GetUpcomingPaymentActionsRequest(user_id=MOCK_USER_ID, date=tt)
+    )
+
+    assert len(response.payment_actions) == 0
+
+
+def test_get_upcomping_payment_actions_future(
+    patch_planning_collection_find: None,
+    mock_planning_server: PlanningService,
+):
+    tt.FromDatetime(datetime.now() + timedelta(days=30))
+    response = mock_planning_server.GetUpcomingPaymentActions(
+        request=GetUpcomingPaymentActionsRequest(user_id=MOCK_USER_ID, date=tt)
+    )
+    payment_actions = response.payment_actions
+
+    assert len(payment_actions) == 2
+    for pa in payment_actions:
+        assert pa.account_id == '2'
+        assert pa.amount == 150.0
+        assert pa.transaction_date.ToDatetime().date() == (datetime.now() + timedelta(days=31)).date()
+        assert pa.status == PAYMENT_ACTION_STATUS_PENDING
 
 
 def test_get_amount_paid_percentage(

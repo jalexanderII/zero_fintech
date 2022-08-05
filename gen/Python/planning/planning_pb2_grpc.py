@@ -35,6 +35,11 @@ class PlanningStub(object):
                 request_serializer=planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
                 response_deserializer=planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.FromString,
                 )
+        self.GetUpcomingPaymentActions = channel.unary_unary(
+                '/planning.Planning/GetUpcomingPaymentActions',
+                request_serializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsRequest.SerializeToString,
+                response_deserializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsResponse.FromString,
+                )
         self.GetPaymentPlan = channel.unary_unary(
                 '/planning.Planning/GetPaymentPlan',
                 request_serializer=common_dot_payment__plan__pb2.GetPaymentPlanRequest.SerializeToString,
@@ -94,6 +99,13 @@ class PlanningServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetUpcomingPaymentActions(self, request, context):
+        """Get pending payment actions which are at given date or the day thereafter; if no date is given, today is used
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def GetPaymentPlan(self, request, context):
         """CRUD METHODS
         """
@@ -147,6 +159,11 @@ def add_PlanningServicer_to_server(servicer, server):
                     servicer.GetPercentageCoveredByPlans,
                     request_deserializer=planning_dot_planning__pb2.GetUserOverviewRequest.FromString,
                     response_serializer=planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.SerializeToString,
+            ),
+            'GetUpcomingPaymentActions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUpcomingPaymentActions,
+                    request_deserializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsRequest.FromString,
+                    response_serializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsResponse.SerializeToString,
             ),
             'GetPaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentPlan,
@@ -248,6 +265,23 @@ class Planning(object):
         return grpc.experimental.unary_unary(request, target, '/planning.Planning/GetPercentageCoveredByPlans',
             planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
             planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetUpcomingPaymentActions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/planning.Planning/GetUpcomingPaymentActions',
+            planning_dot_planning__pb2.GetUpcomingPaymentActionsRequest.SerializeToString,
+            planning_dot_planning__pb2.GetUpcomingPaymentActionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

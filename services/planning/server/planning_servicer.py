@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import logging
 import os
 import sys
@@ -23,14 +23,15 @@ from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.core.accounts_pb2 import Account, ListUserAccountsRequest, ListAccountResponse
 from gen.Python.core.core_pb2_grpc import CoreStub
-from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest
+from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
+    GetUpcomingPaymentActionsResponse, GetUpcomingPaymentActionsRequest
 from gen.Python.planning.planning_pb2 import GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse
 from gen.Python.planning.planning_pb2 import WaterfallOverviewResponse, WaterfallMonth
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
-from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
+from services.planning.database.models.common import PaymentPlan as PaymentPlanDB, PaymentAction as PaymentActionDB
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
-from services.planning.server.utils import payment_plan_PB_to_DB, payment_plan_DB_to_PB
+from services.planning.server.utils import payment_plan_PB_to_DB, payment_plan_DB_to_PB, payment_actions_db_to_pb
 
 logging.basicConfig(
     level=logging.INFO,
@@ -64,6 +65,27 @@ class PlanningService(PlanningServicer):
                 logger.info(f"New plan created with id {new_id}")
 
         return PaymentPlanResponse(payment_plans=payment_plans_pb)
+
+    def GetUpcomingPaymentActions(
+            self, request: GetUpcomingPaymentActionsRequest, context=None
+    ) -> GetUpcomingPaymentActionsResponse:
+        """ Returns pending payment actions which are at given date or day thereafter. Default date is today. """
+        date = request.date
+        if date:
+            date = date.ToDatetime().date()
+        else:
+            date = datetime.now().date()
+        lt_threshold = date + timedelta(days=2)
+
+        payment_actions: List[PaymentActionDB] = []
+        payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
+        for pp in payment_plans_cursor:
+            pp = PaymentPlanDB().from_dict(pp)
+            for pa in pp.payment_action:
+                if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING and \
+                        date <= pa.transaction_date.date() < lt_threshold:
+                    payment_actions.append(pa)
+        return GetUpcomingPaymentActionsResponse(payment_actions=payment_actions_db_to_pb(payment_actions))
 
     def SavePaymentPlan(self, payment_plan_pb: PaymentPlanPB) -> str:
         """Adds a given PaymentPlan to the database"""
@@ -157,7 +179,7 @@ class PlanningService(PlanningServicer):
         payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
         # for this month and 11 month afterwards have a dictionary mapping account_id to amount to be paid
         waterfall = [defaultdict(float) for _ in range(12)]
-        now = datetime.datetime.now()
+        now = datetime.now()
         for _pp in payment_plans_cursor:
             pp = PaymentPlanDB().from_dict(_pp)
             for pa in pp.payment_action:
