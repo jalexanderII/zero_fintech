@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/gen/Go/notification"
@@ -75,28 +76,23 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 }
 
 func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *notification.NotifyUsersUpcomingPaymentActionsRequest) (*notification.NotifyUsersUpcomingPaymentActionsResponse, error) {
-	listPaymentPlans, err := s.planningClient.ListPaymentPlans(ctx, &planning.ListPaymentPlanRequest{})
+	now := ptypes.TimestampProto(time.Now())
+	upcomingPaymentActionsAllUsers, err := s.planningClient.GetAllUpcomingPaymentActions(ctx, &planning.ListPaymentPlanRequest{date: now})
 	if err != nil {
-		s.l.Error("[PaymentPlan] Error listing all PaymentPlans", "error", err)
+		s.l.Error("[PaymentPlan] Error listing upcoming PaymentActions", "error", err)
 		return nil, err
 	}
+	userIds := upcomingPaymentActionsAllUsers.GetUserIds()
+	paymentActions := upcomingPaymentActionsAllUsers.GetPaymentActions()
 
 	// create map of UserID -> AccID -> Liability
 	userAccLiabilities := make(map[string]map[string]float64)
-	now := time.Now()
-	for _, paymentPlan := range listPaymentPlans.GetPaymentPlans() {
-		if paymentPlan.GetActive() {
-			for _, paymentAction := range paymentPlan.GetPaymentAction() {
-				diff := paymentAction.GetTransactionDate().AsTime().Sub(now).Hours() / 24
-				if (diff >= 0) && (diff <= 1) {
-					_, created := userAccLiabilities[paymentPlan.GetUserId()]
-					if !created {
-						userAccLiabilities[paymentPlan.GetUserId()] = make(map[string]float64)
-					}
-					userAccLiabilities[paymentPlan.GetUserId()][paymentPlan.GetAccountId()] += paymentAction.GetAmount()
-				}
-			}
+	for idx := range upcomingPaymentActionsAllUsers {
+		_, created := userAccLiabilities[userIds[idx]]
+		if !created {
+			userAccLiabilities[userIds[idx]] = make(map[string]float64)
 		}
+		userAccLiabilities[userIds[idx]][paymentActions[idx].GetAccountId()] += paymentActions[idx].GetAmount()
 	}
 
 	// creates map of how to inform users
@@ -107,12 +103,12 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 			totalLiab += liab
 		}
 
+		// TODO: call BFF instead to get amount of debit available
 		userAccs, err := s.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: userId})
 		if err != nil {
 			s.l.Error("[Accounts] Error listing accounts for user", userId, "error", err)
 			return nil, err
 		}
-
 		totalDebit := 0.0
 		for _, acc := range userAccs.GetAccounts() {
 			if acc.GetType() == "debit" {

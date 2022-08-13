@@ -35,10 +35,15 @@ class PlanningStub(object):
                 request_serializer=planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
                 response_deserializer=planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.FromString,
                 )
-        self.GetUpcomingPaymentActions = channel.unary_unary(
-                '/planning.Planning/GetUpcomingPaymentActions',
-                request_serializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsRequest.SerializeToString,
-                response_deserializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsResponse.FromString,
+        self.GetUpcomingPaymentActionsUser = channel.unary_unary(
+                '/planning.Planning/GetUpcomingPaymentActionsUser',
+                request_serializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsUserRequest.SerializeToString,
+                response_deserializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsUserResponse.FromString,
+                )
+        self.GetAllUpcomingPaymentActions = channel.unary_unary(
+                '/planning.Planning/GetAllUpcomingPaymentActions',
+                request_serializer=planning_dot_planning__pb2.GetAllUpcomingPaymentActionsRequest.SerializeToString,
+                response_deserializer=planning_dot_planning__pb2.GetAllUpcomingPaymentActionsResponse.FromString,
                 )
         self.GetPaymentPlan = channel.unary_unary(
                 '/planning.Planning/GetPaymentPlan',
@@ -99,8 +104,15 @@ class PlanningServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetUpcomingPaymentActions(self, request, context):
-        """Get pending payment actions which are at given date or the day thereafter; if no date is given, today is used
+    def GetUpcomingPaymentActionsUser(self, request, context):
+        """Get pending payment actions which are at given date or the day thereafter for user; if no date is given, today is used
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAllUpcomingPaymentActions(self, request, context):
+        """Get pending payment actions which are at given date or the day thereafter for all users; if no date is given, today is used
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -160,10 +172,15 @@ def add_PlanningServicer_to_server(servicer, server):
                     request_deserializer=planning_dot_planning__pb2.GetUserOverviewRequest.FromString,
                     response_serializer=planning_dot_planning__pb2.GetPercentageCoveredByPlansResponse.SerializeToString,
             ),
-            'GetUpcomingPaymentActions': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetUpcomingPaymentActions,
-                    request_deserializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsRequest.FromString,
-                    response_serializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsResponse.SerializeToString,
+            'GetUpcomingPaymentActionsUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUpcomingPaymentActionsUser,
+                    request_deserializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsUserRequest.FromString,
+                    response_serializer=planning_dot_planning__pb2.GetUpcomingPaymentActionsUserResponse.SerializeToString,
+            ),
+            'GetAllUpcomingPaymentActions': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllUpcomingPaymentActions,
+                    request_deserializer=planning_dot_planning__pb2.GetAllUpcomingPaymentActionsRequest.FromString,
+                    response_serializer=planning_dot_planning__pb2.GetAllUpcomingPaymentActionsResponse.SerializeToString,
             ),
             'GetPaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentPlan,
@@ -269,7 +286,7 @@ class Planning(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetUpcomingPaymentActions(request,
+    def GetUpcomingPaymentActionsUser(request,
             target,
             options=(),
             channel_credentials=None,
@@ -279,9 +296,26 @@ class Planning(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/planning.Planning/GetUpcomingPaymentActions',
-            planning_dot_planning__pb2.GetUpcomingPaymentActionsRequest.SerializeToString,
-            planning_dot_planning__pb2.GetUpcomingPaymentActionsResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/planning.Planning/GetUpcomingPaymentActionsUser',
+            planning_dot_planning__pb2.GetUpcomingPaymentActionsUserRequest.SerializeToString,
+            planning_dot_planning__pb2.GetUpcomingPaymentActionsUserResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetAllUpcomingPaymentActions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/planning.Planning/GetAllUpcomingPaymentActions',
+            planning_dot_planning__pb2.GetAllUpcomingPaymentActionsRequest.SerializeToString,
+            planning_dot_planning__pb2.GetAllUpcomingPaymentActionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

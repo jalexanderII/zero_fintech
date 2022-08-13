@@ -17,8 +17,10 @@ service Planning {
   rpc GetAmountPaidPercentage(GetUserOverviewRequest) returns (GetAmountPaidPercentageResponse);
   // Get the percentage of current balance which is covered by active plans for a given user ID
   rpc GetPercentageCoveredByPlans(GetUserOverviewRequest) returns (GetPercentageCoveredByPlansResponse);
-  // Get pending payment actions which are at given date or the day thereafter; if no date is given, today is used
-  rpc GetUpcomingPaymentActions(GetUpcomingPaymentActionsRequest) returns (GetUpcomingPaymentActionsResponse);
+  // Get pending payment actions which are at given date or the day thereafter for user; if no date is given, today is used
+  rpc GetUpcomingPaymentActionsUser(GetUpcomingPaymentActionsUserRequest) returns (GetUpcomingPaymentActionsUserResponse);
+  // Get pending payment actions which are at given date or the day thereafter for all users; if no date is given, today is used
+  rpc GetAllUpcomingPaymentActions(GetAllUpcomingPaymentActionsRequest) returns (GetAllUpcomingPaymentActionsResponse);
 
   //  CRUD METHODS
   rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
@@ -28,13 +30,22 @@ service Planning {
   rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
 }
 
-message GetUpcomingPaymentActionsRequest {
+message GetUpcomingPaymentActionsUserRequest {
   string user_id = 1;
   google.protobuf.Timestamp date = 2;
 }
 
-message GetUpcomingPaymentActionsResponse {
+message GetUpcomingPaymentActionsUserResponse {
   repeated common.PaymentAction payment_actions = 1;
+}
+
+message GetAllUpcomingPaymentActionsRequest {
+  google.protobuf.Timestamp date = 1;
+}
+
+message GetAllUpcomingPaymentActionsResponse {
+  repeated string user_ids = 1;
+  repeated common.PaymentAction payment_actions = 2;
 }
 
 message CreatePaymentPlanRequest {

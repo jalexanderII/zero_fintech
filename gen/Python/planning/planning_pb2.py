@@ -17,12 +17,14 @@ from common import payment_plan_pb2 as common_dot_payment__plan__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"]\n GetUpcomingPaymentActionsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12(\n\x04\x64\x61te\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"S\n!GetUpcomingPaymentActionsResponse\x12.\n\x0fpayment_actions\x18\x01 \x03(\x0b\x32\x15.common.PaymentAction\"~\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\x12#\n\tmeta_data\x18\x02 \x01(\x0b\x32\x10.common.MetaData\x12\x11\n\tsave_plan\x18\x03 \x01(\x08\")\n\x16GetUserOverviewRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"\x95\x01\n\x0eWaterfallMonth\x12J\n\x12\x61\x63\x63ount_to_amounts\x18\x01 \x03(\x0b\x32..planning.WaterfallMonth.AccountToAmountsEntry\x1a\x37\n\x15\x41\x63\x63ountToAmountsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x01:\x02\x38\x01\"P\n\x19WaterfallOverviewResponse\x12\x33\n\x11monthly_waterfall\x18\x01 \x03(\x0b\x32\x18.planning.WaterfallMonth\":\n\x1fGetAmountPaidPercentageResponse\x12\x17\n\x0fpercentage_paid\x18\x01 \x01(\x01\"\xee\x01\n#GetPercentageCoveredByPlansResponse\x12\x17\n\x0foverall_covered\x18\x01 \x01(\x01\x12n\n\x1a\x61\x63\x63ount_to_percent_covered\x18\x02 \x03(\x0b\x32J.planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry\x1a>\n\x1c\x41\x63\x63ountToPercentCoveredEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x01:\x02\x38\x01\x32\xac\x07\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12]\n\x14GetWaterfallOverview\x12 .planning.GetUserOverviewRequest\x1a#.planning.WaterfallOverviewResponse\x12\x66\n\x17GetAmountPaidPercentage\x12 .planning.GetUserOverviewRequest\x1a).planning.GetAmountPaidPercentageResponse\x12n\n\x1bGetPercentageCoveredByPlans\x12 .planning.GetUserOverviewRequest\x1a-.planning.GetPercentageCoveredByPlansResponse\x12t\n\x19GetUpcomingPaymentActions\x12*.planning.GetUpcomingPaymentActionsRequest\x1a+.planning.GetUpcomingPaymentActionsResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12\\\n\x14ListUserPaymentPlans\x12#.common.ListUserPaymentPlansRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17planning/planning.proto\x12\x08planning\x1a\x19\x63ommon/payment_task.proto\x1a\x19\x63ommon/payment_plan.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"a\n$GetUpcomingPaymentActionsUserRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12(\n\x04\x64\x61te\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"W\n%GetUpcomingPaymentActionsUserResponse\x12.\n\x0fpayment_actions\x18\x01 \x03(\x0b\x32\x15.common.PaymentAction\"O\n#GetAllUpcomingPaymentActionsRequest\x12(\n\x04\x64\x61te\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"h\n$GetAllUpcomingPaymentActionsResponse\x12\x10\n\x08user_ids\x18\x01 \x03(\t\x12.\n\x0fpayment_actions\x18\x02 \x03(\x0b\x32\x15.common.PaymentAction\"~\n\x18\x43reatePaymentPlanRequest\x12*\n\rpayment_tasks\x18\x01 \x03(\x0b\x32\x13.common.PaymentTask\x12#\n\tmeta_data\x18\x02 \x01(\x0b\x32\x10.common.MetaData\x12\x11\n\tsave_plan\x18\x03 \x01(\x08\")\n\x16GetUserOverviewRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"\x95\x01\n\x0eWaterfallMonth\x12J\n\x12\x61\x63\x63ount_to_amounts\x18\x01 \x03(\x0b\x32..planning.WaterfallMonth.AccountToAmountsEntry\x1a\x37\n\x15\x41\x63\x63ountToAmountsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x01:\x02\x38\x01\"P\n\x19WaterfallOverviewResponse\x12\x33\n\x11monthly_waterfall\x18\x01 \x03(\x0b\x32\x18.planning.WaterfallMonth\":\n\x1fGetAmountPaidPercentageResponse\x12\x17\n\x0fpercentage_paid\x18\x01 \x01(\x01\"\xee\x01\n#GetPercentageCoveredByPlansResponse\x12\x17\n\x0foverall_covered\x18\x01 \x01(\x01\x12n\n\x1a\x61\x63\x63ount_to_percent_covered\x18\x02 \x03(\x0b\x32J.planning.GetPercentageCoveredByPlansResponse.AccountToPercentCoveredEntry\x1a>\n\x1c\x41\x63\x63ountToPercentCoveredEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x01:\x02\x38\x01\x32\xb8\x08\n\x08Planning\x12T\n\x11\x43reatePaymentPlan\x12\".planning.CreatePaymentPlanRequest\x1a\x1b.common.PaymentPlanResponse\x12]\n\x14GetWaterfallOverview\x12 .planning.GetUserOverviewRequest\x1a#.planning.WaterfallOverviewResponse\x12\x66\n\x17GetAmountPaidPercentage\x12 .planning.GetUserOverviewRequest\x1a).planning.GetAmountPaidPercentageResponse\x12n\n\x1bGetPercentageCoveredByPlans\x12 .planning.GetUserOverviewRequest\x1a-.planning.GetPercentageCoveredByPlansResponse\x12\x80\x01\n\x1dGetUpcomingPaymentActionsUser\x12..planning.GetUpcomingPaymentActionsUserRequest\x1a/.planning.GetUpcomingPaymentActionsUserResponse\x12}\n\x1cGetAllUpcomingPaymentActions\x12-.planning.GetAllUpcomingPaymentActionsRequest\x1a..planning.GetAllUpcomingPaymentActionsResponse\x12\x44\n\x0eGetPaymentPlan\x12\x1d.common.GetPaymentPlanRequest\x1a\x13.common.PaymentPlan\x12S\n\x10ListPaymentPlans\x12\x1e.common.ListPaymentPlanRequest\x1a\x1f.common.ListPaymentPlanResponse\x12\\\n\x14ListUserPaymentPlans\x12#.common.ListUserPaymentPlansRequest\x1a\x1f.common.ListPaymentPlanResponse\x12J\n\x11UpdatePaymentPlan\x12 .common.UpdatePaymentPlanRequest\x1a\x13.common.PaymentPlan\x12X\n\x11\x44\x65letePaymentPlan\x12 .common.DeletePaymentPlanRequest\x1a!.common.DeletePaymentPlanResponseB6Z4github.com/jalexanderII/zero_fintech/gen/Go/planningb\x06proto3')
 
 
 
-_GETUPCOMINGPAYMENTACTIONSREQUEST = DESCRIPTOR.message_types_by_name['GetUpcomingPaymentActionsRequest']
-_GETUPCOMINGPAYMENTACTIONSRESPONSE = DESCRIPTOR.message_types_by_name['GetUpcomingPaymentActionsResponse']
+_GETUPCOMINGPAYMENTACTIONSUSERREQUEST = DESCRIPTOR.message_types_by_name['GetUpcomingPaymentActionsUserRequest']
+_GETUPCOMINGPAYMENTACTIONSUSERRESPONSE = DESCRIPTOR.message_types_by_name['GetUpcomingPaymentActionsUserResponse']
+_GETALLUPCOMINGPAYMENTACTIONSREQUEST = DESCRIPTOR.message_types_by_name['GetAllUpcomingPaymentActionsRequest']
+_GETALLUPCOMINGPAYMENTACTIONSRESPONSE = DESCRIPTOR.message_types_by_name['GetAllUpcomingPaymentActionsResponse']
 _CREATEPAYMENTPLANREQUEST = DESCRIPTOR.message_types_by_name['CreatePaymentPlanRequest']
 _GETUSEROVERVIEWREQUEST = DESCRIPTOR.message_types_by_name['GetUserOverviewRequest']
 _WATERFALLMONTH = DESCRIPTOR.message_types_by_name['WaterfallMonth']
@@ -31,19 +33,33 @@ _WATERFALLOVERVIEWRESPONSE = DESCRIPTOR.message_types_by_name['WaterfallOverview
 _GETAMOUNTPAIDPERCENTAGERESPONSE = DESCRIPTOR.message_types_by_name['GetAmountPaidPercentageResponse']
 _GETPERCENTAGECOVEREDBYPLANSRESPONSE = DESCRIPTOR.message_types_by_name['GetPercentageCoveredByPlansResponse']
 _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY = _GETPERCENTAGECOVEREDBYPLANSRESPONSE.nested_types_by_name['AccountToPercentCoveredEntry']
-GetUpcomingPaymentActionsRequest = _reflection.GeneratedProtocolMessageType('GetUpcomingPaymentActionsRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETUPCOMINGPAYMENTACTIONSREQUEST,
+GetUpcomingPaymentActionsUserRequest = _reflection.GeneratedProtocolMessageType('GetUpcomingPaymentActionsUserRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETUPCOMINGPAYMENTACTIONSUSERREQUEST,
   '__module__' : 'planning.planning_pb2'
-  # @@protoc_insertion_point(class_scope:planning.GetUpcomingPaymentActionsRequest)
+  # @@protoc_insertion_point(class_scope:planning.GetUpcomingPaymentActionsUserRequest)
   })
-_sym_db.RegisterMessage(GetUpcomingPaymentActionsRequest)
+_sym_db.RegisterMessage(GetUpcomingPaymentActionsUserRequest)
 
-GetUpcomingPaymentActionsResponse = _reflection.GeneratedProtocolMessageType('GetUpcomingPaymentActionsResponse', (_message.Message,), {
-  'DESCRIPTOR' : _GETUPCOMINGPAYMENTACTIONSRESPONSE,
+GetUpcomingPaymentActionsUserResponse = _reflection.GeneratedProtocolMessageType('GetUpcomingPaymentActionsUserResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETUPCOMINGPAYMENTACTIONSUSERRESPONSE,
   '__module__' : 'planning.planning_pb2'
-  # @@protoc_insertion_point(class_scope:planning.GetUpcomingPaymentActionsResponse)
+  # @@protoc_insertion_point(class_scope:planning.GetUpcomingPaymentActionsUserResponse)
   })
-_sym_db.RegisterMessage(GetUpcomingPaymentActionsResponse)
+_sym_db.RegisterMessage(GetUpcomingPaymentActionsUserResponse)
+
+GetAllUpcomingPaymentActionsRequest = _reflection.GeneratedProtocolMessageType('GetAllUpcomingPaymentActionsRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETALLUPCOMINGPAYMENTACTIONSREQUEST,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.GetAllUpcomingPaymentActionsRequest)
+  })
+_sym_db.RegisterMessage(GetAllUpcomingPaymentActionsRequest)
+
+GetAllUpcomingPaymentActionsResponse = _reflection.GeneratedProtocolMessageType('GetAllUpcomingPaymentActionsResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETALLUPCOMINGPAYMENTACTIONSRESPONSE,
+  '__module__' : 'planning.planning_pb2'
+  # @@protoc_insertion_point(class_scope:planning.GetAllUpcomingPaymentActionsResponse)
+  })
+_sym_db.RegisterMessage(GetAllUpcomingPaymentActionsResponse)
 
 CreatePaymentPlanRequest = _reflection.GeneratedProtocolMessageType('CreatePaymentPlanRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATEPAYMENTPLANREQUEST,
@@ -112,26 +128,30 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY._serialized_options = b'8\001'
   _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._options = None
   _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._serialized_options = b'8\001'
-  _GETUPCOMINGPAYMENTACTIONSREQUEST._serialized_start=124
-  _GETUPCOMINGPAYMENTACTIONSREQUEST._serialized_end=217
-  _GETUPCOMINGPAYMENTACTIONSRESPONSE._serialized_start=219
-  _GETUPCOMINGPAYMENTACTIONSRESPONSE._serialized_end=302
-  _CREATEPAYMENTPLANREQUEST._serialized_start=304
-  _CREATEPAYMENTPLANREQUEST._serialized_end=430
-  _GETUSEROVERVIEWREQUEST._serialized_start=432
-  _GETUSEROVERVIEWREQUEST._serialized_end=473
-  _WATERFALLMONTH._serialized_start=476
-  _WATERFALLMONTH._serialized_end=625
-  _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY._serialized_start=570
-  _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY._serialized_end=625
-  _WATERFALLOVERVIEWRESPONSE._serialized_start=627
-  _WATERFALLOVERVIEWRESPONSE._serialized_end=707
-  _GETAMOUNTPAIDPERCENTAGERESPONSE._serialized_start=709
-  _GETAMOUNTPAIDPERCENTAGERESPONSE._serialized_end=767
-  _GETPERCENTAGECOVEREDBYPLANSRESPONSE._serialized_start=770
-  _GETPERCENTAGECOVEREDBYPLANSRESPONSE._serialized_end=1008
-  _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._serialized_start=946
-  _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._serialized_end=1008
-  _PLANNING._serialized_start=1011
-  _PLANNING._serialized_end=1951
+  _GETUPCOMINGPAYMENTACTIONSUSERREQUEST._serialized_start=124
+  _GETUPCOMINGPAYMENTACTIONSUSERREQUEST._serialized_end=221
+  _GETUPCOMINGPAYMENTACTIONSUSERRESPONSE._serialized_start=223
+  _GETUPCOMINGPAYMENTACTIONSUSERRESPONSE._serialized_end=310
+  _GETALLUPCOMINGPAYMENTACTIONSREQUEST._serialized_start=312
+  _GETALLUPCOMINGPAYMENTACTIONSREQUEST._serialized_end=391
+  _GETALLUPCOMINGPAYMENTACTIONSRESPONSE._serialized_start=393
+  _GETALLUPCOMINGPAYMENTACTIONSRESPONSE._serialized_end=497
+  _CREATEPAYMENTPLANREQUEST._serialized_start=499
+  _CREATEPAYMENTPLANREQUEST._serialized_end=625
+  _GETUSEROVERVIEWREQUEST._serialized_start=627
+  _GETUSEROVERVIEWREQUEST._serialized_end=668
+  _WATERFALLMONTH._serialized_start=671
+  _WATERFALLMONTH._serialized_end=820
+  _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY._serialized_start=765
+  _WATERFALLMONTH_ACCOUNTTOAMOUNTSENTRY._serialized_end=820
+  _WATERFALLOVERVIEWRESPONSE._serialized_start=822
+  _WATERFALLOVERVIEWRESPONSE._serialized_end=902
+  _GETAMOUNTPAIDPERCENTAGERESPONSE._serialized_start=904
+  _GETAMOUNTPAIDPERCENTAGERESPONSE._serialized_end=962
+  _GETPERCENTAGECOVEREDBYPLANSRESPONSE._serialized_start=965
+  _GETPERCENTAGECOVEREDBYPLANSRESPONSE._serialized_end=1203
+  _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._serialized_start=1141
+  _GETPERCENTAGECOVEREDBYPLANSRESPONSE_ACCOUNTTOPERCENTCOVEREDENTRY._serialized_end=1203
+  _PLANNING._serialized_start=1206
+  _PLANNING._serialized_end=2286
 # @@protoc_insertion_point(module_scope)

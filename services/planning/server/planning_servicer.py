@@ -3,11 +3,12 @@ import logging
 import os
 import sys
 from collections import defaultdict
-from typing import List
+from typing import List, Optional, Tuple
 
 import grpc
 from attr import define, field
 from bson.objectid import ObjectId
+from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 from pymongo.results import InsertOneResult
 
@@ -18,13 +19,14 @@ from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import GetPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
-from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
+from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB, PaymentAction as PaymentActionPB
 from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.core.accounts_pb2 import Account, ListUserAccountsRequest, ListAccountResponse
 from gen.Python.core.core_pb2_grpc import CoreStub
 from gen.Python.planning.planning_pb2 import CreatePaymentPlanRequest, GetUserOverviewRequest, \
-    GetUpcomingPaymentActionsResponse, GetUpcomingPaymentActionsRequest
+    GetUpcomingPaymentActionsUserRequest, GetUpcomingPaymentActionsUserResponse, GetAllUpcomingPaymentActionsRequest, \
+    GetAllUpcomingPaymentActionsResponse
 from gen.Python.planning.planning_pb2 import GetAmountPaidPercentageResponse, GetPercentageCoveredByPlansResponse
 from gen.Python.planning.planning_pb2 import WaterfallOverviewResponse, WaterfallMonth
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
@@ -66,26 +68,47 @@ class PlanningService(PlanningServicer):
 
         return PaymentPlanResponse(payment_plans=payment_plans_pb)
 
-    def GetUpcomingPaymentActions(
-            self, request: GetUpcomingPaymentActionsRequest, context=None
-    ) -> GetUpcomingPaymentActionsResponse:
-        """ Returns pending payment actions which are at given date or day thereafter. Default date is today. """
-        date = request.date
+    def _get_upcoming_payment_actions(
+            self, date: Optional[Timestamp]=None,  user_id: Optional[str]=None
+    ) -> Tuple[List[str], List[PaymentActionPB]]:
+        """ If user_id is given, then it returns all active PaymentActions for that user. Otherwise for all users."""
         if date:
             date = date.ToDatetime().date()
         else:
             date = datetime.now().date()
         lt_threshold = date + timedelta(days=2)
 
+        query = {'active': True}
+        if user_id:
+            query['user_id'] = user_id
+        payment_plans_cursor = self.planning_collection.find(query)
+
+        user_ids: List[str] = []
         payment_actions: List[PaymentActionDB] = []
-        payment_plans_cursor = self.planning_collection.find({'userId': request.user_id, 'active': True})
         for pp in payment_plans_cursor:
             pp = PaymentPlanDB().from_dict(pp)
             for pa in pp.payment_action:
                 if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING and \
                         date <= pa.transaction_date.date() < lt_threshold:
+                    user_ids.append(pp.user_id)
                     payment_actions.append(pa)
-        return GetUpcomingPaymentActionsResponse(payment_actions=payment_actions_db_to_pb(payment_actions))
+        return user_ids, payment_actions_db_to_pb(payment_actions)
+
+    def GetUpcomingPaymentActionsUser(
+            self, request: GetUpcomingPaymentActionsUserRequest, context=None
+    ) -> GetUpcomingPaymentActionsUserResponse:
+        """ Returns pending payment actions which are at given date or day thereafter for user. Default date is
+        today. """
+        _, payment_actions = self._get_upcoming_payment_actions(date=request.date, user_id=request.user_id)
+        return GetUpcomingPaymentActionsUserResponse(payment_actions=payment_actions)
+
+    def GetAllUpcomingPaymentActions(
+            self, request: GetAllUpcomingPaymentActionsRequest, context=None
+    ) -> GetAllUpcomingPaymentActionsResponse:
+        """ Returns pending payment actions which are at given date or day thereafter for all users. Default date is
+        today."""
+        user_ids, payment_actions = self._get_upcoming_payment_actions(data=request.date, user_id=None)
+        return GetAllUpcomingPaymentActionsResponse(user_ids=user_ids, payment_actions=payment_actions)
 
     def SavePaymentPlan(self, payment_plan_pb: PaymentPlanPB) -> str:
         """Adds a given PaymentPlan to the database"""
