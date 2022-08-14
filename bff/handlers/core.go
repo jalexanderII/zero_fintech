@@ -212,6 +212,17 @@ func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.
 	}
 }
 
+func GetUserDebitAccountBalance(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		debitAccBalance, err := client.GetDebitAccountBalance(ctx, &core.GetDebitAccountBalanceRequest{UserId: c.Params("id")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's debit account", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": debitAccBalance})
+	}
+}
+
 func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: c.Params("id")})

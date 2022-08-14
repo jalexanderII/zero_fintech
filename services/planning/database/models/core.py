@@ -81,13 +81,6 @@ class AnnualPercentageRates(betterproto.Message):
 
 
 @dataclass
-class CreateAccountRequest(betterproto.Message):
-    """CRUD Methods"""
-
-    account: "Account" = betterproto.message_field(1)
-
-
-@dataclass
 class Transaction(betterproto.Message):
     """Transaction A representation of a transaction"""
 

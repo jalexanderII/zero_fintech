@@ -55,6 +55,11 @@ class CoreStub(object):
                 request_serializer=core_dot_accounts__pb2.GetAccountRequest.SerializeToString,
                 response_deserializer=core_dot_accounts__pb2.Account.FromString,
                 )
+        self.GetDebitAccountBalance = channel.unary_unary(
+                '/core.Core/GetDebitAccountBalance',
+                request_serializer=core_dot_accounts__pb2.GetDebitAccountBalanceRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.GetDebitAccountBalanceResponse.FromString,
+                )
         self.ListAccounts = channel.unary_unary(
                 '/core.Core/ListAccounts',
                 request_serializer=core_dot_accounts__pb2.ListAccountRequest.SerializeToString,
@@ -185,6 +190,12 @@ class CoreServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetAccount(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetDebitAccountBalance(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -326,6 +337,11 @@ def add_CoreServicer_to_server(servicer, server):
                     servicer.GetAccount,
                     request_deserializer=core_dot_accounts__pb2.GetAccountRequest.FromString,
                     response_serializer=core_dot_accounts__pb2.Account.SerializeToString,
+            ),
+            'GetDebitAccountBalance': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetDebitAccountBalance,
+                    request_deserializer=core_dot_accounts__pb2.GetDebitAccountBalanceRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.GetDebitAccountBalanceResponse.SerializeToString,
             ),
             'ListAccounts': grpc.unary_unary_rpc_method_handler(
                     servicer.ListAccounts,
@@ -533,6 +549,23 @@ class Core(object):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetAccount',
             core_dot_accounts__pb2.GetAccountRequest.SerializeToString,
             core_dot_accounts__pb2.Account.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetDebitAccountBalance(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/GetDebitAccountBalance',
+            core_dot_accounts__pb2.GetDebitAccountBalanceRequest.SerializeToString,
+            core_dot_accounts__pb2.GetDebitAccountBalanceResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

@@ -17,7 +17,7 @@ func (s CoreServer) GetUser(ctx context.Context, in *core.GetUserRequest) (*core
 
 	if in.GetId() == "" {
 		filter = []bson.M{{"username": in.GetUsername()}}
-		s.l.Info("Filter is", filter)
+		s.l.Info("No id Filter is", filter)
 	} else {
 		id, err := primitive.ObjectIDFromHex(in.GetId())
 		if err != nil {

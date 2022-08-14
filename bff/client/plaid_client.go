@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -81,7 +82,10 @@ func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.Core
 }
 
 // LinkTokenCreate creates a link token using the specified parameters
-func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purpose string) (*models.CreateLinkTokenResponse, error) {
+func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username, purpose string) (*models.CreateLinkTokenResponse, error) {
+	fmt.Printf("username: %+v", username)
+	fmt.Printf("purpose: %+v", purpose)
+
 	purp, err := models.PurposeFromString(purpose)
 	if err != nil {
 		return nil, err
@@ -89,7 +93,7 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username string, purp
 
 	DbUser, err := p.GetUser(ctx, username, "")
 	if err != nil {
-		p.l.Error("[DB Error] error fetching user")
+		p.l.Error("[DB Error] error fetching user", err)
 		return nil, err
 	}
 	id := DbUser.ID.Hex()
@@ -406,12 +410,16 @@ func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*mo
 		Id:       userId,
 		Username: username,
 	}
+	fmt.Printf("userRequest: %+v", userRequest)
+
 	user, err := p.CoreClient.GetUser(ctx, userRequest)
 	if err != nil {
+		fmt.Printf("failed to get a user: %+v", userRequest)
 		return nil, err
 	}
 	id, err := primitive.ObjectIDFromHex(user.GetId())
 	if err != nil {
+		fmt.Printf("failed to get Object ID: %+v", user)
 		return nil, err
 	}
 

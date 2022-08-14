@@ -41,6 +41,26 @@ func (s CoreServer) GetAccount(ctx context.Context, in *core.GetAccountRequest) 
 	return AccountDBToPB(account), nil
 }
 
+func (s CoreServer) GetDebitAccountBalance(ctx context.Context, in *core.GetDebitAccountBalanceRequest) (*core.GetDebitAccountBalanceResponse, error) {
+	var account database.Account
+	user_id, err := primitive.ObjectIDFromHex(in.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+
+	filter := []bson.M{{"user_id": user_id}, {"type": "depository"}}
+	err = s.AccountDB.FindOne(ctx, bson.M{"$and": filter}).Decode(&account)
+	if err != nil {
+		s.l.Error("[AccountDB] Error getting debt account for user", "error", err)
+		return nil, err
+	}
+	debitAccount := AccountDBToPB(account)
+	return &core.GetDebitAccountBalanceResponse{
+		AvailableBalance: debitAccount.AvailableBalance,
+		CurrentBalance:   debitAccount.CurrentBalance,
+	}, nil
+}
+
 func (s CoreServer) ListAccounts(ctx context.Context, in *core.ListAccountRequest) (*core.ListAccountResponse, error) {
 	var results []database.Account
 	cursor, err := s.AccountDB.Find(ctx, bson.D{})
