@@ -223,6 +223,27 @@ func GetUserDebitAccountBalance(client core.CoreClient, ctx context.Context) fun
 	}
 }
 
+func GetUserTotalCreditAccountBalance(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		type UserTotalCreditAccountBalance struct {
+			AvailableBalance float64 `json:"available_balance,omitempty"`
+			CurrentBalance   float64 `json:"current_balance,omitempty"`
+		}
+
+		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: c.Params("id")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's accounts", "data": err})
+		}
+		totalCurrent := 0.0
+		totalAvailable := 0.0
+		for _, account := range accounts.GetAccounts() {
+			totalCurrent += account.GetCurrentBalance()
+			totalAvailable += account.GetAvailableBalance()
+		}
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": UserTotalCreditAccountBalance{totalAvailable, totalCurrent}})
+	}
+}
+
 func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: c.Params("id")})
