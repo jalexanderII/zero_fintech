@@ -2,9 +2,13 @@ package server
 
 import (
 	"context"
+	"fmt"
+	"time"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/jalexanderII/zero_fintech/gen/Go/common"
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
+	"github.com/jalexanderII/zero_fintech/gen/Go/notification"
 	"github.com/jalexanderII/zero_fintech/gen/Go/planning"
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/sirupsen/logrus"
@@ -23,7 +27,8 @@ type CoreServer struct {
 	// authentication manager
 	jwtm *middleware.JWTManager
 	// clients
-	planningClient planning.PlanningClient
+	planningClient     planning.PlanningClient
+	notificationClient notification.NotificationClient
 	// custom logger
 	l *logrus.Logger
 }
@@ -68,6 +73,74 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 		return nil, err
 	}
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
+}
+
+func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *notification.NotifyUsersUpcomingPaymentActionsRequest) (*notification.NotifyUsersUpcomingPaymentActionsResponse, error) {
+	now := ptypes.TimestampProto(time.Now())
+	upcomingPaymentActionsAllUsers, err := s.planningClient.GetAllUpcomingPaymentActions(ctx, &planning.ListPaymentPlanRequest{date: now})
+	if err != nil {
+		s.l.Error("[PaymentPlan] Error listing upcoming PaymentActions", "error", err)
+		return nil, err
+	}
+	userIds := upcomingPaymentActionsAllUsers.GetUserIds()
+	paymentActions := upcomingPaymentActionsAllUsers.GetPaymentActions()
+
+	// create map of UserID -> AccID -> Liability
+	userAccLiabilities := make(map[string]map[string]float64)
+	for idx := range upcomingPaymentActionsAllUsers {
+		_, created := userAccLiabilities[userIds[idx]]
+		if !created {
+			userAccLiabilities[userIds[idx]] = make(map[string]float64)
+		}
+		userAccLiabilities[userIds[idx]][paymentActions[idx].GetAccountId()] += paymentActions[idx].GetAmount()
+	}
+
+	// creates map of how to inform users
+	userNotify := make(map[string]string)
+	for userId, accLiab := range userAccLiabilities {
+		totalLiab := 0.0
+		for _, liab := range accLiab {
+			totalLiab += liab
+		}
+
+		userAccs, err := s.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: userId})
+		if err != nil {
+			s.l.Error("[Accounts] Error listing accounts for user", userId, "error", err)
+			return nil, err
+		}
+		totalDebit, err := s.GetDebitAccountBalance(ctx, &core.GetDebitAccountBalanceRequest{UserId: userId})
+		if err != nil {
+			s.l.Error("[Accounts] Error getting debit balance for user", userId, "error", err)
+			return nil, err
+		}
+
+		if totalDebit < totalLiab {
+			userNotify[userId] = fmt.Sprintf("You are missing %v for tomorrows upcoming total payment of %v", totalLiab-totalDebit, totalLiab)
+		} else {
+			userNotify[userId] = fmt.Sprintf("You are all setup for tomorrows total payment of %v", totalLiab)
+		}
+		for accId, liab := range accLiab {
+			accName := ""
+			for acc := range userAccs.GetAccounts() {
+				if acc.GetAccountId() == accId {
+					accName = acc.GetName()
+					break
+				}
+			}
+			userNotify[userId] += fmt.Sprintf("\n%v: %v", accName, liab)
+		}
+	}
+
+	// send notifications to the appropriate user
+	for userId, message := range userNotify {
+		phoneNumber := s.GetUser(ctx, &core.GetUserRequest{Id: userId}).GetPhoneNumber()
+		_, err := s.notificationClient.SendSMS(ctx, &notification.SendSMSRequest{PhoneNumber: phoneNumber, Message: message})
+		if err != nil {
+			s.l.Error("[Notification] Failed to notify user", userId, "error", err)
+			return nil, err
+		}
+	}
+	return nil, nil
 }
 
 func (s CoreServer) GetWaterfallOverview(ctx context.Context, in *planning.GetUserOverviewRequest) (*planning.WaterfallOverviewResponse, error) {

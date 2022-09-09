@@ -14,6 +14,8 @@ service Core {
   // GetPaymentPlan makes request to the Planning service by passing it a list
   // of PaymentTasks and expects to receive a list of PaymentPlans
   rpc GetPaymentPlan(GetPaymentPlanRequest) returns (common.PaymentPlanResponse);
+  // Notify Users about upcoming payment actions
+  rpc NotifyUsersUpcomingPaymentActions(NotifyUsersUpcomingPaymentActionsRequest) returns (NotifyUsersUpcomingPaymentActionsResponse);
   // GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
   // coming 12 month
   rpc GetWaterfallOverview(planning.GetUserOverviewRequest) returns (planning.WaterfallOverviewResponse);
@@ -54,6 +56,14 @@ message GetPaymentPlanRequest {
   common.MetaData meta_data = 3;
   // indicates whether to save PaymentPlan in database
   bool save_plan = 4;
+}
+
+message NotifyUsersUpcomingPaymentActionsRequest {
+
+}
+
+message NotifyUsersUpcomingPaymentActionsResponse {
+
 }
 
 message AccountInfo {
