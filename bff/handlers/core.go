@@ -272,8 +272,29 @@ func GetWaterfallOverview(client core.CoreClient, ctx context.Context) func(c *f
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's waterfall", "data": err})
 		}
+		type Series struct {
+			Name string    `json:"name"`
+			Data []float32 `json:"data"`
+		}
 
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": overview})
+		accountSeries := make(map[string]Series)
+		monthlyWaterfall := overview.GetMonthlyWaterfall()
+		for idx, WaterfallMonth := range monthlyWaterfall {
+			for name, value := range WaterfallMonth.GetAccountToAmounts() {
+				if series, ok := accountSeries[name]; ok {
+					series.Data[idx] = float32(value)
+				} else {
+					accountSeries[name] = Series{Name: name, Data: make([]float32, 12)}
+					accountSeries[name].Data[idx] = float32(value)
+				}
+			}
+		}
+		response := []Series{}
+		for _, series := range accountSeries {
+			response = append(response, series)
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": response})
 	}
 }
 
