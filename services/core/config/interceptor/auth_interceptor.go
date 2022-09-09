@@ -57,7 +57,7 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 
 	values := md["authorization"]
 	if len(values) == 0 {
-		return status.Errorf(codes.Unauthenticated, "authorization token is not provided", md)
+		return status.Errorf(codes.Unauthenticated, "authorization token is not provided %v", md)
 	}
 
 	accessToken := values[0]
@@ -71,9 +71,12 @@ func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string
 
 func AccessibleRoles() map[string]bool {
 	const authServicePath = "/auth.Auth/"
+	const coreServicePath = "/core.Core/"
 	return map[string]bool{
 		// Auth paths not Protected since they are needed to generate the tokens
-		authServicePath + "Login":  true,
-		authServicePath + "SignUp": true,
+		authServicePath + "Login":      true,
+		authServicePath + "SignUp":     true,
+		coreServicePath + "GetAccount": true,
+		// coreServicePath + "GetPaymentPlan": true,
 	}
 }
