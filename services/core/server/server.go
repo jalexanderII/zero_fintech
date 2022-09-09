@@ -109,11 +109,10 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 			s.l.Error("[Accounts] Error listing accounts for user", userId, "error", err)
 			return nil, err
 		}
-		totalDebit := 0.0
-		for _, acc := range userAccs.GetAccounts() {
-			if acc.GetType() == "debit" {
-				totalDebit += acc.GetAvailableBalance()
-			}
+		totalDebit, err := s.GetDebitAccountBalance(ctx, &core.GetDebitAccountBalanceRequest{UserId: userId})
+		if err != nil {
+			s.l.Error("[Accounts] Error getting debit balance for user", userId, "error", err)
+			return nil, err
 		}
 
 		if totalDebit < totalLiab {
