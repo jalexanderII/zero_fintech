@@ -103,7 +103,6 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 			totalLiab += liab
 		}
 
-		// TODO: call BFF instead to get amount of debit available
 		userAccs, err := s.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: userId})
 		if err != nil {
 			s.l.Error("[Accounts] Error listing accounts for user", userId, "error", err)
