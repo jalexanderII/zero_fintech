@@ -77,6 +77,17 @@ func TestCoreServer_GetAccount(t *testing.T) {
 	}
 }
 
+func TestCoreServer_GetDebitAccountBalance(t *testing.T) {
+	server, ctx := GenServer()
+	debitAccBalance, err := server.GetDebitAccountBalance(ctx, &core.GetDebitAccountBalanceRequest{UserId: "6212a0101fca9390a37a32d2"})
+	if err != nil {
+		t.Errorf("1: An error was returned: %v", err)
+	}
+	if debitAccBalance.GetAvailableBalance() != 7000.0 || debitAccBalance.GetCurrentBalance() != 1000.0 {
+		t.Errorf("2: Failed to fetch correct account: %+v", debitAccBalance)
+	}
+}
+
 func TestCoreServer_ListAccounts(t *testing.T) {
 	server, ctx := GenServer()
 

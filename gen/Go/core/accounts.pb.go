@@ -398,6 +398,108 @@ func (x *GetAccountRequest) GetId() string {
 	return ""
 }
 
+type GetDebitAccountBalanceRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+}
+
+func (x *GetDebitAccountBalanceRequest) Reset() {
+	*x = GetDebitAccountBalanceRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_accounts_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetDebitAccountBalanceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDebitAccountBalanceRequest) ProtoMessage() {}
+
+func (x *GetDebitAccountBalanceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_core_accounts_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDebitAccountBalanceRequest.ProtoReflect.Descriptor instead.
+func (*GetDebitAccountBalanceRequest) Descriptor() ([]byte, []int) {
+	return file_core_accounts_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetDebitAccountBalanceRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type GetDebitAccountBalanceResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AvailableBalance float64 `protobuf:"fixed64,1,opt,name=available_balance,json=availableBalance,proto3" json:"available_balance,omitempty"`
+	CurrentBalance   float64 `protobuf:"fixed64,2,opt,name=current_balance,json=currentBalance,proto3" json:"current_balance,omitempty"`
+}
+
+func (x *GetDebitAccountBalanceResponse) Reset() {
+	*x = GetDebitAccountBalanceResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_accounts_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetDebitAccountBalanceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDebitAccountBalanceResponse) ProtoMessage() {}
+
+func (x *GetDebitAccountBalanceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_core_accounts_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDebitAccountBalanceResponse.ProtoReflect.Descriptor instead.
+func (*GetDebitAccountBalanceResponse) Descriptor() ([]byte, []int) {
+	return file_core_accounts_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *GetDebitAccountBalanceResponse) GetAvailableBalance() float64 {
+	if x != nil {
+		return x.AvailableBalance
+	}
+	return 0
+}
+
+func (x *GetDebitAccountBalanceResponse) GetCurrentBalance() float64 {
+	if x != nil {
+		return x.CurrentBalance
+	}
+	return 0
+}
+
 type ListAccountRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -407,7 +509,7 @@ type ListAccountRequest struct {
 func (x *ListAccountRequest) Reset() {
 	*x = ListAccountRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_core_accounts_proto_msgTypes[4]
+		mi := &file_core_accounts_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -420,7 +522,7 @@ func (x *ListAccountRequest) String() string {
 func (*ListAccountRequest) ProtoMessage() {}
 
 func (x *ListAccountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_core_accounts_proto_msgTypes[4]
+	mi := &file_core_accounts_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -433,7 +535,7 @@ func (x *ListAccountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAccountRequest.ProtoReflect.Descriptor instead.
 func (*ListAccountRequest) Descriptor() ([]byte, []int) {
-	return file_core_accounts_proto_rawDescGZIP(), []int{4}
+	return file_core_accounts_proto_rawDescGZIP(), []int{6}
 }
 
 type ListUserAccountsRequest struct {
@@ -447,7 +549,7 @@ type ListUserAccountsRequest struct {
 func (x *ListUserAccountsRequest) Reset() {
 	*x = ListUserAccountsRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_core_accounts_proto_msgTypes[5]
+		mi := &file_core_accounts_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -460,7 +562,7 @@ func (x *ListUserAccountsRequest) String() string {
 func (*ListUserAccountsRequest) ProtoMessage() {}
 
 func (x *ListUserAccountsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_core_accounts_proto_msgTypes[5]
+	mi := &file_core_accounts_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -473,7 +575,7 @@ func (x *ListUserAccountsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListUserAccountsRequest.ProtoReflect.Descriptor instead.
 func (*ListUserAccountsRequest) Descriptor() ([]byte, []int) {
-	return file_core_accounts_proto_rawDescGZIP(), []int{5}
+	return file_core_accounts_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ListUserAccountsRequest) GetUserId() string {
@@ -494,7 +596,7 @@ type ListAccountResponse struct {
 func (x *ListAccountResponse) Reset() {
 	*x = ListAccountResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_core_accounts_proto_msgTypes[6]
+		mi := &file_core_accounts_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -507,7 +609,7 @@ func (x *ListAccountResponse) String() string {
 func (*ListAccountResponse) ProtoMessage() {}
 
 func (x *ListAccountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_core_accounts_proto_msgTypes[6]
+	mi := &file_core_accounts_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -520,7 +622,7 @@ func (x *ListAccountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAccountResponse.ProtoReflect.Descriptor instead.
 func (*ListAccountResponse) Descriptor() ([]byte, []int) {
-	return file_core_accounts_proto_rawDescGZIP(), []int{6}
+	return file_core_accounts_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListAccountResponse) GetAccounts() []*Account {
@@ -600,20 +702,31 @@ var file_core_accounts_proto_rawDesc = []byte{
 	0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
 	0x52, 0x07, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x23, 0x0a, 0x11, 0x47, 0x65, 0x74,
 	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e,
-	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x14,
-	0x0a, 0x12, 0x4c, 0x69, 0x73, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x22, 0x32, 0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x55, 0x73, 0x65, 0x72,
-	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x38,
+	0x0a, 0x1d, 0x47, 0x65, 0x74, 0x44, 0x65, 0x62, 0x69, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x42, 0x61, 0x6c, 0x61, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
 	0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x40, 0x0a, 0x13, 0x4c, 0x69, 0x73, 0x74,
-	0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x29, 0x0a, 0x08, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
-	0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
-	0x52, 0x08, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x42, 0x32, 0x5a, 0x30, 0x67, 0x69,
-	0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x61, 0x6c, 0x65, 0x78, 0x61, 0x6e,
-	0x64, 0x65, 0x72, 0x49, 0x49, 0x2f, 0x7a, 0x65, 0x72, 0x6f, 0x5f, 0x66, 0x69, 0x6e, 0x74, 0x65,
-	0x63, 0x68, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x47, 0x6f, 0x2f, 0x63, 0x6f, 0x72, 0x65, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x76, 0x0a, 0x1e, 0x47, 0x65, 0x74, 0x44,
+	0x65, 0x62, 0x69, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x42, 0x61, 0x6c, 0x61, 0x6e,
+	0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2b, 0x0a, 0x11, 0x61, 0x76,
+	0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x5f, 0x62, 0x61, 0x6c, 0x61, 0x6e, 0x63, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x01, 0x52, 0x10, 0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65,
+	0x42, 0x61, 0x6c, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x27, 0x0a, 0x0f, 0x63, 0x75, 0x72, 0x72, 0x65,
+	0x6e, 0x74, 0x5f, 0x62, 0x61, 0x6c, 0x61, 0x6e, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01,
+	0x52, 0x0e, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x42, 0x61, 0x6c, 0x61, 0x6e, 0x63, 0x65,
+	0x22, 0x14, 0x0a, 0x12, 0x4c, 0x69, 0x73, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x32, 0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x55, 0x73,
+	0x65, 0x72, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x22, 0x40, 0x0a, 0x13, 0x4c, 0x69,
+	0x73, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x29, 0x0a, 0x08, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75,
+	0x6e, 0x74, 0x52, 0x08, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x42, 0x32, 0x5a, 0x30,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6a, 0x61, 0x6c, 0x65, 0x78,
+	0x61, 0x6e, 0x64, 0x65, 0x72, 0x49, 0x49, 0x2f, 0x7a, 0x65, 0x72, 0x6f, 0x5f, 0x66, 0x69, 0x6e,
+	0x74, 0x65, 0x63, 0x68, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x47, 0x6f, 0x2f, 0x63, 0x6f, 0x72, 0x65,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -628,15 +741,17 @@ func file_core_accounts_proto_rawDescGZIP() []byte {
 	return file_core_accounts_proto_rawDescData
 }
 
-var file_core_accounts_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_core_accounts_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_core_accounts_proto_goTypes = []interface{}{
-	(*Account)(nil),                 // 0: core.Account
-	(*AnnualPercentageRates)(nil),   // 1: core.AnnualPercentageRates
-	(*CreateAccountRequest)(nil),    // 2: core.CreateAccountRequest
-	(*GetAccountRequest)(nil),       // 3: core.GetAccountRequest
-	(*ListAccountRequest)(nil),      // 4: core.ListAccountRequest
-	(*ListUserAccountsRequest)(nil), // 5: core.ListUserAccountsRequest
-	(*ListAccountResponse)(nil),     // 6: core.ListAccountResponse
+	(*Account)(nil),                        // 0: core.Account
+	(*AnnualPercentageRates)(nil),          // 1: core.AnnualPercentageRates
+	(*CreateAccountRequest)(nil),           // 2: core.CreateAccountRequest
+	(*GetAccountRequest)(nil),              // 3: core.GetAccountRequest
+	(*GetDebitAccountBalanceRequest)(nil),  // 4: core.GetDebitAccountBalanceRequest
+	(*GetDebitAccountBalanceResponse)(nil), // 5: core.GetDebitAccountBalanceResponse
+	(*ListAccountRequest)(nil),             // 6: core.ListAccountRequest
+	(*ListUserAccountsRequest)(nil),        // 7: core.ListUserAccountsRequest
+	(*ListAccountResponse)(nil),            // 8: core.ListAccountResponse
 }
 var file_core_accounts_proto_depIdxs = []int32{
 	1, // 0: core.Account.annual_percentage_rate:type_name -> core.AnnualPercentageRates
@@ -704,7 +819,7 @@ func file_core_accounts_proto_init() {
 			}
 		}
 		file_core_accounts_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListAccountRequest); i {
+			switch v := v.(*GetDebitAccountBalanceRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -716,7 +831,7 @@ func file_core_accounts_proto_init() {
 			}
 		}
 		file_core_accounts_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUserAccountsRequest); i {
+			switch v := v.(*GetDebitAccountBalanceResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -728,6 +843,30 @@ func file_core_accounts_proto_init() {
 			}
 		}
 		file_core_accounts_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListAccountRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_core_accounts_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListUserAccountsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_core_accounts_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListAccountResponse); i {
 			case 0:
 				return &v.state
@@ -746,7 +885,7 @@ func file_core_accounts_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_core_accounts_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -212,6 +212,38 @@ func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.
 	}
 }
 
+func GetUserDebitAccountBalance(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		debitAccBalance, err := client.GetDebitAccountBalance(ctx, &core.GetDebitAccountBalanceRequest{UserId: c.Params("id")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's debit account", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": debitAccBalance})
+	}
+}
+
+func GetUserTotalCreditAccountBalance(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		type UserTotalCreditAccountBalance struct {
+			AvailableBalance float64 `json:"available_balance,omitempty"`
+			CurrentBalance   float64 `json:"current_balance,omitempty"`
+		}
+
+		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: c.Params("id")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's accounts", "data": err})
+		}
+		totalCurrent := 0.0
+		totalAvailable := 0.0
+		for _, account := range accounts.GetAccounts() {
+			totalCurrent += account.GetCurrentBalance()
+			totalAvailable += account.GetAvailableBalance()
+		}
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": UserTotalCreditAccountBalance{totalAvailable, totalCurrent}})
+	}
+}
+
 func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: c.Params("id")})
@@ -240,8 +272,29 @@ func GetWaterfallOverview(client core.CoreClient, ctx context.Context) func(c *f
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error fetching user's waterfall", "data": err})
 		}
+		type Series struct {
+			Name string    `json:"name"`
+			Data []float32 `json:"data"`
+		}
 
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": overview})
+		accountSeries := make(map[string]Series)
+		monthlyWaterfall := overview.GetMonthlyWaterfall()
+		for idx, WaterfallMonth := range monthlyWaterfall {
+			for name, value := range WaterfallMonth.GetAccountToAmounts() {
+				if series, ok := accountSeries[name]; ok {
+					series.Data[idx] = float32(value)
+				} else {
+					accountSeries[name] = Series{Name: name, Data: make([]float32, 12)}
+					accountSeries[name].Data[idx] = float32(value)
+				}
+			}
+		}
+		response := []Series{}
+		for _, series := range accountSeries {
+			response = append(response, series)
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": response})
 	}
 }
 

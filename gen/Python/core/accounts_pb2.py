@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\"\xe1\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rofficial_name\x18\x04 \x01(\t\x12\x0c\n\x04type\x18\x05 \x01(\t\x12\x0f\n\x07subtype\x18\x06 \x01(\t\x12\x19\n\x11\x61vailable_balance\x18\x07 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x08 \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\t \x01(\x01\x12\x19\n\x11iso_currency_code\x18\n \x01(\t\x12;\n\x16\x61nnual_percentage_rate\x18\x0c \x03(\x0b\x32\x1b.core.AnnualPercentageRates\x12\x12\n\nis_overdue\x18\r \x01(\x08\x12\x1b\n\x13last_payment_amount\x18\x0e \x01(\x01\x12!\n\x19last_statement_issue_date\x18\x10 \x01(\t\x12\x1e\n\x16last_statement_balance\x18\x11 \x01(\x01\x12\x1e\n\x16minimum_payment_amount\x18\x12 \x01(\x01\x12\x1d\n\x15next_payment_due_date\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\"\x81\x01\n\x15\x41nnualPercentageRates\x12\x16\n\x0e\x61pr_percentage\x18\x01 \x01(\x01\x12\x10\n\x08\x61pr_type\x18\x02 \x01(\t\x12\x1e\n\x16\x62\x61lance_subject_to_apr\x18\x03 \x01(\x01\x12\x1e\n\x16interest_charge_amount\x18\x04 \x01(\x01\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x12ListAccountRequest\"*\n\x17ListUserAccountsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\"\xe1\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rofficial_name\x18\x04 \x01(\t\x12\x0c\n\x04type\x18\x05 \x01(\t\x12\x0f\n\x07subtype\x18\x06 \x01(\t\x12\x19\n\x11\x61vailable_balance\x18\x07 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x08 \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\t \x01(\x01\x12\x19\n\x11iso_currency_code\x18\n \x01(\t\x12;\n\x16\x61nnual_percentage_rate\x18\x0c \x03(\x0b\x32\x1b.core.AnnualPercentageRates\x12\x12\n\nis_overdue\x18\r \x01(\x08\x12\x1b\n\x13last_payment_amount\x18\x0e \x01(\x01\x12!\n\x19last_statement_issue_date\x18\x10 \x01(\t\x12\x1e\n\x16last_statement_balance\x18\x11 \x01(\x01\x12\x1e\n\x16minimum_payment_amount\x18\x12 \x01(\x01\x12\x1d\n\x15next_payment_due_date\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\"\x81\x01\n\x15\x41nnualPercentageRates\x12\x16\n\x0e\x61pr_percentage\x18\x01 \x01(\x01\x12\x10\n\x08\x61pr_type\x18\x02 \x01(\t\x12\x1e\n\x16\x62\x61lance_subject_to_apr\x18\x03 \x01(\x01\x12\x1e\n\x16interest_charge_amount\x18\x04 \x01(\x01\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"0\n\x1dGetDebitAccountBalanceRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"T\n\x1eGetDebitAccountBalanceResponse\x12\x19\n\x11\x61vailable_balance\x18\x01 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x02 \x01(\x01\"\x14\n\x12ListAccountRequest\"*\n\x17ListUserAccountsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
@@ -22,6 +22,8 @@ _ACCOUNT = DESCRIPTOR.message_types_by_name['Account']
 _ANNUALPERCENTAGERATES = DESCRIPTOR.message_types_by_name['AnnualPercentageRates']
 _CREATEACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['CreateAccountRequest']
 _GETACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['GetAccountRequest']
+_GETDEBITACCOUNTBALANCEREQUEST = DESCRIPTOR.message_types_by_name['GetDebitAccountBalanceRequest']
+_GETDEBITACCOUNTBALANCERESPONSE = DESCRIPTOR.message_types_by_name['GetDebitAccountBalanceResponse']
 _LISTACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['ListAccountRequest']
 _LISTUSERACCOUNTSREQUEST = DESCRIPTOR.message_types_by_name['ListUserAccountsRequest']
 _LISTACCOUNTRESPONSE = DESCRIPTOR.message_types_by_name['ListAccountResponse']
@@ -52,6 +54,20 @@ GetAccountRequest = _reflection.GeneratedProtocolMessageType('GetAccountRequest'
   # @@protoc_insertion_point(class_scope:core.GetAccountRequest)
   })
 _sym_db.RegisterMessage(GetAccountRequest)
+
+GetDebitAccountBalanceRequest = _reflection.GeneratedProtocolMessageType('GetDebitAccountBalanceRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETDEBITACCOUNTBALANCEREQUEST,
+  '__module__' : 'core.accounts_pb2'
+  # @@protoc_insertion_point(class_scope:core.GetDebitAccountBalanceRequest)
+  })
+_sym_db.RegisterMessage(GetDebitAccountBalanceRequest)
+
+GetDebitAccountBalanceResponse = _reflection.GeneratedProtocolMessageType('GetDebitAccountBalanceResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GETDEBITACCOUNTBALANCERESPONSE,
+  '__module__' : 'core.accounts_pb2'
+  # @@protoc_insertion_point(class_scope:core.GetDebitAccountBalanceResponse)
+  })
+_sym_db.RegisterMessage(GetDebitAccountBalanceResponse)
 
 ListAccountRequest = _reflection.GeneratedProtocolMessageType('ListAccountRequest', (_message.Message,), {
   'DESCRIPTOR' : _LISTACCOUNTREQUEST,
@@ -86,10 +102,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _CREATEACCOUNTREQUEST._serialized_end=699
   _GETACCOUNTREQUEST._serialized_start=701
   _GETACCOUNTREQUEST._serialized_end=732
-  _LISTACCOUNTREQUEST._serialized_start=734
-  _LISTACCOUNTREQUEST._serialized_end=754
-  _LISTUSERACCOUNTSREQUEST._serialized_start=756
-  _LISTUSERACCOUNTSREQUEST._serialized_end=798
-  _LISTACCOUNTRESPONSE._serialized_start=800
-  _LISTACCOUNTRESPONSE._serialized_end=854
+  _GETDEBITACCOUNTBALANCEREQUEST._serialized_start=734
+  _GETDEBITACCOUNTBALANCEREQUEST._serialized_end=782
+  _GETDEBITACCOUNTBALANCERESPONSE._serialized_start=784
+  _GETDEBITACCOUNTBALANCERESPONSE._serialized_end=868
+  _LISTACCOUNTREQUEST._serialized_start=870
+  _LISTACCOUNTREQUEST._serialized_end=890
+  _LISTUSERACCOUNTSREQUEST._serialized_start=892
+  _LISTUSERACCOUNTSREQUEST._serialized_end=934
+  _LISTACCOUNTRESPONSE._serialized_start=936
+  _LISTACCOUNTRESPONSE._serialized_end=990
 # @@protoc_insertion_point(module_scope)

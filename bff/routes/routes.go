@@ -62,7 +62,9 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreEndpoints.Patch("/paymenttask/:id", handlers.UpdatePaymentTask(coreClient, ctx))
 	coreEndpoints.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
 	coreEndpoints.Get("/accounts/:id", handlers.GetUserAccounts(coreClient, ctx))
+	coreEndpoints.Get("/accounts/debit/balance/:id", handlers.GetUserDebitAccountBalance(coreClient, ctx))
 	coreEndpoints.Get("/transactions/:id", handlers.GetUserTransactions(coreClient, ctx))
+	coreEndpoints.Get("/accounts/credit/balance/:id", handlers.GetUserTotalCreditAccountBalance(coreClient, ctx))
 
 	coreDashboardEndpoints := coreEndpoints.Group("/dashboard")
 	coreDashboardEndpoints.Get("/waterfall/:id", handlers.GetWaterfallOverview(coreClient, ctx))

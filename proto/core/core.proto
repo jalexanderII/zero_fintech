@@ -28,6 +28,7 @@ service Core {
   // Account
   rpc CreateAccount(CreateAccountRequest) returns (Account);
   rpc GetAccount(GetAccountRequest) returns (Account);
+  rpc GetDebitAccountBalance(GetDebitAccountBalanceRequest) returns (GetDebitAccountBalanceResponse);
   rpc ListAccounts(ListAccountRequest) returns (ListAccountResponse);
   rpc ListUserAccounts(ListUserAccountsRequest) returns (ListAccountResponse);
   // Transaction

@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x61uth/auth.proto\x12\x04\x61uth\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\".\n\x0c\x41uthResponse\x12\x0f\n\x07User_id\x18\x01 \x01(\t\x12\r\n\x05Token\x18\x02 \x01(\t\"X\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t\x12\x14\n\x0cphone_number\x18\x04 \x01(\t2j\n\x04\x41uth\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x31\n\x06SignUp\x12\x13.auth.SignupRequest\x1a\x12.auth.AuthResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/authb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x61uth/auth.proto\x12\x04\x61uth\"2\n\x0cLoginRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\x10\n\x08Password\x18\x02 \x01(\t\".\n\x0c\x41uthResponse\x12\x0f\n\x07User_id\x18\x01 \x01(\t\x12\r\n\x05Token\x18\x02 \x01(\t\"X\n\rSignupRequest\x12\x10\n\x08Username\x18\x01 \x01(\t\x12\r\n\x05\x45mail\x18\x02 \x01(\t\x12\x10\n\x08Password\x18\x03 \x01(\t\x12\x14\n\x0cPhone_number\x18\x04 \x01(\t2j\n\x04\x41uth\x12/\n\x05Login\x12\x12.auth.LoginRequest\x1a\x12.auth.AuthResponse\x12\x31\n\x06SignUp\x12\x13.auth.SignupRequest\x1a\x12.auth.AuthResponseB2Z0github.com/jalexanderII/zero_fintech/gen/Go/authb\x06proto3')
 
 
 

@@ -86,6 +86,10 @@ func (s AuthServer) SignUp(ctx context.Context, in *auth.SignupRequest) (*auth.A
 		return nil, errors.New("email already used")
 	}
 
+	if phone_number == "" {
+		return nil, errors.New("phone number required")
+	}
+
 	// hashed passwords are saved in the DB
 	pw, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	newId := primitive.NewObjectID()
