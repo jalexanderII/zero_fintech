@@ -84,6 +84,55 @@ class MetaData(betterproto.Message):
 
 
 @dataclass
+class CreatePaymentTaskRequest(betterproto.Message):
+    """CRUD Methods"""
+
+    payment_task: "PaymentTask" = betterproto.message_field(1)
+
+
+@dataclass
+class GetPaymentTaskRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+
+
+@dataclass
+class UpdatePaymentTaskRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+    payment_task: "PaymentTask" = betterproto.message_field(2)
+
+
+@dataclass
+class DeletePaymentTaskRequest(betterproto.Message):
+    id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListPaymentTaskRequest(betterproto.Message):
+    pass
+
+
+@dataclass
+class ListPaymentTaskResponse(betterproto.Message):
+    payment_tasks: List["PaymentTask"] = betterproto.message_field(1)
+
+
+@dataclass
+class DeletePaymentTaskResponse(betterproto.Message):
+    status: "DELETE_STATUS" = betterproto.enum_field(1)
+    payment_task: "PaymentTask" = betterproto.message_field(2)
+
+
+@dataclass
+class CreateManyPaymentTaskRequest(betterproto.Message):
+    payment_tasks: List["PaymentTask"] = betterproto.message_field(1)
+
+
+@dataclass
+class CreateManyPaymentTaskResponse(betterproto.Message):
+    payment_task_ids: List[str] = betterproto.string_field(1)
+
+
+@dataclass
 class PaymentAction(betterproto.Message):
     # account to which payment shall be made
     account_id: str = betterproto.string_field(1)
@@ -114,3 +163,49 @@ class PaymentPlan(betterproto.Message):
     # payment actions of the plan
     payment_action: List["PaymentAction"] = betterproto.message_field(12)
     name: str = betterproto.string_field(13)
+
+
+@dataclass
+class PaymentPlanResponse(betterproto.Message):
+    """Response for CreatePaymentPlan"""
+
+    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
+
+
+@dataclass
+class GetPaymentPlanRequest(betterproto.Message):
+    """CRUD Methods"""
+
+    payment_plan_id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListPaymentPlanRequest(betterproto.Message):
+    pass
+
+
+@dataclass
+class ListUserPaymentPlansRequest(betterproto.Message):
+    user_id: str = betterproto.string_field(1)
+
+
+@dataclass
+class ListPaymentPlanResponse(betterproto.Message):
+    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
+
+
+@dataclass
+class UpdatePaymentPlanRequest(betterproto.Message):
+    payment_plan_id: str = betterproto.string_field(1)
+    payment_plan: "PaymentPlan" = betterproto.message_field(2)
+
+
+@dataclass
+class DeletePaymentPlanRequest(betterproto.Message):
+    payment_plan_id: str = betterproto.string_field(1)
+
+
+@dataclass
+class DeletePaymentPlanResponse(betterproto.Message):
+    status: "DELETE_STATUS" = betterproto.enum_field(1)
+    payment_plan: "PaymentPlan" = betterproto.message_field(2)

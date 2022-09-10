@@ -55,6 +55,9 @@ from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.database.models.common import (
     PaymentPlan as PaymentPlanDB,
     PaymentAction as PaymentActionDB,
+    PaymentTask,
+    MetaData,
+    PaymentPlan,
 )
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
@@ -76,9 +79,7 @@ from services.planning.server.utils import (
 class PlanningService(PlanningServicer):
     logger: logging.Logger
     planning_collection: Collection
-    _payment_plan_builder: PaymentPlanBuilder = field(
-        init=False, default=payment_plan_builder
-    )
+    _payment_plan_builder: PaymentPlanBuilder = payment_plan_builder
     core_client: CoreStub = CoreStub(
         grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
     )
@@ -88,17 +89,18 @@ class PlanningService(PlanningServicer):
     ) -> PaymentPlanResponse:
         """Calls PaymentPlanBuilder to generate a list of Payments plans given a list of PaymentTasks"""
         self.logger.info("CreatePaymentPlan called")
-        payment_tasks, meta_data = request.payment_tasks, request.meta_data
+        payment_tasks: List[PaymentTask] = request.payment_tasks
+        meta_data: MetaData = request.meta_data
 
-        payment_plans_pb: List[PaymentPlanPB] = self._payment_plan_builder.create(
+        payment_plans: List[PaymentPlan] = self._payment_plan_builder.create(
             payment_tasks, meta_data
         )
         if request.save_plan:
-            for payment_plan in payment_plans_pb:
-                new_id = self.SavePaymentPlan(payment_plan)
+            for payment_plan in payment_plans:
+                new_id: str = self.SavePaymentPlan(payment_plan)
                 self.logger.info(f"New plan created with id {new_id}")
 
-        return PaymentPlanResponse(payment_plans=payment_plans_pb)
+        return PaymentPlanResponse(payment_plans=payment_plans)
 
     def _get_upcoming_payment_actions(
         self, date: Optional[Timestamp] = None, user_id: Optional[str] = None

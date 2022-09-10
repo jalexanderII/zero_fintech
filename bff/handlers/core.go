@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,18 +33,18 @@ type PaymentAction struct {
 
 type PaymentPlan struct {
 	Name             string           `json:"name,omitempty"`
-	PaymentPlanId    string           `json:"payment_plan_id,omitempty" json:"paymentPlanId,omitempty"`
-	UserId           string           `json:"user_id,omitempty" json:"userId,omitempty"`
-	PaymentTaskId    []string         `json:"payment_task_id,omitempty" json:"paymentTaskId,omitempty"`
-	Timeline         float64          `json:"timeline,omitempty" json:"timeline,omitempty"`
-	PaymentFreq      int32            `json:"payment_freq,omitempty" json:"paymentFreq,omitempty"`
-	Amount           float64          `json:"amount,omitempty" json:"amount,omitempty"`
-	AmountPerPayment float64          `json:"amount_per_payment,omitempty" json:"amountPerPayment,omitempty"`
-	PlanType         int32            `json:"plan_type,omitempty" json:"planType,omitempty"`
-	EndDate          time.Time        `json:"end_date,omitempty" json:"endDate"`
-	Active           bool             `json:"active,omitempty" json:"active,omitempty"`
-	Status           int32            `json:"status,omitempty" json:"status,omitempty"`
-	PaymentAction    []*PaymentAction `json:"payment_action,omitempty" json:"paymentAction,omitempty"`
+	PaymentPlanId    string           `json:"payment_plan_id,omitempty"`
+	UserId           string           `json:"user_id,omitempty"`
+	PaymentTaskId    []string         `json:"payment_task_id,omitempty"`
+	Timeline         float64          `json:"timeline,omitempty"`
+	PaymentFreq      int32            `json:"payment_freq,omitempty"`
+	Amount           float64          `json:"amount,omitempty"`
+	AmountPerPayment float64          `json:"amount_per_payment,omitempty"`
+	PlanType         int32            `json:"plan_type,omitempty"`
+	EndDate          time.Time        `json:"end_date,omitempty"`
+	Active           bool             `json:"active,omitempty"`
+	Status           int32            `json:"status,omitempty"`
+	PaymentAction    []*PaymentAction `json:"payment_action,omitempty"`
 }
 
 type AccountInfo struct {
@@ -98,6 +99,7 @@ func CreateResponsePaymentTask(paymentTaskModel *common.PaymentTask) PaymentTask
 
 func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		current_date := time.Now().Format("01.02.2006")
 		var input GetPaymentPlanRequest
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
@@ -118,7 +120,10 @@ func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.C
 
 		responsePaymentPlans := make([]PaymentPlan, len(paymentPlanResponse.GetPaymentPlans()))
 		for idx, paymentPlan := range paymentPlanResponse.GetPaymentPlans() {
-			responsePaymentPlans[idx] = CreateResponsePaymentPlan(paymentPlan)
+			pp := CreateResponsePaymentPlan(paymentPlan)
+			name := fmt.Sprintf("Plan_%s_%d_%s", idx+1, pp.UserId[len(pp.UserId)-4:], current_date)
+			pp.Name = name
+			responsePaymentPlans[idx] = pp
 		}
 
 		return c.Status(fiber.StatusOK).JSON(responsePaymentPlans)
