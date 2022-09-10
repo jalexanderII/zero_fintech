@@ -31,18 +31,19 @@ type PaymentAction struct {
 }
 
 type PaymentPlan struct {
-	PaymentPlanId    string           `json:"payment_plan_id,omitempty"`
-	UserId           string           `json:"user_id,omitempty"`
-	PaymentTaskId    []string         `json:"payment_task_id,omitempty"`
-	Timeline         float64          `json:"timeline,omitempty"`
-	PaymentFreq      int32            `json:"payment_freq,omitempty"`
-	Amount           float64          `json:"amount,omitempty"`
-	AmountPerPayment float64          `json:"amount_per_payment,omitempty"`
-	PlanType         int32            `json:"plan_type,omitempty"`
-	EndDate          time.Time        `json:"end_date,omitempty"`
-	Active           bool             `json:"active,omitempty"`
-	Status           int32            `json:"status,omitempty"`
-	PaymentAction    []*PaymentAction `json:"payment_action,omitempty"`
+	Name             string           `json:"name,omitempty"`
+	PaymentPlanId    string           `json:"payment_plan_id,omitempty" json:"paymentPlanId,omitempty"`
+	UserId           string           `json:"user_id,omitempty" json:"userId,omitempty"`
+	PaymentTaskId    []string         `json:"payment_task_id,omitempty" json:"paymentTaskId,omitempty"`
+	Timeline         float64          `json:"timeline,omitempty" json:"timeline,omitempty"`
+	PaymentFreq      int32            `json:"payment_freq,omitempty" json:"paymentFreq,omitempty"`
+	Amount           float64          `json:"amount,omitempty" json:"amount,omitempty"`
+	AmountPerPayment float64          `json:"amount_per_payment,omitempty" json:"amountPerPayment,omitempty"`
+	PlanType         int32            `json:"plan_type,omitempty" json:"planType,omitempty"`
+	EndDate          time.Time        `json:"end_date,omitempty" json:"endDate"`
+	Active           bool             `json:"active,omitempty" json:"active,omitempty"`
+	Status           int32            `json:"status,omitempty" json:"status,omitempty"`
+	PaymentAction    []*PaymentAction `json:"payment_action,omitempty" json:"paymentAction,omitempty"`
 }
 
 type AccountInfo struct {
@@ -70,6 +71,7 @@ func CreateResponsePaymentPlan(paymentTaskModel *common.PaymentPlan) PaymentPlan
 		}
 	}
 	return PaymentPlan{
+		Name:             paymentTaskModel.Name,
 		PaymentPlanId:    paymentTaskModel.PaymentPlanId,
 		UserId:           paymentTaskModel.UserId,
 		PaymentTaskId:    paymentTaskModel.PaymentTaskId,

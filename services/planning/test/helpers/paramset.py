@@ -25,6 +25,7 @@ class ParamSet:
 
 @attr.s(auto_attribs=True, kw_only=True)
 class MetaDataToPaymentPlanParams(ParamSet):
+    name: str
     user_id: str
     plan_type: PlanType
     amount: float

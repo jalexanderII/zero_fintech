@@ -34,6 +34,7 @@ message PaymentPlan {
   common.PaymentStatus status = 11;
   // payment actions of the plan
   repeated PaymentAction payment_action = 12;
+  string name = 13;
 }
 
 // Response for CreatePaymentPlan

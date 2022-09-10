@@ -98,6 +98,82 @@ func (x *GetPaymentPlanRequest) GetSavePlan() bool {
 	return false
 }
 
+type NotifyUsersUpcomingPaymentActionsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *NotifyUsersUpcomingPaymentActionsRequest) Reset() {
+	*x = NotifyUsersUpcomingPaymentActionsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_core_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NotifyUsersUpcomingPaymentActionsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyUsersUpcomingPaymentActionsRequest) ProtoMessage() {}
+
+func (x *NotifyUsersUpcomingPaymentActionsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_core_core_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyUsersUpcomingPaymentActionsRequest.ProtoReflect.Descriptor instead.
+func (*NotifyUsersUpcomingPaymentActionsRequest) Descriptor() ([]byte, []int) {
+	return file_core_core_proto_rawDescGZIP(), []int{1}
+}
+
+type NotifyUsersUpcomingPaymentActionsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *NotifyUsersUpcomingPaymentActionsResponse) Reset() {
+	*x = NotifyUsersUpcomingPaymentActionsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_core_core_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NotifyUsersUpcomingPaymentActionsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotifyUsersUpcomingPaymentActionsResponse) ProtoMessage() {}
+
+func (x *NotifyUsersUpcomingPaymentActionsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_core_core_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotifyUsersUpcomingPaymentActionsResponse.ProtoReflect.Descriptor instead.
+func (*NotifyUsersUpcomingPaymentActionsResponse) Descriptor() ([]byte, []int) {
+	return file_core_core_proto_rawDescGZIP(), []int{2}
+}
+
 type AccountInfo struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -111,7 +187,7 @@ type AccountInfo struct {
 func (x *AccountInfo) Reset() {
 	*x = AccountInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_core_core_proto_msgTypes[1]
+		mi := &file_core_core_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -124,7 +200,7 @@ func (x *AccountInfo) String() string {
 func (*AccountInfo) ProtoMessage() {}
 
 func (x *AccountInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_core_core_proto_msgTypes[1]
+	mi := &file_core_core_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -137,7 +213,7 @@ func (x *AccountInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccountInfo.ProtoReflect.Descriptor instead.
 func (*AccountInfo) Descriptor() ([]byte, []int) {
-	return file_core_core_proto_rawDescGZIP(), []int{1}
+	return file_core_core_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *AccountInfo) GetTransactionIds() []string {
@@ -172,7 +248,7 @@ type GetAccountDetailsResponse struct {
 func (x *GetAccountDetailsResponse) Reset() {
 	*x = GetAccountDetailsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_core_core_proto_msgTypes[2]
+		mi := &file_core_core_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -185,7 +261,7 @@ func (x *GetAccountDetailsResponse) String() string {
 func (*GetAccountDetailsResponse) ProtoMessage() {}
 
 func (x *GetAccountDetailsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_core_core_proto_msgTypes[2]
+	mi := &file_core_core_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -198,7 +274,7 @@ func (x *GetAccountDetailsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAccountDetailsResponse.ProtoReflect.Descriptor instead.
 func (*GetAccountDetailsResponse) Descriptor() ([]byte, []int) {
-	return file_core_core_proto_rawDescGZIP(), []int{2}
+	return file_core_core_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetAccountDetailsResponse) GetAccountDetailsResponse() *AccountDetailsResponse {
@@ -220,7 +296,7 @@ type AccountDetailsResponse struct {
 func (x *AccountDetailsResponse) Reset() {
 	*x = AccountDetailsResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_core_core_proto_msgTypes[3]
+		mi := &file_core_core_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -233,7 +309,7 @@ func (x *AccountDetailsResponse) String() string {
 func (*AccountDetailsResponse) ProtoMessage() {}
 
 func (x *AccountDetailsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_core_core_proto_msgTypes[3]
+	mi := &file_core_core_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -246,7 +322,7 @@ func (x *AccountDetailsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AccountDetailsResponse.ProtoReflect.Descriptor instead.
 func (*AccountDetailsResponse) Descriptor() ([]byte, []int) {
-	return file_core_core_proto_rawDescGZIP(), []int{3}
+	return file_core_core_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AccountDetailsResponse) GetAccounts() []*Account {
@@ -287,34 +363,48 @@ var file_core_core_proto_rawDesc = []byte{
 	0x28, 0x0b, 0x32, 0x10, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x4d, 0x65, 0x74, 0x61,
 	0x44, 0x61, 0x74, 0x61, 0x52, 0x08, 0x6d, 0x65, 0x74, 0x61, 0x44, 0x61, 0x74, 0x61, 0x12, 0x1b,
 	0x0a, 0x09, 0x73, 0x61, 0x76, 0x65, 0x5f, 0x70, 0x6c, 0x61, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x08, 0x52, 0x08, 0x73, 0x61, 0x76, 0x65, 0x50, 0x6c, 0x61, 0x6e, 0x22, 0x6d, 0x0a, 0x0b, 0x41,
-	0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x27, 0x0a, 0x0f, 0x74, 0x72,
-	0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x01, 0x20,
-	0x03, 0x28, 0x09, 0x52, 0x0e, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x49, 0x64, 0x73, 0x12, 0x1d, 0x0a, 0x0a, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69,
-	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
-	0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01,
-	0x28, 0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x73, 0x0a, 0x19, 0x47, 0x65,
-	0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x56, 0x0a, 0x18, 0x61, 0x63, 0x63, 0x6f, 0x75,
-	0x6e, 0x74, 0x5f, 0x64, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x63, 0x6f, 0x72, 0x65,
-	0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x16, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
-	0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x7a, 0x0a, 0x16, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c,
-	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x29, 0x0a, 0x08, 0x61, 0x63, 0x63,
-	0x6f, 0x75, 0x6e, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f,
-	0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x52, 0x08, 0x61, 0x63, 0x63, 0x6f,
-	0x75, 0x6e, 0x74, 0x73, 0x12, 0x35, 0x0a, 0x0c, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74,
-	0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x72,
-	0x65, 0x2e, 0x54, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0c, 0x74,
-	0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x32, 0xd6, 0x0e, 0x0a, 0x04,
-	0x43, 0x6f, 0x72, 0x65, 0x12, 0x4a, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65,
-	0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x12, 0x1b, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x47, 0x65,
-	0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x50, 0x61, 0x79,
-	0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x08, 0x52, 0x08, 0x73, 0x61, 0x76, 0x65, 0x50, 0x6c, 0x61, 0x6e, 0x22, 0x2a, 0x0a, 0x28, 0x4e,
+	0x6f, 0x74, 0x69, 0x66, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x55, 0x70, 0x63, 0x6f, 0x6d, 0x69,
+	0x6e, 0x67, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x2b, 0x0a, 0x29, 0x4e, 0x6f, 0x74, 0x69, 0x66,
+	0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x55, 0x70, 0x63, 0x6f, 0x6d, 0x69, 0x6e, 0x67, 0x50, 0x61,
+	0x79, 0x6d, 0x65, 0x6e, 0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x6d, 0x0a, 0x0b, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49,
+	0x6e, 0x66, 0x6f, 0x12, 0x27, 0x0a, 0x0f, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69,
+	0x6f, 0x6e, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0e, 0x74, 0x72,
+	0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x73, 0x12, 0x1d, 0x0a, 0x0a,
+	0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x09, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x61,
+	0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x01, 0x52, 0x06, 0x61, 0x6d, 0x6f,
+	0x75, 0x6e, 0x74, 0x22, 0x73, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x56, 0x0a, 0x18, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x64, 0x65, 0x74, 0x61,
+	0x69, 0x6c, 0x73, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x52, 0x16, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x7a, 0x0a, 0x16, 0x41, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x29, 0x0a, 0x08, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x41, 0x63, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x52, 0x08, 0x61, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x12, 0x35, 0x0a,
+	0x0c, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x54, 0x72, 0x61, 0x6e, 0x73,
+	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0c, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x32, 0xdd, 0x0f, 0x0a, 0x04, 0x43, 0x6f, 0x72, 0x65, 0x12, 0x4a, 0x0a,
+	0x0e, 0x47, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61, 0x6e, 0x12,
+	0x1b, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e,
+	0x74, 0x50, 0x6c, 0x61, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x63,
+	0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x2e, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x50, 0x6c, 0x61,
+	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x84, 0x01, 0x0a, 0x21, 0x4e, 0x6f,
+	0x74, 0x69, 0x66, 0x79, 0x55, 0x73, 0x65, 0x72, 0x73, 0x55, 0x70, 0x63, 0x6f, 0x6d, 0x69, 0x6e,
+	0x67, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12,
+	0x2e, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x55, 0x73, 0x65,
+	0x72, 0x73, 0x55, 0x70, 0x63, 0x6f, 0x6d, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e,
+	0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x2f, 0x2e, 0x63, 0x6f, 0x72, 0x65, 0x2e, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x55, 0x73, 0x65,
+	0x72, 0x73, 0x55, 0x70, 0x63, 0x6f, 0x6d, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x79, 0x6d, 0x65, 0x6e,
+	0x74, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x12, 0x5d, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x57, 0x61, 0x74, 0x65, 0x72, 0x66, 0x61, 0x6c, 0x6c,
 	0x4f, 0x76, 0x65, 0x72, 0x76, 0x69, 0x65, 0x77, 0x12, 0x20, 0x2e, 0x70, 0x6c, 0x61, 0x6e, 0x6e,
 	0x69, 0x6e, 0x67, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x4f, 0x76, 0x65, 0x72, 0x76,
@@ -445,108 +535,112 @@ func file_core_core_proto_rawDescGZIP() []byte {
 	return file_core_core_proto_rawDescData
 }
 
-var file_core_core_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_core_core_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_core_core_proto_goTypes = []interface{}{
 	(*GetPaymentPlanRequest)(nil),                        // 0: core.GetPaymentPlanRequest
-	(*AccountInfo)(nil),                                  // 1: core.AccountInfo
-	(*GetAccountDetailsResponse)(nil),                    // 2: core.GetAccountDetailsResponse
-	(*AccountDetailsResponse)(nil),                       // 3: core.AccountDetailsResponse
-	(*common.MetaData)(nil),                              // 4: common.MetaData
-	(*Account)(nil),                                      // 5: core.Account
-	(*Transaction)(nil),                                  // 6: core.Transaction
-	(*planning.GetUserOverviewRequest)(nil),              // 7: planning.GetUserOverviewRequest
-	(*common.ListUserPaymentPlansRequest)(nil),           // 8: common.ListUserPaymentPlansRequest
-	(*CreateAccountRequest)(nil),                         // 9: core.CreateAccountRequest
-	(*GetAccountRequest)(nil),                            // 10: core.GetAccountRequest
-	(*GetDebitAccountBalanceRequest)(nil),                // 11: core.GetDebitAccountBalanceRequest
-	(*ListAccountRequest)(nil),                           // 12: core.ListAccountRequest
-	(*ListUserAccountsRequest)(nil),                      // 13: core.ListUserAccountsRequest
-	(*CreateTransactionRequest)(nil),                     // 14: core.CreateTransactionRequest
-	(*GetTransactionRequest)(nil),                        // 15: core.GetTransactionRequest
-	(*ListTransactionRequest)(nil),                       // 16: core.ListTransactionRequest
-	(*ListUserTransactionsRequest)(nil),                  // 17: core.ListUserTransactionsRequest
-	(*common.CreatePaymentTaskRequest)(nil),              // 18: common.CreatePaymentTaskRequest
-	(*common.CreateManyPaymentTaskRequest)(nil),          // 19: common.CreateManyPaymentTaskRequest
-	(*common.GetPaymentTaskRequest)(nil),                 // 20: common.GetPaymentTaskRequest
-	(*common.ListPaymentTaskRequest)(nil),                // 21: common.ListPaymentTaskRequest
-	(*common.UpdatePaymentTaskRequest)(nil),              // 22: common.UpdatePaymentTaskRequest
-	(*common.DeletePaymentTaskRequest)(nil),              // 23: common.DeletePaymentTaskRequest
-	(*GetUserRequest)(nil),                               // 24: core.GetUserRequest
-	(*ListUserRequest)(nil),                              // 25: core.ListUserRequest
-	(*UpdateUserRequest)(nil),                            // 26: core.UpdateUserRequest
-	(*DeleteUserRequest)(nil),                            // 27: core.DeleteUserRequest
-	(*common.PaymentPlanResponse)(nil),                   // 28: common.PaymentPlanResponse
-	(*planning.WaterfallOverviewResponse)(nil),           // 29: planning.WaterfallOverviewResponse
-	(*planning.GetAmountPaidPercentageResponse)(nil),     // 30: planning.GetAmountPaidPercentageResponse
-	(*planning.GetPercentageCoveredByPlansResponse)(nil), // 31: planning.GetPercentageCoveredByPlansResponse
-	(*common.ListPaymentPlanResponse)(nil),               // 32: common.ListPaymentPlanResponse
-	(*GetDebitAccountBalanceResponse)(nil),               // 33: core.GetDebitAccountBalanceResponse
-	(*ListAccountResponse)(nil),                          // 34: core.ListAccountResponse
-	(*ListTransactionResponse)(nil),                      // 35: core.ListTransactionResponse
-	(*common.PaymentTask)(nil),                           // 36: common.PaymentTask
-	(*common.CreateManyPaymentTaskResponse)(nil),         // 37: common.CreateManyPaymentTaskResponse
-	(*common.ListPaymentTaskResponse)(nil),               // 38: common.ListPaymentTaskResponse
-	(*common.DeletePaymentTaskResponse)(nil),             // 39: common.DeletePaymentTaskResponse
-	(*User)(nil),                                         // 40: core.User
-	(*ListUserResponse)(nil),                             // 41: core.ListUserResponse
-	(*DeleteUserResponse)(nil),                           // 42: core.DeleteUserResponse
+	(*NotifyUsersUpcomingPaymentActionsRequest)(nil),     // 1: core.NotifyUsersUpcomingPaymentActionsRequest
+	(*NotifyUsersUpcomingPaymentActionsResponse)(nil),    // 2: core.NotifyUsersUpcomingPaymentActionsResponse
+	(*AccountInfo)(nil),                                  // 3: core.AccountInfo
+	(*GetAccountDetailsResponse)(nil),                    // 4: core.GetAccountDetailsResponse
+	(*AccountDetailsResponse)(nil),                       // 5: core.AccountDetailsResponse
+	(*common.MetaData)(nil),                              // 6: common.MetaData
+	(*Account)(nil),                                      // 7: core.Account
+	(*Transaction)(nil),                                  // 8: core.Transaction
+	(*planning.GetUserOverviewRequest)(nil),              // 9: planning.GetUserOverviewRequest
+	(*common.ListUserPaymentPlansRequest)(nil),           // 10: common.ListUserPaymentPlansRequest
+	(*CreateAccountRequest)(nil),                         // 11: core.CreateAccountRequest
+	(*GetAccountRequest)(nil),                            // 12: core.GetAccountRequest
+	(*GetDebitAccountBalanceRequest)(nil),                // 13: core.GetDebitAccountBalanceRequest
+	(*ListAccountRequest)(nil),                           // 14: core.ListAccountRequest
+	(*ListUserAccountsRequest)(nil),                      // 15: core.ListUserAccountsRequest
+	(*CreateTransactionRequest)(nil),                     // 16: core.CreateTransactionRequest
+	(*GetTransactionRequest)(nil),                        // 17: core.GetTransactionRequest
+	(*ListTransactionRequest)(nil),                       // 18: core.ListTransactionRequest
+	(*ListUserTransactionsRequest)(nil),                  // 19: core.ListUserTransactionsRequest
+	(*common.CreatePaymentTaskRequest)(nil),              // 20: common.CreatePaymentTaskRequest
+	(*common.CreateManyPaymentTaskRequest)(nil),          // 21: common.CreateManyPaymentTaskRequest
+	(*common.GetPaymentTaskRequest)(nil),                 // 22: common.GetPaymentTaskRequest
+	(*common.ListPaymentTaskRequest)(nil),                // 23: common.ListPaymentTaskRequest
+	(*common.UpdatePaymentTaskRequest)(nil),              // 24: common.UpdatePaymentTaskRequest
+	(*common.DeletePaymentTaskRequest)(nil),              // 25: common.DeletePaymentTaskRequest
+	(*GetUserRequest)(nil),                               // 26: core.GetUserRequest
+	(*ListUserRequest)(nil),                              // 27: core.ListUserRequest
+	(*UpdateUserRequest)(nil),                            // 28: core.UpdateUserRequest
+	(*DeleteUserRequest)(nil),                            // 29: core.DeleteUserRequest
+	(*common.PaymentPlanResponse)(nil),                   // 30: common.PaymentPlanResponse
+	(*planning.WaterfallOverviewResponse)(nil),           // 31: planning.WaterfallOverviewResponse
+	(*planning.GetAmountPaidPercentageResponse)(nil),     // 32: planning.GetAmountPaidPercentageResponse
+	(*planning.GetPercentageCoveredByPlansResponse)(nil), // 33: planning.GetPercentageCoveredByPlansResponse
+	(*common.ListPaymentPlanResponse)(nil),               // 34: common.ListPaymentPlanResponse
+	(*GetDebitAccountBalanceResponse)(nil),               // 35: core.GetDebitAccountBalanceResponse
+	(*ListAccountResponse)(nil),                          // 36: core.ListAccountResponse
+	(*ListTransactionResponse)(nil),                      // 37: core.ListTransactionResponse
+	(*common.PaymentTask)(nil),                           // 38: common.PaymentTask
+	(*common.CreateManyPaymentTaskResponse)(nil),         // 39: common.CreateManyPaymentTaskResponse
+	(*common.ListPaymentTaskResponse)(nil),               // 40: common.ListPaymentTaskResponse
+	(*common.DeletePaymentTaskResponse)(nil),             // 41: common.DeletePaymentTaskResponse
+	(*User)(nil),                                         // 42: core.User
+	(*ListUserResponse)(nil),                             // 43: core.ListUserResponse
+	(*DeleteUserResponse)(nil),                           // 44: core.DeleteUserResponse
 }
 var file_core_core_proto_depIdxs = []int32{
-	1,  // 0: core.GetPaymentPlanRequest.account_info:type_name -> core.AccountInfo
-	4,  // 1: core.GetPaymentPlanRequest.meta_data:type_name -> common.MetaData
-	3,  // 2: core.GetAccountDetailsResponse.account_details_response:type_name -> core.AccountDetailsResponse
-	5,  // 3: core.AccountDetailsResponse.accounts:type_name -> core.Account
-	6,  // 4: core.AccountDetailsResponse.transactions:type_name -> core.Transaction
+	3,  // 0: core.GetPaymentPlanRequest.account_info:type_name -> core.AccountInfo
+	6,  // 1: core.GetPaymentPlanRequest.meta_data:type_name -> common.MetaData
+	5,  // 2: core.GetAccountDetailsResponse.account_details_response:type_name -> core.AccountDetailsResponse
+	7,  // 3: core.AccountDetailsResponse.accounts:type_name -> core.Account
+	8,  // 4: core.AccountDetailsResponse.transactions:type_name -> core.Transaction
 	0,  // 5: core.Core.GetPaymentPlan:input_type -> core.GetPaymentPlanRequest
-	7,  // 6: core.Core.GetWaterfallOverview:input_type -> planning.GetUserOverviewRequest
-	7,  // 7: core.Core.GetAmountPaidPercentage:input_type -> planning.GetUserOverviewRequest
-	7,  // 8: core.Core.GetPercentageCoveredByPlans:input_type -> planning.GetUserOverviewRequest
-	8,  // 9: core.Core.ListUserPaymentPlans:input_type -> common.ListUserPaymentPlansRequest
-	9,  // 10: core.Core.CreateAccount:input_type -> core.CreateAccountRequest
-	10, // 11: core.Core.GetAccount:input_type -> core.GetAccountRequest
-	11, // 12: core.Core.GetDebitAccountBalance:input_type -> core.GetDebitAccountBalanceRequest
-	12, // 13: core.Core.ListAccounts:input_type -> core.ListAccountRequest
-	13, // 14: core.Core.ListUserAccounts:input_type -> core.ListUserAccountsRequest
-	14, // 15: core.Core.CreateTransaction:input_type -> core.CreateTransactionRequest
-	15, // 16: core.Core.GetTransaction:input_type -> core.GetTransactionRequest
-	16, // 17: core.Core.ListTransactions:input_type -> core.ListTransactionRequest
-	17, // 18: core.Core.ListUserTransactions:input_type -> core.ListUserTransactionsRequest
-	18, // 19: core.Core.CreatePaymentTask:input_type -> common.CreatePaymentTaskRequest
-	19, // 20: core.Core.CreateManyPaymentTask:input_type -> common.CreateManyPaymentTaskRequest
-	20, // 21: core.Core.GetPaymentTask:input_type -> common.GetPaymentTaskRequest
-	21, // 22: core.Core.ListPaymentTasks:input_type -> common.ListPaymentTaskRequest
-	22, // 23: core.Core.UpdatePaymentTask:input_type -> common.UpdatePaymentTaskRequest
-	23, // 24: core.Core.DeletePaymentTask:input_type -> common.DeletePaymentTaskRequest
-	24, // 25: core.Core.GetUser:input_type -> core.GetUserRequest
-	25, // 26: core.Core.ListUsers:input_type -> core.ListUserRequest
-	26, // 27: core.Core.UpdateUser:input_type -> core.UpdateUserRequest
-	27, // 28: core.Core.DeleteUser:input_type -> core.DeleteUserRequest
-	28, // 29: core.Core.GetPaymentPlan:output_type -> common.PaymentPlanResponse
-	29, // 30: core.Core.GetWaterfallOverview:output_type -> planning.WaterfallOverviewResponse
-	30, // 31: core.Core.GetAmountPaidPercentage:output_type -> planning.GetAmountPaidPercentageResponse
-	31, // 32: core.Core.GetPercentageCoveredByPlans:output_type -> planning.GetPercentageCoveredByPlansResponse
-	32, // 33: core.Core.ListUserPaymentPlans:output_type -> common.ListPaymentPlanResponse
-	5,  // 34: core.Core.CreateAccount:output_type -> core.Account
-	5,  // 35: core.Core.GetAccount:output_type -> core.Account
-	33, // 36: core.Core.GetDebitAccountBalance:output_type -> core.GetDebitAccountBalanceResponse
-	34, // 37: core.Core.ListAccounts:output_type -> core.ListAccountResponse
-	34, // 38: core.Core.ListUserAccounts:output_type -> core.ListAccountResponse
-	6,  // 39: core.Core.CreateTransaction:output_type -> core.Transaction
-	6,  // 40: core.Core.GetTransaction:output_type -> core.Transaction
-	35, // 41: core.Core.ListTransactions:output_type -> core.ListTransactionResponse
-	35, // 42: core.Core.ListUserTransactions:output_type -> core.ListTransactionResponse
-	36, // 43: core.Core.CreatePaymentTask:output_type -> common.PaymentTask
-	37, // 44: core.Core.CreateManyPaymentTask:output_type -> common.CreateManyPaymentTaskResponse
-	36, // 45: core.Core.GetPaymentTask:output_type -> common.PaymentTask
-	38, // 46: core.Core.ListPaymentTasks:output_type -> common.ListPaymentTaskResponse
-	36, // 47: core.Core.UpdatePaymentTask:output_type -> common.PaymentTask
-	39, // 48: core.Core.DeletePaymentTask:output_type -> common.DeletePaymentTaskResponse
-	40, // 49: core.Core.GetUser:output_type -> core.User
-	41, // 50: core.Core.ListUsers:output_type -> core.ListUserResponse
-	40, // 51: core.Core.UpdateUser:output_type -> core.User
-	42, // 52: core.Core.DeleteUser:output_type -> core.DeleteUserResponse
-	29, // [29:53] is the sub-list for method output_type
-	5,  // [5:29] is the sub-list for method input_type
+	1,  // 6: core.Core.NotifyUsersUpcomingPaymentActions:input_type -> core.NotifyUsersUpcomingPaymentActionsRequest
+	9,  // 7: core.Core.GetWaterfallOverview:input_type -> planning.GetUserOverviewRequest
+	9,  // 8: core.Core.GetAmountPaidPercentage:input_type -> planning.GetUserOverviewRequest
+	9,  // 9: core.Core.GetPercentageCoveredByPlans:input_type -> planning.GetUserOverviewRequest
+	10, // 10: core.Core.ListUserPaymentPlans:input_type -> common.ListUserPaymentPlansRequest
+	11, // 11: core.Core.CreateAccount:input_type -> core.CreateAccountRequest
+	12, // 12: core.Core.GetAccount:input_type -> core.GetAccountRequest
+	13, // 13: core.Core.GetDebitAccountBalance:input_type -> core.GetDebitAccountBalanceRequest
+	14, // 14: core.Core.ListAccounts:input_type -> core.ListAccountRequest
+	15, // 15: core.Core.ListUserAccounts:input_type -> core.ListUserAccountsRequest
+	16, // 16: core.Core.CreateTransaction:input_type -> core.CreateTransactionRequest
+	17, // 17: core.Core.GetTransaction:input_type -> core.GetTransactionRequest
+	18, // 18: core.Core.ListTransactions:input_type -> core.ListTransactionRequest
+	19, // 19: core.Core.ListUserTransactions:input_type -> core.ListUserTransactionsRequest
+	20, // 20: core.Core.CreatePaymentTask:input_type -> common.CreatePaymentTaskRequest
+	21, // 21: core.Core.CreateManyPaymentTask:input_type -> common.CreateManyPaymentTaskRequest
+	22, // 22: core.Core.GetPaymentTask:input_type -> common.GetPaymentTaskRequest
+	23, // 23: core.Core.ListPaymentTasks:input_type -> common.ListPaymentTaskRequest
+	24, // 24: core.Core.UpdatePaymentTask:input_type -> common.UpdatePaymentTaskRequest
+	25, // 25: core.Core.DeletePaymentTask:input_type -> common.DeletePaymentTaskRequest
+	26, // 26: core.Core.GetUser:input_type -> core.GetUserRequest
+	27, // 27: core.Core.ListUsers:input_type -> core.ListUserRequest
+	28, // 28: core.Core.UpdateUser:input_type -> core.UpdateUserRequest
+	29, // 29: core.Core.DeleteUser:input_type -> core.DeleteUserRequest
+	30, // 30: core.Core.GetPaymentPlan:output_type -> common.PaymentPlanResponse
+	2,  // 31: core.Core.NotifyUsersUpcomingPaymentActions:output_type -> core.NotifyUsersUpcomingPaymentActionsResponse
+	31, // 32: core.Core.GetWaterfallOverview:output_type -> planning.WaterfallOverviewResponse
+	32, // 33: core.Core.GetAmountPaidPercentage:output_type -> planning.GetAmountPaidPercentageResponse
+	33, // 34: core.Core.GetPercentageCoveredByPlans:output_type -> planning.GetPercentageCoveredByPlansResponse
+	34, // 35: core.Core.ListUserPaymentPlans:output_type -> common.ListPaymentPlanResponse
+	7,  // 36: core.Core.CreateAccount:output_type -> core.Account
+	7,  // 37: core.Core.GetAccount:output_type -> core.Account
+	35, // 38: core.Core.GetDebitAccountBalance:output_type -> core.GetDebitAccountBalanceResponse
+	36, // 39: core.Core.ListAccounts:output_type -> core.ListAccountResponse
+	36, // 40: core.Core.ListUserAccounts:output_type -> core.ListAccountResponse
+	8,  // 41: core.Core.CreateTransaction:output_type -> core.Transaction
+	8,  // 42: core.Core.GetTransaction:output_type -> core.Transaction
+	37, // 43: core.Core.ListTransactions:output_type -> core.ListTransactionResponse
+	37, // 44: core.Core.ListUserTransactions:output_type -> core.ListTransactionResponse
+	38, // 45: core.Core.CreatePaymentTask:output_type -> common.PaymentTask
+	39, // 46: core.Core.CreateManyPaymentTask:output_type -> common.CreateManyPaymentTaskResponse
+	38, // 47: core.Core.GetPaymentTask:output_type -> common.PaymentTask
+	40, // 48: core.Core.ListPaymentTasks:output_type -> common.ListPaymentTaskResponse
+	38, // 49: core.Core.UpdatePaymentTask:output_type -> common.PaymentTask
+	41, // 50: core.Core.DeletePaymentTask:output_type -> common.DeletePaymentTaskResponse
+	42, // 51: core.Core.GetUser:output_type -> core.User
+	43, // 52: core.Core.ListUsers:output_type -> core.ListUserResponse
+	42, // 53: core.Core.UpdateUser:output_type -> core.User
+	44, // 54: core.Core.DeleteUser:output_type -> core.DeleteUserResponse
+	30, // [30:55] is the sub-list for method output_type
+	5,  // [5:30] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -574,7 +668,7 @@ func file_core_core_proto_init() {
 			}
 		}
 		file_core_core_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*AccountInfo); i {
+			switch v := v.(*NotifyUsersUpcomingPaymentActionsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -586,7 +680,7 @@ func file_core_core_proto_init() {
 			}
 		}
 		file_core_core_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetAccountDetailsResponse); i {
+			switch v := v.(*NotifyUsersUpcomingPaymentActionsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -598,6 +692,30 @@ func file_core_core_proto_init() {
 			}
 		}
 		file_core_core_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AccountInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_core_core_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetAccountDetailsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_core_core_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*AccountDetailsResponse); i {
 			case 0:
 				return &v.state
@@ -616,7 +734,7 @@ func file_core_core_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_core_core_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -645,6 +763,8 @@ type CoreClient interface {
 	// GetPaymentPlan makes request to the Planning service by passing it a list
 	// of PaymentTasks and expects to receive a list of PaymentPlans
 	GetPaymentPlan(ctx context.Context, in *GetPaymentPlanRequest, opts ...grpc.CallOption) (*common.PaymentPlanResponse, error)
+	// Notify Users about upcoming payment actions
+	NotifyUsersUpcomingPaymentActions(ctx context.Context, in *NotifyUsersUpcomingPaymentActionsRequest, opts ...grpc.CallOption) (*NotifyUsersUpcomingPaymentActionsResponse, error)
 	// GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
 	// coming 12 month
 	GetWaterfallOverview(ctx context.Context, in *planning.GetUserOverviewRequest, opts ...grpc.CallOption) (*planning.WaterfallOverviewResponse, error)
@@ -690,6 +810,15 @@ func NewCoreClient(cc grpc.ClientConnInterface) CoreClient {
 func (c *coreClient) GetPaymentPlan(ctx context.Context, in *GetPaymentPlanRequest, opts ...grpc.CallOption) (*common.PaymentPlanResponse, error) {
 	out := new(common.PaymentPlanResponse)
 	err := c.cc.Invoke(ctx, "/core.Core/GetPaymentPlan", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coreClient) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *NotifyUsersUpcomingPaymentActionsRequest, opts ...grpc.CallOption) (*NotifyUsersUpcomingPaymentActionsResponse, error) {
+	out := new(NotifyUsersUpcomingPaymentActionsResponse)
+	err := c.cc.Invoke(ctx, "/core.Core/NotifyUsersUpcomingPaymentActions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -908,6 +1037,8 @@ type CoreServer interface {
 	// GetPaymentPlan makes request to the Planning service by passing it a list
 	// of PaymentTasks and expects to receive a list of PaymentPlans
 	GetPaymentPlan(context.Context, *GetPaymentPlanRequest) (*common.PaymentPlanResponse, error)
+	// Notify Users about upcoming payment actions
+	NotifyUsersUpcomingPaymentActions(context.Context, *NotifyUsersUpcomingPaymentActionsRequest) (*NotifyUsersUpcomingPaymentActionsResponse, error)
 	// GetWaterfallOverview accepts a request from Core service with a user ID to create a waterfall overview for the
 	// coming 12 month
 	GetWaterfallOverview(context.Context, *planning.GetUserOverviewRequest) (*planning.WaterfallOverviewResponse, error)
@@ -948,6 +1079,9 @@ type UnimplementedCoreServer struct {
 
 func (*UnimplementedCoreServer) GetPaymentPlan(context.Context, *GetPaymentPlanRequest) (*common.PaymentPlanResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentPlan not implemented")
+}
+func (*UnimplementedCoreServer) NotifyUsersUpcomingPaymentActions(context.Context, *NotifyUsersUpcomingPaymentActionsRequest) (*NotifyUsersUpcomingPaymentActionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NotifyUsersUpcomingPaymentActions not implemented")
 }
 func (*UnimplementedCoreServer) GetWaterfallOverview(context.Context, *planning.GetUserOverviewRequest) (*planning.WaterfallOverviewResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWaterfallOverview not implemented")
@@ -1037,6 +1171,24 @@ func _Core_GetPaymentPlan_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CoreServer).GetPaymentPlan(ctx, req.(*GetPaymentPlanRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Core_NotifyUsersUpcomingPaymentActions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyUsersUpcomingPaymentActionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoreServer).NotifyUsersUpcomingPaymentActions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/core.Core/NotifyUsersUpcomingPaymentActions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoreServer).NotifyUsersUpcomingPaymentActions(ctx, req.(*NotifyUsersUpcomingPaymentActionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1462,6 +1614,10 @@ var _Core_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPaymentPlan",
 			Handler:    _Core_GetPaymentPlan_Handler,
+		},
+		{
+			MethodName: "NotifyUsersUpcomingPaymentActions",
+			Handler:    _Core_NotifyUsersUpcomingPaymentActions_Handler,
 		},
 		{
 			MethodName: "GetWaterfallOverview",

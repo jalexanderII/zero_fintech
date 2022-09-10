@@ -62,6 +62,7 @@ class PaymentPlanBuilder:
         self, payment_tasks: List[PaymentTask], meta_data: Optional[MetaData] = None
     ) -> List[PaymentPlan]:
         """Creates a PaymentPlan given a list of PaymentTasks"""
+        current_date: str = datetime.datetime.now().strftime("%d-%m-%Y")
         user_id: str = payment_tasks[0].user_id
         payment_task_ids: List[str] = []
         account_ids: List[str] = []
@@ -73,6 +74,7 @@ class PaymentPlanBuilder:
 
         return [
             self._create_from_meta_data(
+                name=f"Plan_{user_id[-4:]}_{idx}_{current_date}",
                 user_id=user_id,
                 plan_type=meta_data.preferred_plan_type,
                 timeline_months=meta_data.preferred_timeline_in_months,
@@ -81,8 +83,8 @@ class PaymentPlanBuilder:
                 account_ids=account_ids,
                 amounts=amounts,
             )
-            for meta_data in self._get_meta_data_options(
-                meta_data, sum(amounts) > AMOUNT_THRESHOLD
+            for idx, _meta_data in enumerate(
+                self._get_meta_data_options(meta_data, sum(amounts) > AMOUNT_THRESHOLD)
             )
         ]
 
@@ -152,6 +154,7 @@ class PaymentPlanBuilder:
 
     def _create_from_meta_data(
         self,
+        name: str,
         user_id: str,
         plan_type: PlanType,
         timeline_months: float,
@@ -210,8 +213,10 @@ class PaymentPlanBuilder:
                 start_date=start_date,
                 amount_per_payment=amount_per_payment,
             )
-
+        print(f"I should have a name {name}!")
+        logger.info(f"I should have a name {name}!")
         return PaymentPlan(
+            name=name,
             user_id=user_id,
             payment_task_id=payment_task_ids,
             amount=sum(amounts),

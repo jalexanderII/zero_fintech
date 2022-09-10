@@ -23,7 +23,9 @@ def serve():
     load_dotenv()
 
     logger.info("Initiate Mongo client and servicer")
-    servicer = PlanningService(planning_collection=initiate_mongo_client())
+    servicer = PlanningService(
+        planning_collection=initiate_mongo_client(), logger=logger
+    )
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     PlanningServicePB.add_PlanningServicer_to_server(servicer, server)
 

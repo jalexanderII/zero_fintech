@@ -113,3 +113,4 @@ class PaymentPlan(betterproto.Message):
     status: "PaymentStatus" = betterproto.enum_field(11)
     # payment actions of the plan
     payment_action: List["PaymentAction"] = betterproto.message_field(12)
+    name: str = betterproto.string_field(13)

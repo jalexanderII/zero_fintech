@@ -25,6 +25,11 @@ class CoreStub(object):
                 request_serializer=core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
                 response_deserializer=common_dot_payment__plan__pb2.PaymentPlanResponse.FromString,
                 )
+        self.NotifyUsersUpcomingPaymentActions = channel.unary_unary(
+                '/core.Core/NotifyUsersUpcomingPaymentActions',
+                request_serializer=core_dot_core__pb2.NotifyUsersUpcomingPaymentActionsRequest.SerializeToString,
+                response_deserializer=core_dot_core__pb2.NotifyUsersUpcomingPaymentActionsResponse.FromString,
+                )
         self.GetWaterfallOverview = channel.unary_unary(
                 '/core.Core/GetWaterfallOverview',
                 request_serializer=planning_dot_planning__pb2.GetUserOverviewRequest.SerializeToString,
@@ -148,6 +153,13 @@ class CoreServicer(object):
     def GetPaymentPlan(self, request, context):
         """GetPaymentPlan makes request to the Planning service by passing it a list
         of PaymentTasks and expects to receive a list of PaymentPlans
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def NotifyUsersUpcomingPaymentActions(self, request, context):
+        """Notify Users about upcoming payment actions
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -308,6 +320,11 @@ def add_CoreServicer_to_server(servicer, server):
                     request_deserializer=core_dot_core__pb2.GetPaymentPlanRequest.FromString,
                     response_serializer=common_dot_payment__plan__pb2.PaymentPlanResponse.SerializeToString,
             ),
+            'NotifyUsersUpcomingPaymentActions': grpc.unary_unary_rpc_method_handler(
+                    servicer.NotifyUsersUpcomingPaymentActions,
+                    request_deserializer=core_dot_core__pb2.NotifyUsersUpcomingPaymentActionsRequest.FromString,
+                    response_serializer=core_dot_core__pb2.NotifyUsersUpcomingPaymentActionsResponse.SerializeToString,
+            ),
             'GetWaterfallOverview': grpc.unary_unary_rpc_method_handler(
                     servicer.GetWaterfallOverview,
                     request_deserializer=planning_dot_planning__pb2.GetUserOverviewRequest.FromString,
@@ -447,6 +464,23 @@ class Core(object):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetPaymentPlan',
             core_dot_core__pb2.GetPaymentPlanRequest.SerializeToString,
             common_dot_payment__plan__pb2.PaymentPlanResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def NotifyUsersUpcomingPaymentActions(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/NotifyUsersUpcomingPaymentActions',
+            core_dot_core__pb2.NotifyUsersUpcomingPaymentActionsRequest.SerializeToString,
+            core_dot_core__pb2.NotifyUsersUpcomingPaymentActionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

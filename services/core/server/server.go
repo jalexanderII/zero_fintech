@@ -68,16 +68,18 @@ func (s CoreServer) GetPaymentPlan(ctx context.Context, in *core.GetPaymentPlanR
 	}
 
 	// send payment tasks to planning to get payment plans
+	s.l.Info("Should be calling Planning now!!")
 	res, err := s.planningClient.CreatePaymentPlan(ctx, &planning.CreatePaymentPlanRequest{PaymentTasks: paymentTasks, MetaData: in.GetMetaData(), SavePlan: in.GetSavePlan()})
 	if err != nil {
 		return nil, err
 	}
+	s.l.Info("Planning says!!", res.PaymentPlans)
 	return &common.PaymentPlanResponse{PaymentPlans: res.GetPaymentPlans()}, nil
 }
 
-func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *notification.NotifyUsersUpcomingPaymentActionsRequest) (*notification.NotifyUsersUpcomingPaymentActionsResponse, error) {
-	now := ptypes.TimestampProto(time.Now())
-	upcomingPaymentActionsAllUsers, err := s.planningClient.GetAllUpcomingPaymentActions(ctx, &planning.ListPaymentPlanRequest{date: now})
+func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *core.NotifyUsersUpcomingPaymentActionsRequest) (*core.NotifyUsersUpcomingPaymentActionsResponse, error) {
+	now, _ := ptypes.TimestampProto(time.Now())
+	upcomingPaymentActionsAllUsers, err := s.planningClient.GetAllUpcomingPaymentActions(ctx, &planning.GetAllUpcomingPaymentActionsRequest{Date: now})
 	if err != nil {
 		s.l.Error("[PaymentPlan] Error listing upcoming PaymentActions", "error", err)
 		return nil, err
@@ -87,7 +89,7 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 
 	// create map of UserID -> AccID -> Liability
 	userAccLiabilities := make(map[string]map[string]float64)
-	for idx := range upcomingPaymentActionsAllUsers {
+	for idx := range paymentActions {
 		_, created := userAccLiabilities[userIds[idx]]
 		if !created {
 			userAccLiabilities[userIds[idx]] = make(map[string]float64)
@@ -114,14 +116,14 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 			return nil, err
 		}
 
-		if totalDebit < totalLiab {
-			userNotify[userId] = fmt.Sprintf("You are missing %v for tomorrows upcoming total payment of %v", totalLiab-totalDebit, totalLiab)
+		if totalDebit.CurrentBalance < totalLiab {
+			userNotify[userId] = fmt.Sprintf("You are missing %v for tomorrows upcoming total payment of %v", totalLiab-totalDebit.CurrentBalance, totalLiab)
 		} else {
 			userNotify[userId] = fmt.Sprintf("You are all setup for tomorrows total payment of %v", totalLiab)
 		}
 		for accId, liab := range accLiab {
 			accName := ""
-			for acc := range userAccs.GetAccounts() {
+			for _, acc := range userAccs.GetAccounts() {
 				if acc.GetAccountId() == accId {
 					accName = acc.GetName()
 					break
@@ -133,8 +135,8 @@ func (s CoreServer) NotifyUsersUpcomingPaymentActions(ctx context.Context, in *n
 
 	// send notifications to the appropriate user
 	for userId, message := range userNotify {
-		phoneNumber := s.GetUser(ctx, &core.GetUserRequest{Id: userId}).GetPhoneNumber()
-		_, err := s.notificationClient.SendSMS(ctx, &notification.SendSMSRequest{PhoneNumber: phoneNumber, Message: message})
+		user, _ := s.GetUser(ctx, &core.GetUserRequest{Id: userId})
+		_, err := s.notificationClient.SendSMS(ctx, &notification.SendSMSRequest{PhoneNumber: user.GetPhoneNumber(), Message: message})
 		if err != nil {
 			s.l.Error("[Notification] Failed to notify user", userId, "error", err)
 			return nil, err

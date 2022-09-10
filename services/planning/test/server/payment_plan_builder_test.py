@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 
 import pandas as pd
 import pytest
@@ -35,16 +36,18 @@ from services.planning.test.helpers.shared_objects import MOCK_CHASE_ACC, MOCK_A
 
 
 def shift_now_by_payment_frequency_multiple_times(
-    payment_freq: PaymentFrequency, how_often: int
+    payment_freq: PaymentFrequency,
+    how_often: int,
+    _date: Optional[datetime.datetime] = None,
 ) -> Timestamp:
     """Helper function to shift current date/now by PaymentFrequency multiple times."""
-    date = datetime.datetime.now()
+    date = _date or datetime.datetime.now()
     for _ in range(how_often):
         date = shift_date_by_payment_frequency(date=date, payment_freq=payment_freq)
     return datetime_to_pb_timestamp(date)
 
 
-# used for creation from meta data
+# used for creation from metadata
 DATE_IN_1_MONTH_PB = shift_now_by_payment_frequency_multiple_times(
     PAYMENT_FREQUENCY_MONTHLY, 1
 )
@@ -53,6 +56,9 @@ DATE_IN_2_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(
 )
 DATE_IN_3_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(
     PAYMENT_FREQUENCY_MONTHLY, 3
+)
+DATE_IN_4_MONTHS_PB = shift_now_by_payment_frequency_multiple_times(
+    PAYMENT_FREQUENCY_MONTHLY, 4
 )
 # used only for creation of payment actions
 START_DATE_CREATION_PAYMENT_ACTIONS = datetime.datetime(2022, 2, 21, 17, 26, 12)
@@ -75,39 +81,51 @@ MOCK_DF = pd.DataFrame(
 MOCK_MIN_FEE_MONTHLY_ACTIONS = [
     PaymentAction(
         account_id="1",
-        amount=500,
+        amount=600,
         transaction_date=DATE_IN_1_MONTH_PB,
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
     PaymentAction(
-        account_id="2",
-        amount=500,
+        account_id="1",
+        amount=200,
         transaction_date=DATE_IN_2_MONTHS_PB,
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
     PaymentAction(
         account_id="2",
-        amount=500,
+        amount=400,
+        transaction_date=DATE_IN_2_MONTHS_PB,
+        status=PAYMENT_ACTION_STATUS_PENDING,
+    ),
+    PaymentAction(
+        account_id="2",
+        amount=600,
         transaction_date=DATE_IN_3_MONTHS_PB,
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
 ]
 MOCK_OPTIM_MONTHLY_ACTIONS = [
     PaymentAction(
-        account_id="2",
-        amount=500,
+        account_id="1",
+        amount=600,
         transaction_date=DATE_IN_1_MONTH_PB,
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
     PaymentAction(
-        account_id="1",
-        amount=500,
+        account_id="2",
+        amount=600,
         transaction_date=DATE_IN_2_MONTHS_PB,
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
     PaymentAction(
         account_id="2",
-        amount=500,
+        amount=400,
+        transaction_date=DATE_IN_3_MONTHS_PB,
+        status=PAYMENT_ACTION_STATUS_PENDING,
+    ),
+    PaymentAction(
+        account_id="1",
+        amount=200,
         transaction_date=DATE_IN_3_MONTHS_PB,
         status=PAYMENT_ACTION_STATUS_PENDING,
     ),
@@ -134,19 +152,21 @@ def patch__fetch_accounts(mocker: MockerFixture) -> None:
             id="Test Payment Plan for Monthly min fee",
             user_id="test",
             plan_type=PLAN_TYPE_MIN_FEES,
-            amount=1500.0,
+            amount=1800.0,
             timeline_months=3,
             payment_freq=PAYMENT_FREQUENCY_MONTHLY,
             payment_task_ids=["01", "02"],
             account_ids=[MOCK_CHASE_ACC.account_id, MOCK_AMEX_ACC.account_id],
             amounts=[MOCK_CHASE_ACC.current_balance, MOCK_AMEX_ACC.current_balance],
+            name="123",
             expected=PaymentPlan(
+                name="123",
                 user_id="test",
                 payment_task_id=["01", "02"],
-                amount=1500,
+                amount=1800,
                 timeline=3,
                 payment_freq=PAYMENT_FREQUENCY_MONTHLY,
-                amount_per_payment=500,
+                amount_per_payment=600,
                 plan_type=PLAN_TYPE_MIN_FEES,
                 end_date=DATE_IN_3_MONTHS_PB,
                 active=True,
@@ -159,18 +179,20 @@ def patch__fetch_accounts(mocker: MockerFixture) -> None:
             user_id="test",
             plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
             timeline_months=3,
-            amount=1500.0,
+            amount=1800.0,
             payment_freq=PAYMENT_FREQUENCY_MONTHLY,
             payment_task_ids=["01", "02"],
             account_ids=[MOCK_CHASE_ACC.account_id, MOCK_AMEX_ACC.account_id],
             amounts=[MOCK_CHASE_ACC.current_balance, MOCK_AMEX_ACC.current_balance],
+            name="123",
             expected=PaymentPlan(
+                name="123",
                 user_id="test",
                 payment_task_id=["01", "02"],
-                amount=1500.0,
+                amount=1800.0,
                 timeline=3,
                 payment_freq=PAYMENT_FREQUENCY_MONTHLY,
-                amount_per_payment=500,
+                amount_per_payment=600,
                 plan_type=PLAN_TYPE_OPTIM_CREDIT_SCORE,
                 end_date=DATE_IN_3_MONTHS_PB,
                 active=True,
@@ -187,6 +209,7 @@ def test__create_from_meta_data(
 ):
     ppb = mock_payment_plan_builder
     args = (
+        p.name,
         p.user_id,
         p.plan_type,
         p.timeline_months,
@@ -231,7 +254,7 @@ def test__create_from_meta_data(
                     status=PAYMENT_ACTION_STATUS_PENDING,
                 ),
                 PaymentAction(
-                    account_id="2",
+                    account_id="1",
                     amount=250,
                     transaction_date=Timestamp(seconds=1649093172),
                     status=PAYMENT_ACTION_STATUS_PENDING,
