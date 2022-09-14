@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -61,7 +60,7 @@ type GetPaymentPlanRequest struct {
 }
 
 // CreateResponsePaymentPlan Takes in a model and returns a serializer
-func CreateResponsePaymentPlan(paymentTaskModel *common.PaymentPlan) PaymentPlan {
+func CreateResponsePaymentPlan(paymentTaskModel *common.PaymentPlanWName) PaymentPlan {
 	paymentActions := make([]*PaymentAction, len(paymentTaskModel.GetPaymentAction()))
 	for idx, paymentAction := range paymentTaskModel.GetPaymentAction() {
 		paymentActions[idx] = &PaymentAction{
@@ -99,7 +98,7 @@ func CreateResponsePaymentTask(paymentTaskModel *common.PaymentTask) PaymentTask
 
 func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		current_date := time.Now().Format("01.02.2006")
+		// current_date := time.Now().Format("01.02.2006")
 		var input GetPaymentPlanRequest
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
@@ -120,10 +119,10 @@ func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.C
 
 		responsePaymentPlans := make([]PaymentPlan, len(paymentPlanResponse.GetPaymentPlans()))
 		for idx, paymentPlan := range paymentPlanResponse.GetPaymentPlans() {
-			pp := CreateResponsePaymentPlan(paymentPlan)
-			name := fmt.Sprintf("Plan_%s_%d_%s", idx+1, pp.UserId[len(pp.UserId)-4:], current_date)
-			pp.Name = name
-			responsePaymentPlans[idx] = pp
+			// pp :=
+			// name := fmt.Sprintf("Plan_%d_%s_%s", idx+1, pp.UserId[len(pp.UserId)-4:], current_date)
+			// pp.Name = name
+			responsePaymentPlans[idx] = CreateResponsePaymentPlan(paymentPlan)
 		}
 
 		return c.Status(fiber.StatusOK).JSON(responsePaymentPlans)

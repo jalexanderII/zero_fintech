@@ -23,10 +23,10 @@ service Planning {
   rpc GetAllUpcomingPaymentActions(GetAllUpcomingPaymentActionsRequest) returns (GetAllUpcomingPaymentActionsResponse);
 
   //  CRUD METHODS
-  rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlan);
+  rpc GetPaymentPlan(common.GetPaymentPlanRequest) returns (common.PaymentPlanWName);
   rpc ListPaymentPlans(common.ListPaymentPlanRequest) returns (common.ListPaymentPlanResponse);
   rpc ListUserPaymentPlans(common.ListUserPaymentPlansRequest) returns (common.ListPaymentPlanResponse);
-  rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlan);
+  rpc UpdatePaymentPlan(common.UpdatePaymentPlanRequest) returns (common.PaymentPlanWName);
   rpc DeletePaymentPlan(common.DeletePaymentPlanRequest) returns (common.DeletePaymentPlanResponse);
 }
 

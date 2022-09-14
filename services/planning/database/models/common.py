@@ -145,31 +145,31 @@ class PaymentAction(betterproto.Message):
 
 
 @dataclass
-class PaymentPlan(betterproto.Message):
-    payment_plan_id: str = betterproto.string_field(1)
-    user_id: str = betterproto.string_field(2)
-    payment_task_id: List[str] = betterproto.string_field(3)
-    amount: float = betterproto.double_field(4)
-    timeline: float = betterproto.double_field(5)
-    payment_freq: "PaymentFrequency" = betterproto.enum_field(6)
-    amount_per_payment: float = betterproto.double_field(7)
-    plan_type: "PlanType" = betterproto.enum_field(8)
+class PaymentPlanWName(betterproto.Message):
+    name: str = betterproto.string_field(1)
+    payment_plan_id: str = betterproto.string_field(2)
+    user_id: str = betterproto.string_field(3)
+    payment_task_id: List[str] = betterproto.string_field(4)
+    amount: float = betterproto.double_field(5)
+    timeline: float = betterproto.double_field(6)
+    payment_freq: "PaymentFrequency" = betterproto.enum_field(7)
+    amount_per_payment: float = betterproto.double_field(8)
+    plan_type: "PlanType" = betterproto.enum_field(9)
     # Expected date the plan should be completed
-    end_date: datetime = betterproto.message_field(9)
+    end_date: datetime = betterproto.message_field(10)
     # This Payment plan has not completed and is still active
-    active: bool = betterproto.bool_field(10)
+    active: bool = betterproto.bool_field(11)
     # Current status of this plan
-    status: "PaymentStatus" = betterproto.enum_field(11)
+    status: "PaymentStatus" = betterproto.enum_field(12)
     # payment actions of the plan
-    payment_action: List["PaymentAction"] = betterproto.message_field(12)
-    name: str = betterproto.string_field(13)
+    payment_action: List["PaymentAction"] = betterproto.message_field(13)
 
 
 @dataclass
 class PaymentPlanResponse(betterproto.Message):
     """Response for CreatePaymentPlan"""
 
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
+    payment_plans: List["PaymentPlanWName"] = betterproto.message_field(1)
 
 
 @dataclass
@@ -191,13 +191,13 @@ class ListUserPaymentPlansRequest(betterproto.Message):
 
 @dataclass
 class ListPaymentPlanResponse(betterproto.Message):
-    payment_plans: List["PaymentPlan"] = betterproto.message_field(1)
+    payment_plans: List["PaymentPlanWName"] = betterproto.message_field(1)
 
 
 @dataclass
 class UpdatePaymentPlanRequest(betterproto.Message):
     payment_plan_id: str = betterproto.string_field(1)
-    payment_plan: "PaymentPlan" = betterproto.message_field(2)
+    payment_plan: "PaymentPlanWName" = betterproto.message_field(2)
 
 
 @dataclass
@@ -208,4 +208,4 @@ class DeletePaymentPlanRequest(betterproto.Message):
 @dataclass
 class DeletePaymentPlanResponse(betterproto.Message):
     status: "DELETE_STATUS" = betterproto.enum_field(1)
-    payment_plan: "PaymentPlan" = betterproto.message_field(2)
+    payment_plan: "PaymentPlanWName" = betterproto.message_field(2)

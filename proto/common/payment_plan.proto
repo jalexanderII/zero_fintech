@@ -34,12 +34,31 @@ message PaymentPlan {
   common.PaymentStatus status = 11;
   // payment actions of the plan
   repeated PaymentAction payment_action = 12;
-  string name = 13;
+}
+
+message PaymentPlanWName {
+  string name = 1;
+  string payment_plan_id = 2;
+  string user_id = 3;
+  repeated string payment_task_id = 4;
+  double amount = 5;
+  double timeline = 6;
+  common.PaymentFrequency payment_freq = 7;
+  double amount_per_payment = 8;
+  common.PlanType plan_type = 9;
+  // Expected date the plan should be completed
+  google.protobuf.Timestamp end_date = 10;
+  // This Payment plan has not completed and is still active
+  bool active = 11;
+  // Current status of this plan
+  common.PaymentStatus status = 12;
+  // payment actions of the plan
+  repeated PaymentAction payment_action = 13;
 }
 
 // Response for CreatePaymentPlan
 message PaymentPlanResponse {
-  repeated common.PaymentPlan payment_plans = 1;
+  repeated PaymentPlanWName payment_plans = 1;
 }
 
 // CRUD Methods
@@ -54,12 +73,12 @@ message ListUserPaymentPlansRequest {
 }
 
 message ListPaymentPlanResponse {
-  repeated PaymentPlan payment_plans = 1;
+  repeated PaymentPlanWName payment_plans = 1;
 }
 
 message UpdatePaymentPlanRequest {
   string payment_plan_id = 1;
-  PaymentPlan payment_plan = 2;
+  PaymentPlanWName payment_plan = 2;
 }
 
 message DeletePaymentPlanRequest {
@@ -68,5 +87,5 @@ message DeletePaymentPlanRequest {
 
 message DeletePaymentPlanResponse {
   common.DELETE_STATUS status = 1;
-  PaymentPlan payment_plan = 2;
+  PaymentPlanWName payment_plan = 2;
 }

@@ -9,7 +9,7 @@ from gen.Python.common.payment_plan_pb2 import PaymentPlan as PaymentPlanPB
 from gen.Python.common.payment_plan_pb2 import PaymentAction as PaymentActionPB
 
 from services.planning.database.models.common import PaymentAction as PaymentActionDB
-from services.planning.database.models.common import PaymentPlan as PaymentPlanDB
+from services.planning.database.models.common import PaymentPlanWName as PaymentPlanDB
 
 
 def datetime_to_pb_timestamp(timestamp: datetime) -> Timestamp:

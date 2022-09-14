@@ -7,17 +7,13 @@ from collections import defaultdict
 from typing import List, Optional, Tuple
 
 import grpc
-from attr import define, field
+from attr import define
 from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 from pymongo.results import InsertOneResult
 
-from gen.Python.common.common_pb2 import (
-    PaymentActionStatus,
-    PAYMENT_ACTION_STATUS_PENDING,
-)
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
+
 from gen.Python.common.payment_plan_pb2 import (
     DeletePaymentPlanRequest,
     ListUserPaymentPlansRequest,
@@ -26,14 +22,9 @@ from gen.Python.common.payment_plan_pb2 import DeletePaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import GetPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanRequest
 from gen.Python.common.payment_plan_pb2 import ListPaymentPlanResponse
-from gen.Python.common.payment_plan_pb2 import (
-    PaymentPlan as PaymentPlanPB,
-    PaymentAction as PaymentActionPB,
-)
 from gen.Python.common.payment_plan_pb2 import PaymentPlanResponse
 from gen.Python.common.payment_plan_pb2 import UpdatePaymentPlanRequest
 from gen.Python.core.accounts_pb2 import (
-    Account,
     ListUserAccountsRequest,
     ListAccountResponse,
 )
@@ -50,15 +41,18 @@ from gen.Python.planning.planning_pb2 import (
     GetAmountPaidPercentageResponse,
     GetPercentageCoveredByPlansResponse,
 )
-from gen.Python.planning.planning_pb2 import WaterfallOverviewResponse, WaterfallMonth
+from gen.Python.planning.planning_pb2 import WaterfallOverviewResponse
 from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.database.models.common import (
-    PaymentPlan as PaymentPlanDB,
-    PaymentAction as PaymentActionDB,
+    PaymentAction,
     PaymentTask,
     MetaData,
-    PaymentPlan,
+    PaymentPlanWName as PaymentPlan,
+    PaymentActionStatus,
+    DELETE_STATUS,
 )
+from services.planning.database.models.core import Account
+from services.planning.database.models.planning import WaterfallMonth
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
 from services.planning.server.utils import (
@@ -104,7 +98,7 @@ class PlanningService(PlanningServicer):
 
     def _get_upcoming_payment_actions(
         self, date: Optional[Timestamp] = None, user_id: Optional[str] = None
-    ) -> Tuple[List[str], List[PaymentActionPB]]:
+    ) -> Tuple[List[str], List[PaymentAction]]:
         """If user_id is given, then it returns all active PaymentActions for that user. Otherwise, for all users."""
         if date:
             date = date.ToDatetime().date()
@@ -118,9 +112,9 @@ class PlanningService(PlanningServicer):
         payment_plans_cursor = self.planning_collection.find(query)
 
         user_ids: List[str] = []
-        payment_actions: List[PaymentActionDB] = []
+        payment_actions: List[PaymentAction] = []
         for pp in payment_plans_cursor:
-            pp = PaymentPlanDB().from_dict(pp)
+            pp = PaymentPlan().from_dict(pp)
             for pa in pp.payment_action:
                 if (
                     pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING
@@ -152,31 +146,32 @@ class PlanningService(PlanningServicer):
             user_ids=user_ids, payment_actions=payment_actions
         )
 
-    def SavePaymentPlan(self, payment_plan_pb: PaymentPlanPB) -> str:
+    def SavePaymentPlan(self, payment_plan: PaymentPlan) -> str:
         """Adds a given PaymentPlan to the database"""
         self.logger.info("SavePaymentPlan called")
-        payment_plan_db = payment_plan_PB_to_DB(payment_plan_pb).to_dict()
-        resp: InsertOneResult = self.planning_collection.insert_one(payment_plan_db)
+        resp: InsertOneResult = self.planning_collection.insert_one(
+            payment_plan.to_dict()
+        )
         return str(resp.inserted_id)
 
-    def GetPaymentPlan(self, request: GetPaymentPlanRequest, ctx=None) -> PaymentPlanPB:
+    def GetPaymentPlan(self, request: GetPaymentPlanRequest, ctx=None) -> PaymentPlan:
         self.logger.info("GetPaymentPlan called")
         payment_plan_response = self.planning_collection.find_one(
             {"_id": ObjectId(request.payment_plan_id)}
         )
         _id = payment_plan_response["_id"]
-        payment_plan_db = PaymentPlanDB().from_dict(payment_plan_response)
-        payment_plan_db.payment_plan_id = str(_id)
-        return payment_plan_DB_to_PB(payment_plan_db)
+        payment_plan = PaymentPlan().from_dict(payment_plan_response)
+        payment_plan.payment_plan_id = str(_id)
+        return payment_plan
 
     def ListPaymentPlans(
         self, request: ListPaymentPlanRequest, ctx=None
     ) -> ListPaymentPlanResponse:
         self.logger.info("ListPaymentPlans called")
-        payment_plans_pb: List[PaymentPlanPB] = []
+        payment_plans_pb: List[PaymentPlan] = []
         payment_plans = self.planning_collection.find()
         for payment_plan in payment_plans:
-            payment_plan_db = PaymentPlanDB().from_dict(payment_plan)
+            payment_plan_db = PaymentPlan().from_dict(payment_plan)
             payment_plan_db.payment_plan_id = str(payment_plan["_id"])
             payment_plans_pb.append(payment_plan_DB_to_PB(payment_plan_db))
 
@@ -186,10 +181,10 @@ class PlanningService(PlanningServicer):
         self, request: ListUserPaymentPlansRequest, ctx=None
     ) -> ListPaymentPlanResponse:
         self.logger.info("ListUserPaymentPlans called")
-        payment_plans_pb: List[PaymentPlanPB] = []
+        payment_plans_pb: List[PaymentPlan] = []
         payment_plans = self.planning_collection.find({"userId": request.user_id})
         for payment_plan in payment_plans:
-            payment_plan_db = PaymentPlanDB().from_dict(payment_plan)
+            payment_plan_db = PaymentPlan().from_dict(payment_plan)
             payment_plan_db.payment_plan_id = str(payment_plan["_id"])
             payment_plans_pb.append(payment_plan_DB_to_PB(payment_plan_db))
 
@@ -197,7 +192,7 @@ class PlanningService(PlanningServicer):
 
     def UpdatePaymentPlan(
         self, request: UpdatePaymentPlanRequest, ctx=None
-    ) -> PaymentPlanPB:
+    ) -> PaymentPlan:
         self.logger.info("UpdatePaymentPlan called")
         payment_plan = {
             k: v
@@ -211,7 +206,7 @@ class PlanningService(PlanningServicer):
         updated_payment_plan = self.planning_collection.find_one(
             {"_id": ObjectId(request.payment_plan_id)}
         )
-        payment_plan_db = PaymentPlanDB().from_dict(updated_payment_plan)
+        payment_plan_db = PaymentPlan().from_dict(updated_payment_plan)
         payment_plan_db.payment_plan_id = request.payment_plan_id
 
         return payment_plan_DB_to_PB(payment_plan_db)
@@ -224,7 +219,7 @@ class PlanningService(PlanningServicer):
         payment_plan_db = self.planning_collection.find_one(
             {"_id": ObjectId(request.payment_plan_id)}
         )
-        payment_plan_db = PaymentPlanDB().from_dict(payment_plan_db)
+        payment_plan_db = PaymentPlan().from_dict(payment_plan_db)
         payment_plan_db.payment_plan_id = request.payment_plan_id
 
         resp = self.planning_collection.delete_one(
@@ -232,9 +227,9 @@ class PlanningService(PlanningServicer):
         )
 
         return DeletePaymentPlanResponse(
-            status=DELETE_STATUS_SUCCESS
+            status=DELETE_STATUS.DELETE_STATUS_SUCCESS
             if resp.deleted_count == 1
-            else DELETE_STATUS_FAILED,
+            else DELETE_STATUS.DELETE_STATUS_FAILED,
             payment_plan=payment_plan_DB_to_PB(payment_plan_db),
         )
 
@@ -250,7 +245,7 @@ class PlanningService(PlanningServicer):
         waterfall = [defaultdict(float) for _ in range(12)]
         now = datetime.now()
         for _pp in payment_plans_cursor:
-            pp = PaymentPlanDB().from_dict(_pp)
+            pp = PaymentPlan().from_dict(_pp)
             for pa in pp.payment_action:
                 _waterfall_month = (
                     pa.transaction_date.month - now.month
@@ -277,7 +272,7 @@ class PlanningService(PlanningServicer):
         )
         amount_paid, total_amount = 0, 0
         for _pp in payment_plans_cursor:
-            pp = PaymentPlanDB().from_dict(_pp)
+            pp = PaymentPlan().from_dict(_pp)
             for pa in pp.payment_action:
                 _amount = pa.amount
                 if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_COMPLETED:
@@ -307,9 +302,9 @@ class PlanningService(PlanningServicer):
         )
         acc2coverage = defaultdict(float)
         for _pp in payment_plans_cursor:
-            pp = PaymentPlanDB().from_dict(_pp)
+            pp = PaymentPlan().from_dict(_pp)
             for pa in pp.payment_action:
-                if pa.status == PAYMENT_ACTION_STATUS_PENDING:
+                if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING:
                     acc2coverage[pa.account_id] += pa.amount
         # see coverage in percentage
         total_balance = sum(acc2balance.values())

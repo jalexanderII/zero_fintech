@@ -185,7 +185,7 @@ class PlanningStub(betterproto.ServiceStub):
             GetAllUpcomingPaymentActionsResponse,
         )
 
-    async def get_payment_plan(self) -> common.PaymentPlan:
+    async def get_payment_plan(self) -> common.PaymentPlanWName:
         """CRUD METHODS"""
 
         request = common.GetPaymentPlanRequest()
@@ -193,7 +193,7 @@ class PlanningStub(betterproto.ServiceStub):
         return await self._unary_unary(
             "/planning.Planning/GetPaymentPlan",
             request,
-            common.PaymentPlan,
+            common.PaymentPlanWName,
         )
 
     async def list_payment_plans(self) -> common.ListPaymentPlanResponse:
@@ -214,13 +214,13 @@ class PlanningStub(betterproto.ServiceStub):
             common.ListPaymentPlanResponse,
         )
 
-    async def update_payment_plan(self) -> common.PaymentPlan:
+    async def update_payment_plan(self) -> common.PaymentPlanWName:
         request = common.UpdatePaymentPlanRequest()
 
         return await self._unary_unary(
             "/planning.Planning/UpdatePaymentPlan",
             request,
-            common.PaymentPlan,
+            common.PaymentPlanWName,
         )
 
     async def delete_payment_plan(self) -> common.DeletePaymentPlanResponse:

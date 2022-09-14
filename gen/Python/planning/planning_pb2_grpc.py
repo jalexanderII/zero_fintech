@@ -48,7 +48,7 @@ class PlanningStub(object):
         self.GetPaymentPlan = channel.unary_unary(
                 '/planning.Planning/GetPaymentPlan',
                 request_serializer=common_dot_payment__plan__pb2.GetPaymentPlanRequest.SerializeToString,
-                response_deserializer=common_dot_payment__plan__pb2.PaymentPlan.FromString,
+                response_deserializer=common_dot_payment__plan__pb2.PaymentPlanWName.FromString,
                 )
         self.ListPaymentPlans = channel.unary_unary(
                 '/planning.Planning/ListPaymentPlans',
@@ -63,7 +63,7 @@ class PlanningStub(object):
         self.UpdatePaymentPlan = channel.unary_unary(
                 '/planning.Planning/UpdatePaymentPlan',
                 request_serializer=common_dot_payment__plan__pb2.UpdatePaymentPlanRequest.SerializeToString,
-                response_deserializer=common_dot_payment__plan__pb2.PaymentPlan.FromString,
+                response_deserializer=common_dot_payment__plan__pb2.PaymentPlanWName.FromString,
                 )
         self.DeletePaymentPlan = channel.unary_unary(
                 '/planning.Planning/DeletePaymentPlan',
@@ -185,7 +185,7 @@ def add_PlanningServicer_to_server(servicer, server):
             'GetPaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPaymentPlan,
                     request_deserializer=common_dot_payment__plan__pb2.GetPaymentPlanRequest.FromString,
-                    response_serializer=common_dot_payment__plan__pb2.PaymentPlan.SerializeToString,
+                    response_serializer=common_dot_payment__plan__pb2.PaymentPlanWName.SerializeToString,
             ),
             'ListPaymentPlans': grpc.unary_unary_rpc_method_handler(
                     servicer.ListPaymentPlans,
@@ -200,7 +200,7 @@ def add_PlanningServicer_to_server(servicer, server):
             'UpdatePaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdatePaymentPlan,
                     request_deserializer=common_dot_payment__plan__pb2.UpdatePaymentPlanRequest.FromString,
-                    response_serializer=common_dot_payment__plan__pb2.PaymentPlan.SerializeToString,
+                    response_serializer=common_dot_payment__plan__pb2.PaymentPlanWName.SerializeToString,
             ),
             'DeletePaymentPlan': grpc.unary_unary_rpc_method_handler(
                     servicer.DeletePaymentPlan,
@@ -332,7 +332,7 @@ class Planning(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/planning.Planning/GetPaymentPlan',
             common_dot_payment__plan__pb2.GetPaymentPlanRequest.SerializeToString,
-            common_dot_payment__plan__pb2.PaymentPlan.FromString,
+            common_dot_payment__plan__pb2.PaymentPlanWName.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -383,7 +383,7 @@ class Planning(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/planning.Planning/UpdatePaymentPlan',
             common_dot_payment__plan__pb2.UpdatePaymentPlanRequest.SerializeToString,
-            common_dot_payment__plan__pb2.PaymentPlan.FromString,
+            common_dot_payment__plan__pb2.PaymentPlanWName.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

@@ -16,12 +16,13 @@ from common import common_pb2 as common_dot_common__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/payment_plan.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x01\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x06status\x18\x04 \x01(\x0e\x32\x1b.common.PaymentActionStatus\"\x85\x03\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x0e\n\x06\x61mount\x18\x04 \x01(\x01\x12\x10\n\x08timeline\x18\x05 \x01(\x01\x12.\n\x0cpayment_freq\x18\x06 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x07 \x01(\x01\x12#\n\tplan_type\x18\x08 \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\t \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\n \x01(\x08\x12%\n\x06status\x18\x0b \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\x0c \x03(\x0b\x32\x15.common.PaymentAction\x12\x0c\n\x04name\x18\r \x01(\t\"A\n\x13PaymentPlanResponse\x12*\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x13.common.PaymentPlan\"0\n\x15GetPaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentPlanRequest\".\n\x1bListUserPaymentPlansRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"E\n\x17ListPaymentPlanResponse\x12*\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x13.common.PaymentPlan\"^\n\x18UpdatePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12)\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x13.common.PaymentPlan\"3\n\x18\x44\x65letePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"m\n\x19\x44\x65letePaymentPlanResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12)\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x13.common.PaymentPlanB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x63ommon/payment_plan.proto\x12\x06\x63ommon\x1a\x13\x63ommon/common.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x01\n\rPaymentAction\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x01\x12\x34\n\x10transaction_date\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x06status\x18\x04 \x01(\x0e\x32\x1b.common.PaymentActionStatus\"\xf7\x02\n\x0bPaymentPlan\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x03 \x03(\t\x12\x0e\n\x06\x61mount\x18\x04 \x01(\x01\x12\x10\n\x08timeline\x18\x05 \x01(\x01\x12.\n\x0cpayment_freq\x18\x06 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x07 \x01(\x01\x12#\n\tplan_type\x18\x08 \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\t \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\n \x01(\x08\x12%\n\x06status\x18\x0b \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\x0c \x03(\x0b\x32\x15.common.PaymentAction\"\x8a\x03\n\x10PaymentPlanWName\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x17\n\x0fpayment_plan_id\x18\x02 \x01(\t\x12\x0f\n\x07user_id\x18\x03 \x01(\t\x12\x17\n\x0fpayment_task_id\x18\x04 \x03(\t\x12\x0e\n\x06\x61mount\x18\x05 \x01(\x01\x12\x10\n\x08timeline\x18\x06 \x01(\x01\x12.\n\x0cpayment_freq\x18\x07 \x01(\x0e\x32\x18.common.PaymentFrequency\x12\x1a\n\x12\x61mount_per_payment\x18\x08 \x01(\x01\x12#\n\tplan_type\x18\t \x01(\x0e\x32\x10.common.PlanType\x12,\n\x08\x65nd_date\x18\n \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06\x61\x63tive\x18\x0b \x01(\x08\x12%\n\x06status\x18\x0c \x01(\x0e\x32\x15.common.PaymentStatus\x12-\n\x0epayment_action\x18\r \x03(\x0b\x32\x15.common.PaymentAction\"F\n\x13PaymentPlanResponse\x12/\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x18.common.PaymentPlanWName\"0\n\x15GetPaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"\x18\n\x16ListPaymentPlanRequest\".\n\x1bListUserPaymentPlansRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"J\n\x17ListPaymentPlanResponse\x12/\n\rpayment_plans\x18\x01 \x03(\x0b\x32\x18.common.PaymentPlanWName\"c\n\x18UpdatePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\x12.\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x18.common.PaymentPlanWName\"3\n\x18\x44\x65letePaymentPlanRequest\x12\x17\n\x0fpayment_plan_id\x18\x01 \x01(\t\"r\n\x19\x44\x65letePaymentPlanResponse\x12%\n\x06status\x18\x01 \x01(\x0e\x32\x15.common.DELETE_STATUS\x12.\n\x0cpayment_plan\x18\x02 \x01(\x0b\x32\x18.common.PaymentPlanWNameB4Z2github.com/jalexanderII/zero_fintech/gen/Go/commonb\x06proto3')
 
 
 
 _PAYMENTACTION = DESCRIPTOR.message_types_by_name['PaymentAction']
 _PAYMENTPLAN = DESCRIPTOR.message_types_by_name['PaymentPlan']
+_PAYMENTPLANWNAME = DESCRIPTOR.message_types_by_name['PaymentPlanWName']
 _PAYMENTPLANRESPONSE = DESCRIPTOR.message_types_by_name['PaymentPlanResponse']
 _GETPAYMENTPLANREQUEST = DESCRIPTOR.message_types_by_name['GetPaymentPlanRequest']
 _LISTPAYMENTPLANREQUEST = DESCRIPTOR.message_types_by_name['ListPaymentPlanRequest']
@@ -43,6 +44,13 @@ PaymentPlan = _reflection.GeneratedProtocolMessageType('PaymentPlan', (_message.
   # @@protoc_insertion_point(class_scope:common.PaymentPlan)
   })
 _sym_db.RegisterMessage(PaymentPlan)
+
+PaymentPlanWName = _reflection.GeneratedProtocolMessageType('PaymentPlanWName', (_message.Message,), {
+  'DESCRIPTOR' : _PAYMENTPLANWNAME,
+  '__module__' : 'common.payment_plan_pb2'
+  # @@protoc_insertion_point(class_scope:common.PaymentPlanWName)
+  })
+_sym_db.RegisterMessage(PaymentPlanWName)
 
 PaymentPlanResponse = _reflection.GeneratedProtocolMessageType('PaymentPlanResponse', (_message.Message,), {
   'DESCRIPTOR' : _PAYMENTPLANRESPONSE,
@@ -107,21 +115,23 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _PAYMENTACTION._serialized_start=92
   _PAYMENTACTION._serialized_end=242
   _PAYMENTPLAN._serialized_start=245
-  _PAYMENTPLAN._serialized_end=634
-  _PAYMENTPLANRESPONSE._serialized_start=636
-  _PAYMENTPLANRESPONSE._serialized_end=701
-  _GETPAYMENTPLANREQUEST._serialized_start=703
-  _GETPAYMENTPLANREQUEST._serialized_end=751
-  _LISTPAYMENTPLANREQUEST._serialized_start=753
-  _LISTPAYMENTPLANREQUEST._serialized_end=777
-  _LISTUSERPAYMENTPLANSREQUEST._serialized_start=779
-  _LISTUSERPAYMENTPLANSREQUEST._serialized_end=825
-  _LISTPAYMENTPLANRESPONSE._serialized_start=827
-  _LISTPAYMENTPLANRESPONSE._serialized_end=896
-  _UPDATEPAYMENTPLANREQUEST._serialized_start=898
-  _UPDATEPAYMENTPLANREQUEST._serialized_end=992
-  _DELETEPAYMENTPLANREQUEST._serialized_start=994
-  _DELETEPAYMENTPLANREQUEST._serialized_end=1045
-  _DELETEPAYMENTPLANRESPONSE._serialized_start=1047
-  _DELETEPAYMENTPLANRESPONSE._serialized_end=1156
+  _PAYMENTPLAN._serialized_end=620
+  _PAYMENTPLANWNAME._serialized_start=623
+  _PAYMENTPLANWNAME._serialized_end=1017
+  _PAYMENTPLANRESPONSE._serialized_start=1019
+  _PAYMENTPLANRESPONSE._serialized_end=1089
+  _GETPAYMENTPLANREQUEST._serialized_start=1091
+  _GETPAYMENTPLANREQUEST._serialized_end=1139
+  _LISTPAYMENTPLANREQUEST._serialized_start=1141
+  _LISTPAYMENTPLANREQUEST._serialized_end=1165
+  _LISTUSERPAYMENTPLANSREQUEST._serialized_start=1167
+  _LISTUSERPAYMENTPLANSREQUEST._serialized_end=1213
+  _LISTPAYMENTPLANRESPONSE._serialized_start=1215
+  _LISTPAYMENTPLANRESPONSE._serialized_end=1289
+  _UPDATEPAYMENTPLANREQUEST._serialized_start=1291
+  _UPDATEPAYMENTPLANREQUEST._serialized_end=1390
+  _DELETEPAYMENTPLANREQUEST._serialized_start=1392
+  _DELETEPAYMENTPLANREQUEST._serialized_end=1443
+  _DELETEPAYMENTPLANRESPONSE._serialized_start=1445
+  _DELETEPAYMENTPLANRESPONSE._serialized_end=1559
 # @@protoc_insertion_point(module_scope)

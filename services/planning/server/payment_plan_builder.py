@@ -14,27 +14,19 @@ from attr import define
 from dotenv import load_dotenv
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from gen.Python.common.common_pb2 import PAYMENT_ACTION_STATUS_PENDING
-from gen.Python.common.common_pb2 import PAYMENT_STATUS_CURRENT
-from gen.Python.common.common_pb2 import (
-    PaymentFrequency,
-    PAYMENT_FREQUENCY_UNKNOWN,
-    PAYMENT_FREQUENCY_WEEKLY,
-    PAYMENT_FREQUENCY_BIWEEKLY,
-    PAYMENT_FREQUENCY_MONTHLY,
-    PAYMENT_FREQUENCY_QUARTERLY,
-)
-from gen.Python.common.common_pb2 import (
-    PlanType,
-    PLAN_TYPE_UNKNOWN,
-    PLAN_TYPE_MIN_FEES,
-    PLAN_TYPE_OPTIM_CREDIT_SCORE,
-)
-from gen.Python.common.payment_plan_pb2 import PaymentAction, PaymentPlan
-from gen.Python.common.payment_task_pb2 import PaymentTask, MetaData
-from gen.Python.core.accounts_pb2 import AnnualPercentageRates
-from gen.Python.core.accounts_pb2 import GetAccountRequest, Account
+from gen.Python.core.accounts_pb2 import GetAccountRequest
 from gen.Python.core.core_pb2_grpc import CoreStub
+from services.planning.database.models.common import (
+    PaymentTask,
+    MetaData,
+    PaymentPlanWName as PaymentPlan,
+    PaymentFrequency,
+    PlanType,
+    PaymentAction,
+    PaymentStatus,
+    PaymentActionStatus,
+)
+from services.planning.database.models.core import Account, AnnualPercentageRates
 from services.planning.server.utils import shift_date_by_payment_frequency
 
 logging.basicConfig(
@@ -94,32 +86,38 @@ class PaymentPlanBuilder:
     ) -> List[MetaData]:
         """Creates options for what kind of plans to create given type, timeline, frequency and total amount."""
         timeline_months: float = 0.0
-        payment_freq: PaymentFrequency = PAYMENT_FREQUENCY_UNKNOWN
+        payment_freq: PaymentFrequency = PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN
         plan_type_options: List[PlanType] = [
-            PLAN_TYPE_MIN_FEES,
-            PLAN_TYPE_OPTIM_CREDIT_SCORE,
+            PlanType.PLAN_TYPE_MIN_FEES,
+            PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE,
         ]
-        freq_options: List[PaymentFrequency] = [PAYMENT_FREQUENCY_MONTHLY]
+        freq_options: List[PaymentFrequency] = [
+            PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY
+        ]
 
         if meta_data:
             plan_type = meta_data.preferred_plan_type
             timeline_months = meta_data.preferred_timeline_in_months
             payment_freq = meta_data.preferred_payment_freq
             plan_type_options = (
-                [plan_type] if plan_type != PLAN_TYPE_UNKNOWN else plan_type_options
+                [plan_type]
+                if plan_type != PlanType.PLAN_TYPE_UNKNOWN
+                else plan_type_options
             )
             freq_options = (
                 [payment_freq]
-                if payment_freq != PAYMENT_FREQUENCY_UNKNOWN
+                if payment_freq != PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN
                 else freq_options
             )
 
         payment_freq_to_timeline_options: Dict[PaymentFrequency, List[float]] = {
-            PAYMENT_FREQUENCY_UNKNOWN: [3.0, 6.0, 12.0] if gt_threshold else [1.0],
-            PAYMENT_FREQUENCY_WEEKLY: [1.0, 2.0],
-            PAYMENT_FREQUENCY_BIWEEKLY: [1.0, 2.0],
-            PAYMENT_FREQUENCY_MONTHLY: [3.0, 6.0, 12.0],
-            PAYMENT_FREQUENCY_QUARTERLY: [3.0, 6.0, 12.0],
+            PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN: [3.0, 6.0, 12.0]
+            if gt_threshold
+            else [1.0],
+            PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY: [1.0, 2.0],
+            PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY: [1.0, 2.0],
+            PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY: [3.0, 6.0, 12.0],
+            PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY: [3.0, 6.0, 12.0],
         }
 
         timeline_options: List[float] = (
@@ -128,7 +126,7 @@ class PaymentPlanBuilder:
             else payment_freq_to_timeline_options[payment_freq]
         )
 
-        if PLAN_TYPE_UNKNOWN in plan_type_options:
+        if PlanType.PLAN_TYPE_UNKNOWN in plan_type_options:
             raise ValueError(
                 f"Chosen PlanTypes contains PLAN_TYPE_UNKNOWN: {plan_type_options}"
             )
@@ -136,7 +134,7 @@ class PaymentPlanBuilder:
             raise ValueError(
                 f"Chosen timeline options contain non-positive values: {timeline_options}"
             )
-        elif PAYMENT_FREQUENCY_UNKNOWN in freq_options:
+        elif PaymentFrequency.PAYMENT_FREQUENCY_UNKNOWN in freq_options:
             raise ValueError(
                 f"Chosen PaymentFrequency options contains PAYMENT_FREQUENCY_UNKNOWN: {freq_options}"
             )
@@ -188,10 +186,10 @@ class PaymentPlanBuilder:
         )
 
         PAYMENT_FREQ_TO_TIMELINE: Dict[PaymentFrequency, float] = {
-            PAYMENT_FREQUENCY_WEEKLY: 0.25,
-            PAYMENT_FREQUENCY_BIWEEKLY: 0.5,
-            PAYMENT_FREQUENCY_MONTHLY: 1.0,
-            PAYMENT_FREQUENCY_QUARTERLY: 3.0,
+            PaymentFrequency.PAYMENT_FREQUENCY_WEEKLY: 0.25,
+            PaymentFrequency.PAYMENT_FREQUENCY_BIWEEKLY: 0.5,
+            PaymentFrequency.PAYMENT_FREQUENCY_MONTHLY: 1.0,
+            PaymentFrequency.PAYMENT_FREQUENCY_QUARTERLY: 3.0,
         }
 
         num_payments = timeline_months / PAYMENT_FREQ_TO_TIMELINE[payment_freq]
@@ -199,22 +197,20 @@ class PaymentPlanBuilder:
         amount_per_payment = round(ceil(amount_per_payment * 100) / 100, 2)
 
         payment_actions: List[PaymentAction] = []
-        if plan_type == PLAN_TYPE_MIN_FEES:
+        if plan_type == PlanType.PLAN_TYPE_MIN_FEES:
             payment_actions = self._create_payment_actions_min_fees(
                 payment_freq=payment_freq,
                 df=df,
                 start_date=start_date,
                 amount_per_payment=amount_per_payment,
             )
-        elif plan_type == PLAN_TYPE_OPTIM_CREDIT_SCORE:
+        elif plan_type == PlanType.PLAN_TYPE_OPTIM_CREDIT_SCORE:
             payment_actions = self._create_payment_actions_optim_credit_score(
                 payment_freq=payment_freq,
                 df=df,
                 start_date=start_date,
                 amount_per_payment=amount_per_payment,
             )
-        print(f"I should have a name {name}!")
-        logger.info(f"I should have a name {name}!")
         return PaymentPlan(
             name=name,
             user_id=user_id,
@@ -226,7 +222,7 @@ class PaymentPlanBuilder:
             plan_type=plan_type,
             end_date=payment_actions[-1].transaction_date,
             active=True,
-            status=PAYMENT_STATUS_CURRENT,
+            status=PaymentStatus.PAYMENT_STATUS_CURRENT,
             payment_action=payment_actions,
         )
 
@@ -267,7 +263,7 @@ class PaymentPlanBuilder:
                         account_id=_accId,
                         amount=_amountThisDate,
                         transaction_date=datePB,
-                        status=PAYMENT_ACTION_STATUS_PENDING,
+                        status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
                     )
                 )
                 pay_on_date += _amount
@@ -315,7 +311,7 @@ class PaymentPlanBuilder:
                         account_id=_accId,
                         amount=_amountThisDate,
                         transaction_date=datePB,
-                        status=PAYMENT_ACTION_STATUS_PENDING,
+                        status=PaymentActionStatus.PAYMENT_ACTION_STATUS_PENDING,
                     )
                 )
                 pay_on_date += _amountThisDate

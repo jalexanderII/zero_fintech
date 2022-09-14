@@ -158,9 +158,7 @@ def patch__fetch_accounts(mocker: MockerFixture) -> None:
             payment_task_ids=["01", "02"],
             account_ids=[MOCK_CHASE_ACC.account_id, MOCK_AMEX_ACC.account_id],
             amounts=[MOCK_CHASE_ACC.current_balance, MOCK_AMEX_ACC.current_balance],
-            name="123",
             expected=PaymentPlan(
-                name="123",
                 user_id="test",
                 payment_task_id=["01", "02"],
                 amount=1800,
@@ -184,9 +182,7 @@ def patch__fetch_accounts(mocker: MockerFixture) -> None:
             payment_task_ids=["01", "02"],
             account_ids=[MOCK_CHASE_ACC.account_id, MOCK_AMEX_ACC.account_id],
             amounts=[MOCK_CHASE_ACC.current_balance, MOCK_AMEX_ACC.current_balance],
-            name="123",
             expected=PaymentPlan(
-                name="123",
                 user_id="test",
                 payment_task_id=["01", "02"],
                 amount=1800.0,
@@ -209,7 +205,6 @@ def test__create_from_meta_data(
 ):
     ppb = mock_payment_plan_builder
     args = (
-        p.name,
         p.user_id,
         p.plan_type,
         p.timeline_months,
