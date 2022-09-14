@@ -57,7 +57,6 @@ class PaymentPlan(google.protobuf.message.Message):
     ACTIVE_FIELD_NUMBER: builtins.int
     STATUS_FIELD_NUMBER: builtins.int
     PAYMENT_ACTION_FIELD_NUMBER: builtins.int
-    NAME_FIELD_NUMBER: builtins.int
     payment_plan_id: typing.Text = ...
     user_id: typing.Text = ...
     @property
@@ -81,7 +80,6 @@ class PaymentPlan(google.protobuf.message.Message):
     def payment_action(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___PaymentAction]:
         """payment actions of the plan"""
         pass
-    name: typing.Text = ...
     def __init__(self,
         *,
         payment_plan_id : typing.Text = ...,
@@ -96,10 +94,9 @@ class PaymentPlan(google.protobuf.message.Message):
         active : builtins.bool = ...,
         status : common.common_pb2.PaymentStatus.ValueType = ...,
         payment_action : typing.Optional[typing.Iterable[global___PaymentAction]] = ...,
-        name : typing.Text = ...,
         ) -> None: ...
     def HasField(self, field_name: typing_extensions.Literal["end_date",b"end_date"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal["active",b"active","amount",b"amount","amount_per_payment",b"amount_per_payment","end_date",b"end_date","name",b"name","payment_action",b"payment_action","payment_freq",b"payment_freq","payment_plan_id",b"payment_plan_id","payment_task_id",b"payment_task_id","plan_type",b"plan_type","status",b"status","timeline",b"timeline","user_id",b"user_id"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["active",b"active","amount",b"amount","amount_per_payment",b"amount_per_payment","end_date",b"end_date","payment_action",b"payment_action","payment_freq",b"payment_freq","payment_plan_id",b"payment_plan_id","payment_task_id",b"payment_task_id","plan_type",b"plan_type","status",b"status","timeline",b"timeline","user_id",b"user_id"]) -> None: ...
 global___PaymentPlan = PaymentPlan
 
 class PaymentPlanResponse(google.protobuf.message.Message):

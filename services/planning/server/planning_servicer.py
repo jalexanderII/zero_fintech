@@ -1,23 +1,23 @@
-from datetime import datetime, timedelta
 import logging
 import os
 
 # import sys
 from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
 
 import grpc
-from attr import define, field
+from attr import define
 from bson.objectid import ObjectId
 from google.protobuf.timestamp_pb2 import Timestamp
 from pymongo.collection import Collection
 from pymongo.results import InsertOneResult
 
+from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
 from gen.Python.common.common_pb2 import (
     PaymentActionStatus,
     PAYMENT_ACTION_STATUS_PENDING,
 )
-from gen.Python.common.common_pb2 import DELETE_STATUS_SUCCESS, DELETE_STATUS_FAILED
 from gen.Python.common.payment_plan_pb2 import (
     DeletePaymentPlanRequest,
     ListUserPaymentPlansRequest,
@@ -55,9 +55,6 @@ from gen.Python.planning.planning_pb2_grpc import PlanningServicer
 from services.planning.database.models.common import (
     PaymentPlan as PaymentPlanDB,
     PaymentAction as PaymentActionDB,
-    PaymentTask,
-    MetaData,
-    PaymentPlan,
 )
 from services.planning.server.payment_plan_builder import PaymentPlanBuilder
 from services.planning.server.payment_plan_builder import payment_plan_builder
@@ -66,13 +63,6 @@ from services.planning.server.utils import (
     payment_plan_DB_to_PB,
     payment_actions_db_to_pb,
 )
-
-# logging.basicConfig(
-#     level=logging.INFO,
-#     format="%(asctime)s [%(levelname)s] %(message)s",
-#     handlers=[logging.StreamHandler(sys.stdout)],
-# )
-# logger = logging.getLogger("PlanningServicer")
 
 
 @define
@@ -89,18 +79,17 @@ class PlanningService(PlanningServicer):
     ) -> PaymentPlanResponse:
         """Calls PaymentPlanBuilder to generate a list of Payments plans given a list of PaymentTasks"""
         self.logger.info("CreatePaymentPlan called")
-        payment_tasks: List[PaymentTask] = request.payment_tasks
-        meta_data: MetaData = request.meta_data
+        payment_tasks, meta_data = request.payment_tasks, request.meta_data
 
-        payment_plans: List[PaymentPlan] = self._payment_plan_builder.create(
+        payment_plans_pb: List[PaymentPlanPB] = self._payment_plan_builder.create(
             payment_tasks, meta_data
         )
         if request.save_plan:
-            for payment_plan in payment_plans:
-                new_id: str = self.SavePaymentPlan(payment_plan)
+            for payment_plan in payment_plans_pb:
+                new_id = self.SavePaymentPlan(payment_plan)
                 self.logger.info(f"New plan created with id {new_id}")
 
-        return PaymentPlanResponse(payment_plans=payment_plans)
+        return PaymentPlanResponse(payment_plans=payment_plans_pb)
 
     def _get_upcoming_payment_actions(
         self, date: Optional[Timestamp] = None, user_id: Optional[str] = None
@@ -277,13 +266,15 @@ class PlanningService(PlanningServicer):
         )
         amount_paid, total_amount = 0, 0
         for _pp in payment_plans_cursor:
-            pp = PaymentPlanDB().from_dict(_pp)
+            pp: PaymentPlanDB = PaymentPlanDB().from_dict(_pp)
+            print(_pp.payment_plan_id)
             for pa in pp.payment_action:
                 _amount = pa.amount
                 if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_COMPLETED:
                     amount_paid += _amount
                 total_amount += _amount
         prcnt_paid = amount_paid / total_amount if total_amount > 0 else 1
+        print(prcnt_paid)
         return GetAmountPaidPercentageResponse(percentage_paid=prcnt_paid)
 
     def GetPercentageCoveredByPlans(

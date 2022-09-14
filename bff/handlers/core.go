@@ -72,7 +72,7 @@ func CreateResponsePaymentPlan(paymentTaskModel *common.PaymentPlan) PaymentPlan
 		}
 	}
 	return PaymentPlan{
-		Name:             paymentTaskModel.Name,
+		Name:             "",
 		PaymentPlanId:    paymentTaskModel.PaymentPlanId,
 		UserId:           paymentTaskModel.UserId,
 		PaymentTaskId:    paymentTaskModel.PaymentTaskId,
@@ -121,7 +121,7 @@ func GetPaymentPlan(client core.CoreClient, ctx context.Context) func(c *fiber.C
 		responsePaymentPlans := make([]PaymentPlan, len(paymentPlanResponse.GetPaymentPlans()))
 		for idx, paymentPlan := range paymentPlanResponse.GetPaymentPlans() {
 			pp := CreateResponsePaymentPlan(paymentPlan)
-			name := fmt.Sprintf("Plan_%s_%d_%s", idx+1, pp.UserId[len(pp.UserId)-4:], current_date)
+			name := fmt.Sprintf("Plan_%v_%v_%v", idx+1, pp.UserId[len(pp.UserId)-4:], current_date)
 			pp.Name = name
 			responsePaymentPlans[idx] = pp
 		}
