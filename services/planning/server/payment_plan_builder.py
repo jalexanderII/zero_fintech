@@ -74,9 +74,9 @@ class PaymentPlanBuilder:
         return [
             self._create_from_meta_data(
                 user_id=user_id,
-                plan_type=meta_data.preferred_plan_type,
-                timeline_months=meta_data.preferred_timeline_in_months,
-                payment_freq=meta_data.preferred_payment_freq,
+                plan_type=_meta_data.preferred_plan_type,
+                timeline_months=_meta_data.preferred_timeline_in_months,
+                payment_freq=_meta_data.preferred_payment_freq,
                 payment_task_ids=payment_task_ids,
                 account_ids=account_ids,
                 amounts=amounts,
