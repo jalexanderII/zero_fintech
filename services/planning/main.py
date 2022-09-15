@@ -1,6 +1,4 @@
-import logging
 import os
-import sys
 from concurrent import futures
 
 import grpc
@@ -9,13 +7,9 @@ from dotenv import load_dotenv
 from gen.Python.planning import planning_pb2_grpc as PlanningServicePB
 from services.planning.database.db import initiate_mongo_client
 from services.planning.server.planning_servicer import PlanningService
+import app_logger
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)],
-)
-logger = logging.getLogger("Server")
+logger = app_logger.get_logger("Server")
 
 
 def serve():
@@ -23,9 +17,7 @@ def serve():
     load_dotenv()
 
     logger.info("Initiate Mongo client and servicer")
-    servicer = PlanningService(
-        planning_collection=initiate_mongo_client(), logger=logger
-    )
+    servicer = PlanningService(planning_collection=initiate_mongo_client())
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     PlanningServicePB.add_PlanningServicer_to_server(servicer, server)
 

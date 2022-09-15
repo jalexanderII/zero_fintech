@@ -1,7 +1,5 @@
-import logging
 import os
 
-# import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
@@ -63,11 +61,13 @@ from services.planning.server.utils import (
     payment_plan_DB_to_PB,
     payment_actions_db_to_pb,
 )
+from services.planning import app_logger
+
+logger = app_logger.get_logger("PlanningService")
 
 
 @define
 class PlanningService(PlanningServicer):
-    logger: logging.Logger
     planning_collection: Collection
     _payment_plan_builder: PaymentPlanBuilder = payment_plan_builder
     core_client: CoreStub = CoreStub(
@@ -78,7 +78,7 @@ class PlanningService(PlanningServicer):
         self, request: CreatePaymentPlanRequest, ctx=None
     ) -> PaymentPlanResponse:
         """Calls PaymentPlanBuilder to generate a list of Payments plans given a list of PaymentTasks"""
-        self.logger.info("CreatePaymentPlan called")
+        logger.info("CreatePaymentPlan called")
         payment_tasks, meta_data = request.payment_tasks, request.meta_data
 
         payment_plans_pb: List[PaymentPlanPB] = self._payment_plan_builder.create(
@@ -87,7 +87,7 @@ class PlanningService(PlanningServicer):
         if request.save_plan:
             for payment_plan in payment_plans_pb:
                 new_id = self.SavePaymentPlan(payment_plan)
-                self.logger.info(f"New plan created with id {new_id}")
+                logger.info(f"New plan created with id {new_id}")
 
         return PaymentPlanResponse(payment_plans=payment_plans_pb)
 
@@ -143,13 +143,13 @@ class PlanningService(PlanningServicer):
 
     def SavePaymentPlan(self, payment_plan_pb: PaymentPlanPB) -> str:
         """Adds a given PaymentPlan to the database"""
-        self.logger.info("SavePaymentPlan called")
+        logger.info("SavePaymentPlan called")
         payment_plan_db = payment_plan_PB_to_DB(payment_plan_pb).to_dict()
         resp: InsertOneResult = self.planning_collection.insert_one(payment_plan_db)
         return str(resp.inserted_id)
 
     def GetPaymentPlan(self, request: GetPaymentPlanRequest, ctx=None) -> PaymentPlanPB:
-        self.logger.info("GetPaymentPlan called")
+        logger.info("GetPaymentPlan called")
         payment_plan_response = self.planning_collection.find_one(
             {"_id": ObjectId(request.payment_plan_id)}
         )
@@ -161,7 +161,7 @@ class PlanningService(PlanningServicer):
     def ListPaymentPlans(
         self, request: ListPaymentPlanRequest, ctx=None
     ) -> ListPaymentPlanResponse:
-        self.logger.info("ListPaymentPlans called")
+        logger.info("ListPaymentPlans called")
         payment_plans_pb: List[PaymentPlanPB] = []
         payment_plans = self.planning_collection.find()
         for payment_plan in payment_plans:
@@ -174,7 +174,7 @@ class PlanningService(PlanningServicer):
     def ListUserPaymentPlans(
         self, request: ListUserPaymentPlansRequest, ctx=None
     ) -> ListPaymentPlanResponse:
-        self.logger.info("ListUserPaymentPlans called")
+        logger.info("ListUserPaymentPlans called")
         payment_plans_pb: List[PaymentPlanPB] = []
         payment_plans = self.planning_collection.find({"userId": request.user_id})
         for payment_plan in payment_plans:
@@ -187,7 +187,7 @@ class PlanningService(PlanningServicer):
     def UpdatePaymentPlan(
         self, request: UpdatePaymentPlanRequest, ctx=None
     ) -> PaymentPlanPB:
-        self.logger.info("UpdatePaymentPlan called")
+        logger.info("UpdatePaymentPlan called")
         payment_plan = {
             k: v
             for k, v in payment_plan_PB_to_DB(request.payment_plan).to_dict().items()
@@ -208,7 +208,7 @@ class PlanningService(PlanningServicer):
     def DeletePaymentPlan(
         self, request: DeletePaymentPlanRequest, ctx=None
     ) -> DeletePaymentPlanResponse:
-        self.logger.info("DeletePaymentPlan called")
+        logger.info("DeletePaymentPlan called")
 
         payment_plan_db = self.planning_collection.find_one(
             {"_id": ObjectId(request.payment_plan_id)}
@@ -230,7 +230,7 @@ class PlanningService(PlanningServicer):
     def GetWaterfallOverview(
         self, request: GetUserOverviewRequest, ctx=None
     ) -> WaterfallOverviewResponse:
-        self.logger.info("GetWaterfallOverview called")
+        logger.info("GetWaterfallOverview called")
 
         payment_plans_cursor = self.planning_collection.find(
             {"userId": request.user_id, "active": True}
@@ -257,7 +257,7 @@ class PlanningService(PlanningServicer):
     def GetAmountPaidPercentage(
         self, request: GetUserOverviewRequest, ctx=None
     ) -> GetAmountPaidPercentageResponse:
-        self.logger.info("GetAmountPaidPercentage called")
+        logger.info("GetAmountPaidPercentage called")
 
         # retrieve all active PaymentPlans for user
         # iterate over all PaymentActions and depending on its status add it to paid amount or only total_amount
@@ -280,7 +280,7 @@ class PlanningService(PlanningServicer):
     def GetPercentageCoveredByPlans(
         self, request: GetUserOverviewRequest, ctx=None
     ) -> GetPercentageCoveredByPlansResponse:
-        self.logger.info("GetPercentageCoveredByPlans")
+        logger.info("GetPercentageCoveredByPlans")
 
         user_id = request.user_id
         # retrieve all accounts

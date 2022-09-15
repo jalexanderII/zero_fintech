@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import datetime
-import logging
 import os
-import sys
 from itertools import product
 from math import ceil
 from typing import List, Dict, Optional
@@ -37,18 +35,11 @@ from gen.Python.core.accounts_pb2 import GetAccountRequest, Account
 from gen.Python.core.core_pb2_grpc import CoreStub
 from services.planning.server.utils import shift_date_by_payment_frequency
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)],
-)
-logger = logging.getLogger("PaymentPlanBuilder")
+from services.planning import app_logger
+
+logger = app_logger.get_logger("PaymentPlanBuilder")
 
 load_dotenv()
-
-CORE_CLIENT = CoreStub(
-    grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
-)
 
 AMOUNT_THRESHOLD = 250.0
 DEFAULT_APR = 10.0
@@ -56,7 +47,9 @@ DEFAULT_APR = 10.0
 
 @define
 class PaymentPlanBuilder:
-    core_client: CoreStub = CORE_CLIENT
+    core_client: CoreStub = CoreStub(
+        grpc.insecure_channel(f'localhost:{os.getenv("CORE_SERVER_PORT")}')
+    )
 
     def create(
         self, payment_tasks: List[PaymentTask], meta_data: Optional[MetaData] = None
