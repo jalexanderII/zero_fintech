@@ -109,6 +109,10 @@ func TestCoreServer_IsDebitAccountLinked(t *testing.T) {
 	if islinked.GetStatus() != true {
 		t.Errorf("2: Failed to fetch correct status: %+v", islinked)
 	}
+	islinked2, err := server.IsDebitAccountLinked(ctx, &core.IsDebitAccountLinkedRequest{UserId: "6212a0101fca9390a37a32d3"})
+	if islinked2.GetStatus() != false {
+		t.Errorf("3: Failed to correctly return false: %+v", islinked2)
+	}
 }
 
 func TestCoreServer_IsCreditAccountLinked(t *testing.T) {
@@ -119,5 +123,9 @@ func TestCoreServer_IsCreditAccountLinked(t *testing.T) {
 	}
 	if islinked.GetStatus() != true {
 		t.Errorf("2: Failed to fetch correct status: %+v", islinked)
+	}
+	islinked2, err := server.IsCreditAccountLinked(ctx, &core.IsCreditAccountLinkedRequest{UserId: "6212a0101fca9390a37a32d3"})
+	if islinked2.GetStatus() != false {
+		t.Errorf("3: Failed to correctly return false: %+v", islinked2)
 	}
 }

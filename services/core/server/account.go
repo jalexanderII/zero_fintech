@@ -8,6 +8,7 @@ import (
 	"github.com/jalexanderII/zero_fintech/services/core/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (s CoreServer) CreateAccount(ctx context.Context, in *core.CreateAccountRequest) (*core.Account, error) {
@@ -71,6 +72,9 @@ func (s CoreServer) IsDebitAccountLinked(ctx context.Context, in *core.IsDebitAc
 	filter := []bson.M{{"user_id": user_id}, {"type": "depository"}}
 	err = s.AccountDB.FindOne(ctx, bson.M{"$and": filter}).Decode(&account)
 	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return &core.IsDebitAccountLinkedResponse{Status: account.NotNull()}, nil
+		}
 		s.l.Error("[AccountDB] Error getting debt account for user", "error", err)
 		return nil, err
 	}
@@ -88,6 +92,10 @@ func (s CoreServer) IsCreditAccountLinked(ctx context.Context, in *core.IsCredit
 	filter := []bson.M{{"user_id": user_id}, {"type": "depository"}}
 	err = s.AccountDB.FindOne(ctx, bson.M{"$and": filter}).Decode(&account)
 	if err != nil {
+		// ErrNoDocuments means that the filter did not match any documents in the collection
+		if err == mongo.ErrNoDocuments {
+			return &core.IsCreditAccountLinkedResponse{Status: account.NotNull()}, nil
+		}
 		s.l.Error("[AccountDB] Error getting debt account for user", "error", err)
 		return nil, err
 	}
