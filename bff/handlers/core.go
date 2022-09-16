@@ -251,6 +251,28 @@ func GetUserTotalCreditAccountBalance(client core.CoreClient, ctx context.Contex
 	}
 }
 
+func IsDebitAccountLinked(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		debitAcc, err := client.IsDebitAccountLinked(ctx, &core.IsDebitAccountLinkedRequest{UserId: c.Params("id")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's debit account", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": debitAcc.Status})
+	}
+}
+
+func IsCreditAccountLinked(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		debitAcc, err := client.IsCreditAccountLinked(ctx, &core.IsCreditAccountLinkedRequest{UserId: c.Params("id")})
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's credit accounts", "data": err})
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": debitAcc.Status})
+	}
+}
+
 func GetUserTransactions(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		transactions, err := client.ListUserTransactions(ctx, &core.ListUserTransactionsRequest{UserId: c.Params("id")})

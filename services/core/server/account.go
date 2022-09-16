@@ -61,6 +61,39 @@ func (s CoreServer) GetDebitAccountBalance(ctx context.Context, in *core.GetDebi
 	}, nil
 }
 
+func (s CoreServer) IsDebitAccountLinked(ctx context.Context, in *core.IsDebitAccountLinkedRequest) (*core.IsDebitAccountLinkedResponse, error) {
+	var account database.Account
+	user_id, err := primitive.ObjectIDFromHex(in.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+
+	filter := []bson.M{{"user_id": user_id}, {"type": "depository"}}
+	err = s.AccountDB.FindOne(ctx, bson.M{"$and": filter}).Decode(&account)
+	if err != nil {
+		s.l.Error("[AccountDB] Error getting debt account for user", "error", err)
+		return nil, err
+	}
+
+	return &core.IsDebitAccountLinkedResponse{Status: account.NotNull()}, nil
+}
+
+func (s CoreServer) IsCreditAccountLinked(ctx context.Context, in *core.IsCreditAccountLinkedRequest) (*core.IsCreditAccountLinkedResponse, error) {
+	var account database.Account
+	user_id, err := primitive.ObjectIDFromHex(in.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+
+	filter := []bson.M{{"user_id": user_id}, {"type": "depository"}}
+	err = s.AccountDB.FindOne(ctx, bson.M{"$and": filter}).Decode(&account)
+	if err != nil {
+		s.l.Error("[AccountDB] Error getting debt account for user", "error", err)
+		return nil, err
+	}
+	return &core.IsCreditAccountLinkedResponse{Status: account.NotNull()}, nil
+}
+
 func (s CoreServer) ListAccounts(ctx context.Context, in *core.ListAccountRequest) (*core.ListAccountResponse, error) {
 	var results []database.Account
 	cursor, err := s.AccountDB.Find(ctx, bson.D{})

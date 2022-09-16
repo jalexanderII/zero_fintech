@@ -65,6 +65,8 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreEndpoints.Get("/accounts/debit/balance/:id", handlers.GetUserDebitAccountBalance(coreClient, ctx))
 	coreEndpoints.Get("/transactions/:id", handlers.GetUserTransactions(coreClient, ctx))
 	coreEndpoints.Get("/accounts/credit/balance/:id", handlers.GetUserTotalCreditAccountBalance(coreClient, ctx))
+	coreEndpoints.Get("/accounts/credit/exist/:id", handlers.IsCreditAccountLinked(coreClient, ctx))
+	coreEndpoints.Get("/accounts/debit/exist/:id", handlers.IsDebitAccountLinked(coreClient, ctx))
 
 	coreDashboardEndpoints := coreEndpoints.Group("/dashboard")
 	coreDashboardEndpoints.Get("/waterfall/:id", handlers.GetWaterfallOverview(coreClient, ctx))

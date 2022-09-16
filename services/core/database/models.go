@@ -52,6 +52,10 @@ type Account struct {
 	NextPaymentDueDate     string                   `bson:"next_payment_due_date"`
 }
 
+func (a *Account) NotNull() bool {
+	return (a != nil && a.PlaidAccountId != "")
+}
+
 // Transaction is a DB Serialization of Proto Transaction
 type Transaction struct {
 	ID                   primitive.ObjectID  `bson:"_id"`

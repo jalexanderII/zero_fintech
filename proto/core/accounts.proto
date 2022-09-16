@@ -87,3 +87,19 @@ message ListUserAccountsRequest {
 message ListAccountResponse {
   repeated Account accounts = 1;
 }
+
+message IsDebitAccountLinkedRequest {
+  string user_id = 1;
+}
+
+message IsDebitAccountLinkedResponse {
+  bool status = 1;
+}
+
+message IsCreditAccountLinkedRequest {
+  string user_id = 1;
+}
+
+message IsCreditAccountLinkedResponse {
+  bool status = 1;
+}

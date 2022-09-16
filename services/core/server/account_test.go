@@ -99,3 +99,25 @@ func TestCoreServer_ListAccounts(t *testing.T) {
 		t.Errorf("2: Failed to fetch all accounts: %+v", len(accounts.Accounts))
 	}
 }
+
+func TestCoreServer_IsDebitAccountLinked(t *testing.T) {
+	server, ctx := GenServer()
+	islinked, err := server.IsDebitAccountLinked(ctx, &core.IsDebitAccountLinkedRequest{UserId: "6212a0101fca9390a37a32d2"})
+	if err != nil {
+		t.Errorf("1: An error was returned: %v", err)
+	}
+	if islinked.GetStatus() != true {
+		t.Errorf("2: Failed to fetch correct status: %+v", islinked)
+	}
+}
+
+func TestCoreServer_IsCreditAccountLinked(t *testing.T) {
+	server, ctx := GenServer()
+	islinked, err := server.IsCreditAccountLinked(ctx, &core.IsCreditAccountLinkedRequest{UserId: "6212a0101fca9390a37a32d2"})
+	if err != nil {
+		t.Errorf("1: An error was returned: %v", err)
+	}
+	if islinked.GetStatus() != true {
+		t.Errorf("2: Failed to fetch correct status: %+v", islinked)
+	}
+}
