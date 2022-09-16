@@ -257,24 +257,24 @@ class PlanningService(PlanningServicer):
     def GetAmountPaidPercentage(
         self, request: GetUserOverviewRequest, ctx=None
     ) -> GetAmountPaidPercentageResponse:
+        """
+        retrieve all active PaymentPlans for user
+        iterate over all PaymentActions and depending on its status add it to paid amount or only total_amount
+        """
         logger.info("GetAmountPaidPercentage called")
 
-        # retrieve all active PaymentPlans for user
-        # iterate over all PaymentActions and depending on its status add it to paid amount or only total_amount
         payment_plans_cursor = self.planning_collection.find(
             {"userId": request.user_id, "active": True}
         )
         amount_paid, total_amount = 0, 0
         for _pp in payment_plans_cursor:
             pp: PaymentPlanDB = PaymentPlanDB().from_dict(_pp)
-            print(_pp.payment_plan_id)
             for pa in pp.payment_action:
                 _amount = pa.amount
                 if pa.status == PaymentActionStatus.PAYMENT_ACTION_STATUS_COMPLETED:
                     amount_paid += _amount
                 total_amount += _amount
         prcnt_paid = amount_paid / total_amount if total_amount > 0 else 1
-        print(prcnt_paid)
         return GetAmountPaidPercentageResponse(percentage_paid=prcnt_paid)
 
     def GetPercentageCoveredByPlans(

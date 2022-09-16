@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\"\xe1\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rofficial_name\x18\x04 \x01(\t\x12\x0c\n\x04type\x18\x05 \x01(\t\x12\x0f\n\x07subtype\x18\x06 \x01(\t\x12\x19\n\x11\x61vailable_balance\x18\x07 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x08 \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\t \x01(\x01\x12\x19\n\x11iso_currency_code\x18\n \x01(\t\x12;\n\x16\x61nnual_percentage_rate\x18\x0c \x03(\x0b\x32\x1b.core.AnnualPercentageRates\x12\x12\n\nis_overdue\x18\r \x01(\x08\x12\x1b\n\x13last_payment_amount\x18\x0e \x01(\x01\x12!\n\x19last_statement_issue_date\x18\x10 \x01(\t\x12\x1e\n\x16last_statement_balance\x18\x11 \x01(\x01\x12\x1e\n\x16minimum_payment_amount\x18\x12 \x01(\x01\x12\x1d\n\x15next_payment_due_date\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\"\x81\x01\n\x15\x41nnualPercentageRates\x12\x16\n\x0e\x61pr_percentage\x18\x01 \x01(\x01\x12\x10\n\x08\x61pr_type\x18\x02 \x01(\t\x12\x1e\n\x16\x62\x61lance_subject_to_apr\x18\x03 \x01(\x01\x12\x1e\n\x16interest_charge_amount\x18\x04 \x01(\x01\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"0\n\x1dGetDebitAccountBalanceRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"T\n\x1eGetDebitAccountBalanceResponse\x12\x19\n\x11\x61vailable_balance\x18\x01 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x02 \x01(\x01\"\x14\n\x12ListAccountRequest\"*\n\x17ListUserAccountsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.AccountB2Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x13\x63ore/accounts.proto\x12\x04\x63ore\"\xe1\x03\n\x07\x41\x63\x63ount\x12\x12\n\naccount_id\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rofficial_name\x18\x04 \x01(\t\x12\x0c\n\x04type\x18\x05 \x01(\t\x12\x0f\n\x07subtype\x18\x06 \x01(\t\x12\x19\n\x11\x61vailable_balance\x18\x07 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x08 \x01(\x01\x12\x14\n\x0c\x63redit_limit\x18\t \x01(\x01\x12\x19\n\x11iso_currency_code\x18\n \x01(\t\x12;\n\x16\x61nnual_percentage_rate\x18\x0c \x03(\x0b\x32\x1b.core.AnnualPercentageRates\x12\x12\n\nis_overdue\x18\r \x01(\x08\x12\x1b\n\x13last_payment_amount\x18\x0e \x01(\x01\x12!\n\x19last_statement_issue_date\x18\x10 \x01(\t\x12\x1e\n\x16last_statement_balance\x18\x11 \x01(\x01\x12\x1e\n\x16minimum_payment_amount\x18\x12 \x01(\x01\x12\x1d\n\x15next_payment_due_date\x18\x13 \x01(\t\x12\x18\n\x10plaid_account_id\x18\x14 \x01(\t\"\x81\x01\n\x15\x41nnualPercentageRates\x12\x16\n\x0e\x61pr_percentage\x18\x01 \x01(\x01\x12\x10\n\x08\x61pr_type\x18\x02 \x01(\t\x12\x1e\n\x16\x62\x61lance_subject_to_apr\x18\x03 \x01(\x01\x12\x1e\n\x16interest_charge_amount\x18\x04 \x01(\x01\"6\n\x14\x43reateAccountRequest\x12\x1e\n\x07\x61\x63\x63ount\x18\x01 \x01(\x0b\x32\r.core.Account\"\x1f\n\x11GetAccountRequest\x12\n\n\x02id\x18\x01 \x01(\t\"0\n\x1dGetDebitAccountBalanceRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"T\n\x1eGetDebitAccountBalanceResponse\x12\x19\n\x11\x61vailable_balance\x18\x01 \x01(\x01\x12\x17\n\x0f\x63urrent_balance\x18\x02 \x01(\x01\"\x14\n\x12ListAccountRequest\"*\n\x17ListUserAccountsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"6\n\x13ListAccountResponse\x12\x1f\n\x08\x61\x63\x63ounts\x18\x01 \x03(\x0b\x32\r.core.Account\".\n\x1bIsDebitAccountLinkedRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\".\n\x1cIsDebitAccountLinkedResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\"/\n\x1cIsCreditAccountLinkedRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\"/\n\x1dIsCreditAccountLinkedResponse\x12\x0e\n\x06status\x18\x01 \x01(\x08\x42\x32Z0github.com/jalexanderII/zero_fintech/gen/Go/coreb\x06proto3')
 
 
 
@@ -27,6 +27,10 @@ _GETDEBITACCOUNTBALANCERESPONSE = DESCRIPTOR.message_types_by_name['GetDebitAcco
 _LISTACCOUNTREQUEST = DESCRIPTOR.message_types_by_name['ListAccountRequest']
 _LISTUSERACCOUNTSREQUEST = DESCRIPTOR.message_types_by_name['ListUserAccountsRequest']
 _LISTACCOUNTRESPONSE = DESCRIPTOR.message_types_by_name['ListAccountResponse']
+_ISDEBITACCOUNTLINKEDREQUEST = DESCRIPTOR.message_types_by_name['IsDebitAccountLinkedRequest']
+_ISDEBITACCOUNTLINKEDRESPONSE = DESCRIPTOR.message_types_by_name['IsDebitAccountLinkedResponse']
+_ISCREDITACCOUNTLINKEDREQUEST = DESCRIPTOR.message_types_by_name['IsCreditAccountLinkedRequest']
+_ISCREDITACCOUNTLINKEDRESPONSE = DESCRIPTOR.message_types_by_name['IsCreditAccountLinkedResponse']
 Account = _reflection.GeneratedProtocolMessageType('Account', (_message.Message,), {
   'DESCRIPTOR' : _ACCOUNT,
   '__module__' : 'core.accounts_pb2'
@@ -90,6 +94,34 @@ ListAccountResponse = _reflection.GeneratedProtocolMessageType('ListAccountRespo
   })
 _sym_db.RegisterMessage(ListAccountResponse)
 
+IsDebitAccountLinkedRequest = _reflection.GeneratedProtocolMessageType('IsDebitAccountLinkedRequest', (_message.Message,), {
+  'DESCRIPTOR' : _ISDEBITACCOUNTLINKEDREQUEST,
+  '__module__' : 'core.accounts_pb2'
+  # @@protoc_insertion_point(class_scope:core.IsDebitAccountLinkedRequest)
+  })
+_sym_db.RegisterMessage(IsDebitAccountLinkedRequest)
+
+IsDebitAccountLinkedResponse = _reflection.GeneratedProtocolMessageType('IsDebitAccountLinkedResponse', (_message.Message,), {
+  'DESCRIPTOR' : _ISDEBITACCOUNTLINKEDRESPONSE,
+  '__module__' : 'core.accounts_pb2'
+  # @@protoc_insertion_point(class_scope:core.IsDebitAccountLinkedResponse)
+  })
+_sym_db.RegisterMessage(IsDebitAccountLinkedResponse)
+
+IsCreditAccountLinkedRequest = _reflection.GeneratedProtocolMessageType('IsCreditAccountLinkedRequest', (_message.Message,), {
+  'DESCRIPTOR' : _ISCREDITACCOUNTLINKEDREQUEST,
+  '__module__' : 'core.accounts_pb2'
+  # @@protoc_insertion_point(class_scope:core.IsCreditAccountLinkedRequest)
+  })
+_sym_db.RegisterMessage(IsCreditAccountLinkedRequest)
+
+IsCreditAccountLinkedResponse = _reflection.GeneratedProtocolMessageType('IsCreditAccountLinkedResponse', (_message.Message,), {
+  'DESCRIPTOR' : _ISCREDITACCOUNTLINKEDRESPONSE,
+  '__module__' : 'core.accounts_pb2'
+  # @@protoc_insertion_point(class_scope:core.IsCreditAccountLinkedResponse)
+  })
+_sym_db.RegisterMessage(IsCreditAccountLinkedResponse)
+
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
@@ -112,4 +144,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LISTUSERACCOUNTSREQUEST._serialized_end=934
   _LISTACCOUNTRESPONSE._serialized_start=936
   _LISTACCOUNTRESPONSE._serialized_end=990
+  _ISDEBITACCOUNTLINKEDREQUEST._serialized_start=992
+  _ISDEBITACCOUNTLINKEDREQUEST._serialized_end=1038
+  _ISDEBITACCOUNTLINKEDRESPONSE._serialized_start=1040
+  _ISDEBITACCOUNTLINKEDRESPONSE._serialized_end=1086
+  _ISCREDITACCOUNTLINKEDREQUEST._serialized_start=1088
+  _ISCREDITACCOUNTLINKEDREQUEST._serialized_end=1135
+  _ISCREDITACCOUNTLINKEDRESPONSE._serialized_start=1137
+  _ISCREDITACCOUNTLINKEDRESPONSE._serialized_end=1184
 # @@protoc_insertion_point(module_scope)

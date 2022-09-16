@@ -65,6 +65,16 @@ class CoreStub(object):
                 request_serializer=core_dot_accounts__pb2.GetDebitAccountBalanceRequest.SerializeToString,
                 response_deserializer=core_dot_accounts__pb2.GetDebitAccountBalanceResponse.FromString,
                 )
+        self.IsDebitAccountLinked = channel.unary_unary(
+                '/core.Core/IsDebitAccountLinked',
+                request_serializer=core_dot_accounts__pb2.IsDebitAccountLinkedRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.IsDebitAccountLinkedResponse.FromString,
+                )
+        self.IsCreditAccountLinked = channel.unary_unary(
+                '/core.Core/IsCreditAccountLinked',
+                request_serializer=core_dot_accounts__pb2.IsCreditAccountLinkedRequest.SerializeToString,
+                response_deserializer=core_dot_accounts__pb2.IsCreditAccountLinkedResponse.FromString,
+                )
         self.ListAccounts = channel.unary_unary(
                 '/core.Core/ListAccounts',
                 request_serializer=core_dot_accounts__pb2.ListAccountRequest.SerializeToString,
@@ -208,6 +218,18 @@ class CoreServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetDebitAccountBalance(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IsDebitAccountLinked(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def IsCreditAccountLinked(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -359,6 +381,16 @@ def add_CoreServicer_to_server(servicer, server):
                     servicer.GetDebitAccountBalance,
                     request_deserializer=core_dot_accounts__pb2.GetDebitAccountBalanceRequest.FromString,
                     response_serializer=core_dot_accounts__pb2.GetDebitAccountBalanceResponse.SerializeToString,
+            ),
+            'IsDebitAccountLinked': grpc.unary_unary_rpc_method_handler(
+                    servicer.IsDebitAccountLinked,
+                    request_deserializer=core_dot_accounts__pb2.IsDebitAccountLinkedRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.IsDebitAccountLinkedResponse.SerializeToString,
+            ),
+            'IsCreditAccountLinked': grpc.unary_unary_rpc_method_handler(
+                    servicer.IsCreditAccountLinked,
+                    request_deserializer=core_dot_accounts__pb2.IsCreditAccountLinkedRequest.FromString,
+                    response_serializer=core_dot_accounts__pb2.IsCreditAccountLinkedResponse.SerializeToString,
             ),
             'ListAccounts': grpc.unary_unary_rpc_method_handler(
                     servicer.ListAccounts,
@@ -600,6 +632,40 @@ class Core(object):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetDebitAccountBalance',
             core_dot_accounts__pb2.GetDebitAccountBalanceRequest.SerializeToString,
             core_dot_accounts__pb2.GetDebitAccountBalanceResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def IsDebitAccountLinked(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/IsDebitAccountLinked',
+            core_dot_accounts__pb2.IsDebitAccountLinkedRequest.SerializeToString,
+            core_dot_accounts__pb2.IsDebitAccountLinkedResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def IsCreditAccountLinked(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/IsCreditAccountLinked',
+            core_dot_accounts__pb2.IsCreditAccountLinkedRequest.SerializeToString,
+            core_dot_accounts__pb2.IsCreditAccountLinkedResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
