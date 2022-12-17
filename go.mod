@@ -1,12 +1,12 @@
 module github.com/jalexanderII/zero_fintech
 
-go 1.17
+go 1.19
 
 require (
 	github.com/bxcodec/faker/v3 v3.7.0
 	github.com/gofiber/fiber/v2 v2.27.0
-	github.com/gofiber/template v1.6.23
 	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/golang/protobuf v1.5.2
 	github.com/joho/godotenv v1.4.0
 	github.com/plaid/plaid-go v1.10.0
 	github.com/sirupsen/logrus v1.4.2
@@ -19,8 +19,8 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/klauspost/compress v1.14.1 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -38,4 +38,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
