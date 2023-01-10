@@ -2,11 +2,14 @@ package routes
 
 import (
 	"context"
-
+	"github.com/auth0/go-jwt-middleware/v2"
+	"github.com/auth0/go-jwt-middleware/v2/validator"
+	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/jalexanderII/zero_fintech/bff/client"
 	"github.com/jalexanderII/zero_fintech/bff/handlers"
+	"github.com/jalexanderII/zero_fintech/bff/middleware"
 	"github.com/jalexanderII/zero_fintech/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,6 +17,25 @@ import (
 
 // Create a new instance of the logger.
 var l = logrus.New()
+
+func protect(f fiber.Handler) fiber.Handler {
+	return adaptor.HTTPHandler(middleware.EnsureValidToken()(adaptor.FiberHandlerFunc(f)))
+}
+
+func greet(msg string) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": msg})
+	}
+}
+
+func scopedGreet(c *fiber.Ctx) error {
+	token := c.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
+	claims := token.CustomClaims.(*middleware.CustomClaims)
+	if !claims.HasScope("read:messages") {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "error", "message": "Insufficient scope."})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "Hello from a private endpoint! You need to be authenticated to see this."})
+}
 
 func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	// Create a client and context to reuse in all handlers
@@ -25,12 +47,17 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	plaidClient := client.NewPlaidClient(l, plaidCollection, coreClient)
 
 	// Create handlers for bff server
-	app.Get("/", func(c *fiber.Ctx) error { return c.SendString("Hello, World!") })
+	app.Get("/", greet("Hello, World!"))
 
 	api := app.Group("/api")
 
 	// Monitoring api stats
 	api.Get("/dashboard", monitor.New())
+
+	authTest := api.Group("/messages")
+	authTest.Get("/public", greet("Hello from a public endpoint! You don't need to be authenticated to see this."))
+	authTest.Get("/private", protect(greet("Hello from a private endpoint! You need to be authenticated to see this.")))
+	authTest.Get("/private-scoped", protect(scopedGreet))
 
 	// Auth endpoints
 	authEndpoints := api.Group("/auth")
