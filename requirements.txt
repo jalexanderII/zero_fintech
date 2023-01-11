@@ -1,8 +1,8 @@
 attr==0.3.2
 attrs==21.4.0
 betterproto==1.2.5
-grpcio-tools==1.47.0
-grpcio==1.47.0
+grpcio-tools
+grpcio==1.46.5
 grpclib==0.4.2
 motor==3.0.0
 pandas==1.4.3
