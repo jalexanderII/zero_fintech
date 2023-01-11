@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+
 	"github.com/auth0/go-jwt-middleware/v2"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/gofiber/adaptor/v2"
@@ -31,7 +32,7 @@ func greet(msg string) func(c *fiber.Ctx) error {
 func scopedGreet(c *fiber.Ctx) error {
 	token := c.Context().Value(jwtmiddleware.ContextKey{}).(*validator.ValidatedClaims)
 	claims := token.CustomClaims.(*middleware.CustomClaims)
-	if !claims.HasScope("read:messages") {
+	if !claims.HasScope("read:admin-messages") {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "error", "message": "Insufficient scope."})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "message": "Hello from a private endpoint! You need to be authenticated to see this."})
@@ -55,9 +56,10 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	api.Get("/dashboard", monitor.New())
 
 	authTest := api.Group("/messages")
+	authTest.Get("/admin", greet("Admin Hi"))
 	authTest.Get("/public", greet("Hello from a public endpoint! You don't need to be authenticated to see this."))
-	authTest.Get("/private", protect(greet("Hello from a private endpoint! You need to be authenticated to see this.")))
-	authTest.Get("/private-scoped", protect(scopedGreet))
+	authTest.Get("/protected", protect(greet("Hello from a private endpoint! You need to be authenticated to see this.")))
+	authTest.Get("/admin", protect(scopedGreet))
 
 	// Auth endpoints
 	authEndpoints := api.Group("/auth")

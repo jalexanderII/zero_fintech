@@ -3,7 +3,9 @@ module github.com/jalexanderII/zero_fintech
 go 1.19
 
 require (
+	github.com/auth0/go-jwt-middleware/v2 v2.1.0
 	github.com/bxcodec/faker/v3 v3.7.0
+	github.com/gofiber/adaptor/v2 v2.1.30
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.5.2
@@ -18,11 +20,8 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/auth0/go-jwt-middleware/v2 v2.1.0 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/gofiber/adaptor/v2 v2.1.30 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/klauspost/compress v1.15.14 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -44,5 +43,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )

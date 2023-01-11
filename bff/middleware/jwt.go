@@ -2,13 +2,14 @@ package middleware
 
 import (
 	"context"
-	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
-	"github.com/jalexanderII/zero_fintech/utils"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	jwtmiddleware "github.com/auth0/go-jwt-middleware/v2"
+	"github.com/jalexanderII/zero_fintech/utils"
 
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
