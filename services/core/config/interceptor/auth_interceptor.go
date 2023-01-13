@@ -77,6 +77,6 @@ func AccessibleRoles() map[string]bool {
 		authServicePath + "Login":      true,
 		authServicePath + "SignUp":     true,
 		coreServicePath + "GetAccount": true,
-		// coreServicePath + "GetPaymentPlan": true,
+		coreServicePath + "GetUser":    true,
 	}
 }
