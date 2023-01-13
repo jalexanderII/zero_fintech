@@ -6,9 +6,6 @@ import (
 	"github.com/jalexanderII/zero_fintech/services/auth/config/middleware"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 // AuthInterceptor is a server interceptor for authentication and authorization
@@ -43,28 +40,28 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 }
 
 func (interceptor *AuthInterceptor) authorize(ctx context.Context, method string) error {
-	_, ok := interceptor.accessibleRoles[method]
-	if ok {
-		// everyone can access
-		return nil
-	}
-
-	md, ok := metadata.FromIncomingContext(ctx)
-	interceptor.l.Debug("Meta data from client: ", md)
-	if !ok {
-		return status.Errorf(codes.Unauthenticated, "metadata is not provided")
-	}
-
-	values := md["authorization"]
-	if len(values) == 0 {
-		return status.Errorf(codes.Unauthenticated, "authorization token is not provided %v", md)
-	}
-
-	accessToken := values[0]
-	_, err := interceptor.jwtManager.Verify(accessToken)
-	if err != nil {
-		return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
-	}
+	// _, ok := interceptor.accessibleRoles[method]
+	// if ok {
+	// 	// everyone can access
+	// 	return nil
+	// }
+	//
+	// md, ok := metadata.FromIncomingContext(ctx)
+	// interceptor.l.Debug("Meta data from client: ", md)
+	// if !ok {
+	// 	return status.Errorf(codes.Unauthenticated, "metadata is not provided")
+	// }
+	//
+	// values := md["authorization"]
+	// if len(values) == 0 {
+	// 	return status.Errorf(codes.Unauthenticated, "authorization token is not provided %v", md)
+	// }
+	//
+	// accessToken := values[0]
+	// _, err := interceptor.jwtManager.Verify(accessToken)
+	// if err != nil {
+	// 	return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
+	// }
 
 	return nil
 }
@@ -74,9 +71,10 @@ func AccessibleRoles() map[string]bool {
 	const coreServicePath = "/core.Core/"
 	return map[string]bool{
 		// Auth paths not Protected since they are needed to generate the tokens
-		authServicePath + "Login":      true,
-		authServicePath + "SignUp":     true,
-		coreServicePath + "GetAccount": true,
-		coreServicePath + "GetUser":    true,
+		authServicePath + "Login":          true,
+		authServicePath + "SignUp":         true,
+		coreServicePath + "GetAccount":     true,
+		coreServicePath + "GetUser":        true,
+		coreServicePath + "GetUserByEmail": true,
 	}
 }

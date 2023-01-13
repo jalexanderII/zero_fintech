@@ -25,7 +25,7 @@
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript">
-    (async function() {
+    (async ($) => {
         const Email = "{{.Email}}"
         const Purpose = "{{.Purpose}}"
         const Token = await axios.post("https://127.0.0.1:8080/api/auth/plaid/create_link/internal", {email: Email, purpose: Purpose})

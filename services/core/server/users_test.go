@@ -8,7 +8,6 @@ import (
 	"github.com/jalexanderII/zero_fintech/gen/Go/core"
 	"github.com/jalexanderII/zero_fintech/services/core/data"
 	"github.com/jalexanderII/zero_fintech/services/core/database"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -110,5 +109,17 @@ func TestAuthServer_DeleteUser(t *testing.T) {
 	}
 	if deleted.Status != common.DELETE_STATUS_DELETE_STATUS_SUCCESS {
 		t.Errorf("5: Failed to delete user: %+v\n, %+v", deleted.Status, deleted.GetUser())
+	}
+}
+
+func TestCoreServer_GetUserByEmail(t *testing.T) {
+	server, ctx := GenServer()
+
+	user, err := server.GetUserByEmail(ctx, &core.GetUserByEmailRequest{Email: "exampleUpdated@gmail.com"})
+	if err != nil {
+		t.Errorf("1: An error was returned: %v", err)
+	}
+	if user.Username != "exampleUpdated" {
+		t.Errorf("2: Failed to fetch correct user: %+v", user)
 	}
 }

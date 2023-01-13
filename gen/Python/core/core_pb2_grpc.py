@@ -140,6 +140,11 @@ class CoreStub(object):
                 request_serializer=core_dot_users__pb2.GetUserRequest.SerializeToString,
                 response_deserializer=core_dot_users__pb2.User.FromString,
                 )
+        self.GetUserByEmail = channel.unary_unary(
+                '/core.Core/GetUserByEmail',
+                request_serializer=core_dot_users__pb2.GetUserByEmailRequest.SerializeToString,
+                response_deserializer=core_dot_users__pb2.User.FromString,
+                )
         self.ListUsers = channel.unary_unary(
                 '/core.Core/ListUsers',
                 request_serializer=core_dot_users__pb2.ListUserRequest.SerializeToString,
@@ -316,6 +321,12 @@ class CoreServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetUserByEmail(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListUsers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -455,6 +466,11 @@ def add_CoreServicer_to_server(servicer, server):
             'GetUser': grpc.unary_unary_rpc_method_handler(
                     servicer.GetUser,
                     request_deserializer=core_dot_users__pb2.GetUserRequest.FromString,
+                    response_serializer=core_dot_users__pb2.User.SerializeToString,
+            ),
+            'GetUserByEmail': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetUserByEmail,
+                    request_deserializer=core_dot_users__pb2.GetUserByEmailRequest.FromString,
                     response_serializer=core_dot_users__pb2.User.SerializeToString,
             ),
             'ListUsers': grpc.unary_unary_rpc_method_handler(
@@ -886,6 +902,23 @@ class Core(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/core.Core/GetUser',
             core_dot_users__pb2.GetUserRequest.SerializeToString,
+            core_dot_users__pb2.User.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetUserByEmail(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/core.Core/GetUserByEmail',
+            core_dot_users__pb2.GetUserByEmailRequest.SerializeToString,
             core_dot_users__pb2.User.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

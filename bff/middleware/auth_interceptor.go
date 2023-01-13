@@ -31,9 +31,9 @@ func (interceptor *AuthInterceptor) Unary() grpc.UnaryClientInterceptor {
 	) error {
 		log.Printf("--> Auth unary interceptor: %s", method)
 
-		if !interceptor.AuthMethods[method] {
-			return invoker(interceptor.attachToken(ctx), method, req, reply, cc, opts...)
-		}
+		// if !interceptor.AuthMethods[method] {
+		// 	return invoker(interceptor.attachToken(ctx), method, req, reply, cc, opts...)
+		// }
 
 		return invoker(ctx, method, req, reply, cc, opts...)
 	}
@@ -54,8 +54,9 @@ func AccessibleRoles() map[string]bool {
 	const coreServicePath = "/core.Core/"
 	return map[string]bool{
 		// Auth paths are not Protected since they are needed to generate the tokens
-		authServicePath + "Login":   true,
-		authServicePath + "SignUp":  true,
-		coreServicePath + "GetUser": true,
+		authServicePath + "Login":          true,
+		authServicePath + "SignUp":         true,
+		coreServicePath + "GetUser":        true,
+		coreServicePath + "GetUserByEmail": true,
 	}
 }
