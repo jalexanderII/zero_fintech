@@ -69,9 +69,11 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	// Plaid endpoints within Auth
 	plaidEndpoints := authEndpoints.Group("/plaid")
 	plaidEndpoints.Post("/info", handlers.Info(plaidClient))
-	plaidEndpoints.Get("/link/:username/:purpose", handlers.Link)
-	plaidEndpoints.Post("/create_link", handlers.CreateLinkToken(plaidClient, ctx))
-	plaidEndpoints.Post("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
+	plaidEndpoints.Get("/link/:email/:purpose", handlers.Link)
+	plaidEndpoints.Post("/create_link", protect(handlers.CreateLinkToken(plaidClient, ctx)))
+	plaidEndpoints.Post("/exchange", protect(handlers.ExchangePublicToken(plaidClient, ctx)))
+	plaidEndpoints.Post("/create_link/internal", handlers.CreateLinkToken(plaidClient, ctx))
+	plaidEndpoints.Post("/exchange/internal", handlers.ExchangePublicToken(plaidClient, ctx))
 	// plaidEndpoints.Patch("/exchange", handlers.ExchangePublicToken(plaidClient, ctx))
 
 	// User endpoints

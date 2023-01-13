@@ -26,16 +26,16 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript">
     (async function() {
-        const Username = "{{.Username}}"
+        const Email = "{{.Email}}"
         const Purpose = "{{.Purpose}}"
-        const Token = await axios.post("https://127.0.0.1:8080/api/auth/plaid/create_link", {username: Username, purpose: Purpose})
+        const Token = await axios.post("https://127.0.0.1:8080/api/auth/plaid/create_link/internal", {email: Email, purpose: Purpose})
             .then(response => {
                 console.log(response.data);
                 return response.data.link_token
             })
             .catch(error => console.error(error.message));
 
-        console.log('the user is:', Username);
+        console.log('the email is:', Email);
         console.log('link token is:', Token);
         const configs = {
             // Pass the link_token generated in step 2.
@@ -52,8 +52,8 @@
                 // and the selected account ID, metadata.accounts,
                 // to your backend app server.
                 //
-                axios.post("https://127.0.0.1:8080/api/auth/plaid/exchange", {
-                    username: Username,
+                axios.post("https://127.0.0.1:8080/api/auth/plaid/exchange/internal", {
+                    email: Email,
                     public_token: publicToken,
                     meta_data: metadata,
                     purpose: Purpose
