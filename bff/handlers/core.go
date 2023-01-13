@@ -221,7 +221,12 @@ func DeletePaymentTask(client core.CoreClient, ctx context.Context) func(c *fibe
 
 func GetUserAccounts(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: c.Params("id")})
+		user, err := GetUserByEmail(client, ctx, c)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's from email", "data": err})
+		}
+
+		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: user.GetId()})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's accounts", "data": err})
 		}

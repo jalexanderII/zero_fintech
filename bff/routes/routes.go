@@ -92,7 +92,7 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	coreEndpoints.Get("/paymenttask/:id", handlers.GetPaymentTask(coreClient, ctx))
 	coreEndpoints.Patch("/paymenttask/:id", handlers.UpdatePaymentTask(coreClient, ctx))
 	coreEndpoints.Delete("/paymenttask/:id", handlers.DeletePaymentTask(coreClient, ctx))
-	coreEndpoints.Get("/accounts/:id", handlers.GetUserAccounts(coreClient, ctx))
+	coreEndpoints.Get("/accounts/:email", handlers.GetUserAccounts(coreClient, ctx))
 	coreEndpoints.Get("/accounts/debit/balance/:email", handlers.GetUserDebitAccountBalance(coreClient, ctx))
 	coreEndpoints.Get("/transactions/:email", handlers.GetUserTransactions(coreClient, ctx))
 	coreEndpoints.Get("/accounts/credit/balance/:email", handlers.GetUserTotalCreditAccountBalance(coreClient, ctx))
