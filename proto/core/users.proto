@@ -18,6 +18,11 @@ message GetUserRequest {
   string username = 2;
 }
 
+message GetUserByEmailRequest {
+  string id = 1;
+  string email = 2;
+}
+
 message UpdateUserRequest {
   string id = 1;
   User user = 2;

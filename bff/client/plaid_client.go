@@ -82,8 +82,8 @@ func NewPlaidClient(l *logrus.Logger, pdb mongo.Collection, coreClient core.Core
 }
 
 // LinkTokenCreate creates a link token using the specified parameters
-func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username, purpose string) (*models.CreateLinkTokenResponse, error) {
-	fmt.Printf("username: %+v", username)
+func (p *PlaidClient) LinkTokenCreate(ctx context.Context, email, purpose string) (*models.CreateLinkTokenResponse, error) {
+	fmt.Printf("email: %+v", email)
 	fmt.Printf("purpose: %+v", purpose)
 
 	purp, err := models.PurposeFromString(purpose)
@@ -91,7 +91,7 @@ func (p *PlaidClient) LinkTokenCreate(ctx context.Context, username, purpose str
 		return nil, err
 	}
 
-	DbUser, err := p.GetUser(ctx, username, "")
+	DbUser, err := p.GetUser(ctx, email, "")
 	if err != nil {
 		p.l.Error("[DB Error] error fetching user", err)
 		return nil, err
@@ -405,14 +405,14 @@ func (p *PlaidClient) GetUserToken(ctx context.Context, user *models.User) (*mod
 	return &token, nil
 }
 
-func (p *PlaidClient) GetUser(ctx context.Context, username, userId string) (*models.User, error) {
-	userRequest := &core.GetUserRequest{
-		Id:       userId,
-		Username: username,
+func (p *PlaidClient) GetUser(ctx context.Context, email, userId string) (*models.User, error) {
+	userRequest := &core.GetUserByEmailRequest{
+		Id:    userId,
+		Email: email,
 	}
 	fmt.Printf("userRequest: %+v", userRequest)
 
-	user, err := p.CoreClient.GetUser(ctx, userRequest)
+	user, err := p.CoreClient.GetUserByEmail(ctx, userRequest)
 	if err != nil {
 		fmt.Printf("failed to get a user: %+v", userRequest)
 		return nil, err

@@ -26,36 +26,36 @@ func Info(plaidClient *client.PlaidClient) func(c *fiber.Ctx) error {
 // will be saved to db along with account and transaction details upon success
 func Link(c *fiber.Ctx) error {
 	return c.Render("index", fiber.Map{
-		"Username": c.Params("username"),
-		"Purpose":  c.Params("purpose"),
+		"Email":   c.Params("email"),
+		"Purpose": c.Params("purpose"),
 	})
 }
 
 func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type Input struct {
-			Username string `json:"username"`
-			Purpose  string `json:"purpose"`
+			Email   string `json:"email"`
+			Purpose string `json:"purpose"`
 		}
 		var input Input
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 		}
 
-		linkTokenResp, err := plaidClient.LinkTokenCreate(ctx, input.Username, input.Purpose)
+		linkTokenResp, err := plaidClient.LinkTokenCreate(ctx, input.Email, input.Purpose)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to create link token", "data": err})
 		}
 
-		shared.CreateCookie(c, fmt.Sprintf("%v_link_token", input.Username), linkTokenResp.Token)
-		shared.CreateCookie(c, input.Username, linkTokenResp.UserId)
+		shared.CreateCookie(c, fmt.Sprintf("%v_link_token", input.Email), linkTokenResp.Token)
+		shared.CreateCookie(c, input.Email, linkTokenResp.UserId)
 		id, err := primitive.ObjectIDFromHex(linkTokenResp.UserId)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get ObjectId from Hex", "data": err})
 		}
 
 		plaidClient.SetLinkToken(&models.Token{
-			User:  &models.User{ID: id, Username: input.Username},
+			User:  &models.User{ID: id, Email: input.Email},
 			Value: linkTokenResp.Token,
 		})
 
@@ -66,7 +66,7 @@ func CreateLinkToken(plaidClient *client.PlaidClient, ctx context.Context) func(
 func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		type Input struct {
-			Username    string               `json:"username"`
+			Email       string               `json:"email"`
 			PublicToken string               `json:"public_token"`
 			MetaData    models.PlaidMetaData `json:"meta_data,omitempty"`
 			Purpose     models.Purpose       `json:"purpose"`
@@ -77,7 +77,7 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		}
 		fmt.Printf("METADATA: %+v", input.MetaData)
 
-		user, err := plaidClient.GetUser(ctx, input.Username, "")
+		user, err := plaidClient.GetUser(ctx, input.Email, "")
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Failure to get user for token", "data": err})
 		}

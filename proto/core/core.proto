@@ -47,6 +47,7 @@ service Core {
   rpc DeletePaymentTask(common.DeletePaymentTaskRequest) returns (common.DeletePaymentTaskResponse);
   // Users
   rpc GetUser(GetUserRequest) returns (User);
+  rpc GetUserByEmail(GetUserByEmailRequest) returns (User);
   rpc ListUsers(ListUserRequest) returns (ListUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns (User);
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
