@@ -86,7 +86,7 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	// Core endpoints
 	coreEndpoints := api.Group("/core")
 	coreEndpoints.Post("/paymenttask", handlers.CreatePaymentTask(coreClient, ctx))
-	coreEndpoints.Post("/paymentplan", handlers.GetPaymentPlan(coreClient, ctx))
+	coreEndpoints.Post("/paymentplan/:email", handlers.GetPaymentPlan(coreClient, ctx))
 	coreEndpoints.Get("/paymentplan/:email", handlers.GetUserPaymentPlans(coreClient, ctx))
 	coreEndpoints.Get("/paymenttask", handlers.ListPaymentTasks(coreClient, ctx))
 	coreEndpoints.Get("/paymenttask/:id", handlers.GetPaymentTask(coreClient, ctx))
