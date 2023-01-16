@@ -1,4 +1,20 @@
-.PHONY: gen_protos_go clear_protos_go
+.PHONY: gen_protos_go clear_protos_go run_servers
+
+run_core:
+	echo "Running Core..."
+	go run ./services/core/core.go
+
+run_auth:
+	echo "Running Auth..."
+	go run ./services/auth/auth.go
+
+run_bff:
+	echo "Running BFF..."
+	cd ./bff && air
+
+run_planning:
+	echo "Running Planning..."
+	python ./services/planning/main.py
 
 gen_protos_go:
 	protoc -I=./proto --go_opt=paths=source_relative --go_out=plugins=grpc:./gen/Go/ ./proto/common/*.proto
