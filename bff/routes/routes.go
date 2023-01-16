@@ -64,7 +64,7 @@ func SetupRoutes(app *fiber.App, DB mongo.Database) {
 	// Auth endpoints
 	authEndpoints := api.Group("/auth")
 	authEndpoints.Post("/login", handlers.Login(authClient))
-	authEndpoints.Post("/signup", handlers.SignUp(authClient))
+	authEndpoints.Post("/signup", handlers.SignUp(authClient, coreClient, ctx))
 	authEndpoints.Post("/logout", handlers.Logout(authClient))
 	// Plaid endpoints within Auth
 	plaidEndpoints := authEndpoints.Group("/plaid")
