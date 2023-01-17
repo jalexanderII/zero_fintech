@@ -89,7 +89,7 @@ func (s CoreServer) IsCreditAccountLinked(ctx context.Context, in *core.IsCredit
 		return nil, err
 	}
 
-	filter := []bson.M{{"user_id": user_id}, {"type": "depository"}}
+	filter := []bson.M{{"user_id": user_id}, {"type": "credit"}}
 	err = s.AccountDB.FindOne(ctx, bson.M{"$and": filter}).Decode(&account)
 	if err != nil {
 		// ErrNoDocuments means that the filter did not match any documents in the collection

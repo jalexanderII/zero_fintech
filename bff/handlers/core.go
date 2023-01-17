@@ -296,9 +296,9 @@ func GetUserKPIs(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx)
 			CurrentBalance   float64 `json:"current_balance,omitempty"`
 		}
 		type KPI struct {
-			Debit        float64 `json:"debit,omitempty"`
-			Credit       float64 `json:"credit,omitempty"`
-			PaymentPlans float64 `json:"payment_plans,omitempty"`
+			Debit        float64 `json:"debit"`
+			Credit       float64 `json:"credit"`
+			PaymentPlans float64 `json:"payment_plans"`
 		}
 
 		accounts, err := client.ListUserAccounts(ctx, &core.ListUserAccountsRequest{UserId: user.GetId()})
@@ -310,21 +310,21 @@ func GetUserKPIs(client core.CoreClient, ctx context.Context) func(c *fiber.Ctx)
 			totalCurrent += account.GetCurrentBalance()
 		}
 
+		var totalDebit = 0.0
 		debitAccBalance, err := client.GetDebitAccountBalance(ctx, &core.GetDebitAccountBalanceRequest{UserId: user.GetId()})
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's debit account", "data": err})
+		if err == nil {
+			totalDebit = debitAccBalance.GetCurrentBalance()
 		}
 
-		plans, err := client.ListUserPaymentPlans(ctx, &common.ListUserPaymentPlansRequest{UserId: user.GetId()})
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's transactions", "data": err})
-		}
 		var totalPlanAmount = 0.0
-		for _, plan := range plans.GetPaymentPlans() {
-			totalPlanAmount += plan.GetAmount()
+		plans, err := client.ListUserPaymentPlans(ctx, &common.ListUserPaymentPlansRequest{UserId: user.GetId()})
+		if err == nil {
+			for _, plan := range plans.GetPaymentPlans() {
+				totalPlanAmount += plan.GetAmount()
+			}
 		}
 
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": KPI{debitAccBalance.GetCurrentBalance(), totalCurrent, totalPlanAmount}})
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": KPI{totalDebit, totalCurrent, totalPlanAmount}})
 	}
 }
 
@@ -367,11 +367,11 @@ func ArePlaidAccountsLinked(client core.CoreClient, ctx context.Context) func(c 
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's from email", "data": err})
 		}
 		type Exist struct {
-			Debit  bool `json:"debit,omitempty"`
-			Credit bool `json:"credit,omitempty"`
+			Debit  bool `json:"debit"`
+			Credit bool `json:"credit"`
 		}
 
-		debitAcc, err := client.IsCreditAccountLinked(ctx, &core.IsCreditAccountLinkedRequest{UserId: user.GetId()})
+		debitAcc, err := client.IsDebitAccountLinked(ctx, &core.IsDebitAccountLinkedRequest{UserId: user.GetId()})
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"status": "error", "message": "Error on fetching user's credit accounts", "data": err})
 		}

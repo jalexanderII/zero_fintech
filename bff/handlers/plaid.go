@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jalexanderII/zero_fintech/bff/client"
@@ -68,12 +69,18 @@ func ExchangePublicToken(plaidClient *client.PlaidClient, ctx context.Context) f
 		type Input struct {
 			Email       string               `json:"email"`
 			PublicToken string               `json:"public_token"`
-			MetaData    models.PlaidMetaData `json:"meta_data,omitempty"`
 			Purpose     models.Purpose       `json:"purpose"`
+			MetaData    models.PlaidMetaData `json:"meta_data,omitempty"`
 		}
 		var input Input
 		if err := c.BodyParser(&input); err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		}
+		if strings.HasPrefix(input.Email, "public") {
+			temp := input.Email
+			input.Email = input.PublicToken
+			input.PublicToken = temp
+			fmt.Printf("INPUT: %+v", input)
 		}
 		fmt.Printf("METADATA: %+v", input.MetaData)
 
